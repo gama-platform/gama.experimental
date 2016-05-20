@@ -1,12 +1,29 @@
+*.log
+target/
+target/*
+*.orig
+build
+build/*
+dist
+dist/*
+private
+private/*
+release/
+release/*
+*.iml
+*.ipr
+*.iws
+*.iml
+.idea/
+.idea/*
+*~
+*.bak
+.directory
+.DS_Store
+*.history
 *.class
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+.metadata/
+.metadata/*
+/*/gaml/
+/*/bin/
+msi.gama.ext/lib/
