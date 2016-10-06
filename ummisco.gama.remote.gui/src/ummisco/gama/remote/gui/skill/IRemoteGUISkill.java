@@ -16,7 +16,8 @@ public interface IRemoteGUISkill {
 	
 	public final static String EXPOSE_VAR = "expose";
 	public final static String LISTEN_VAR = "listen";
-	public final static String VAR_NAME = "name";
+	public final static String VAR_NAME = "variables";
+	public final static String STORE_NAME = "store_to";
 	public final static String EXPOSED_NAME = "with_name";
 	
 }

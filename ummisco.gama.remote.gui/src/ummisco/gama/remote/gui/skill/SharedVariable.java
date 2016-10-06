@@ -1,5 +1,8 @@
 package ummisco.gama.remote.gui.skill;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
@@ -13,7 +16,7 @@ public class SharedVariable  {
 	public final static int EXPOSED_VARIABLE = 1;
 	public final static int LISTENED_VARIABLE = 2;
 	
-	String attributeName;
+	ArrayList<String> attributeName;
 	String exposedName;
 	
 	int connectionType = -1;
@@ -22,11 +25,26 @@ public class SharedVariable  {
 	MQTTConnector connection;
 	IAgent agent;
 	
-	SharedVariable(IAgent agt, String name, String exposedName, MQTTConnector connect, int IO) throws MqttException
+	
+	SharedVariable(IAgent agt, String names, String exposedName, MQTTConnector connect, int IO) throws MqttException
 	{
 		connection = connect; //new MQTTConnector(server,login,pass,exposedName,IO);
 		this.agent = agt;
-		this.attributeName = name;
+		this.attributeName = new ArrayList<String>();
+		this.attributeName.add(names);
+		this.exposedName = exposedName;
+		this.connectionType = IO;
+		if(connectionType==LISTENED_VARIABLE)
+			connection.subscribeToGroup(exposedName);
+		this.update(agt.getScope());
+	}
+	
+	
+	SharedVariable(IAgent agt, ArrayList<String> names, String exposedName, MQTTConnector connect, int IO) throws MqttException
+	{
+		connection = connect; //new MQTTConnector(server,login,pass,exposedName,IO);
+		this.agent = agt;
+		this.attributeName = names;
 		this.exposedName = exposedName;
 		this.connectionType = IO;
 		if(connectionType==LISTENED_VARIABLE)
@@ -48,12 +66,28 @@ public class SharedVariable  {
 		
 	}
 	
+	private boolean attributeChanged()
+	{
+		for(String cn:this.attributeName)
+		{
+			if(!agent.getAttribute(cn).equals(value))
+				return true;
+		}
+		return false;
+	}
+	
 	private void exposeValue() 
 	{
 		try {
-				if(!agent.getAttribute(attributeName).equals(value))
+				if(attributeChanged())
 				{
-						connection.sendMessage(exposedName, agent.getAttribute(attributeName));
+					Map<String,Object> mmap = new HashMap<String,Object>();
+					for(String cn:this.attributeName)
+					{
+						mmap.put(cn, agent.getAttribute(cn));
+						System.out.println(" "+cn+"->"+agent.getAttribute(cn));
+					}
+					connection.sendMessage(exposedName, mmap);
 				}
 		} catch (MqttException e) {
 			// TODO Auto-generated catch block
@@ -69,7 +103,7 @@ public class SharedVariable  {
 		if(data != null)
 		{
 			this.value = data;
-			this.agent.setAttribute(attributeName,data);
+			this.agent.setAttribute(attributeName.get(0),data);
 		}
 	}
 	
