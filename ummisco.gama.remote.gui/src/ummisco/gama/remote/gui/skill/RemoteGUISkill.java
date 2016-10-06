@@ -21,6 +21,7 @@ import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaList;
+import msi.gama.util.IList;
 import msi.gaml.skills.Skill;
 import msi.gaml.statements.IExecutable;
 import msi.gaml.types.IType;
@@ -67,7 +68,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 	
 	
 	@action(name = IRemoteGUISkill.EXPOSE_VAR, args = {
-			@arg(name = IRemoteGUISkill.VAR_NAME, type = IType.STRING, optional = false, doc = @doc("server nameL")),
+			@arg(name = IRemoteGUISkill.VAR_NAME, type = IType.LIST, optional = false, doc = @doc("server nameL")),
 			@arg(name = IRemoteGUISkill.EXPOSED_NAME, type = IType.STRING, optional = false, doc = @doc("server nameL"))
 		 }, doc = @doc(value = "", returns = "", examples = { @example("") }))
 	public void exposeToRemoteGui(IScope scope)
@@ -79,11 +80,12 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 		String url = (String)agt.getAttribute(IRemoteGUISkill.SERVER_URL);
 		String login = (String)agt.getAttribute(IRemoteGUISkill.LOGIN);
 		String pass = (String) agt.getAttribute(IRemoteGUISkill.PASSWORD);
-		String varName = (String )scope.getArg(IRemoteGUISkill.VAR_NAME,IType.STRING);
+		@SuppressWarnings("unchecked")
+		ArrayList<String> varName =  (ArrayList<String>)scope.getListArg(IRemoteGUISkill.VAR_NAME); //scope.getArg(IRemoteGUISkill.VAR_NAME,IType.MAP);
 		String exposedName = (String )scope.getArg(IRemoteGUISkill.EXPOSED_NAME,IType.STRING);
 		
-		try {
-			SharedVariable varS = new SharedVariable(agt, varName, exposedName, connection,SharedVariable.EXPOSED_VARIABLE);
+	try {
+			SharedVariable varS = new SharedVariable(agt, (ArrayList<String>) varName, exposedName, connection,SharedVariable.EXPOSED_VARIABLE);
 			this.getShareVariables(scope).add(varS);
 		} catch (MqttException e) {
 			// TODO Auto-generated catch block
@@ -92,7 +94,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 	}
 	
 	@action(name = IRemoteGUISkill.LISTEN_VAR, args = {
-			@arg(name = IRemoteGUISkill.VAR_NAME, type = IType.STRING, optional = false, doc = @doc("server nameL")),
+			@arg(name = IRemoteGUISkill.STORE_NAME, type = IType.STRING, optional = false, doc = @doc("server nameL")),
 			@arg(name = IRemoteGUISkill.EXPOSED_NAME, type = IType.STRING, optional = false, doc = @doc("server nameL"))
 		 }, doc = @doc(value = "", returns = "", examples = { @example("") }))
 	public void listenFromRemoteGui(IScope scope)
@@ -102,7 +104,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 		String url = (String)agt.getAttribute(IRemoteGUISkill.SERVER_URL);
 		String login = (String)agt.getAttribute(IRemoteGUISkill.LOGIN);
 		String pass = (String) agt.getAttribute(IRemoteGUISkill.PASSWORD);
-		String varName = (String )scope.getArg(IRemoteGUISkill.VAR_NAME,IType.STRING);
+		String varName = (String )scope.getArg(IRemoteGUISkill.STORE_NAME,IType.STRING);
 		String exposedName = (String )scope.getArg(IRemoteGUISkill.EXPOSED_NAME,IType.STRING);
 		
 		try {
@@ -112,6 +114,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 
 	
