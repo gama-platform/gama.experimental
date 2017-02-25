@@ -8,9 +8,15 @@ import java.util.Observable;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
+import msi.gama.util.GamaList;
+import msi.gama.util.GamaMap;
 import ummisco.gama.remote.gui.connector.MQTTConnector;
+import ummisco.gama.remote.reducer.DataReducer;
 
 public class SharedVariable  {
 	public final static int EXPOSED_VARIABLE = 1;
@@ -76,6 +82,8 @@ public class SharedVariable  {
 		return false;
 	}
 	
+	
+	
 	private void exposeValue() 
 	{
 		try {
@@ -84,8 +92,16 @@ public class SharedVariable  {
 					Map<String,Object> mmap = new HashMap<String,Object>();
 					for(String cn:this.attributeName)
 					{
-						mmap.put(cn, agent.getAttribute(cn));
-						System.out.println(" "+cn+"->"+agent.getAttribute(cn));
+						Object data = agent.getAttribute(cn);
+						if(data instanceof GamaList)
+						{
+							data = DataReducer.castToList((GamaList<?>)data);
+						}
+						if(data instanceof GamaMap)
+						{
+							data = DataReducer.castToMap((GamaMap<?,?>)data);
+						}
+						mmap.put(cn,data);
 					}
 					connection.sendMessage(exposedName, mmap);
 				}
@@ -98,8 +114,6 @@ public class SharedVariable  {
 	private void listenValue()
 	{
 		Object data = connection.getLastData(exposedName);
-		System.out.println("update "+ data);
-
 		if(data != null)
 		{
 			this.value = data;

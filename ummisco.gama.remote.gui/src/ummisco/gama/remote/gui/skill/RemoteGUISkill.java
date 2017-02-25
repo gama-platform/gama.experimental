@@ -10,6 +10,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 import msi.gama.extensions.messaging.GamaMailbox;
 import msi.gama.metamodel.agent.IAgent;
+import msi.gama.outputs.IOutput;
 import msi.gama.precompiler.IConcept;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
@@ -34,8 +35,8 @@ import ummisco.gama.remote.gui.connector.MQTTConnector;
 	@var(name = IRemoteGUISkill.SERVER_URL, type = IType.STRING, doc = @doc("Net ID of the agent")),	
 	@var(name = IRemoteGUISkill.LOGIN, type = IType.STRING, doc = @doc("Net ID of the agent")),	
 	@var(name = IRemoteGUISkill.PASSWORD, type = IType.STRING, doc = @doc("Net ID of the agent")),	
-@var(name = IRemoteGUISkill.EXPOSED_VAR_LIST, type = IType.LIST, doc = @doc("Net ID of the agent"))})
-@skill(name = IRemoteGUISkill.SKILL_NAME, concept = { IConcept.GUI, IConcept.COMMUNICATION, IConcept.SKILL })
+	@var(name = IRemoteGUISkill.EXPOSED_VAR_LIST, type = IType.LIST, doc = @doc("Net ID of the agent"))})
+	@skill(name = IRemoteGUISkill.SKILL_NAME, concept = { IConcept.GUI, IConcept.COMMUNICATION, IConcept.SKILL })
 public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 	final static String SHARED_VARIABLE_LIST = "SHARED_VARIABLE_LIST";
 	ArrayList<SharedVariable> vars = new ArrayList<SharedVariable>();
@@ -51,6 +52,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 			this.startSkill(scope);
 		
 		IAgent agt = scope.getAgent();
+		
 		String serverURL = (String) scope.getArg(IRemoteGUISkill.SERVER_URL, IType.STRING);
 		String login = (String) scope.getArg(INetworkSkill.LOGIN, IType.STRING);
 		String password = (String) scope.getArg(INetworkSkill.PASSWORD, IType.STRING);
@@ -73,10 +75,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 		 }, doc = @doc(value = "", returns = "", examples = { @example("") }))
 	public void exposeToRemoteGui(IScope scope)
 	{
-		
-
 		IAgent agt = scope.getAgent();
-		
 		String url = (String)agt.getAttribute(IRemoteGUISkill.SERVER_URL);
 		String login = (String)agt.getAttribute(IRemoteGUISkill.LOGIN);
 		String pass = (String) agt.getAttribute(IRemoteGUISkill.PASSWORD);

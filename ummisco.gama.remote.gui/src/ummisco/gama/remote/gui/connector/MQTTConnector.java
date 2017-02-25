@@ -1,6 +1,5 @@
 package ummisco.gama.remote.gui.connector;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,18 +15,13 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-import ummisco.gama.remote.gui.skill.SharedVariable;
-import ummisco.gama.serializer.factory.StreamConverter;
-
-
-
 public final class MQTTConnector {
 	public final static String SERVER_URL = "SERVER_URL";
 	public final static String SERVER_PORT = "SERVER_PORT";
 	public final static String LOCAL_NAME = "LOCAL_NAME";
 	public final static String LOGIN = "LOGIN";
 	public final static String PASSWORD = "PASSWORD";
-
+	
 	public static String DEFAULT_USER = "admin";
 	public static String DEFAULT_LOCAL_NAME = "gama-ui"+Calendar.getInstance().getTimeInMillis()+"@";
 	public static String DEFAULT_PASSWORD = "password";
