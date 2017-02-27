@@ -10,6 +10,7 @@ public interface IUILocatedSkill {
 	public static String AGENT_UI_HEIGHT = "ui_height";
 	
 	public static String UI_AGENT_LOCATION_SET = "lock_agent_at";
+	public static String UI_AGENT_LOCATION_MOVE = "move_agent_at";
 	public static String UI_AGENT_LOCATION = "ui_location";
 	public static String UI_NAME = "display_name";
 	public static String UI_WIDTH = "ui_width";

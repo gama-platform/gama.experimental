@@ -10,6 +10,7 @@ import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.ILocation;
 import msi.gama.outputs.IOutput;
 import msi.gama.outputs.LayeredDisplayOutput;
+import msi.gama.outputs.layers.IEventLayerListener;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -25,13 +26,14 @@ import com.vividsolutions.jts.geom.Envelope;
 @vars({ @var(name = IUILocatedSkill.AGENT_LOCATION, type = IType.POINT, doc = @doc("locked location")),
 	@var(name = IUILocatedSkill.AGENT_LOCKED_WIDTH, type = IType.FLOAT, doc = @doc("locked width")),
 	@var(name = IUILocatedSkill.AGENT_LOCKED_HEIGHT, type = IType.FLOAT, doc = @doc("locked height")),
-	@var(name = IUILocatedSkill.AGENT_UI_WIDTH, type = IType.FLOAT, doc = @doc("locked height")),
-	@var(name = IUILocatedSkill.AGENT_UI_HEIGHT, type = IType.POINT, doc = @doc("locked height")),
+	@var(name = IUILocatedSkill.AGENT_UI_WIDTH, type = IType.FLOAT, doc = @doc("resized width")),
+	@var(name = IUILocatedSkill.AGENT_UI_HEIGHT, type = IType.FLOAT, doc = @doc("resized height")),
 	@var(name = IUILocatedSkill.AGENT_DISPLAY, type = IType.STRING, doc = @doc("map of location"))})
 
 @skill(name=IUILocatedSkill.SKILL_NAME, concept = { IConcept.GUI, IConcept.COMMUNICATION, IConcept.SKILL })
 public class UILocatedSkill extends Skill {
 	private ArrayList<IAgent> followedAgent = null;
+	private IEventLayerListener listenAction = null;
 	
 	
 	@action(name = IUILocatedSkill.UI_AGENT_LOCATION, args = {
@@ -45,7 +47,6 @@ public class UILocatedSkill extends Skill {
 		String outputName = (String) scope.getArg(IUILocatedSkill.UI_NAME, IType.STRING);
 		IOutput out = scope.getSimulation().getOutputManager().getOutputWithName(outputName);
 		//output.get
-		System.out.println("output " + out.getClass().getCanonicalName());
 		if(!(out instanceof LayeredDisplayOutput))
 			return null;
 		LayeredDisplayOutput output = (LayeredDisplayOutput)out;
@@ -59,7 +60,7 @@ public class UILocatedSkill extends Skill {
 	}
 	
 	@action(name=IUILocatedSkill.UI_AGENT_LOCATION_SET,args={
-			@arg(name = IUILocatedSkill.UI_AGENT_LOCATION, type = IType.POINT, optional = false, doc = @doc("name of the display")),
+			@arg(name = IUILocatedSkill.UI_AGENT_LOCATION, type = IType.POINT, optional = false, doc = @doc("location in the display")),
 			@arg(name = IUILocatedSkill.UI_NAME, type = IType.STRING, optional = false, doc = @doc("name of the display")),
 			@arg(name = IUILocatedSkill.UI_HEIGHT, type = IType.FLOAT, optional = false, doc = @doc("width of the object in %")),
 			@arg(name = IUILocatedSkill.UI_WIDTH, type = IType.FLOAT, optional = false, doc = @doc("height of the object in %"))},
@@ -73,15 +74,23 @@ public class UILocatedSkill extends Skill {
 		GamaPoint pt = (GamaPoint) scope.getArg(IUILocatedSkill.UI_AGENT_LOCATION, IType.POINT);
 		float wd = ((Double)scope.getArg(IUILocatedSkill.UI_WIDTH, IType.FLOAT)).floatValue();
 		float hg = ((Double)scope.getArg(IUILocatedSkill.UI_HEIGHT, IType.FLOAT)).floatValue();
-		this.followedAgent.add(agt);
-		agt.setAttribute(IUILocatedSkill.AGENT_DISPLAY, outputName);
-		agt.setAttribute(IUILocatedSkill.AGENT_LOCATION, pt);
-		agt.setAttribute(IUILocatedSkill.AGENT_LOCKED_WIDTH, wd);
-		agt.setAttribute(IUILocatedSkill.AGENT_LOCKED_HEIGHT, hg);
+		this.setAgentLocationUI(agt, outputName, pt, wd, hg);
 		moveAgentUI(agt);
-				
 	}
 	
+	private void setAgentLocation(IAgent agt, GamaPoint pt)
+	{
+		agt.setAttribute(IUILocatedSkill.AGENT_LOCATION, pt);
+	}
+	
+	public void setAgentLocationUI(IAgent agt, String outputName, GamaPoint pt, float wd, float hg)
+	{
+		this.followedAgent.add(agt);
+		agt.setAttribute(IUILocatedSkill.AGENT_DISPLAY, outputName);
+		setAgentLocation(agt,pt);
+		agt.setAttribute(IUILocatedSkill.AGENT_LOCKED_WIDTH, wd);
+		agt.setAttribute(IUILocatedSkill.AGENT_LOCKED_HEIGHT, hg);
+	}
 	
 	public void lockAgent(IAgent agt)
 	{
@@ -100,6 +109,7 @@ public class UILocatedSkill extends Skill {
 		float ui_width = (float) agt.getAttribute(IUILocatedSkill.AGENT_LOCKED_WIDTH);
 		float ui_height = (float) agt.getAttribute(IUILocatedSkill.AGENT_LOCKED_HEIGHT);
 		IOutput out = scope.getSimulation().getOutputManager().getOutputWithName(outputName);
+		
 		if(!(out instanceof LayeredDisplayOutput))
 			return;
 		LayeredDisplayOutput output = (LayeredDisplayOutput)out;
@@ -111,9 +121,7 @@ public class UILocatedSkill extends Skill {
 		double xmax = Math.min(e.getMaxX(),output.getSurface().getEnvWidth());
 		double ymax=Math.min(e.getMaxY(),output.getSurface().getEnvHeight());
 		double xx = xmin + pt.x*(xmax - xmin) ;
-		double yy = ymin + pt.y*(ymax - ymin);
-		
-		
+		double yy = ymin + pt.y*(ymax - ymin);		
 		
 		float tui_width = (float)((xmax - xmin) * ui_width);
 		float tui_height = (float) ((ymax - ymin) * ui_height);
@@ -121,8 +129,21 @@ public class UILocatedSkill extends Skill {
 		agt.setAttribute(IUILocatedSkill.AGENT_UI_WIDTH, tui_width);
 		agt.setAttribute(IUILocatedSkill.AGENT_UI_HEIGHT, tui_height);
 		agt.setLocation(loc);
+
+		output.getSurface().updateDisplay(true);
 	}
 
+	@action(name=IUILocatedSkill.UI_AGENT_LOCATION_MOVE,args={
+			@arg(name = IUILocatedSkill.UI_AGENT_LOCATION, type = IType.POINT, optional = false, doc = @doc("location in the display"))},
+			doc = @doc(value = "", returns = "", examples = { @example("")}))
+	public  void moveAgentAt(IScope scope)
+	{
+		IAgent agt = scope.getAgent();
+		GamaPoint pt = (GamaPoint) scope.getArg(IUILocatedSkill.UI_AGENT_LOCATION, IType.POINT);
+		this.setAgentLocation(agt, pt);
+		moveAgentUI(agt);
+	}
+	
 	private void moveAllAgent()
 	{
 		for(IAgent a:followedAgent)
@@ -134,16 +155,33 @@ public class UILocatedSkill extends Skill {
 	private void removeLockedAgent(IScope scope)
 	{
 		this.followedAgent.clear();
+		this.followedAgent=null;
 	}
 	
-	private void initialize(final IScope scope)
+	private void removeDeadLockedAgent()
+	{
+		ArrayList<IAgent> localList = new ArrayList<IAgent>();
+		for(IAgent agt:this.followedAgent)
+		{
+			if(agt.dead())
+				localList.add(agt);
+		}
+		for(IAgent agts:localList)
+		{
+			this.followedAgent.remove(agts);
+		}
+	}
+	
+	protected void initialize(final IScope scope)
 	{
 		this.followedAgent = new ArrayList<>();
 		registerSimulationEvent(scope);
 	}
 	
 	private void registerSimulationEvent(final IScope scope) {
-		scope.getSimulation().postEndAction(scope1 -> { moveAllAgent();
+		scope.getSimulation().postEndAction(scope1 -> { 
+			removeDeadLockedAgent();
+			moveAllAgent();
 			return null;
 		});
 
