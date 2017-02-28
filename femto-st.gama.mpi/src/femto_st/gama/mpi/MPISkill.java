@@ -1,4 +1,4 @@
-package femto.st.gama.mpi;
+package femto_st.gama.mpi;
 
 import msi.gama.precompiler.IConcept;
 import mpi.MPI;
