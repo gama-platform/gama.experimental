@@ -1,6 +1,7 @@
 package femto_st.gama.mpi;
 
 import msi.gama.precompiler.IConcept;
+import msi.gama.runtime.IScope;
 import mpi.MPI;
 import mpi.MPIException;
 import msi.gama.precompiler.GamlAnnotations.action;
@@ -18,7 +19,7 @@ import msi.gaml.types.IType;
 public class MPISkill {
 	
 	@action(name = IMPISkill.MPI_RANK, args = {}, doc = @doc(value = "", returns = "", examples = { @example("") }))
-	public int getMPIRANK()
+	public int getMPIRANK(IScope scope)
 	{
 		//A toi de jouer
 		
