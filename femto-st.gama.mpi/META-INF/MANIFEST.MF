@@ -5,6 +5,7 @@ Bundle-SymbolicName: femto-st.gama.mpi;singleton:=true
 Bundle-Version: 1.7.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.equinox.app,
+ msi.gama.core;bundle-version="1.7.0",
  msi.gama.ext;bundle-version="1.7.0"
 Bundle-ClassPath: ext/mpi.jar,
  .
