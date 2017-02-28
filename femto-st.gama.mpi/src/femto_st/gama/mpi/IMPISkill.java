@@ -1,4 +1,4 @@
-package femto.st.gama.mpi;
+package femto_st.gama.mpi;
 
 public interface IMPISkill {
 	String MPI_NETWORK = "MPI_Network";
