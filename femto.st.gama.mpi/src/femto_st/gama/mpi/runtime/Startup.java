@@ -9,7 +9,8 @@ public class Startup implements BundleActivator {
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		MPI.Init(null);
+		String[] args= {};
+		MPI.Init(args);
 		
 	}
 
