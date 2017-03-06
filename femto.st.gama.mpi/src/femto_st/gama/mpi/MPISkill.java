@@ -22,9 +22,17 @@ public class MPISkill extends Skill{
 	@action(name = IMPISkill.MPI_RANK, args = {}, doc = @doc(value = "", returns = "", examples = { @example("") }))
 	public int getMPIRANK(IScope scope)
 	{
-		//A toi de jouer
+		  int rank = 2;
+		    try {
+
+			rank = MPI.COMM_WORLD.getRank();
+
+		    } catch (MPIException mpiex) {
+
+			System.out.println("MIP Error");
+		    }
 		
-		return 0;
+		return rank;
 	}
 	
 }
