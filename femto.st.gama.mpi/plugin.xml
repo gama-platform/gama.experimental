@@ -2,20 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         id="mpi"
-         name="femto.st.gama.mpi"
-         point="org.eclipse.core.runtime.applications">
-      <application
-            cardinality="singleton-global"
-            thread="main"
-            visible="true">
-         <run
-               class="application.Start">
-         </run>
-      </application>
-   </extension>
-   <extension
          point="gaml.extension">
    </extension>
-
 </plugin>

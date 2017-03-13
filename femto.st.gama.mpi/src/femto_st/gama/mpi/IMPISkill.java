@@ -5,6 +5,7 @@ public interface IMPISkill {
 
 	
 	String MPI_RANK = "MPI_RANK";
+	String MPI_INIT = "MPI_INIT";
 	
 	
 	
