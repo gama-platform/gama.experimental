@@ -20,12 +20,11 @@
 			<url>http://buchen.github.io/maven-repo</url>
 			<layout>default</layout>
 		</pluginRepository>
-	<!--	<pluginRepository>
+		<pluginRepository>
 			<id>gama-repo</id>
 			<url>http://updates.gama-platform.org/</url>
 			<layout>default</layout>
 		</pluginRepository>
-		-->
 	</pluginRepositories>
 
 	<repositories>
