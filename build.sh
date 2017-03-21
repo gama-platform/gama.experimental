@@ -1,2 +1,2 @@
-ls ./home && cd msi.gama.experimental.parent &&
+cd msi.gama.experimental.parent &&
 mvn clean install
