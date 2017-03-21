@@ -15,9 +15,15 @@
 			<layout>default</layout>
 		</pluginRepository>
 		<pluginRepository>
+			<id>gama-repo</id>
+			<url>http://updates.gama-platform.org/</url>
+			<layout>default</layout>
+		</pluginRepository>
+		
+	<!--	<pluginRepository>
 			<id>annot-local-repo</id>
 			<url>${project.baseUri}../msi.gama.processor/processor/plugins</url>
-		</pluginRepository>
+		</pluginRepository> -->
 	</pluginRepositories>
 
 	<repositories>
@@ -86,7 +92,7 @@
 		</repository>
 		<repository>
 			<id>gama-releases</id>
-			<url>http://updates.gama-platform.org//</url>
+			<url>http://updates.gama-platform.org/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
