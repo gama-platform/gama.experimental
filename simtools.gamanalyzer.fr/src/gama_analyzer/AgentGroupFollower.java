@@ -1,7 +1,7 @@
 package gama_analyzer;
 
 import msi.gama.common.interfaces.IKeyword;	 
-import msi.gama.common.util.GeometryUtils;
+import msi.gama.common.geometry.GeometryUtils;
 import msi.gama.metamodel.agent.GamlAgent;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.agent.MinimalAgent;
@@ -283,11 +283,11 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 	public void updateMetaDataHistory(final IScope scope, final int nrow){	
 		GamaObjectMatrix maMatriceMETA = GamaObjectMatrix.from(9,nrow+1,mydata.metadatahistory);
 		mydata.metadatahistory = maMatriceMETA;
-		mydata.metadatahistory.set(scope, 0, nrow, scope.getSimulationScope());
+		mydata.metadatahistory.set(scope, 0, nrow, scope.getSimulation());
 		mydata.metadatahistory.set(scope, 1, nrow, scope.getClock().getCycle());
 		mydata.metadatahistory.set(scope, 2, nrow, getUniqueSimName(scope)); 
 		mydata.metadatahistory.set(scope, 3, nrow, rule);
-		mydata.metadatahistory.set(scope, 4, nrow, scope.getAgentScope().getName()); //supgroupid, Useless for the moment but could be use if an agent_group_follower create a sub agent 
+		mydata.metadatahistory.set(scope, 4, nrow, scope.getAgent().getName()); //supgroupid, Useless for the moment but could be use if an agent_group_follower create a sub agent 
 		mydata.metadatahistory.set(scope, 5, nrow, this.getName()); //supruleid, Useless for the moment  
 		mydata.metadatahistory.set(scope, 6, nrow, this.agentsCourants.copy(scope));
 		mydata.metadatahistory.set(scope, 7, nrow, this.agentsCourants.size());
@@ -297,7 +297,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 	public void updatedata(final IScope scope)
 	{
 		
-		System.out.println("updatedata cycle : " + scope.getSimulationScope().getClock().getCycle());
+		System.out.println("updatedata cycle : " + scope.getSimulation().getClock().getCycle());
 		if(mydata.getIsAgentCreated() == false ) {
 			//GamaList varlist=(GamaList)this.getSpecies().getVarNames();
 		}
@@ -357,7 +357,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 			// AVERAGEHISTORY ...........................................................................
 
 			int nbVar = mydata.numvarmap.length(scope);
-			int step = scope.getSimulationScope().getClock().getCycle();
+			int step = scope.getSimulation().getClock().getCycle();
 			step=mydata.metadatahistory.numRows-1;
 
 			GamaFloatMatrix maMatriceAV = GamaFloatMatrix.from(scope,nbVar,step+1,mydata.averagehistory);
@@ -576,8 +576,8 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 					manager.simColorList.add((GamaColor)GamaColor.getInt(Random.opRnd(scope, 10000)));
 			}
 
-			if(!manager.agentGroupFollowerList.toString().contains(scope.getAgentScope().getName().toString())) {
-				manager.agentGroupFollowerList.add((AgentGroupFollower)scope.getAgentScope());
+			if(!manager.agentGroupFollowerList.toString().contains(scope.getAgent().getName().toString())) {
+				manager.agentGroupFollowerList.add((AgentGroupFollower)scope.getAgent());
 			}
 
 
@@ -601,7 +601,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 
 				if(manager.idSimList.length(scope)>1) {
 					for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-						if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+						if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 
 							manager.storableDataList.get(i).metadatahistory=(GamaObjectMatrix)manager.storableDataList.get(i).metadatahistory._opAppendVertically(scope, multidata.metadatahistory); //.opAppendVertically(scope, manager.storableDataList.get(i).metadatahistory, multidata.metadatahistory);						
 							System.out.println("PARTIE 1 de la matrice: " + manager.storableDataList.get(i).minhistory);
@@ -620,7 +620,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 				}
 				else {
 					for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-						if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+						if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 							manager.storableDataList.add(i,multidata);
 							System.out.println("B- manager.storableDataList: " + manager.storableDataList);
 						}
@@ -801,7 +801,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 						for (int j=0; j<multidata.metadatahistory.numRows; j++)
 						{
 							if ((Integer)multidata.metadatahistory.get(scope, 1, j) == this.getScope().getClock().getCycle())
-								if (!scope.getSimulationScope().toString().equals(multidata.metadatahistory.get(scope, 0, j).toString()))
+								if (!scope.getSimulation().toString().equals(multidata.metadatahistory.get(scope, 0, j).toString()))
 								{
 									System.out.println("metadatahistory "+ multidata.metadatahistory.get(scope, 8,j)+" type "+multidata.metadatahistory.get(scope, 8,j).getClass());		
 									allSimulationShape.add((GamaShape) multidata.metadatahistory.get(scope, 8,j));						
@@ -951,7 +951,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 		if(my_matrix.equals("multi_minhistory")) {
 			at_cycle_manager=new ArrayList<Double>();
 			for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 					//System.out.println("on est à l'agent group follower: " + manager.agentGroupFollowerList.get(i).toString());					
 					for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 						if(Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString())== step) {
@@ -971,7 +971,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 		else if(my_matrix.equals("multi_maxhistory")) {
 			at_cycle_manager=new ArrayList<Double>();
 			for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 					for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 						if(Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString())== step) {
 							for(int k=0; k<mydata.numvarmap.getValues().length(scope);k++) {
@@ -988,7 +988,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 		else if(my_matrix.equals("multi_averagehistory")) {
 			at_cycle_manager=new ArrayList<Double>();
 			for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {				
+				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {				
 					for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 						if(Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString())== step) {
 							for(int k=0; k<mydata.numvarmap.getValues().length(scope);k++) {
@@ -1005,7 +1005,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 		else if(my_matrix.equals("multi_stdevhistory")) {
 			at_cycle_manager=new ArrayList<Double>();
 			for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 					for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 						if(Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString())== step) {
 							for(int k=0; k<mydata.numvarmap.getValues().length(scope);k++) {
@@ -1022,7 +1022,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 		else if(my_matrix.equals("multi_distribhistory")) {
 			at_cycle_manager=new ArrayList<Object>();
 			for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 					for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 						if(Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString())== step) {
 							for(int k=0; k<mydata.numvarmap.getValues().length(scope);k++) {
@@ -1069,7 +1069,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 
 		if(my_matrix.equals("multi_minhistory")) {
 			for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 					for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 						int st=Integer.parseInt(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString());
 						String idsim=manager.storableDataList.get(i).metadatahistory.getColumn(scope, 2).get(j).toString();
@@ -1094,7 +1094,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 		}
 		else if(my_matrix.equals("multi_maxhistory")) {
 			for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 					for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 						int st=Integer.parseInt(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString());
 						String idsim=manager.storableDataList.get(i).metadatahistory.getColumn(scope, 2).get(j).toString();
@@ -1121,7 +1121,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 		}
 		else if(my_matrix.equals("multi_averagehistory")) {
 			for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 					for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 						int st=Integer.parseInt(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString());
 						String idsim=manager.storableDataList.get(i).metadatahistory.getColumn(scope, 2).get(j).toString();
@@ -1148,7 +1148,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 		}
 		else if(my_matrix.equals("multi_stdevhistory")) {
 			for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 					for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 						int st=Integer.parseInt(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString());
 						String idsim=manager.storableDataList.get(i).metadatahistory.getColumn(scope, 2).get(j).toString();
@@ -1177,7 +1177,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 		}
 		else if(my_matrix.equals("multi_distribhistory")) {
 			for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+				if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 					for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 						int st=Integer.parseInt(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString());
 						String idsim=manager.storableDataList.get(i).metadatahistory.getColumn(scope, 2).get(j).toString();
@@ -1235,7 +1235,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 
 
 		for(int i=0;i<manager.agentGroupFollowerList.length(scope);i++) {
-			if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgentScope().getName().toString())) {
+			if(manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 				for(int j=0;j<manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).length(scope);j++) {
 					if(Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString())==step) {
 						for(int k=0; k<mydata.numvarmap.getValues().length(scope);k++) {
@@ -1410,7 +1410,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 									sp.setChildren(nv);
 								}
 								GamlAgent nagent=new GamlAgent(this.getPopulationFor("agent"));
-								this.getPopulationFor("agent").add(nagent);
+//								this.getPopulationFor("agent").add(nagent);
 
 								nagent._init_(scope);
 								nagent.setName("parallel"+manager.idSimList.get(i));

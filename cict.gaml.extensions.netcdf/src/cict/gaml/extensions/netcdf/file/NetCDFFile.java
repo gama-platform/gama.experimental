@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.vividsolutions.jts.geom.Envelope;
 
+import msi.gama.common.geometry.Envelope3D;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.file;
 import msi.gama.precompiler.GamlAnnotations.operator;
@@ -87,7 +88,7 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 	}
 
 	private void initializeNetCDF(IScope scope) {
-		final String NCFile = getPath();
+		final String NCFile = getPath(scope);
 		NetcdfFile dataFile = null;
 		try {
 
@@ -412,30 +413,17 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 		return tokens[0];
 	}
 
-	/*
-	 * (nonJavadoc)
-	 * 
-	 * @see msi.gama.util.GamaFile#flushBuffer()
-	 */
 	@Override
-	protected void flushBuffer() throws GamaRuntimeException {
-		// TODO A faire.
-
-	}
-
-	@Override
-	public Envelope computeEnvelope(final IScope scope) {
+	public Envelope3D computeEnvelope(IScope scope) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/**
-	 * Method getType()
-	 * 
-	 * @see msi.gama.util.IContainer#getType()
-	 */
 	@Override
-	public IContainerType getType() {
-		return Types.FILE.of(Types.INT, Types.STRING);
+	public IContainerType<?> getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 
 }
