@@ -4,7 +4,7 @@ Bundle-Name: Gaml.NetCDF extension
 Bundle-SymbolicName: cict.gaml.extensions.netcdf;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: msi.gama.core;bundle-version="1.6.0",
+Require-Bundle: msi.gama.core;bundle-version="1.7.0",
  msi.gama.ext;bundle-version="1.7.0"
 Bundle-ClassPath: .,
  lib/netcdfAll-4.6.4.jar
