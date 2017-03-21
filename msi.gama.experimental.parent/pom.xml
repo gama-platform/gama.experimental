@@ -12,7 +12,7 @@
 	
 		<pluginRepository>
 			<id>annot-local-repo</id>
-			<url>file://home/travis/.m2/repository</url>
+			<url>file://./home/travis/.m2/repository</url>
 			<layout>default</layout>
 		</pluginRepository> 
 		<pluginRepository>
