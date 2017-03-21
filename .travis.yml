@@ -12,4 +12,4 @@ cache:
 script: sh ./build.sh
 branches:
   only:
-- master
+    - master
