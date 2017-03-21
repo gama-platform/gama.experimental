@@ -22,7 +22,7 @@
 		-->
 		<pluginRepository>
 			<id>annot-local-repo</id>
-			<url>file://home/travis/build/hqnghi88/gamaClone/msi.gama.processor/processor/plugins</url>
+			<url>file://home/travis/build/hqnghi88/gamaClone</url>
 		</pluginRepository> 
 	</pluginRepositories>
 
