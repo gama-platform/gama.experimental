@@ -85,6 +85,16 @@
 			</snapshots>
 		</repository>
 		<repository>
+			<id>gama-releases</id>
+			<url>http://updates.gama-platform.org//</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<!-- <repository>
 			<id>annot-local-repo</id>
 			<url>${project.baseUri}../msi.gama.processor/processor/plugins</url>
 			<releases>
@@ -93,7 +103,7 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-		</repository>
+		</repository> -->
 
 	</repositories>
 
@@ -101,68 +111,13 @@
 
 		<!-- <module>../gama.target.platform</module> -->
 
-		<module>../msi.gama.ext</module>
-		<module>../msi.gama.core</module>
-		<module>../msi.gama.lang.gaml</module>
-		<module>../ummisco.gama.ui.modeling</module>
-		<module>../ummisco.gama.ui.shared</module>
-		<module>../ummisco.gama.ui.navigator</module>
-		<module>../ummisco.gama.ui.experiment</module>
-
-		<module>../msi.gama.application</module>
-
-		<module>../ummisco.gama.feature.models</module>
-		<module>../ummisco.gama.feature.dependencies</module>
-
-		<module>../ummisco.gama.feature.core</module>
-		<module>../ummisco.gama.feature.core.extensions</module>
-		<module>../ummisco.gama.feature.core.ui</module>
-		<module>../ummisco.gama.feature.experiment.ui</module>
-		<module>../ummisco.gama.feature.modeling.ui</module>
-		<module>../ummisco.gama.feature.serialize</module>
-		<module>../ummisco.gama.feature.network</module>
-
-		<module>../msi.gaml.extensions.fipa</module>
-		<module>../msi.gama.headless</module>
-		<module>../simtools.gaml.extensions.traffic</module>
-		<module>../simtools.gaml.extensions.physics</module>
-
-
-		<module>../idees.gama.features.weka</module>
-		<module>../idees.gama.weka</module>
-		<module>../irit.gaml.extensions.database</module>
-		<module>../irit.gaml.extensions.test</module>
-
-
-		<module>../msi.gama.models</module>
-		<module>../msi.gaml.architecture.simplebdi</module>
-
-
-		<module>../simtools.graphanalysis.fr</module>
-		<module>../simtools.graphlayout.feature</module>
-
-		<module>../ummisco.gama.feature.audio</module>
-
-		<module>../ummisco.gama.feature.stats</module>
-
-		<module>../ummisco.gama.opengl</module>
-		<module>../ummisco.gama.java2d</module>
-		<module>../ummisco.gama.ui.viewers</module>
-		<module>../ummisco.gama.serialize</module>
-		<module>../ummisco.gama.network</module>
-		<module>../ummisco.gaml.extensions.maths</module>
-		<module>../ummisco.gaml.extensions.rjava</module>
-		<module>../ummisco.gaml.extensions.sound</module>
-		<module>../ummisco.gaml.extensions.stats</module>
-
-
-
-
-		<module>../msi.gama.p2updatesite</module>
-
-
-		<module>../ummisco.gama.product</module>
-
+		<module>../cict.gaml.extensions.netcdf</module>
+		<module>../femto.st.gama.mpi</module>
+		<module>../msi.gama.experimental.p2updatesite</module>
+		<module>../simtools.gamanalyzer.fr</module>
+		<module>../ummisco.gama.gaming</module>
+		<module>../ummisco.gama.remote.gui</module>
+		
 	</modules>
 
 	<properties>

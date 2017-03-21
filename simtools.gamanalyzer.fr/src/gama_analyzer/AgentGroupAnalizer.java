@@ -26,7 +26,7 @@ public class AgentGroupAnalizer extends ClusterBuilder  {
 			super(s);
 	}
 	
-	@action(name = "creation_cluster")
+//	@action(name = "creation_cluster")
 	public void creationCluster(final IScope scope) throws GamaRuntimeException  {
 	}
 	
