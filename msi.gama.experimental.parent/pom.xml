@@ -12,7 +12,8 @@
 	
 		<pluginRepository>
 			<id>annot-local-repo</id>
-			<url>file://./home/.m2/repository</url>
+			<url>https://oss.sonatype.org/content/groups/public</url>
+			<layout>default</layout>
 		</pluginRepository> 
 		<pluginRepository>
 			<id>buchen-maven-repo</id>
