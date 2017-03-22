@@ -12,17 +12,11 @@
 	
 		<pluginRepository>
 			<id>annot-local-repo</id>
-			<url>$HOME/.m2/repository</url>
-			<layout>default</layout>
+			<url>file://$HOME/.m2/repository</url>
 		</pluginRepository> 
 		<pluginRepository>
 			<id>buchen-maven-repo</id>
 			<url>http://buchen.github.io/maven-repo</url>
-			<layout>default</layout>
-		</pluginRepository>
-		<pluginRepository>
-			<id>gama-repo</id>
-			<url>http://updates.gama-platform.org/</url>
 			<layout>default</layout>
 		</pluginRepository>
 	</pluginRepositories>
