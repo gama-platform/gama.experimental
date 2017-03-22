@@ -10,6 +10,10 @@
 
 	<pluginRepositories>
 		<pluginRepository>
+ 			<id>annot-local-repo</id>
+			<url>file://./home/.m2/repository</url>
+ 		</pluginRepository> 
+		<pluginRepository>
 			<id>buchen-maven-repo</id>
 			<url>http://buchen.github.io/maven-repo</url>
 			<layout>default</layout>
