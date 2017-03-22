@@ -9,16 +9,6 @@
 	<packaging>pom</packaging>
 
 	<pluginRepositories>
-	<pluginRepository>
-			<id>annot-local-reposss</id>
-			<url>https://oss.sonatype.org/content/groups/staging</url>
-			<layout>default</layout>
-		</pluginRepository> 
-		<pluginRepository>
-			<id>annot-local-repo</id>
-			<url>https://oss.sonatype.org/content/groups/public</url>
-			<layout>default</layout>
-		</pluginRepository>  
 		<pluginRepository>
 			<id>buchen-maven-repo</id>
 			<url>http://buchen.github.io/maven-repo</url>
