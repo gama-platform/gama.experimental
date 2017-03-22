@@ -12,7 +12,7 @@
 	
 		<pluginRepository>
 			<id>annot-local-repo</id>
-			<url>file://$HOME/.m2/repository</url>
+			<url>file://./home/.m2/repository</url>
 		</pluginRepository> 
 		<pluginRepository>
 			<id>buchen-maven-repo</id>
@@ -87,7 +87,7 @@
 		</repository>
 		<repository>
 			<id>gama-releases</id>
-			<url>http://updates.gama-platform.org/</url>
+			<url>file://./home/.m2/repository/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
