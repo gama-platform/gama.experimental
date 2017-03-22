@@ -10,7 +10,7 @@
 	<pluginRepositories>
 		<pluginRepository>
  			<id>annot-local-repo</id>
-			<url>file://.${user.home}/.m2/repository/</url>
+			<url>./home/.m2/repository/</url>
  		</pluginRepository> 
 		<pluginRepository>
 			<id>buchen-maven-repo</id>
@@ -94,7 +94,6 @@
 			</snapshots>
 		</repository> -->
 
-<localRepository>/home/.m2/repository/</localRepository>
 	</repositories>
 
 	<modules>
