@@ -10,7 +10,7 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			<url>https://oss.sonatype.org/content/groups/staging</url>
 		</pluginRepository>
 	<!--	<pluginRepository>
 			<id>buchen-maven-repo</id>
