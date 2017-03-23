@@ -9,7 +9,10 @@ notifications:
 cache:
   directories:
   - "$HOME/.m2/cache"
-script: sh ./build.sh
+script: 
+  - travis encrypt -r hqnghi88/gamaExpClone "CI_DEPLOY_USERNAME=hqnghi88"
+  - travis encrypt -r hqnghi88/gamaExpClone "CI_DEPLOY_PASSWORD=23111988"
+  - sh ./build.sh
 branches:
   only:
     - master
