@@ -21,11 +21,7 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 	</distributionManagement>
-	<pluginRepositories>	
-		<pluginRepository>
-			<id>releases2</id>
-			<url>https://oss.sonatype.org/content/groups/staging</url>
-		</pluginRepository>		 
+	<pluginRepositories>		 
 		<pluginRepository>
 			<id>releases1</id>
 			<url>https://oss.sonatype.org/content/groups/public</url>
