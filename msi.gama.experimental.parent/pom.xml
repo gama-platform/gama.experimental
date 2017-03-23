@@ -9,8 +9,8 @@
 	<packaging>pom</packaging>
 	<pluginRepositories>
 		<pluginRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/groups/staging</url>
+			<id>releases</id>
+			<url>https://oss.sonatype.org/content/groups/public</url>
 		</pluginRepository>
 	<!--	<pluginRepository>
 			<id>buchen-maven-repo</id>
