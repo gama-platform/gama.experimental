@@ -7,17 +7,37 @@
 	<artifactId>msi.gama.experimental.parent</artifactId>
 	<version>1.7.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<pluginRepositories>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>releases</id>
+			<name>Sonatype Nexus snapshot repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>releases</id>
+			<name>Sonatype Nexus release repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
+	<pluginRepositories>	
 		<pluginRepository>
 			<id>releases</id>
 			<url>https://oss.sonatype.org/content/groups/public</url>
 		</pluginRepository>
-	<!--	<pluginRepository>
+		<pluginRepository>
+			<id>releases</id>
+			<url>https://oss.sonatype.org/content/groups/staging</url>
+		</pluginRepository>		 
+		<pluginRepository>
 			<id>buchen-maven-repo</id>
 			<url>http://buchen.github.io/maven-repo</url>
 			<layout>default</layout>
 		</pluginRepository>
-	-->
+		<pluginRepository>
+			<id>annot-local-repo</id>
+			<url>${project.baseUri}../msi.gama.processor/processor/plugins</url>
+		</pluginRepository>
 	</pluginRepositories> 
 	
 
