@@ -9,5 +9,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/netcdfAll-4.6.4.jar"/>
+	<classpathentry kind="lib" path="lib/ummisco.gama.annotations-1.7.0-20170323.163414-6.jar"/>
+	<classpathentry kind="lib" path="lib/msi.gama.core-1.7.0-20170323.163605-5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
