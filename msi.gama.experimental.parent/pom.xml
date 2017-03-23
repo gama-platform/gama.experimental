@@ -7,7 +7,7 @@
 	<artifactId>msi.gama.experimental.parent</artifactId>
 	<version>1.7.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
+	<!-- 
 	<distributionManagement>
 		<snapshotRepository>
 			<id>releases</id>
@@ -40,7 +40,7 @@
 		</pluginRepository>
 	</pluginRepositories> 
 	
-
+ -->
 	<repositories>
 		<repository>
 			<id>portfolio-non-maven-dependencies</id>
@@ -87,7 +87,9 @@
 		<repository>
 			<id>sonatype-nexus-snapshots</id>
 			<name>Sonatype Nexus Snapshots</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+			<!-- <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url> -->
+			
+			<url>https://oss.sonatype.org/content/groups/staging</url> 
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -240,15 +242,15 @@
 						<annotationProcessor>msi.gama.precompiler.GamaProcessor</annotationProcessor>
 					</annotationProcessors>
 				</configuration>
-				<dependencies>
-					<!-- dependency containing the annotation processor specified in the 
-						annotationProcessor element -->
+				<!-- <dependencies>
+					dependency containing the annotation processor specified in the 
+						annotationProcessor element 
 					<dependency>
 						<groupId>com.github.hqnghi88</groupId>
 						<artifactId>msi.gama.processor</artifactId>
 						<version>1.4.0.qualifier</version>
 					</dependency>
-				</dependencies>
+				</dependencies>-->
 			</plugin>
 			<plugin>
 				<!-- You can see the effect of Execution Environnement here : https://wiki.eclipse.org/Tycho/Execution_Environments 
