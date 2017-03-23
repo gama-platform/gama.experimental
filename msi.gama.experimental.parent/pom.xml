@@ -87,9 +87,30 @@
 		<repository>
 			<id>sonatype-nexus-snapshots</id>
 			<name>Sonatype Nexus Snapshots</name>
-			<!-- <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url> -->
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 			
-			<url>https://oss.sonatype.org/content/groups/staging</url> 
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype Nexus staging</name>
+			<url>https://oss.sonatype.org/content/groups/staging/</url> 			
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>sonatype-nexus-public</id>
+			<name>Sonatype Nexus public</name>
+			<url>https://oss.sonatype.org/content/groups/public/</url> 			
 			<releases>
 				<enabled>true</enabled>
 			</releases>
