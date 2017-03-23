@@ -25,15 +25,12 @@
 		<pluginRepository>
 			<id>releases1</id>
 			<url>https://oss.sonatype.org/content/groups/public</url>
+			<layout>default</layout>
 		</pluginRepository>
 		<pluginRepository>
 			<id>buchen-maven-repo</id>
 			<url>http://buchen.github.io/maven-repo</url>
 			<layout>default</layout>
-		</pluginRepository>
-		<pluginRepository>
-			<id>annot-local-repo</id>
-			<url>${project.baseUri}../msi.gama.processor/processor/plugins</url>
 		</pluginRepository>
 	</pluginRepositories> 
 	
@@ -259,15 +256,20 @@
 						<annotationProcessor>msi.gama.precompiler.GamaProcessor</annotationProcessor>
 					</annotationProcessors>
 				</configuration>
-				<!-- <dependencies>
-					dependency containing the annotation processor specified in the 
-						annotationProcessor element 
+				<dependencies>
+					<!--dependency containing the annotation processor specified in the 
+						annotationProcessor element -->
 					<dependency>
 						<groupId>com.github.hqnghi88</groupId>
 						<artifactId>msi.gama.processor</artifactId>
-						<version>1.4.0.qualifier</version>
+						<version>[1.4.0,4.0.0)</version>
 					</dependency>
-				</dependencies>-->
+					<dependency>
+						<groupId>com.github.hqnghi88</groupId>
+						<artifactId>msi.gama.ext</artifactId>
+						<version>[0.0.0,4.0.0)</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<!-- You can see the effect of Execution Environnement here : https://wiki.eclipse.org/Tycho/Execution_Environments 
