@@ -8,7 +8,7 @@ notifications:
   email: false
 cache:
   directories:
-  - "$HOME/.m2/cache"
+  - "$HOME/.m2"
 script: 
   - sh ./build.sh
 branches:
