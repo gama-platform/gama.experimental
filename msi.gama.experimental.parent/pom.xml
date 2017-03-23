@@ -246,7 +246,27 @@
 			<plugin>
 				<groupId>com.github.hqnghi88</groupId>
 				<artifactId>msi.gama.processor</artifactId>
-				<version>[1.4.0,4.0.0)</version>
+				<version>[1.4.0,4.0.0)</version>				
+				<dependencies>
+					<dependency>
+							<groupId>com.github.hqnghi88</groupId>
+							<artifactId>msi.gama.processor</artifactId>
+							<version>[1.4.0,4.0.0)</version>
+					</dependency>				
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>com.github.hqnghi88</groupId>
+				<artifactId>msi.gama.ext</artifactId>
+				<version>[0.0.0,4.0.0)</version>				
+				<dependencies>
+					<dependency>
+							<groupId>com.github.hqnghi88</groupId>
+							<artifactId>msi.gama.ext</artifactId>
+							<version>[0.0.0,4.0.0)</version>
+					</dependency>
+				
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
