@@ -1,4 +1,4 @@
 #!/bin/bash
 cd msi.gama.experimental.p2updatesite &&
-mvn clean deploy --settings ../settings.xml -DskipTests=true -B  && 
+mvn clean install -P p2Repo --settings ../settings.xml && 
 cd -

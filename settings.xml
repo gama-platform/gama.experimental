@@ -9,6 +9,9 @@
 		 <id>p2Repo</id>
 		<username>${env.USER_ID}</username>
 		<password>${env.USER_PWD}</password>
+		
+      <filePermissions>664</filePermissions>
+      <directoryPermissions>775</directoryPermissions>
 		 </server> 
     </servers>
      
