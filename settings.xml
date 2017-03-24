@@ -12,6 +12,10 @@
 		
       <filePermissions>664</filePermissions>
       <directoryPermissions>775</directoryPermissions>
+	  <configuration>
+        <sshExecutable>plink</sshExecutable>
+        <scpExecutable>pscp</scpExecutable>
+      </configuration>
 		 </server> 
     </servers>
      
