@@ -145,6 +145,8 @@
 		<!-- <module>../gama.target.platform</module> -->
 
 		<module>../cict.gaml.extensions.netcdf</module>
+		<module>../cict.feature.netcdf</module>
+		
 		<module>../femto.st.gama.mpi</module>
 		<module>../simtools.gamanalyzer.fr</module>
 		<module>../ummisco.gama.gaming</module>
