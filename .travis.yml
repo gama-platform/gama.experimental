@@ -7,13 +7,18 @@ before_install:
 notifications:
   email: false
 addons:
-  ssh_known_hosts:
-  - 51.255.46.42
+    apt:
+        packages:
+            - sshpass
+    ssh_known_hosts:
+      - 51.255.46.42
 cache:
   directories:
   - "$HOME/.m2"
 script: sh ./build.sh
-after_success: sh ./publish.sh
+after_success: 
+    - export SSHPASS=$USER_PWD
+    - sh ./publish.sh
 branches:
   only:
     - master
