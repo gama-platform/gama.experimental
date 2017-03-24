@@ -9,8 +9,8 @@ notifications:
 cache:
   directories:
   - "$HOME/.m2"
-script: 
-  - sh ./build.sh
+script: sh ./build.sh
+after_success: sh ./publish.sh
 branches:
   only:
     - master
