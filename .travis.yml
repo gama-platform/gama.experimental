@@ -17,7 +17,7 @@ cache:
   - "$HOME/.m2"
 script: sh ./build.sh
 after_success: 
-    - export SSHPASS=$USER_PWD
+    - export SSHPASS=$USER_PWD 
     - sh ./publish.sh
 branches:
   only:
