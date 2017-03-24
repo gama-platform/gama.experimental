@@ -6,6 +6,9 @@ before_install:
 - echo "MAVEN_OPTS='-Xmx2048m -XX:MaxPermSize=512m'" >> ~/.mavenrc
 notifications:
   email: false
+addons:
+  ssh_known_hosts:
+  - 51.255.46.42
 cache:
   directories:
   - "$HOME/.m2"
