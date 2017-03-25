@@ -15,6 +15,8 @@ addons:
 cache:
   directories:
   - "$HOME/.m2"
+before_install:
+  - rm ~/.m2/settings.xml
 script: sh ./build.sh
 after_success: 
     - export SSHPASS=$USER_PWD 
