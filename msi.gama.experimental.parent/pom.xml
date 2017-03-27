@@ -142,6 +142,9 @@
 		<module>../cict.gaml.extensions.netcdf</module>
 		<module>../cict.feature.netcdf</module>
 
+		<module>../miat.gama.extension.ifcfile</module>
+		<module>../miat.gama.feature.ifcfile</module>
+
 		<module>../femto.st.gama.mpi</module>
 		<module>../simtools.gamanalyzer.fr</module>
 		<module>../ummisco.gama.gaming</module>

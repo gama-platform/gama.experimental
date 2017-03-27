@@ -6,6 +6,9 @@
    <feature url="features/cict.feature.netcdf_1.0.0.qualifier.jar" id="cict.feature.netcdf" version="1.0.0.qualifier">
       <category name="gama.optional"/>
    </feature>
+   <feature url="features/miat.gama.feature.ifcfile_1.0.0.qualifier.jar" id="miat.gama.feature.ifcfile" version="1.0.0.qualifier">
+      <category name="gama.optional"/>
+   </feature>
    <category-def name="gama.ui" label="UI components of GAMA"/>
    <category-def name="gama.core" label="Core components of GAMA"/>
    <category-def name="gama.optional" label="Optional components of GAMA"/>
