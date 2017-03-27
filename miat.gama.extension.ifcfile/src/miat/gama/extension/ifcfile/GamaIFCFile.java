@@ -507,12 +507,12 @@ public class GamaIFCFile extends GamaGeometryFile {
 					geoms.add(g);
 			}
 			
-			final Collection<IfcOpeningElement> opening = ifcModel.getCollection(IfcOpeningElement.class);
+			/*final Collection<IfcOpeningElement> opening = ifcModel.getCollection(IfcOpeningElement.class);
 			for (final IfcOpeningElement o : opening) {
 				final IShape g = createOpening(scope, o);
 				if (g != null)
 					geoms.add(g);
-			}
+			}*/
 			
 
 			final Collection<IfcDoor> doors = ifcModel.getCollection(IfcDoor.class);
