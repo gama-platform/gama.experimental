@@ -76,6 +76,7 @@ public class SharedVariable  {
 	{
 		for(String cn:this.attributeName)
 		{
+			System.out.println("test equ "+ agent.getAttribute(cn)+ "  "+ value+ "  "+ agent.getAttribute(cn).equals(value));
 			if(!agent.getAttribute(cn).equals(value))
 				return true;
 		}
@@ -87,24 +88,22 @@ public class SharedVariable  {
 	private void exposeValue() 
 	{
 		try {
-				if(attributeChanged())
+			Map<String,Object> mmap = new HashMap<String,Object>();
+			for(String cn:this.attributeName)
+			{
+				Object data = agent.getAttribute(cn);
+				if(data instanceof GamaList)
 				{
-					Map<String,Object> mmap = new HashMap<String,Object>();
-					for(String cn:this.attributeName)
-					{
-						Object data = agent.getAttribute(cn);
-						if(data instanceof GamaList)
-						{
-							data = DataReducer.castToList((GamaList<?>)data);
-						}
-						if(data instanceof GamaMap)
-						{
-							data = DataReducer.castToMap((GamaMap<?,?>)data);
-						}
-						mmap.put(cn,data);
-					}
-					connection.sendMessage(exposedName, mmap);
+					data = DataReducer.castToList((GamaList<?>)data);
 				}
+				if(data instanceof GamaMap)
+				{
+					data = DataReducer.castToMap((GamaMap<?,?>)data);
+				}
+				mmap.put(cn,data);
+				this.value = data;
+			}
+			connection.sendMessage(exposedName, mmap);
 		} catch (MqttException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

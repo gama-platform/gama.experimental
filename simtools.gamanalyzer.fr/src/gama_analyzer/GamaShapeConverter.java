@@ -38,7 +38,7 @@ public class GamaShapeConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext arg1) {
-		 GamaShape res=new GamaShape();
+		 GamaShape res=new GamaShape(null, null, null, null, 0d);
 		 String clname=reader.getValue();
 //		 System.out.println("geomcl: "+clname);
 		 reader.moveDown();
