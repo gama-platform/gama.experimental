@@ -9,6 +9,9 @@
    <feature url="features/miat.gama.feature.ifcfile_1.0.0.qualifier.jar" id="miat.gama.feature.ifcfile" version="1.0.0.qualifier">
       <category name="gama.optional"/>
    </feature>
+   <feature url="features/simtools.gama.feature.gamanalyzer_1.0.0.qualifier.jar" id="simtools.gama.feature.gamanalyzer" version="1.0.0.qualifier">
+      <category name="gama.optional"/>
+   </feature>
    <category-def name="gama.ui" label="UI components of GAMA"/>
    <category-def name="gama.core" label="Core components of GAMA"/>
    <category-def name="gama.optional" label="Optional components of GAMA"/>
