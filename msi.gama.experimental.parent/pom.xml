@@ -153,6 +153,7 @@
 		<module>../msi.gama.experimental.p2updatesite</module>
 		-->
 
+		<module>../simtools.gama.feature.gamanalyzer</module>
 	</modules>
 
 	<properties>
