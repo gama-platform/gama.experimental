@@ -3,7 +3,7 @@
   <groupId>simtools.gama.feature.gamanalyzer</groupId>
   <artifactId>simtools.gama.feature.gamanalyzer</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <packaging>eclipse-plugin</packaging>
+  <packaging>eclipse-feature</packaging>
   <parent>
   	<groupId>msi.gama</groupId>
   	<artifactId>msi.gama.experimental.parent</artifactId>

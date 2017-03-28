@@ -16,11 +16,14 @@
       [Enter License Description here.]
    </license>
 
+   <url>
+      <update label="GAMA 1.7.x Experimental Plugins Update Site" url="http://updates.gama-platform.org/experimental"/>
+   </url>
+
    <plugin
          id="simtools.gamanalyzer.fr"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>
