@@ -123,12 +123,12 @@
 			<version>1.7.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>msi.gama</groupId>
+			<groupId>ummisco.gama.network</groupId>
 			<artifactId>ummisco.gama.network</artifactId>
 			<version>1.7.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>msi.gama</groupId>
+			<groupId>ummisco.gama.serialize</groupId>
 			<artifactId>ummisco.gama.serialize</artifactId>
 			<version>1.7.0-SNAPSHOT</version>
 		</dependency>
