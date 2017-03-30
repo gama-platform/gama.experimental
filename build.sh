@@ -5,7 +5,7 @@ git_push(){
     git config --global user.name "hqnghi88"
     git config --global push.default simple
     git remote rm origin
-    git remote add origin https://hqnghi88:$HQN_KEY@github.com/hqnghi88/gamaExpClone.git
+    git remote add origin https://hqnghi88:$HQN_KEY@github.com/gama-platform/gama.experimental.git
     git add -A
     git commit -m "[ci skip] generate parent pom"
     git push origin HEAD:master
