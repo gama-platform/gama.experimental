@@ -18,7 +18,7 @@ generate_parent_pom(){
 
     modules=$'\n'$"<modules>"$'\n'
     for file in *; do 
-      if [[ -d "$file" && ! -L "$file" ]]; then
+      if [[ -d "$file" && ! -L "$file" && "$file" != "msi.gama.experimental.parent"]]; then
         echo "$file is a directory"; 
         if [ -f "$file/pom.xml" ]; then
             echo "File $file/pom.xml found!"        
