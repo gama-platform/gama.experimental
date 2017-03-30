@@ -1,0 +1,12 @@
+
+<modules>
+ <module>../cict.feature.netcdf</module> 
+ <module>../cict.gaml.extensions.netcdf</module> 
+ <module>../femto.st.gama.mpi</module> 
+ <module>../msi.gama.experimental.p2updatesite</module> 
+ <module>../msi.gama.experimental.parent</module> 
+ <module>../simtools.gamanalyzer.fr</module> 
+ <module>../ummisco.gama.gaming</module> 
+ <module>../ummisco.gama.remote.gui</module> 
+ </modules>
+
