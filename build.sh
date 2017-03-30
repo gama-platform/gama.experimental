@@ -29,7 +29,7 @@ generate_parent_pom(){
     modules="$modules </modules>"$'\n'
     if [[ "$current_modules" != "$modules" ]]; then
         echo "$modules" > msi.gama.experimental.parent/pom_modules.xml
-        echo " $header $modules $footer " > msi.gama.experimental.parent/pom.xml
+        echo " $header $modules $footer"> msi.gama.experimental.parent/pom.xml
     fi
 }
 generate_p2updatesite_category(){
@@ -61,7 +61,7 @@ generate_p2updatesite_category(){
     
     if [[ "$current_cate" != "$cate" ]]; then
         echo "$cate" > msi.gama.experimental.p2updatesite/category_body.xml
-        echo " $header $cate $footer " > msi.gama.experimental.p2updatesite/category.xml
+        echo "$header $cate $footer " > msi.gama.experimental.p2updatesite/category.xml
     fi
 }
 
