@@ -11,4 +11,4 @@
    <category-def name="gama.core" label="Core components of GAMA"/>
    <category-def name="gama.optional" label="Optional components of GAMA"/>
    <category-def name="gama.models" label="GAMA Models Library"/>
-</site> 
+</site>
