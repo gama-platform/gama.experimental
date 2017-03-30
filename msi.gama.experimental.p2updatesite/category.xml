@@ -1,19 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
+ <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <description name="GAMA Update Site">
       Site containing updates to the GAMA platform software (see http://gama-platform.org)
-   </description>
-   <feature url="features/cict.feature.netcdf_1.0.0.qualifier.jar" id="cict.feature.netcdf" version="1.0.0.qualifier">
-      <category name="gama.optional"/>
-   </feature>
-   <feature url="features/miat.gama.feature.ifcfile_1.0.0.qualifier.jar" id="miat.gama.feature.ifcfile" version="1.0.0.qualifier">
-      <category name="gama.optional"/>
-   </feature>
-   <feature url="features/simtools.gama.feature.gamanalyzer_1.0.0.qualifier.jar" id="simtools.gama.feature.gamanalyzer" version="1.0.0.qualifier">
-      <category name="gama.optional"/>
-   </feature>
-   <category-def name="gama.ui" label="UI components of GAMA"/>
+   </description> 
+ 
+ <feature  url="features/cict.feature.netcdf_1.0.0.qualifier.jar" id="cict.feature.netcdf" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
+ <feature  url="features/miat.gama.feature.ifcfile_1.0.0.qualifier.jar" id="miat.gama.feature.ifcfile" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
+ <feature  url="features/simtools.gama.feature.gamanalyzer_1.0.0.qualifier.jar" id="simtools.gama.feature.gamanalyzer" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
+    <category-def name="gama.ui" label="UI components of GAMA"/>
    <category-def name="gama.core" label="Core components of GAMA"/>
    <category-def name="gama.optional" label="Optional components of GAMA"/>
    <category-def name="gama.models" label="GAMA Models Library"/>
-</site>
+</site> 
