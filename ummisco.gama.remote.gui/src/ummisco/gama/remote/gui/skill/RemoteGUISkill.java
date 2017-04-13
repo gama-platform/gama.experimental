@@ -75,6 +75,8 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 		 }, doc = @doc(value = "", returns = "", examples = { @example("") }))
 	public void exposeToRemoteGui(IScope scope)
 	{
+		System.out.println("register variable");
+		
 		IAgent agt = scope.getAgent();
 		String url = (String)agt.getAttribute(IRemoteGUISkill.SERVER_URL);
 		String login = (String)agt.getAttribute(IRemoteGUISkill.LOGIN);
@@ -105,7 +107,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 		String pass = (String) agt.getAttribute(IRemoteGUISkill.PASSWORD);
 		String varName = (String )scope.getArg(IRemoteGUISkill.STORE_NAME,IType.STRING);
 		String exposedName = (String )scope.getArg(IRemoteGUISkill.EXPOSED_NAME,IType.STRING);
-		
+		System.out.println("register");
 		try {
 			SharedVariable varS = new SharedVariable(agt, varName, exposedName, connection, SharedVariable.LISTENED_VARIABLE);
 			this.getShareVariables(scope).add(varS);
@@ -145,6 +147,8 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 		ArrayList<SharedVariable> agts = getShareVariables(scope);
 		for(SharedVariable agt:agts)
 		{
+			System.out.println("update d'un variable  "+agt.exposedName);
+
 			agt.update(scope);
 		}
 	}
@@ -155,6 +159,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill{
 		scope.getSimulation().postEndAction(new IExecutable() {
 			@Override
 			public Object executeOn(IScope scope) throws GamaRuntimeException {
+				System.out.println("fdsqfdsq");
 				updateVariables(scope);
 				return null;
 			}

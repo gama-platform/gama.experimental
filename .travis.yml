@@ -17,7 +17,7 @@ cache:
   - "$HOME/.m2"
 before_install:
   - rm ~/.m2/settings.xml
-script: sh ./build.sh
+script: bash ./build.sh
 after_success: 
     - export SSHPASS=$USER_PWD 
     - sh ./publish.sh
