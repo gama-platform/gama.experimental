@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="cict.feature.netcdf"
-      label="Netcdf"
+      id="simtools.gama.feature.gamanalyzer"
+      label="Gamanalyzer"
       version="1.0.0.qualifier">
 
    <description url="http://www.example.com/description">
@@ -21,7 +21,7 @@
    </url>
 
    <plugin
-         id="cict.gaml.extensions.netcdf"
+         id="simtools.gamanalyzer.fr"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
