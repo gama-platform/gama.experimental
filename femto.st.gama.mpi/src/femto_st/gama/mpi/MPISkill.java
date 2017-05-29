@@ -70,7 +70,7 @@ public class MPISkill extends Skill{
 		    }
 		
 		return rank;
-	}
+	} 
 	
 	@action(name = IMPISkill.MPI_SEND, args = {
 			@arg(name = IMPISkill.DEST, type = IType.INT, doc = @doc("dest destinataire")),
