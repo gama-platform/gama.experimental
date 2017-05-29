@@ -37,8 +37,8 @@ public class MPISkill extends Skill{
 		
 		String[] arg={};
 		try {
-			System.out.println("INIT MPI ");
 			MPI.Init(arg);
+			isMPIInit = true;
 		} catch (MPIException e) {
 			System.out.println("MPI Init Error" + e);
 		}
