@@ -1,0 +1,6 @@
+
+ 
+ <feature  url="features/cict.feature.netcdf_1.0.0.qualifier.jar" id="cict.feature.netcdf" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
+ <feature  url="features/miat.gama.feature.ifcfile_1.0.0.qualifier.jar" id="miat.gama.feature.ifcfile" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
+ <feature  url="features/simtools.gama.feature.gamanalyzer_1.0.0.qualifier.jar" id="simtools.gama.feature.gamanalyzer" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
+
