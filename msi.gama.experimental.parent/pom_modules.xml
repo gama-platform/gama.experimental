@@ -2,6 +2,7 @@
 <modules>
  <module>../cict.feature.netcdf</module> 
  <module>../cict.gaml.extensions.netcdf</module> 
+ <module>../femto.st.gama.feature.mpi</module> 
  <module>../femto.st.gama.mpi</module> 
  <module>../miat.gama.extension.ifcfile</module> 
  <module>../miat.gama.feature.ifcfile</module> 
@@ -10,5 +11,7 @@
  <module>../simtools.gamanalyzer.fr</module> 
  <module>../ummisco.gama.gaming</module> 
  <module>../ummisco.gama.remote.gui</module> 
+ <module>../ummisco.gaml.extensions.rjava</module> 
+ <module>../ummisco.gaml.feature.rjava</module> 
  </modules>
 
