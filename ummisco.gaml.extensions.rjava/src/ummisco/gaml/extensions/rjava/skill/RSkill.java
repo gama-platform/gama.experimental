@@ -25,6 +25,7 @@ import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.IConcept;
+import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.skills.Skill;
@@ -36,7 +37,8 @@ public class RSkill extends Skill {
 	class TextConsole implements RMainLoopCallbacks {
 		@Override
 		public void rWriteConsole(final Rengine re, final String text, final int oType) {
-			System.out.print(text);
+//			System.out.print("xxxx"+text);
+			GAMA.getGui().getConsole(null).informConsole(text, null);
 		}
 
 		@Override
@@ -98,18 +100,35 @@ public class RSkill extends Skill {
 	}
 
 	private String[] args;
-	private final Rengine re = new Rengine(args, false, new TextConsole());
+	private Rengine re = null;
 
 	@action(name = "R_eval", args = {
 			@arg(name = "command", type = IType.STRING, optional = true, doc = @doc("R command to be evalutated")) }, doc = @doc(value = "evaluate the R command", returns = "object in R.", examples = {
 					@example(" R_eval(\"data(iris)\")") }))
 	public String primREval(final IScope scope) throws GamaRuntimeException {
 		// re = new Rengine(args, false, new TextConsole());
-
+		String env = System.getProperty("java.library.path");
+		if(!env.contains("jri")) {			
+			System.setProperty("java.library.path", "E:/OneDrive/Documents/R/win-library/3.4/rJava/jri;" + env);
+			try {
+				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
+				fieldSysPath.setAccessible( true );
+				fieldSysPath.set( null, null );
+			}catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			System.out.println(System.getProperty("java.library.path"));
+		}
+//		System.loadLibrary("jri");
+		re=Rengine.getMainEngine();
+		if(re==null) {			
+			re = new Rengine(args, false, new TextConsole());
+			
+		}
 		final REXP x = re.eval((String) scope.getArg("command", IType.STRING));
 
 		// TODO remove intension aussi
-		return x.toString();
+		return ""+x;
 	}
 
 }
