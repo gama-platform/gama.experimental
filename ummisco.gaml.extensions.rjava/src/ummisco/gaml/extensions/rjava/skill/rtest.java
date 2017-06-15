@@ -87,9 +87,17 @@ class TextConsole implements RMainLoopCallbacks {
 }
 
 public class rtest {
+	static { 
+	   }
 	@SuppressWarnings("rawtypes")
 	public static void main(final String[] args) {
 		// just making sure we have the right version of everything
+//		String env = System.getProperty("java.library.path");
+//		System.setProperty("java.library.path", "\"C:/Program Files/R/R-3.4.0/bin/x64/\";E:/OneDrive/Documents/R/win-library/3.4/rJava/jri;" + env);
+//		
+//		System.out.println(System.getProperty("java.library.path"));
+
+	    System.loadLibrary("jri");     
 		if (!Rengine.versionCheck()) {
 			System.err.println("** Version mismatch - Java files don't match library version.");
 			System.exit(1);
@@ -99,7 +107,8 @@ public class rtest {
 		// 2) we won't use the main loop at first, we'll start it later
 		// (that's the "false" as second argument)
 		// 3) the callbacks are implemented by the TextConsole class above
-		final Rengine re = new Rengine(args, false, new TextConsole());
+//		final Rengine re = new Rengine(args, false, null);
+	    Rengine re = new Rengine(new String[] { "" }, false, new TextConsole());
 		System.out.println("Rengine created, waiting for R");
 		// the engine creates R is a new thread, so we should wait until it's
 		// ready
