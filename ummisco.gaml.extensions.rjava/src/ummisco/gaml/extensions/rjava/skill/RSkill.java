@@ -127,7 +127,6 @@ public class RSkill extends Skill {
 		}
 		final REXP x = re.eval((String) scope.getArg("command", IType.STRING));
 
-		// TODO remove intension aussi
 		return ""+x;
 	}
 

@@ -16,6 +16,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/JRI.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/JRIEngine.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/REngine.jar"/>
-	<classpathentry exported="true" kind="lib" path="bin" sourcepath="bin"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
