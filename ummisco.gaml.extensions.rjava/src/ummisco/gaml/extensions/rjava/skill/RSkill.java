@@ -16,9 +16,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import org.rosuda.JRI.REXP;
+import org.rosuda.JRI.RFactor;
 import org.rosuda.JRI.RMainLoopCallbacks;
+import org.rosuda.JRI.RVector;
 import org.rosuda.JRI.Rengine;
 
+import msi.gama.common.preferences.GamaPreferences;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -28,6 +31,9 @@ import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gama.util.GamaList;
+import msi.gama.util.GamaListFactory;
+import msi.gaml.operators.Cast;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 
@@ -105,11 +111,13 @@ public class RSkill extends Skill {
 	@action(name = "R_eval", args = {
 			@arg(name = "command", type = IType.STRING, optional = true, doc = @doc("R command to be evalutated")) }, doc = @doc(value = "evaluate the R command", returns = "object in R.", examples = {
 					@example(" R_eval(\"data(iris)\")") }))
-	public String primREval(final IScope scope) throws GamaRuntimeException {
+	public Object primREval(final IScope scope) throws GamaRuntimeException {
 		// re = new Rengine(args, false, new TextConsole());
 		String env = System.getProperty("java.library.path");
 		if(!env.contains("jri")) {			
-			System.setProperty("java.library.path", "E:/OneDrive/Documents/R/win-library/3.4/rJava/jri;" + env);
+			final String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("jri.dll", "").replace("\\", "/");
+			System.out.println(RPath);
+			System.setProperty("java.library.path", RPath+ ";" + env);
 			try {
 				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
 				fieldSysPath.setAccessible( true );
@@ -126,8 +134,35 @@ public class RSkill extends Skill {
 			
 		}
 		final REXP x = re.eval((String) scope.getArg("command", IType.STRING));
+//		System.out.println(" ");
+//		System.out.println(x.getType());
+//		System.out.println(x.getContent());
+		if(x.getType()==REXP.XT_ARRAY_STR) {
+			String[] s=x.asStringArray();
 
-		return ""+x;
+			GamaList a=(GamaList) GamaListFactory.create();
+			for(int i=0; i<s.length;i++) {
+				a.add(s[i]);
+			}
+			return a;
+		}
+		if(x.getType()==REXP.XT_FACTOR) {
+			RFactor f=x.asFactor();
+			GamaList a=(GamaList) GamaListFactory.create();
+			for(int i=0; i<f.size(); i++) {
+				a.add(Cast.asFloat(null, f.at(i)));
+			}
+			return a;
+		}
+		if(x.getType()==REXP.XT_VECTOR) {
+			RVector f=x.asVector();
+			GamaList a=(GamaList) GamaListFactory.create();
+			for(int i=0; i<f.size(); i++) {
+				a.add(f.at(i));
+			}
+			return a;
+		}
+		return x;
 	}
 
 }
