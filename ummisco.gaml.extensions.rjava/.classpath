@@ -7,14 +7,13 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="ummisco.gaml.extensions.rjava/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="gaml">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="ummisco.gaml.extensions.rjava/lib"/>
-			<attribute name="optional" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/JRI.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/JRIEngine.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/REngine.jar"/>
+	<classpathentry kind="src" path="gaml">
+		<attributes>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
