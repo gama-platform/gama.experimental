@@ -115,7 +115,7 @@ public class RSkill extends Skill {
 		// re = new Rengine(args, false, new TextConsole());
 		String env = System.getProperty("java.library.path");
 		if(!env.contains("jri")) {			
-			final String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("jri.dll", "").replace("\\", "/");
+			final String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "").replace("libjri.so", "").replace("jri.dll", "").replace("\\", "/");
 //			System.out.println(RPath);
 			System.setProperty("java.library.path", RPath+ ";" + env);
 			try {
