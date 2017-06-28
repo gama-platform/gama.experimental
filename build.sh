@@ -1,7 +1,7 @@
 #!/bin/bash
 git_push(){
     echo "git push new change of parent pom"
-    git config --global user.email "travis@travis-ci.com"
+    git config --global user.email "hqnghi88@gmail.com"
     git config --global user.name "hqnghi88"
     git config --global push.default simple
     git remote rm origin
