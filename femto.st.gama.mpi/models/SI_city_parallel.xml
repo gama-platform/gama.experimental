@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Simulation id="0" sourcePath="SI_city/SI_city_parallel.gaml" finalStep="10" experiment="main_experiment">
+  <Parameters>
+  </Parameters>
+  <Outputs>
+    <Output id="1" name="Parallel" framerate="5" />
+  </Outputs>
+</Simulation>
