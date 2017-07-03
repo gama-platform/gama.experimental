@@ -131,6 +131,7 @@
  <module>../simtools.gama.feature.gamanalyzer</module> 
  <module>../simtools.gamanalyzer.fr</module> 
  <module>../ummisco.gama.camisole</module> 
+ <module>../ummisco.gama.feature.camisole</module> 
  <module>../ummisco.gama.gaming</module> 
  <module>../ummisco.gama.remote.gui</module> 
  <module>../ummisco.gaml.extensions.rjava</module> 
