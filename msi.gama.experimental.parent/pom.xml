@@ -125,6 +125,8 @@
  <module>../cict.gaml.extensions.netcdf</module> 
  <module>../femto.st.gama.feature.mpi</module> 
  <module>../femto.st.gama.mpi</module> 
+ <module>../idees.gama.features.weka</module> 
+ <module>../idees.gama.weka</module> 
  <module>../miat.gama.extension.ifcfile</module> 
  <module>../miat.gama.feature.ifcfile</module> 
  <module>../msi.gama.experimental.p2updatesite</module> 
