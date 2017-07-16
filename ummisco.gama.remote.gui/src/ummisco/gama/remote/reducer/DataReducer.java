@@ -8,14 +8,13 @@ import msi.gama.util.GamaList;
 import msi.gama.util.GamaMap;
 
 public class DataReducer {
-	public static <T> ArrayList<T> castToList(GamaList<T> mList)
-	{
-		return  new ArrayList<T>(mList);
+	public static <T> ArrayList<T> castToList(final GamaList<T> mList) {
+		return new ArrayList<T>(mList);
 	}
-	public static <K,V> Map<K,V> castToMap(GamaMap< K, V> mMap)
-	{
-		Map<K,V> res =  new HashMap<K,V>();
-		res.putAll((Map<K,V>)mMap);
+
+	public static <K, V> Map<? extends K, ? extends V> castToMap(final GamaMap<K, V> mMap) {
+		final Map<K, V> res = new HashMap<K, V>();
+		mMap.forEach((k, v) -> res.put(k, v));
 		return res;
 	}
 }
