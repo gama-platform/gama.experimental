@@ -45,9 +45,9 @@ import ucar.nc2.Variable;
 		buffer_content = IType.LIST,
 		buffer_index = IType.STRING,
 		concept = { IConcept.FILE, IConcept.R })
-public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, IList> {
+public class NetCDFFile extends GamaFile<GamaMap<String, IList<?>>, IList<?>, String, IList<?>> {
 
-	final GamaMap<String, IList> ncdata = GamaMapFactory.create(Types.STRING, Types.LIST);
+	final GamaMap<String, IList<?>> ncdata = GamaMapFactory.create(Types.STRING, Types.LIST);
 
 	public NetCDFFile(final IScope scope, final String pathName) throws GamaRuntimeException {
 		super(scope, pathName);
@@ -323,7 +323,7 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "general operator to manipylate multidimension netcdf data.")
-	public static IList reduce_dimension(final IScope scope, final String varName, final IList offsets) {
+	public static IList<Integer> reduce_dimension(final IScope scope, final String varName, final IList<?> offsets) {
 		final String NCFile = "";
 		if (varName == null) { return GamaListFactory.create(scope, Types.NO_TYPE, 0); }
 		if (scope == null) {
