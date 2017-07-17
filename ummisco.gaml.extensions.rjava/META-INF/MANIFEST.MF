@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: RJava extension
+Bundle-SymbolicName: ummisco.gaml.extensions.rjava;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: msi.gama.core;visibility:=reexport,
+ msi.gama.ext;visibility:=reexport
+Bundle-ActivationPolicy: lazy
+Export-Package: org.rosuda.JRI,
+ org.rosuda.REngine,
+ org.rosuda.REngine.JRI,
+ ummisco.gaml.extensions.rjava.skill
+Bundle-ClassPath: .,
+ lib/JRI.jar,
+ lib/JRIEngine.jar,
+ lib/REngine.jar
