@@ -220,7 +220,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 		if ( o.getObjectPlacement() == null) return null;
 		Axe newAxe = new Axe();
 		List<IfcAxis2Placement> aps = new ArrayList<>();
-		relatedTo(scope, o.getObjectPlacement(), aps);
+		List<String> previous = new ArrayList<>();
+		relatedTo(scope, o.getObjectPlacement(), aps, previous);
 		newAxe.update(aps, true);
 		for (final IfcRepresentation rep : o.getRepresentation().getRepresentations()) {
 		for (final IfcRepresentationItem item : rep.getItems()) {
@@ -237,7 +238,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 						IShape box = Spatial.Creation.box(scope, height,width, depth);
 						box.setAttribute(IKeyword.NAME, o.getName().getDecodedValue());
 						newAxe.transform(box);
-						addAttribtutes(o, box);
+						addAttribtutes(o, box,previous);
 
 						return box;
 					}
@@ -268,7 +269,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 		if ( d.getObjectPlacement() == null) return null;
 		Axe newAxe = new Axe();
 		List<IfcAxis2Placement> aps = new ArrayList<>();
-		relatedTo(scope, d.getObjectPlacement(), aps);
+		List<String> previous = new ArrayList<>();
+		relatedTo(scope, d.getObjectPlacement(), aps, previous);
 		newAxe.update(aps, true);
 		double height = d.getOverallHeight().value;
 		double width = d.getOverallWidth().value;
@@ -284,7 +286,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 				new GamaPoint(line.getLocation().getX() - line.getPoints().get(0).getX(),
 						line.getLocation().getY() - line.getPoints().get(0).getY()));
 	
-		addAttribtutes(d, box);
+		addAttribtutes(d, box,previous);
 		newAxe.transform(box);
 		
 		return box;
@@ -294,7 +296,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 		if ( d.getObjectPlacement() == null) return null;
 		Axe newAxe = new Axe();
 		List<IfcAxis2Placement> aps = new ArrayList<>();
-		relatedTo(scope, d.getObjectPlacement(), aps);
+		List<String> previous = new ArrayList<>();
+		relatedTo(scope, d.getObjectPlacement(), aps, previous);
 		newAxe.update(aps, true);
 		double height = d.getOverallHeight().value;
 		double width = d.getOverallWidth().value;
@@ -309,7 +312,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 				new GamaPoint(line.getLocation().getX() - line.getPoints().get(0).getX(),
 						2 *depth ));
 	
-		addAttribtutes(d, box);
+		addAttribtutes(d, box,previous);
 		newAxe.transform(box);
 		
 		return box;
@@ -318,7 +321,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 		if ( w.getObjectPlacement() == null) return null;
 		Axe newAxe = new Axe();
 		List<IfcAxis2Placement> aps = new ArrayList<>();
-		relatedTo(scope, w.getObjectPlacement(), aps);
+		List<String> previous = new ArrayList<>();
+		relatedTo(scope, w.getObjectPlacement(), aps,previous);
 		newAxe.update(aps, true);
 		final IList<IShape> linePts = GamaListFactory.create(Types.POINT);
 
@@ -352,18 +356,25 @@ public class GamaIFCFile extends GamaGeometryFile {
 						new GamaPoint(line.getLocation().getX() - line.getPoints().get(0).getX(),
 								line.getLocation().getY() - line.getPoints().get(0).getY()));
 				box.setAttribute(IKeyword.NAME, w.getName().getDecodedValue());
-				addAttribtutes(w, box);
+				addAttribtutes(w, box,previous);
 				return box;
 			}
 		}
 		return null;
+	}
+	
+	void addPreviousAttribute(IShape shape, List<String> previous) {
+		IList<String> pre = GamaListFactory.create(Types.STRING);
+		for (String p : previous) pre.add(p);
+		shape.setAttribute("containers", pre);
 	}
 
 	public IShape createSlab(final IScope scope, final IfcSlab s) {
 		if ( s.getObjectPlacement() == null) return null;
 		Axe newAxe = new Axe();
 		List<IfcAxis2Placement> aps = new ArrayList<>();
-		relatedTo(scope, s.getObjectPlacement(), aps);
+		List<String> previous = new ArrayList<>();
+		relatedTo(scope, s.getObjectPlacement(), aps, previous);
 		newAxe.update(aps, true);
 		for (final IfcRepresentation rep : s.getRepresentation().getRepresentations()) {
 			for (final IfcRepresentationItem item : rep.getItems()) {
@@ -381,7 +392,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 						IShape box = Spatial.Creation.box(scope, width, height, depth);
 						box.setAttribute(IKeyword.NAME, s.getName().getDecodedValue());
 						newAxe.transform(box);
-						addAttribtutes(s, box);
+						addAttribtutes(s, box,previous);
 						box = Spatial.Transformations.translated_by(scope, box, new GamaPoint(0,0,-depth));
 						return box;
 					} else if (solid.getSweptArea() instanceof IfcArbitraryClosedProfileDef) {
@@ -391,7 +402,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 							IShape shape = toGeom(scope, ((IfcPolyline) curve).getPoints(), true);
 							shape.setDepth(depth);
 							shape.setAttribute(IKeyword.NAME, s.getName().getDecodedValue());
-							addAttribtutes(s, shape);
+							addAttribtutes(s, shape,previous);
 							newAxe.transform(shape);
 							return shape;
 						}
@@ -408,7 +419,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 		if ( s.getObjectPlacement() == null) return null;
 		Axe newAxe = new Axe();
 		List<IfcAxis2Placement> aps = new ArrayList<>();
-		relatedTo(scope, s.getObjectPlacement(), aps);
+		List<String> previous = new ArrayList<>();
+		relatedTo(scope, s.getObjectPlacement(), aps, previous);
 		newAxe.update(aps, true);
 		
 		for (final IfcRepresentation rep : s.getRepresentation().getRepresentations()) {
@@ -426,7 +438,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 						IShape box = Spatial.Creation.box(scope, width, height, depth);
 						box.setAttribute(IKeyword.NAME, s.getName().getDecodedValue());
 						newAxe.transform(box);
-						addAttribtutes(s, box);
+						addAttribtutes(s, box,previous);
 						return box;
 					} else if (solid.getSweptArea() instanceof IfcArbitraryClosedProfileDef) {
 						final IfcArbitraryClosedProfileDef profil = (IfcArbitraryClosedProfileDef) solid.getSweptArea();
@@ -437,7 +449,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 							shape.setAttribute(IKeyword.NAME, s.getName().getDecodedValue());
 							newAxe.transform(shape);
 							
-							addAttribtutes(s, shape);
+							addAttribtutes(s, shape,previous);
 							return shape;
 						}
 						return null;
@@ -448,8 +460,9 @@ public class GamaIFCFile extends GamaGeometryFile {
 		return null;
 	}
 
-	public void addAttribtutes(final IfcProduct product, final IShape shape) {
+	public void addAttribtutes(final IfcProduct product, final IShape shape, final List<String> previous) {
 		shape.setAttribute("type", product.getClass().getSimpleName());
+		if (previous != null) addPreviousAttribute(shape, previous);
 		if (product.getIsDefinedBy_Inverse() == null)
 			return;
 		for (final IfcRelDefines rd : product.getIsDefinedBy_Inverse()) {
@@ -532,13 +545,16 @@ public class GamaIFCFile extends GamaGeometryFile {
 
 	}
 	
-	public void relatedTo(final IScope scope, final IfcObjectPlacement placement, List<IfcAxis2Placement> aps) {
+	public void relatedTo(final IScope scope, final IfcObjectPlacement placement, List<IfcAxis2Placement> aps, List<String> previous) {
 		if (placement instanceof IfcLocalPlacement) {
 			final IfcObjectPlacement pla = ((IfcLocalPlacement) placement).getPlacementRelTo();
 			final IfcAxis2Placement axispl = ((IfcLocalPlacement) placement).getRelativePlacement();
 			aps.add(axispl);
 			if (pla != null) {
-				relatedTo(scope, pla, aps);
+				for (IfcProduct product : pla.getPlacesObject_Inverse()) {
+					previous.add(product.getName().getDecodedValue());
+				}
+				relatedTo(scope, pla, aps,previous);
 			}
 		} 
 	}
