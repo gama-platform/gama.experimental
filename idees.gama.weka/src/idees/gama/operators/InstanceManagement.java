@@ -17,126 +17,134 @@ import weka.core.Instance;
 import weka.core.Instances;
 
 public class InstanceManagement {
-	
-	private static Attribute toAttribute(String att, final Map<String,IList<String>> valsNominal) {
+
+	private static Attribute toAttribute(final String att, final Map<String, IList<String>> valsNominal) {
 		Attribute wa = null;
 		if (valsNominal == null || !valsNominal.containsKey(att))
 			wa = new Attribute(att);
 		else {
-			IList<String> vs = valsNominal.get(att);
+			final IList<String> vs = valsNominal.get(att);
 			if (vs == null || vs.isEmpty()) {
-				wa =new Attribute(att,(FastVector) null);
+				wa = new Attribute(att, (FastVector) null);
 			} else {
-				FastVector fv = new FastVector();
-				for ( String v : vs ) fv.addElement(v);
-				wa = new Attribute(att,fv);
-			} 
+				final FastVector fv = new FastVector();
+				for (final String v : vs)
+					fv.addElement(v);
+				wa = new Attribute(att, fv);
+			}
 		}
 		return wa;
 	}
-	
-	private static FastVector initAttributes(final IScope scope,final IList<String> attributes, final Map<String,IList<String>> valsNominal){
-		FastVector attribs = new FastVector();
-		for ( String att : attributes ) {
-			attribs.addElement(toAttribute(att,valsNominal));
+
+	private static FastVector initAttributes(final IScope scope, final IList<String> attributes,
+			final Map<String, IList<String>> valsNominal) {
+		final FastVector attribs = new FastVector();
+		for (final String att : attributes) {
+			attribs.addElement(toAttribute(att, valsNominal));
 		}
 		return attribs;
 	}
-		
-	public static Instances convertToInstances(final IScope scope, final String classAtt,final IList<String> attributes, final Map<String,IList<String>> valsNominal, 
-			final IContainer data) throws GamaRuntimeException {
-		FastVector attribs = initAttributes(scope,attributes, valsNominal);
-		Attribute classA = (classAtt == null) ? null : toAttribute(classAtt, valsNominal);
-		
+
+	@SuppressWarnings ("unchecked")
+	public static Instances convertToInstances(final IScope scope, final String classAtt,
+			final IList<String> attributes, final Map<String, IList<String>> valsNominal, final IContainer<?, ?> data)
+			throws GamaRuntimeException {
+		final FastVector attribs = initAttributes(scope, attributes, valsNominal);
+		final Attribute classA = classAtt == null ? null : toAttribute(classAtt, valsNominal);
+
 		if (classA != null) {
 			attribs.addElement(classA);
 		}
-		Instances dataset = new Instances(scope.getAgent().getName(), attribs, data.length(scope));
+		final Instances dataset = new Instances(scope.getAgent().getName(), attribs, data.length(scope));
 		if (classA != null) {
-			dataset.setClassIndex(attribs.size()-1);
+			dataset.setClassIndex(attribs.size() - 1);
 		}
-		
+
 		if (!data.isEmpty(scope)) {
 			if (data.firstValue(scope) instanceof IAgent) {
-				IList<IAgent> ags = data.listValue(scope, Types.AGENT, false) ;
-				for ( IAgent ag : ags) {
-					dataset.add(createInstance(scope,ag,dataset,classA,valsNominal));
+				final IList<IAgent> ags = (IList<IAgent>) data.listValue(scope, Types.AGENT, false);
+				for (final IAgent ag : ags) {
+					dataset.add(createInstance(scope, ag, dataset, classA, valsNominal));
 				}
 			} else {
-				for (Object v : data.iterable(scope)) {
+				for (final Object v : data.iterable(scope)) {
 					if (v instanceof GamaMap) {
-						final GamaMap dataMap = (GamaMap) v;
-						dataset.add(createInstance(scope,dataMap,dataset,classA,valsNominal));
+						final GamaMap<String, ?> dataMap = (GamaMap<String, ?>) v;
+						dataset.add(createInstance(scope, dataMap, dataset, classA, valsNominal));
 					}
 				}
 			}
 		}
 		return dataset;
 	}
-	public static Instance createInstance(IScope scope, Map dataMap, Instances dataset, Attribute classA, Map<String,IList<String>> valsNominal) {
-		Instance instance = new Instance(dataset.numAttributes());
+
+	public static Instance createInstance(final IScope scope, final Map<String, ?> dataMap, final Instances dataset,
+			final Attribute classA, final Map<String, IList<String>> valsNominal) {
+		final Instance instance = new Instance(dataset.numAttributes());
 		instance.setDataset(dataset);
-		Enumeration<Attribute> attsEnum = dataset.enumerateAttributes();
+		final Enumeration<Attribute> attsEnum = dataset.enumerateAttributes();
 		while (attsEnum.hasMoreElements()) {
-			Attribute att = attsEnum.nextElement();
+			final Attribute att = attsEnum.nextElement();
 			Double var = null;
-			if (valsNominal == null || valsNominal.isEmpty()) 
-				var = Cast.asFloat(scope,dataMap.get(att.name()));
+			if (valsNominal == null || valsNominal.isEmpty())
+				var = Cast.asFloat(scope, dataMap.get(att.name()));
 			else {
-				IList<String> vs = valsNominal.get(att.name());
+				final IList<String> vs = valsNominal.get(att.name());
 				if (vs != null && !vs.isEmpty()) {
-					String val =dataMap.get(att.name()).toString();
+					final String val = dataMap.get(att.name()).toString();
 					var = Double.valueOf(vs.indexOf(val));
-				} else 
+				} else
 					var = Cast.asFloat(scope, dataMap.get(att.name()));
 			}
 			instance.setValue(att, var);
 		}
 		if (classA != null) {
-			IList<String> vs = valsNominal.get(classA.name());
+			final IList<String> vs = valsNominal.get(classA.name());
 			Double var = null;
-			if (valsNominal == null || valsNominal.isEmpty()) 
+			if (valsNominal.isEmpty())
 				var = Cast.asFloat(scope, dataMap.get(classA.name()));
 			else {
 				if (vs != null && !vs.isEmpty()) {
-					String val = dataMap.get(classA.name()).toString();
+					final String val = dataMap.get(classA.name()).toString();
 					var = Double.valueOf(vs.indexOf(val));
-				} else 
-					var = Cast.asFloat(scope,dataMap.get(classA.name()));
+				} else
+					var = Cast.asFloat(scope, dataMap.get(classA.name()));
 			}
 			instance.setClassValue(var);
 		}
 		return instance;
 	}
-	public static Instance createInstance(IScope scope, IAgent ag, Instances dataset, Attribute classA, Map<String,IList<String>> valsNominal) {
-		Instance instance = new Instance(dataset.numAttributes());
+
+	public static Instance createInstance(final IScope scope, final IAgent ag, final Instances dataset,
+			final Attribute classA, final Map<String, IList<String>> valsNominal) {
+		final Instance instance = new Instance(dataset.numAttributes());
 		instance.setDataset(dataset);
-		Enumeration<Attribute> attsEnum = dataset.enumerateAttributes();
+		final Enumeration<Attribute> attsEnum = dataset.enumerateAttributes();
 		while (attsEnum.hasMoreElements()) {
-			Attribute att = attsEnum.nextElement();
+			final Attribute att = attsEnum.nextElement();
 			Double var = null;
-			if (valsNominal == null || valsNominal.isEmpty()) 
+			if (valsNominal == null || valsNominal.isEmpty())
 				var = Cast.asFloat(scope, ag.getDirectVarValue(scope, att.name()));
 			else {
-				IList<String> vs = valsNominal.get(att.name());
+				final IList<String> vs = valsNominal.get(att.name());
 				if (vs != null && !vs.isEmpty()) {
-					String val = ag.getDirectVarValue(scope, att.name()).toString();
+					final String val = ag.getDirectVarValue(scope, att.name()).toString();
 					var = Double.valueOf(vs.indexOf(val));
-				} else 
+				} else
 					var = Cast.asFloat(scope, ag.getDirectVarValue(scope, att.name()));
 			}
 			instance.setValue(att, var);
 		}
 		if (classA != null) {
-			IList<String> vs = valsNominal.get(classA.name());
+			final IList<String> vs = valsNominal.get(classA.name());
 			Double var = null;
-			if (valsNominal == null || valsNominal.isEmpty()) 
+			if (valsNominal.isEmpty())
 				var = Cast.asFloat(scope, ag.getDirectVarValue(scope, classA.name()));
 			else {
 				if (vs != null && !vs.isEmpty()) {
-					String val = ag.getDirectVarValue(scope, classA.name()).toString();
+					final String val = ag.getDirectVarValue(scope, classA.name()).toString();
 					var = Double.valueOf(vs.indexOf(val));
-				} else 
+				} else
 					var = Cast.asFloat(scope, ag.getDirectVarValue(scope, classA.name()));
 			}
 			instance.setClassValue(var);
