@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Gaml.NetCDF extension
+Bundle-SymbolicName: cict.gaml.extensions.VR;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: msi.gama.core;visibility:=reexport,
+ msi.gama.ext;visibility:=reexport
+Bundle-ClassPath: .,
+ lib/netcdfAll-4.6.4.jar
+Export-Package: cict.gaml.extensions.VR.file
+Bundle-ActivationPolicy: lazy
