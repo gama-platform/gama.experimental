@@ -1,7 +1,9 @@
 
 <modules>
  <module>../cict.feature.netcdf</module> 
+ <module>../cict.feature.VR</module> 
  <module>../cict.gaml.extensions.netcdf</module> 
+ <module>../cict.gaml.extensions.VR</module> 
  <module>../femto.st.gama.feature.mpi</module> 
  <module>../femto.st.gama.mpi</module> 
  <module>../idees.gama.features.weka</module> 
