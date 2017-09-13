@@ -26,16 +26,28 @@ import ifc2x3javatoolbox.ifc2x3tc1.IfcCartesianPoint;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcCurve;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcDirection;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcDoor;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcElementQuantity;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcExtrudedAreaSolid;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcLocalPlacement;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcMaterialLayer;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcMaterialLayerSet;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcMaterialLayerSetUsage;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcMaterialSelect;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcObjectPlacement;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcOpeningElement;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcPhysicalComplexQuantity;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcPhysicalQuantity;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcPolyline;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcProduct;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcProperty;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcPropertySet;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcPropertySingleValue;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcQuantityArea;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcQuantityLength;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcQuantityVolume;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRectangleProfileDef;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcRelAssociates;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcRelAssociatesMaterial;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRelDefines;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRelDefinesByProperties;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRepresentation;
@@ -252,7 +264,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 	public Double defineDoorDepth(final IScope scope, final IfcObjectPlacement placement,Map<IfcProduct, Double> depths) {
 		if (placement instanceof IfcLocalPlacement) {
 			final IfcObjectPlacement pla = ((IfcLocalPlacement) placement).getPlacementRelTo();
-			if (pla.getPlacesObject_Inverse() != null) {
+			if (pla != null && pla.getPlacesObject_Inverse() != null) {
 				for (IfcProduct p: pla.getPlacesObject_Inverse()) {
 					if (depths.containsKey(p)) return depths.get(p);
 				}
@@ -275,7 +287,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 		double height = d.getOverallHeight().value;
 		double width = d.getOverallWidth().value;
 		Double depth = defineDoorDepth(scope, d.getObjectPlacement(), depths);
-		if (depth == 0.0) depth = width/10.0;
+		if (depth == null || depth == 0.0) depth = width/10.0;
 		IShape box = Spatial.Creation.box(scope, width,depth,height);
 		IList<IShape> pts = GamaListFactory.create();
 		pts.add(new GamaPoint(-depth/2.0, 0)); pts.add(new GamaPoint(depth/2.0, 0.0));
@@ -463,6 +475,24 @@ public class GamaIFCFile extends GamaGeometryFile {
 	public void addAttribtutes(final IfcProduct product, final IShape shape, final List<String> previous) {
 		shape.setAttribute("type", product.getClass().getSimpleName());
 		if (previous != null) addPreviousAttribute(shape, previous);
+		
+		if (product.getHasAssociations_Inverse() != null) {
+			for (IfcRelAssociates rel: product.getHasAssociations_Inverse()) {
+				if (rel instanceof IfcRelAssociatesMaterial) {
+					IfcRelAssociatesMaterial rm = (IfcRelAssociatesMaterial) rel;
+					IfcMaterialSelect ms = rm.getRelatingMaterial();
+					if (ms instanceof IfcMaterialLayerSetUsage) {
+						IfcMaterialLayerSetUsage mlsu = (IfcMaterialLayerSetUsage)ms;
+						IfcMaterialLayerSet mSet = mlsu.getForLayerSet();
+						if (mSet.getMaterialLayers() == null) continue;
+						for (IfcMaterialLayer lay: mSet.getMaterialLayers()) {
+							if (lay.getLayerThickness() != null)shape.setAttribute("layer_thickness", lay.getLayerThickness().value);
+							if(lay.getMaterial() != null)shape.setAttribute("layer_material", lay.getMaterial().getName().getDecodedValue());
+						}
+					}
+				}
+			}
+		}
 		if (product.getIsDefinedBy_Inverse() == null)
 			return;
 		for (final IfcRelDefines rd : product.getIsDefinedBy_Inverse()) {
@@ -475,6 +505,23 @@ public class GamaIFCFile extends GamaGeometryFile {
 							shape.setAttribute(p.getName().getDecodedValue(),
 									((IfcPropertySingleValue) p).getNominalValue().toString());
 
+						}
+					}
+				}
+				if (rlp.getRelatingPropertyDefinition() instanceof IfcElementQuantity) {
+					IfcElementQuantity eq = (IfcElementQuantity) rlp.getRelatingPropertyDefinition();
+					if(eq.getQuantities() == null) continue;
+					for(IfcPhysicalQuantity pq : eq.getQuantities()) {
+						Double val = null;
+						if (pq instanceof IfcQuantityLength) {
+							val = ((IfcQuantityLength) pq).getLengthValue().value;
+						} else if (pq instanceof IfcQuantityArea) {
+							val = ((IfcQuantityArea) pq).getAreaValue().value;
+						}else if (pq instanceof IfcQuantityVolume) {
+							val = ((IfcQuantityVolume) pq).getVolumeValue().value;
+						}
+						if (val != null) {
+							shape.setAttribute(pq.getName().getDecodedValue(), val);
 						}
 					}
 				}
