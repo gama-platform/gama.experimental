@@ -105,7 +105,7 @@ public class RSkill extends Skill {
 
 	}
 
-	private String[] args;
+	private String[] args=new String[] {" --no-save" };
 	private Rengine re = null;
 
 	@action(name = "R_eval", args = {
@@ -115,8 +115,7 @@ public class RSkill extends Skill {
 		// re = new Rengine(args, false, new TextConsole());
 		String env = System.getProperty("java.library.path");
 		if(!env.contains("jri")) {			
-			final String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "").replace("libjri.so", "").replace("jri.dll", "").replace("\\", "/");
-//			System.out.println(RPath);
+			String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "").replace("libjri.so", "").replace("jri.dll", "");
 			System.setProperty("java.library.path", RPath+ ";" + env);
 			try {
 				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
