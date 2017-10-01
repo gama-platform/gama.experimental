@@ -95,7 +95,9 @@ public class rtest {
 //		String env = System.getProperty("java.library.path");
 //		System.setProperty("java.library.path", "\"C:/Program Files/R/R-3.4.0/bin/x64/\";E:/OneDrive/Documents/R/win-library/3.4/rJava/jri;" + env);
 //		
-//		System.out.println(System.getProperty("java.library.path"));
+		System.out.println(System.getProperty("java.library.path"));
+		System.out.println(System.getenv().values());
+		
 
 	    System.loadLibrary("jri");     
 		if (!Rengine.versionCheck()) {
