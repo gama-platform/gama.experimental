@@ -117,7 +117,11 @@ public class RSkill extends Skill {
 		String env = System.getProperty("java.library.path");
 		if(!env.contains("jri")) {			
 			String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "").replace("libjri.so", "").replace("jri.dll", "");
-			System.setProperty("java.library.path", RPath+ ";" + env);
+			if(System.getProperty("os.name").startsWith("Windows")) {				
+				System.setProperty("java.library.path", RPath+ ";" + env);
+			}else {
+				System.setProperty("java.library.path", RPath+ ":" + env);
+			}
 			try {
 				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
 				fieldSysPath.setAccessible( true );
