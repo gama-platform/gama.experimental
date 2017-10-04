@@ -106,7 +106,7 @@ public class RSkill extends Skill {
 
 	}
 
-	private String[] args=new String[] {" --no-save" };
+	private String[] args=new String[] {"--vanilla" };
 	private Rengine re = null;
 
 	@action(name = "R_eval", args = {
