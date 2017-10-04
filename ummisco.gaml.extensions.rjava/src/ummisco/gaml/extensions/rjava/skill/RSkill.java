@@ -34,7 +34,6 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaList;
 import msi.gama.util.GamaListFactory;
-import msi.gaml.operators.Cast;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 
@@ -140,8 +139,10 @@ public class RSkill extends Skill {
 		final REXP x = re.eval((String) scope.getArg("command", IType.STRING));
 		
 		System.out.println(" ");
-		System.out.println(x.getType());
-		System.out.println(x.getContent());
+		System.out.println(x);
+		System.out.println("type "+x.getType());
+		System.out.println("rtype "+x.rtype);
+		System.out.println("xp "+x.xp);
 		return dataConvert(x);
 	}
 
@@ -150,7 +151,7 @@ public class RSkill extends Skill {
 		if(o instanceof REXP) {
 			x=(REXP)o;
 		}else {
-			return null;
+			return o;
 		}
 		
 		
@@ -159,7 +160,7 @@ public class RSkill extends Skill {
 
 			GamaList a=(GamaList) GamaListFactory.create();
 			for(int i=0; i<s.length;i++) {
-				a.add(s[i]);
+				a.add(dataConvert(s[i]));
 			}
 			return a;
 		}
@@ -200,7 +201,7 @@ public class RSkill extends Skill {
 			RFactor f=x.asFactor();
 			GamaList a=(GamaList) GamaListFactory.create();
 			for(int i=0; i<f.size(); i++) {
-				a.add(Cast.asFloat(null, f.at(i)));
+				a.add(dataConvert(f.at(i)));
 			}
 			return a;
 		}
