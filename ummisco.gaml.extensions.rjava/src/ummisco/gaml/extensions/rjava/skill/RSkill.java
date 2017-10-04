@@ -138,11 +138,12 @@ public class RSkill extends Skill {
 		}
 		final REXP x = re.eval((String) scope.getArg("command", IType.STRING));
 		
-		System.out.println(" ");
-		System.out.println(x);
-		System.out.println("type "+x.getType());
-		System.out.println("rtype "+x.rtype);
-		System.out.println("xp "+x.xp);
+//		System.out.println(" ");
+//		System.out.println(x);
+//		System.out.println("type "+x.getType());
+//		System.out.println("rtype "+x.rtype);
+//		System.out.println("contentclass"+x.getContent().getClass());
+//		System.out.println("xp "+x.xp);
 		return dataConvert(x);
 	}
 
