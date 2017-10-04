@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 
 import org.rosuda.JRI.REXP;
 import org.rosuda.JRI.RFactor;
+import org.rosuda.JRI.RList;
 import org.rosuda.JRI.RMainLoopCallbacks;
 import org.rosuda.JRI.RVector;
 import org.rosuda.JRI.Rengine;
@@ -133,9 +134,21 @@ public class RSkill extends Skill {
 			
 		}
 		final REXP x = re.eval((String) scope.getArg("command", IType.STRING));
-//		System.out.println(" ");
-//		System.out.println(x.getType());
-//		System.out.println(x.getContent());
+		System.out.println(" ");
+		System.out.println(x.getType());
+		System.out.println(x.getContent());
+		return dataConvert(x);
+	}
+
+	public Object dataConvert(Object o) {
+		REXP x;
+		if(o instanceof REXP) {
+			x=(REXP)o;
+		}else {
+			return null;
+		}
+		
+		
 		if(x.getType()==REXP.XT_ARRAY_STR) {
 			String[] s=x.asStringArray();
 
@@ -144,6 +157,39 @@ public class RSkill extends Skill {
 				a.add(s[i]);
 			}
 			return a;
+		}
+		
+		if(x.getType()==REXP.DOTSXP) {
+			RList s=x.asList();
+
+			GamaList a=(GamaList) GamaListFactory.create();
+			for(int i=0; i<s.keys().length;i++) {
+				a.add(dataConvert(s.at(0)));
+			}
+			return a;
+		}
+		
+		if(x.getType()==REXP.XT_ARRAY_BOOL_INT) {
+			int[] s=x.asIntArray();
+
+			GamaList a=(GamaList) GamaListFactory.create();
+			for(int i=0; i<s.length;i++) {
+				a.add(s[i]==0?false:true);
+			}
+			return a;
+		}
+		if(x.getType()==REXP.XT_ARRAY_DOUBLE) {
+			double[] s=x.asDoubleArray();
+
+			GamaList a=(GamaList) GamaListFactory.create();
+			for(int i=0; i<s.length;i++) {
+				a.add(s[i]);
+			}
+			return a;
+		}
+
+		if(x.getType()==REXP.XT_STR) {
+			return (String)x.getContent();
 		}
 		if(x.getType()==REXP.XT_FACTOR) {
 			RFactor f=x.asFactor();
@@ -157,11 +203,10 @@ public class RSkill extends Skill {
 			RVector f=x.asVector();
 			GamaList a=(GamaList) GamaListFactory.create();
 			for(int i=0; i<f.size(); i++) {
-				a.add(f.at(i));
+				a.add(dataConvert(f.at(i)));
 			}
 			return a;
 		}
 		return x;
 	}
-
 }
