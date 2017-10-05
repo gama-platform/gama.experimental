@@ -12,6 +12,7 @@ import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.IScope;
+import msi.gama.util.file.GamaImageFile;
 import msi.gama.util.matrix.GamaIntMatrix;
 import msi.gama.util.matrix.IMatrix;
 
@@ -45,7 +46,7 @@ public class WebcamOperators {
 
 	@operator(value = "cam_shot", can_be_const = false, category = IOperatorCategory.LIST)
 	@doc(value = "get a photoshot from webcam")
-	public static IMatrix cam_shot(final IScope scope, final String varName) {
+	public static GamaImageFile cam_shot(final IScope scope, final String varName) {
 		Webcam wcam;
 		if(scope.getSimulation().getExperiment().getAttribute("webcam") == null) {
 
@@ -67,7 +68,8 @@ public class WebcamOperators {
 			});
 			wcam.open();
 		}
-		return  matrixValueFromImage(scope, wcam.getImage(), null);
+		GamaImageFile gif=new GamaImageFile(scope, varName, matrixValueFromImage(scope, wcam.getImage(), null));
+		return  gif;
 //		return wcam.getImage();
 		
 	}
