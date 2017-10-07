@@ -109,7 +109,7 @@ public class RSkill extends Skill {
 	private Rengine re = null;
 
 	@action(name = "R_eval", args = {
-			@arg(name = "command", type = IType.STRING, optional = true, doc = @doc("R command to be evalutated")) }, doc = @doc(value = "evaluate the R command", returns = "object in R.", examples = {
+			@arg(name = "command", type = IType.STRING, optional = true, doc = @doc("R command to be evalutated")) }, doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
 					@example(" R_eval(\"data(iris)\")") }))
 	public Object primREval(final IScope scope) throws GamaRuntimeException {
 		// re = new Rengine(args, false, new TextConsole());
@@ -136,7 +136,14 @@ public class RSkill extends Skill {
 			re = new Rengine(args, false, new TextConsole());
 			
 		}
-		final REXP x = re.eval((String) scope.getArg("command", IType.STRING));
+		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split("\r\n");
+		REXP x =null;
+		for(int i=0; i<cmd.length; i++){
+			if(!cmd[i].equals("\r\n")) {				
+				x = re.eval(cmd[i].trim());
+				System.out.println(cmd[i]+" "+x);
+			}
+		}
 		
 //		System.out.println(" ");
 //		System.out.println(x);

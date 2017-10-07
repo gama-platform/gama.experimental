@@ -125,6 +125,9 @@ public class rtest {
 		 */
 		try {
 			REXP x;
+			re.eval("source(\"E:/OneDrive/Gama1.7/Rjava/models/r2.txt\")");
+			x=re.eval("u <- myFirstFun(n)");
+			System.out.println("sssss "+x);
 			re.eval("data(iris)", false);
 			System.out.println(x = re.eval("iris"));
 			// generic vectors are RVector to accomodate names
