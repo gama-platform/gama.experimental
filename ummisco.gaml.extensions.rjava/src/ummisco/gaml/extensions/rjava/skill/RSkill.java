@@ -125,16 +125,20 @@ public class RSkill extends Skill {
 				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
 				fieldSysPath.setAccessible( true );
 				fieldSysPath.set( null, null );
+//				System.loadLibrary("jri");
+				re=Rengine.getMainEngine();
+				if(re==null) {			
+					re = new Rengine(args, false, new TextConsole());
+					
+				}
 			}catch(Exception ex) {
+				scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
 				ex.printStackTrace();
 			}
 //			System.out.println(System.getProperty("java.library.path"));
 		}
-//		System.loadLibrary("jri");
-		re=Rengine.getMainEngine();
-		if(re==null) {			
-			re = new Rengine(args, false, new TextConsole());
-			
+		if(re==null) {
+			return null;
 		}
 		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split("\r\n");
 		REXP x =null;
