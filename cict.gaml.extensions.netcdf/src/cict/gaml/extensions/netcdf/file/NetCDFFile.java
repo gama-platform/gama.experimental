@@ -45,7 +45,7 @@ import ucar.nc2.Variable;
 		buffer_content = IType.LIST,
 		buffer_index = IType.STRING,
 		concept = { IConcept.FILE, IConcept.R })
-public class NetCDFFile extends GamaFile<GamaMap<String, IList<?>>, IList<?>, String, IList<?>> {
+public class NetCDFFile extends GamaFile<GamaMap, IList<?>> {
 
 	final GamaMap<String, IList<?>> ncdata = GamaMapFactory.create(Types.STRING, Types.LIST);
 
@@ -61,7 +61,7 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList<?>>, IList<?>, St
 	public String _stringValue(final IScope scope) throws GamaRuntimeException {
 		getContents(scope);
 		final StringBuilder sb = new StringBuilder(getBuffer().length(scope) * 200);
-		for (final IList<?> s : getBuffer().iterable(scope)) {
+		for (final Object s : getBuffer().iterable(scope)) {
 			sb.append(s).append("\n"); // TODO Factorize the different calls to
 										// "new line" ...
 		}

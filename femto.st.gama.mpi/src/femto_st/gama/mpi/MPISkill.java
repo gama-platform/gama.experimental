@@ -148,7 +148,7 @@ public class MPISkill extends Skill {
 					value = "",
 					returns = "",
 					examples = { @example ("") }))
-	public GamaList<Integer> recv(final IScope scope) {
+	public GamaList recv(final IScope scope) {
 		final int rcvSize = ((Integer) scope.getArg(IMPISkill.RCVSIZE, IType.INT)).intValue();
 		final int source = ((Integer) scope.getArg(IMPISkill.SOURCE, IType.INT)).intValue();
 		final int rtag = ((Integer) scope.getArg(IMPISkill.RTAG, IType.INT)).intValue();
