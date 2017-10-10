@@ -84,11 +84,13 @@ public class MPISkill extends Skill{
 		int dest = ((Integer) scope.getArg(IMPISkill.DEST, IType.INT)).intValue();
 		int stag = ((Integer) scope.getArg(IMPISkill.STAG, IType.INT)).intValue();
 		
-		int sndLength = mesg.size() - 1;
+		System.out.println("aahh size" + mesg.size());
+		int sndLength = mesg.size();
 		int message[] = new int[sndLength];
 		for (int i = 0; i < sndLength; i++) {
 	
 			 message[i] = (int) mesg.get(i);
+			 System.out.println("aahh " + message[i]);
 		}
 		try {
 		    MPI.COMM_WORLD.send( message, sndLength, MPI.INT, dest, stag);
@@ -116,6 +118,7 @@ public class MPISkill extends Skill{
 	    } catch (MPIException mpiex) {
 	    	System.out.println("MPI send Error"+mpiex);
 	    }
+		System.out.println(message[0] + " " + message[1]);
 		
 		GamaList rcvMesg = (GamaList) GamaListFactory.create();
 		for (int i = 0; i < rcvSize; i++) {
