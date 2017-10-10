@@ -1,37 +1,18 @@
-/**
- *  focus
- *  Author: drogoul
- *  Description: 
- */
+model RJava
 
-model focus
-
-/* Insert your model definition here */
-
-global {
-	file Rcode<-text_file("r.txt");
-	init {
-		
-		
-//		write "sss-";
-//		
-//		write Rcode;
-		create RJava;
-	}
-}
-
-species RJava skills:[RSkill] {
+global skills:[RSkill]{
+		file Rcode<-text_file("r.txt");
 	init{
+		write R_eval("x<-1");
 		loop s over:Rcode.contents{
-			write s;			
-			write R_eval(s);
+			unknown a<- R_eval(s);
+			write "R>"+s;
+			write a;
 		}
-//		write R_eval("data(iris)");
-//		write ""+R_eval("iris");
-		
 	}
+	
 }
-experiment toto type:gui{
+experiment RJava type:gui{
 	output{
 	}
 }

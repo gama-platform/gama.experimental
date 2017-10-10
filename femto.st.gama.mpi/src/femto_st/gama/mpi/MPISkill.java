@@ -122,7 +122,7 @@ public class MPISkill extends Skill{
 		
 		GamaList rcvMesg = (GamaList) GamaListFactory.create();
 		for (int i = 0; i < rcvSize; i++) {
-			rcvMesg.add(message[i]);
+			rcvMesg.add(message[i]); 
 		}
 		
 		return rcvMesg;
@@ -141,8 +141,8 @@ public class MPISkill extends Skill{
 	}
 
 	private void registerSimulationEvent(final IScope scope) {
-			scope.getSimulation().postDisposeAction(scope1 -> {
-				finalizeMPI(scope1);
+		scope.getSimulation().postDisposeAction(scope1 -> {
+			finalizeMPI(scope1);
 			return null;
 		});
 	}

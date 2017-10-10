@@ -1,9 +1,8 @@
 /*********************************************************************************************
  * 
  * 
- * 'GamaTextFile.java', in plugin 'msi.gama.core', is part of the source code of the
- * GAMA modeling and simulation platform.
- * (c) 20072014 UMI 209 UMMISCO IRD/UPMC & Partners
+ * 'GamaTextFile.java', in plugin 'msi.gama.core', is part of the source code of the GAMA modeling and simulation
+ * platform. (c) 20072014 UMI 209 UMMISCO IRD/UPMC & Partners
  * 
  * Visit https://code.google.com/p/gamaplatform/ for license information and developers contact.
  * 
@@ -13,8 +12,6 @@ package cict.gaml.extensions.netcdf.file;
 
 import java.io.IOException;
 import java.util.List;
-
-import com.vividsolutions.jts.geom.Envelope;
 
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -31,11 +28,6 @@ import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import msi.gama.util.file.GamaFile;
-import msi.gama.util.matrix.GamaFloatMatrix;
-import msi.gama.util.matrix.GamaIntMatrix;
-import msi.gama.util.matrix.GamaMatrix;
-import msi.gama.util.matrix.GamaObjectMatrix;
-import msi.gama.util.matrix.IMatrix;
 import msi.gaml.types.IContainerType;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
@@ -46,26 +38,30 @@ import ucar.nc2.Dimension;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 
-@file(name = "nc", extensions = {
-		"nc" }, buffer_type = IType.MAP, buffer_content = IType.LIST, buffer_index = IType.STRING, concept = {
-				IConcept.FILE, IConcept.R })
-public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, IList> {
+@file (
+		name = "nc",
+		extensions = { "nc" },
+		buffer_type = IType.MAP,
+		buffer_content = IType.LIST,
+		buffer_index = IType.STRING,
+		concept = { IConcept.FILE, IConcept.R })
+public class NetCDFFile extends GamaFile<GamaMap, IList<?>> {
 
-	final GamaMap<String, IList> ncdata = GamaMapFactory.create(Types.STRING, Types.LIST);
+	final GamaMap<String, IList<?>> ncdata = GamaMapFactory.create(Types.STRING, Types.LIST);
 
 	public NetCDFFile(final IScope scope, final String pathName) throws GamaRuntimeException {
 		super(scope, pathName);
 	}
 
-	public NetCDFFile(final IScope scope, final String pathName, final IContainer p) {
+	public NetCDFFile(final IScope scope, final String pathName, final IContainer<?, ?> p) {
 		super(scope, pathName);
 	}
 
 	@Override
 	public String _stringValue(final IScope scope) throws GamaRuntimeException {
 		getContents(scope);
-		StringBuilder sb = new StringBuilder(getBuffer().length(scope) * 200);
-		for (IList s : getBuffer().iterable(scope)) {
+		final StringBuilder sb = new StringBuilder(getBuffer().length(scope) * 200);
+		for (final Object s : getBuffer().iterable(scope)) {
 			sb.append(s).append("\n"); // TODO Factorize the different calls to
 										// "new line" ...
 		}
@@ -80,35 +76,33 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 	 */
 	@Override
 	protected void fillBuffer(final IScope scope) throws GamaRuntimeException {
-		if (getBuffer() != null) {
-			return;
-		}
+		if (getBuffer() != null) { return; }
 		initializeNetCDF(scope);
 		setBuffer(ncdata);
 	}
 
-	private void initializeNetCDF(IScope scope) {
+	private void initializeNetCDF(final IScope scope) {
 		final String NCFile = getPath(scope);
 		NetcdfFile dataFile = null;
 		try {
 
 			dataFile = NetcdfFile.open(NCFile, null);
-			List<Variable> lv = dataFile.getVariables();
-			for (Variable v : lv) {
-				String varName = v.getName();
-				System.out.println("\n" + varName + " " + v.getDataType()+ " " + v.getShape().length);
-				List<Dimension> ld = v.getDimensionsAll();
-				for (Dimension d : ld) {
+			final List<Variable> lv = dataFile.getVariables();
+			for (final Variable v : lv) {
+				final String varName = v.getName();
+				System.out.println("\n" + varName + " " + v.getDataType() + " " + v.getShape().length);
+				final List<Dimension> ld = v.getDimensionsAll();
+				for (final Dimension d : ld) {
 					System.out.println(d.getName() + " " + d.getLength());
 				}
 
 				// Variable lon_rho = dataFile.findVariable();
 
-				Array theArray = v.read();
+				final Array theArray = v.read();
 
 				// latArray = (ArrayFloat) v.read();
 
-				GamaList gl = null;
+				GamaList<?> gl = null;
 				if (theArray instanceof ArrayFloat.D0) {
 					// gl = transformVar2(theArray);
 				}
@@ -122,21 +116,21 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 					gl = transformVar3(theArray);
 				}
 				if (theArray instanceof ArrayFloat.D4) {
-//					gl = transformVar4(theArray);
+					// gl = transformVar4(theArray);
 				}
 				if (theArray instanceof ArrayFloat.D5) {
-//					 gl = transformVar5(theArray);
+					// gl = transformVar5(theArray);
 				}
 
 				ncdata.put(varName, gl);
 			}
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	private GamaList transformVar2(final Array var) throws Exception {
-		GamaList gl = (GamaList) GamaListFactory.create();
+	private GamaList<?> transformVar2(final Array var) throws Exception {
+		final GamaList<GamaList<Float>> gl = (GamaList<GamaList<Float>>) GamaListFactory.create();
 
 		int[] shape;
 		float[] latsIn;
@@ -144,7 +138,7 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 		latsIn = new float[shape[0] * shape[1]];
 
 		for (int i = 0; i < shape[0]; i++) {
-			GamaList gl1 = (GamaList) GamaListFactory.create();
+			final GamaList<Float> gl1 = (GamaList<Float>) GamaListFactory.create();
 			for (int j = 0; j < shape[1]; j++) {
 				gl1.add(((ArrayFloat.D2) var).get(i, j));
 			}
@@ -154,14 +148,14 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 
 	}
 
-	private GamaList transformVar3(final Array var) throws Exception {
-		GamaList gl = (GamaList) GamaListFactory.create();
+	private GamaList<?> transformVar3(final Array var) throws Exception {
+		final GamaList<GamaList<GamaList<Float>>> gl = (GamaList<GamaList<GamaList<Float>>>) GamaListFactory.create();
 
-		int[] shape = var.getShape();
+		final int[] shape = var.getShape();
 		for (int i = 0; i < shape[0]; i++) {
-			GamaList gl1 = (GamaList) GamaListFactory.create();
+			final GamaList<GamaList<Float>> gl1 = (GamaList<GamaList<Float>>) GamaListFactory.create();
 			for (int j = 0; j < shape[1]; j++) {
-				GamaList gl2 = (GamaList) GamaListFactory.create();
+				final GamaList<Float> gl2 = (GamaList<Float>) GamaListFactory.create();
 				for (int k = 0; k < shape[2]; k++) {
 					gl2.add(((ArrayFloat.D3) var).get(i, j, k));
 				}
@@ -173,16 +167,18 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 
 	}
 
-	private GamaList transformVar4(final Array var) throws Exception {
-		GamaList gl = (GamaList) GamaListFactory.create();
+	private GamaList<?> transformVar4(final Array var) throws Exception {
+		final GamaList<GamaList<GamaList<GamaList<Float>>>> gl =
+				(GamaList<GamaList<GamaList<GamaList<Float>>>>) GamaListFactory.create();
 
-		int[] shape = var.getShape();
+		final int[] shape = var.getShape();
 		for (int i = 0; i < shape[0]; i++) {
-			GamaList gl1 = (GamaList) GamaListFactory.create();
+			final GamaList<GamaList<GamaList<Float>>> gl1 =
+					(GamaList<GamaList<GamaList<Float>>>) GamaListFactory.create();
 			for (int j = 0; j < shape[1]; j++) {
-				GamaList gl2 = (GamaList) GamaListFactory.create();
+				final GamaList<GamaList<Float>> gl2 = (GamaList<GamaList<Float>>) GamaListFactory.create();
 				for (int k = 0; k < shape[2]; k++) {
-					GamaList gl3 = (GamaList) GamaListFactory.create();
+					final GamaList<Float> gl3 = (GamaList<Float>) GamaListFactory.create();
 					for (int l = 0; l < shape[3]; l++) {
 						gl3.add(((ArrayFloat.D4) var).get(i, j, k, l));
 					}
@@ -196,18 +192,21 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 
 	}
 
-	private GamaList transformVar5(final Array var) throws Exception {
-		GamaList gl = (GamaList) GamaListFactory.create();
+	private GamaList<?> transformVar5(final Array var) throws Exception {
+		final GamaList<GamaList<GamaList<GamaList<GamaList<Float>>>>> gl =
+				(GamaList<GamaList<GamaList<GamaList<GamaList<Float>>>>>) GamaListFactory.create();
 
-		int[] shape = var.getShape();
+		final int[] shape = var.getShape();
 		for (int i = 0; i < shape[0]; i++) {
-			GamaList gl1 = (GamaList) GamaListFactory.create();
+			final GamaList<GamaList<GamaList<GamaList<Float>>>> gl1 =
+					(GamaList<GamaList<GamaList<GamaList<Float>>>>) GamaListFactory.create();
 			for (int j = 0; j < shape[1]; j++) {
-				GamaList gl2 = (GamaList) GamaListFactory.create();
+				final GamaList<GamaList<GamaList<Float>>> gl2 =
+						(GamaList<GamaList<GamaList<Float>>>) GamaListFactory.create();
 				for (int k = 0; k < shape[2]; k++) {
-					GamaList gl3 = (GamaList) GamaListFactory.create();
+					final GamaList<GamaList<Float>> gl3 = (GamaList<GamaList<Float>>) GamaListFactory.create();
 					for (int l = 0; l < shape[3]; l++) {
-						GamaList gl4 = (GamaList) GamaListFactory.create();
+						final GamaList<Float> gl4 = (GamaList<Float>) GamaListFactory.create();
 						for (int m = 0; m < shape[4]; m++) {
 							gl4.add(((ArrayFloat.D5) var).get(i, j, k, l, m));
 						}
@@ -223,40 +222,40 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 
 	}
 
-	public static void main(String args[]) throws Exception {
+	public static void main(final String args[]) throws Exception {
 
 		// Open the file and check to make sure it's valid.
-		String filename = "D:/roms-benguela.nc";
+		final String filename = "D:/roms-benguela.nc";
 		NetcdfFile dataFile = null;
 
 		try {
 			dataFile = NetcdfFile.open(filename, null);
-			List<Variable> lv = dataFile.getVariables();
+			final List<Variable> lv = dataFile.getVariables();
 
-			for (Variable v : lv) {
+			for (final Variable v : lv) {
 				System.out.println("\n" + v.getName() + " " + v.getDataType() + " " + v.getShape().length);
-				List<Dimension> ld = v.getDimensionsAll();
-				for (Dimension d : ld) {
+				final List<Dimension> ld = v.getDimensionsAll();
+				for (final Dimension d : ld) {
 					System.out.println(d.getName() + " " + d.getLength());
 				}
 			}
 
 			System.out.println("\n\n\n");
 
-			List<Dimension> ld = dataFile.getDimensions();
-			for (Dimension d : ld) {
+			final List<Dimension> ld = dataFile.getDimensions();
+			for (final Dimension d : ld) {
 				System.out.println(d.getName() + " " + d.getLength());
 			}
 
 			System.out.println("\n\n\n");
 
-			List<Attribute> la = dataFile.getGlobalAttributes();
-			for (Attribute a : la) {
+			final List<Attribute> la = dataFile.getGlobalAttributes();
+			for (final Attribute a : la) {
 				System.out.println(a.getName() + " " + a.getDataType() + " " + a.getValues());
 			}
 			int[] shape;
 			float[] latsIn;
-			Variable zeta = dataFile.findVariable("zeta");
+			final Variable zeta = dataFile.findVariable("zeta");
 
 			ArrayFloat.D3 latArray3;
 
@@ -303,14 +302,14 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 			// if (lonsIn[lon] != START_LON + 5. * lon)
 			// System.err.println("ERROR reading variable longitude");
 
-		} catch (java.io.IOException e) {
+		} catch (final java.io.IOException e) {
 			System.out.println(" fail = " + e);
 			e.printStackTrace();
 		} finally {
 			if (dataFile != null)
 				try {
 					dataFile.close();
-				} catch (IOException ioe) {
+				} catch (final IOException ioe) {
 					ioe.printStackTrace();
 				}
 		}
@@ -318,13 +317,15 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 
 	}
 
-	@operator(value = "fetch", can_be_const = false, category = IOperatorCategory.LIST)
-	@doc(value = "general operator to manipylate multidimension netcdf data.")
-	public static IList reduce_dimension(final IScope scope, final String varName, final IList offsets) {
+	@operator (
+			value = "fetch",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "general operator to manipylate multidimension netcdf data.")
+	public static IList<Integer> reduce_dimension(final IScope scope, final String varName, final IList<?> offsets) {
 		final String NCFile = "";
-		if (varName == null) {
-			return GamaListFactory.create(scope, Types.NO_TYPE, 0);
-		}
+		if (varName == null) { return GamaListFactory.create(scope, Types.NO_TYPE, 0); }
 		if (scope == null) {
 			return GamaListFactory.create(scope, Types.NO_TYPE, 0);
 		} else {
@@ -409,12 +410,12 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 	// }
 
 	private static String computeVariable(final String string) {
-		String[] tokens = string.split("<");
+		final String[] tokens = string.split("<");
 		return tokens[0];
 	}
 
 	@Override
-	public Envelope3D computeEnvelope(IScope scope) {
+	public Envelope3D computeEnvelope(final IScope scope) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -424,6 +425,5 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList>, IList, String, 
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 }
