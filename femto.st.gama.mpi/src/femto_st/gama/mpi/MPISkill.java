@@ -51,7 +51,7 @@ public class MPISkill extends Skill{
 		  int size = 2;
 		    try {
 		    size = MPI.COMM_WORLD.getSize();
-
+ //
 		    } catch (MPIException mpiex) {
 		    	System.out.println("MPI Size Error"+mpiex);
 		    }
