@@ -14,6 +14,7 @@ import msi.gama.precompiler.GamlAnnotations.var;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
+import ummisco.gama.serializer.factory.StreamConverter;
 
 @vars({ @var(name = IMPISkill.MPI_RANK, type = IType.INT, doc = @doc("Init MPI Brocker"))})
 @skill(name=IMPISkill.MPI_NETWORK, concept = { IConcept.GUI, IConcept.COMMUNICATION, IConcept.SKILL })
@@ -80,20 +81,18 @@ public class MPISkill extends Skill{
 	}, doc = @doc(value = "", returns = "", examples = { @example("") }))
 	public void send(IScope scope)
 	{
+		
 		GamaList mesg = ((GamaList) (scope.getArg(IMPISkill.MESG, IType.LIST)));
 		int dest = ((Integer) scope.getArg(IMPISkill.DEST, IType.INT)).intValue();
 		int stag = ((Integer) scope.getArg(IMPISkill.STAG, IType.INT)).intValue();
-		
-		System.out.println("aahh size" + mesg.size());
-		int sndLength = mesg.size();
-		int message[] = new int[sndLength];
-		for (int i = 0; i < sndLength; i++) {
-	
-			 message[i] = (int) mesg.get(i);
-			 System.out.println("aahh " + message[i]);
-		}
+
+		byte[] message = StreamConverter.convertObjectToStream(scope, mesg).getBytes();
+		int [] size = new int[1];
+		size[0]=message.length;
+
 		try {
-		    MPI.COMM_WORLD.send( message, sndLength, MPI.INT, dest, stag);
+			MPI.COMM_WORLD.send( size, 1, MPI.INT, dest, stag);
+		    MPI.COMM_WORLD.send( message, message.length, MPI.BYTE, dest, stag);
 
 	    } catch (MPIException mpiex) {
 	    	System.out.println("MPI send Error"+mpiex);
@@ -111,19 +110,18 @@ public class MPISkill extends Skill{
 		int source = ((Integer) scope.getArg(IMPISkill.SOURCE, IType.INT)).intValue();
 		int rtag = ((Integer) scope.getArg(IMPISkill.RTAG, IType.INT)).intValue();
 		
-		int message[] = new int [rcvSize];
+		int size[] = new int [1];
+		byte[] message = null;
+		
 		try {
-		    MPI.COMM_WORLD.recv( message, rcvSize, MPI.INT, source, rtag);
-
+			MPI.COMM_WORLD.recv( size, 1, MPI.INT, source, rtag);
+			message = new byte [size[0]];
+		    MPI.COMM_WORLD.recv( message, size[0], MPI.BYTE, source, rtag);
 	    } catch (MPIException mpiex) {
 	    	System.out.println("MPI send Error"+mpiex);
 	    }
-		System.out.println(message[0] + " " + message[1]);
-		
-		GamaList rcvMesg = (GamaList) GamaListFactory.create();
-		for (int i = 0; i < rcvSize; i++) {
-			rcvMesg.add(message[i]); 
-		}
+
+		GamaList rcvMesg = (GamaList) StreamConverter.convertStreamToObject(scope, new String(message));
 		
 		return rcvMesg;
 	}
