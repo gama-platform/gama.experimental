@@ -44,7 +44,7 @@ public class RSkill extends Skill {
 		@Override
 		public void rWriteConsole(final Rengine re, final String text, final int oType) {
 //			System.out.print("xxxx"+text);
-			GAMA.getGui().getConsole(null).informConsole(text, null);
+			GAMA.getGui().getConsole(null).informConsole("R>"+text, null);
 		}
 
 		@Override
@@ -107,7 +107,7 @@ public class RSkill extends Skill {
 
 	private String[] args=new String[] {"--vanilla" };
 	private Rengine re = null;
-
+	private GamaList loadedLib;
 	@action(name = "R_eval", args = {
 			@arg(name = "command", type = IType.STRING, optional = true, doc = @doc("R command to be evalutated")) }, doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
 					@example(" R_eval(\"data(iris)\")") }))
@@ -126,26 +126,47 @@ public class RSkill extends Skill {
 				fieldSysPath.setAccessible( true );
 				fieldSysPath.set( null, null );
 //				System.loadLibrary("jri");
-				re=Rengine.getMainEngine();
-				if(re==null) {			
-					re = new Rengine(args, false, new TextConsole());
-					
-				}
+				
 			}catch(Exception ex) {
 				scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
 				ex.printStackTrace();
 			}
 //			System.out.println(System.getProperty("java.library.path"));
 		}
-		if(re==null) {
-			return null;
+//		if(System.getenv("R_HOME")==null) {
+//			return "missing R_HOME";
+//		}
+		re=Rengine.getMainEngine();
+		
+		if(re==null) {			
+			
+			re = new Rengine(args, false, new TextConsole());
+
+			loadedLib=(GamaList) dataConvert(re.eval("search()"));
+		}else {
+			scope.getSimulation().postDisposeAction(scope1 -> {
+				GamaList l=(GamaList) dataConvert(re.eval("search()"));
+				for(int i=0;i<l.size();i++) {
+					if(((String) l.get(i)).contains("package:") && !loadedLib.contains(l.get(i))) {
+//						System.out.println(l.get(i));
+						re.eval("detach(\""+l.get(i)+"\")");
+					}
+				}
+				re.idleEval("rm(list=ls(all=TRUE))");
+				re.idleEval("gc()");
+				return null;
+			});
 		}
+
+
+
+
 		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split("\r\n");
 		REXP x =null;
 		for(int i=0; i<cmd.length; i++){
 			if(!cmd[i].equals("\r\n")) {				
-				x = re.eval(cmd[i].trim());
-				System.out.println(cmd[i]+" "+x);
+				x = re.idleEval(cmd[i].trim());
+//				System.out.println(cmd[i]+" "+x);
 			}
 		}
 		
