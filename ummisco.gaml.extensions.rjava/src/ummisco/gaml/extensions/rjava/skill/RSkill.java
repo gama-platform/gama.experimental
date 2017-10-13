@@ -118,13 +118,13 @@ public class RSkill extends Skill {
 
 
 
-		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split("\r\n");
+		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split(System.getProperty("line.separator"));
 		int i=0;
 		for(i=0; i<cmd.length; i++){
 			if(!cmd[i].equals("\r\n")) {				
 				Reval(scope,cmd[i].trim());
 				
-//				System.out.println(cmd[i].trim()+" "+x);
+//				System.out.println(cmd[i].trim()+" "+xx);
 			}
 		}
 		
@@ -235,6 +235,16 @@ public class RSkill extends Skill {
 		}
 		if(x.getType()==REXP.XT_ARRAY_DOUBLE) {
 			double[] s=x.asDoubleArray();
+
+			GamaList a=(GamaList) GamaListFactory.create();
+			for(int i=0; i<s.length;i++) {
+				a.add(s[i]);
+			}
+			return a;
+		}
+
+		if(x.getType()==REXP.XT_ARRAY_INT) {
+			int[] s=x.asIntArray();
 
 			GamaList a=(GamaList) GamaListFactory.create();
 			for(int i=0; i<s.length;i++) {
