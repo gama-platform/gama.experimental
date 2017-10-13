@@ -107,13 +107,38 @@ public class RSkill extends Skill {
 
 	private String[] args=new String[] {"--vanilla" };
 	private Rengine re = null;
-	private GamaList loadedLib;
+	private GamaList loadedLib=null;
+	private String env;
 	@action(name = "R_eval", args = {
 			@arg(name = "command", type = IType.STRING, optional = true, doc = @doc("R command to be evalutated")) }, doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
 					@example(" R_eval(\"data(iris)\")") }))
 	public Object primREval(final IScope scope) throws GamaRuntimeException {
 		// re = new Rengine(args, false, new TextConsole());
-		String env = System.getProperty("java.library.path");
+		initEnv(scope);
+
+
+
+		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split("\r\n");
+		REXP x =null;
+		for(int i=0; i<cmd.length; i++){
+			if(!cmd[i].equals("\r\n")) {				
+				x = Reval(scope,cmd[i].trim());
+				
+//				System.out.println(cmd[i].trim()+" "+x);
+			}
+		}
+		
+//		System.out.println(" ");
+//		System.out.println(x);
+//		System.out.println("type "+x.getType());
+//		System.out.println("rtype "+x.rtype);
+//		System.out.println("contentclass"+x.getContent().getClass());
+//		System.out.println("xp "+x.xp);
+		return dataConvert(x);
+	}
+
+	public void initEnv(final IScope scope) {
+		env = System.getProperty("java.library.path");
 		if(!env.contains("jri")) {			
 			String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "").replace("libjri.so", "").replace("jri.dll", "");
 			if(System.getProperty("os.name").startsWith("Windows")) {				
@@ -136,13 +161,17 @@ public class RSkill extends Skill {
 //		if(System.getenv("R_HOME")==null) {
 //			return "missing R_HOME";
 //		}
+	}
+	public REXP Reval(final IScope scope, final String cmd) {
 		re=Rengine.getMainEngine();
 		
 		if(re==null) {			
 			
 			re = new Rengine(args, false, new TextConsole());
 
-			loadedLib=(GamaList) dataConvert(re.eval("search()"));
+			if(loadedLib==null) {
+				loadedLib=(GamaList) dataConvert(re.eval("search()"));
+			}
 		}else {
 			scope.getSimulation().postDisposeAction(scope1 -> {
 				GamaList l=(GamaList) dataConvert(re.eval("search()"));
@@ -160,25 +189,11 @@ public class RSkill extends Skill {
 
 
 
-
-		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split("\r\n");
-		REXP x =null;
-		for(int i=0; i<cmd.length; i++){
-			if(!cmd[i].equals("\r\n")) {				
-				x = re.idleEval(cmd[i].trim());
-//				System.out.println(cmd[i]+" "+x);
-			}
-		}
+		return re.eval(cmd);
 		
-//		System.out.println(" ");
-//		System.out.println(x);
-//		System.out.println("type "+x.getType());
-//		System.out.println("rtype "+x.rtype);
-//		System.out.println("contentclass"+x.getContent().getClass());
-//		System.out.println("xp "+x.xp);
-		return dataConvert(x);
 	}
-
+	
+	
 	public Object dataConvert(Object o) {
 		REXP x;
 		if(o instanceof REXP) {
