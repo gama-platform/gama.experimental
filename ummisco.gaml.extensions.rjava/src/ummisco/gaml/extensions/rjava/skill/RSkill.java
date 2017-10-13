@@ -119,15 +119,16 @@ public class RSkill extends Skill {
 
 
 		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split("\r\n");
-		REXP x =null;
-		for(int i=0; i<cmd.length; i++){
+		int i=0;
+		for(i=0; i<cmd.length; i++){
 			if(!cmd[i].equals("\r\n")) {				
-				x = Reval(scope,cmd[i].trim());
+				Reval(scope,cmd[i].trim());
 				
 //				System.out.println(cmd[i].trim()+" "+x);
 			}
 		}
 		
+		REXP x =Reval(scope,cmd[i-1].trim());
 //		System.out.println(" ");
 //		System.out.println(x);
 //		System.out.println("type "+x.getType());
