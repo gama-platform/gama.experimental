@@ -7,7 +7,7 @@
 
 model prey_predator
 
-global skills:[MPI_Network] {
+global {
 	int nb_preys_init <- 200;
 	int nb_predators_init <- 20;
 	float prey_max_energy <- 1.0;
@@ -18,13 +18,8 @@ global skills:[MPI_Network] {
 	float predator_energy_consum <- 0.02;
 	int nb_preys -> {length (prey)};
 	int nb_predators -> {length (predator)};
-
-	int my_rank <- 0;
-	int my_size <- 0;
 	
 	init {
-		do MPI_INIT; 
-
 		create prey number: nb_preys_init ; 
 		create predator number: nb_predators_init ;
 		
@@ -32,15 +27,7 @@ global skills:[MPI_Network] {
 		write "nb_preys_init: " + nb_preys_init;
 		write "nb_predators_init: " + nb_predators_init;
 		write "seed : " + seed;
-
-		my_rank <- MPI_RANK();
-		write "mon rank est " + my_rank;
-
-		my_size <- MPI_SIZE ();
-		write "ma size est " + my_size;	
-
  	}
-	
 	
 	reflex aff {
 		write "Message at cycle " + cycle ;
@@ -51,7 +38,7 @@ global skills:[MPI_Network] {
 	}
 }
 
-species generic_species skills: [MPI_Network] {
+species generic_species {
 	float size <- 1.0;
 	rgb color  ;
 	float max_energy;
@@ -59,13 +46,9 @@ species generic_species skills: [MPI_Network] {
 	float energy_consum;
 	vegetation_cell myCell <- one_of (vegetation_cell) ;
 	float energy <- (rnd(1000) / 1000) * max_energy  update: energy - energy_consum max: max_energy ;
-	int ur_rank <- 3;
 	
 	init {
-		// do MPI_INIT;
 		location <- myCell.location;
-		ur_rank <- MPI_RANK();
-		write "Rank = " + ur_rank;
 	}
 		
 	reflex basic_move {
@@ -92,19 +75,6 @@ species prey parent: generic_species {
 		float energy_transfert <- min([max_transfert, myCell.food]) ;
 		myCell.food <- myCell.food - energy_transfert ;
 		energy <- energy + energy_transfert ;
-		write "Eat Rank = " + MPI_RANK();
-	}
-
-	reflex send when: ur_rank = 0 {
-
-	       do MPI_SEND dest: (ur_rank+1) mod 2 stag: 50;
-	       write("envoi");	 
-	}
-	
-	reflex recv when: ur_rank = 1 {
-
-	       int recu <- self MPI_RECV [source:: (ur_rank+1) mod 2, rtag:: 50];
-	       write("recu = " + recu);	 
 	}
 }
 	
