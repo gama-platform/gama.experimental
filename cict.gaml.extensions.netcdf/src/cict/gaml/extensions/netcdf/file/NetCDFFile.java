@@ -62,7 +62,7 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList<?>>, IList<?>> {
 	public String _stringValue(final IScope scope) throws GamaRuntimeException {
 		getContents(scope);
 		final StringBuilder sb = new StringBuilder(getBuffer().length(scope) * 200);
-		for (final IList<?> s : getBuffer().iterable(scope)) {
+		for (final Object s : getBuffer().iterable(scope)) {
 			sb.append(s).append("\n"); // TODO Factorize the different calls to
 										// "new line" ...
 		}
