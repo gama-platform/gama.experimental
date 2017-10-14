@@ -95,6 +95,7 @@ public class rtest {
 //		String env = System.getProperty("java.library.path");
 //		System.setProperty("java.library.path", "\"C:/Program Files/R/R-3.4.0/bin/x64/\";E:/OneDrive/Documents/R/win-library/3.4/rJava/jri;" + env);
 //		
+		System.out.println(System.getenv().toString());
 		System.out.println(System.getProperty("java.library.path"));
 		System.out.println(System.getenv().values());
 		
@@ -125,6 +126,9 @@ public class rtest {
 		 */
 		try {
 			REXP x;
+			re.eval("source(\"E:/OneDrive/Gama1.7/Rjava/models/r2.txt\")");
+			x=re.eval("u <- myFirstFun(n)");
+			System.out.println("sssss "+x);
 			re.eval("data(iris)", false);
 			System.out.println(x = re.eval("iris"));
 			// generic vectors are RVector to accomodate names

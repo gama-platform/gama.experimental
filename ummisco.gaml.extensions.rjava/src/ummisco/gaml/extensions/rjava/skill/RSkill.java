@@ -44,7 +44,7 @@ public class RSkill extends Skill {
 		@Override
 		public void rWriteConsole(final Rengine re, final String text, final int oType) {
 //			System.out.print("xxxx"+text);
-			GAMA.getGui().getConsole(null).informConsole(text, null);
+			GAMA.getGui().getConsole(null).informConsole("R>"+text, null);
 		}
 
 		@Override
@@ -107,13 +107,39 @@ public class RSkill extends Skill {
 
 	private String[] args=new String[] {"--vanilla" };
 	private Rengine re = null;
-
+	private GamaList loadedLib=null;
+	private String env;
 	@action(name = "R_eval", args = {
-			@arg(name = "command", type = IType.STRING, optional = true, doc = @doc("R command to be evalutated")) }, doc = @doc(value = "evaluate the R command", returns = "object in R.", examples = {
+			@arg(name = "command", type = IType.STRING, optional = true, doc = @doc("R command to be evalutated")) }, doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
 					@example(" R_eval(\"data(iris)\")") }))
 	public Object primREval(final IScope scope) throws GamaRuntimeException {
 		// re = new Rengine(args, false, new TextConsole());
-		String env = System.getProperty("java.library.path");
+		initEnv(scope);
+
+
+
+		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split(System.getProperty("line.separator"));
+		int i=0;
+		for(i=0; i<cmd.length; i++){
+			if(!cmd[i].equals("\r\n")) {				
+				Reval(scope,cmd[i].trim());
+				
+//				System.out.println(cmd[i].trim()+" "+xx);
+			}
+		}
+		
+		REXP x =Reval(scope,cmd[i-1].trim());
+//		System.out.println(" ");
+//		System.out.println(x);
+//		System.out.println("type "+x.getType());
+//		System.out.println("rtype "+x.rtype);
+//		System.out.println("contentclass"+x.getContent().getClass());
+//		System.out.println("xp "+x.xp);
+		return dataConvert(x);
+	}
+
+	public void initEnv(final IScope scope) {
+		env = System.getProperty("java.library.path");
 		if(!env.contains("jri")) {			
 			String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "").replace("libjri.so", "").replace("jri.dll", "");
 			if(System.getProperty("os.name").startsWith("Windows")) {				
@@ -125,28 +151,50 @@ public class RSkill extends Skill {
 				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
 				fieldSysPath.setAccessible( true );
 				fieldSysPath.set( null, null );
+//				System.loadLibrary("jri");
+				
 			}catch(Exception ex) {
+				scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
 				ex.printStackTrace();
 			}
 //			System.out.println(System.getProperty("java.library.path"));
 		}
-//		System.loadLibrary("jri");
-		re=Rengine.getMainEngine();
-		if(re==null) {			
-			re = new Rengine(args, false, new TextConsole());
-			
-		}
-		final REXP x = re.eval((String) scope.getArg("command", IType.STRING));
-		
-//		System.out.println(" ");
-//		System.out.println(x);
-//		System.out.println("type "+x.getType());
-//		System.out.println("rtype "+x.rtype);
-//		System.out.println("contentclass"+x.getContent().getClass());
-//		System.out.println("xp "+x.xp);
-		return dataConvert(x);
+//		if(System.getenv("R_HOME")==null) {
+//			return "missing R_HOME";
+//		}
 	}
+	public REXP Reval(final IScope scope, final String cmd) {
+		re=Rengine.getMainEngine();
+		
+		if(re==null) {			
+			
+			re = new Rengine(args, false, new TextConsole());
 
+			if(loadedLib==null) {
+				loadedLib=(GamaList) dataConvert(re.eval("search()"));
+			}
+		}else {
+			scope.getSimulation().postDisposeAction(scope1 -> {
+				GamaList l=(GamaList) dataConvert(re.eval("search()"));
+				for(int i=0;i<l.size();i++) {
+					if(((String) l.get(i)).contains("package:") && !loadedLib.contains(l.get(i))) {
+//						System.out.println(l.get(i));
+						re.eval("detach(\""+l.get(i)+"\")");
+					}
+				}
+				re.idleEval("rm(list=ls(all=TRUE))");
+				re.idleEval("gc()");
+				return null;
+			});
+		}
+
+
+
+		return re.eval(cmd);
+		
+	}
+	
+	
 	public Object dataConvert(Object o) {
 		REXP x;
 		if(o instanceof REXP) {
@@ -187,6 +235,16 @@ public class RSkill extends Skill {
 		}
 		if(x.getType()==REXP.XT_ARRAY_DOUBLE) {
 			double[] s=x.asDoubleArray();
+
+			GamaList a=(GamaList) GamaListFactory.create();
+			for(int i=0; i<s.length;i++) {
+				a.add(s[i]);
+			}
+			return a;
+		}
+
+		if(x.getType()==REXP.XT_ARRAY_INT) {
+			int[] s=x.asIntArray();
 
 			GamaList a=(GamaList) GamaListFactory.create();
 			for(int i=0; i<s.length;i++) {
