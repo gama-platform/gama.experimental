@@ -41,9 +41,11 @@ import msi.gama.precompiler.ITypeProvider;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gama.util.GamaColor;
 import msi.gama.util.GamaList;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IList;
+import msi.gama.util.file.GamaImageFile;
 import msi.gaml.skills.Skill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.types.IType;
@@ -200,10 +202,10 @@ public class RSkill extends Skill {
 			df=df+v.get(0)+"=c(";
 			v.remove(0);
 			for(Object o:v) {
-//				System.out.print(""+dataConvert_G2R(o));
 				df+=""+dataConvert_G2R(o)+",";
+//				System.out.print(o+"           "+dataConvert_G2R(o));
 			}
-			if(v.size()>0)
+			if(v.size()>0)			
 				df=df.substring(0, df.length()-1);
 			df+="),";
 //			System.out.println("");
@@ -217,7 +219,14 @@ public class RSkill extends Skill {
 	}
 
 	public static Object dataConvert_G2R(Object o) {
-		Object res=o;
+		Object res=o.toString();
+		if(o instanceof GamaColor) {
+			res="\""+((GamaColor)o).stringValue(null)+"\"";
+		}
+		if(o instanceof GamaImageFile) {
+			res="\""+((GamaImageFile)o).getPath(null)+"\"";
+		}
+		
 		if(o instanceof IAgent) {
 			res="\""+o+"\"";
 		}
@@ -237,9 +246,12 @@ public class RSkill extends Skill {
 			for(Object obj:((GamaList)o)) {
 				res+=""+(obj)+",";
 			}
-			if(((String)res).length()>2)
+			if(((String)res).length()>2) {				
 				res=((String)res).substring(0, ((String)res).length()-1);
-			res+=")";
+				res+=")";
+			}else {
+				res="\"\"";
+			}
 		}
 		return res;
 	}
