@@ -126,6 +126,9 @@ public class rtest {
 		 */
 		try {
 			REXP x;
+			x=re.eval("gama.data.frame=read.csv(\"E://prey.csv\",header=TRUE, sep=\",\")");
+			System.out.println("sssss "+x);
+
 			re.eval("source(\"E:/OneDrive/Gama1.7/Rjava/models/r2.txt\")");
 			x=re.eval("u <- myFirstFun(n)");
 			System.out.println("sssss "+x);
