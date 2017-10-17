@@ -9,7 +9,7 @@ model prey_predator
 
 global {
 	int nb_preys_init <- 200;
-	int nb_predators_init <- 20;
+	int nb_predators_init <- 200;
 	float prey_max_energy <- 1.0;
 	float prey_max_transfert <- 0.1 ;
 	float prey_energy_consum <- 0.05;
@@ -18,6 +18,7 @@ global {
 	float predator_energy_consum <- 0.02;
 	int nb_preys -> {length (prey)};
 	int nb_predators -> {length (predator)};
+	geometry shape <- square(200#m);
 	
 	init {
 		create prey number: nb_preys_init ; 
