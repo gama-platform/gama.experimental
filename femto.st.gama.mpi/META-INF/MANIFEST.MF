@@ -11,3 +11,4 @@ Require-Bundle: msi.gama.core;bundle-version="1.7.0",
 Bundle-ClassPath: .,
  ext/mpi.jar
 Export-Package: femto_st.gama.mpi
+Import-Package: ummisco.gama.serializer.factory
