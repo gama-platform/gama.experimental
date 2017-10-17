@@ -91,5 +91,5 @@ global skills:[MPI_Network] {
 }
 
 /* Attention ici le nom de l'expe doit etre le meme que celui donne dans le xml */
-experiment Controler type: gui {
+experiment ParallelControler type: gui {
 }
