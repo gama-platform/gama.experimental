@@ -23,17 +23,24 @@ global skills:[MPI_Network] {
 	write "mon rank est " + my_rank;
 	
 	/* Attention ici le nom de l'expe doit etre le meme que celui donne dans le gaml */	
-	agent exp <-  load_sub_model("prey_predatorExp","/home/philippe/devel/gama/mpiModels/predatorPrey.gaml"); 
+	agent exp <- load_sub_model("prey_predatorExp","/home/philippe/devel/gama/mpiModels/controler/predatorPrey.gaml"); 
 	
-	//agent exp <-  load_sub_model("main_experiment","/home/philippe/devel/gama/mpiModels/SI_city/SI_city.gaml");
 	int l <-  0;
-	list<int> myMsg	 <- {0,0};
+	list<string> myMsg <- {0,0};
 	loop while: l < nbLoop {
 		
 	    if (my_rank = 0){
 			
-		netSize <- MPI_SIZE ();	
-				
+		netSize <- MPI_SIZE ();
+
+	        // Init: kill agents that or not on our part
+	    	int p <- evaluate_sub_model(exp,"ask prey where (each.location.x > 100){do die;}");	
+	    	p <- evaluate_sub_model(exp,"ask predator where (each.location.x > 100){do die;}");
+
+		list<prey> preyList <- evaluate_sub_model(exp,"prey where (each.location.x > 90 and each.location.x < 100)");
+		list<predator> predatorList <- evaluate_sub_model(exp,"predator where (each.location.x > 90 and each.location.x < 100)");
+		
+		write("*** 0  = " +  preyList + " loop " + l);
 		/* parameter values  */
 		myMsg <- [l,l+1];
 		
@@ -84,5 +91,5 @@ global skills:[MPI_Network] {
 }
 
 /* Attention ici le nom de l'expe doit etre le meme que celui donne dans le xml */
-experiment Controler type: gui {
+experiment ParallelControler type: gui {
 }
