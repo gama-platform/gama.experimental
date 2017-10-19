@@ -55,7 +55,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_j48" })
 	public static GamaClassifier primBuildCHAIDClassifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal,
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal,
 			final GamaMap<String, Object> parameters) throws GamaRuntimeException {
 
 		final Instances dataset =
@@ -93,7 +93,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_j48" })
 	public static GamaClassifier primBuildJRIPClassifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal,
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal,
 			final GamaMap<String, Object> parameters) throws GamaRuntimeException {
 
 		final Instances dataset =
@@ -135,7 +135,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_j48" })
 	public static GamaClassifier primBuildMLPClassifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal,
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal,
 			final GamaMap<String, Object> parameters) throws GamaRuntimeException {
 
 		final Instances dataset =
@@ -165,7 +165,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_j48" })
 	public static GamaClassifier primBuildSMOClassifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal,
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal,
 			final GamaMap<String, Object> parameters) throws GamaRuntimeException {
 
 		final Instances dataset =
@@ -195,7 +195,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_j48" })
 	public static GamaClassifier primBuildGaussianProcessesClassifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal)
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal)
 			throws GamaRuntimeException {
 
 		final Instances dataset =
@@ -222,7 +222,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_j48" })
 	public static GamaClassifier primBuildREPTREEClassifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal)
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal)
 			throws GamaRuntimeException {
 
 		final Instances dataset =
@@ -249,7 +249,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_j48" })
 	public static GamaClassifier primBuildRBFNetworkClassifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal)
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal)
 			throws GamaRuntimeException {
 
 		final Instances dataset =
@@ -276,7 +276,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_j48" })
 	public static GamaClassifier primBuildBNClassifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal)
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal)
 			throws GamaRuntimeException {
 
 		final Instances dataset =
@@ -302,7 +302,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_j48" })
 	public static GamaClassifier primBuildRandomForestClassifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal)
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal)
 			throws GamaRuntimeException {
 
 		final Instances dataset =
@@ -329,7 +329,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_j48" })
 	public static GamaClassifier primBuildSMORegClassifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal)
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal)
 			throws GamaRuntimeException {
 
 		final Instances dataset =
@@ -363,7 +363,7 @@ public class Classifying {
 					isExecutable = false) },
 			see = { "classify", "train_chaid" })
 	public static GamaClassifier primBuildJ48Classifier(final IScope scope, final IContainer<?, ?> data,
-			final IList<String> attributes, final String classIndex, final Map<String, IList<String>> valsNominal,
+			final IList<String> attributes, final String classIndex, final GamaMap<String, IList<String>> valsNominal,
 			final GamaMap<String, Object> parameters) throws GamaRuntimeException {
 		final Instances dataset =
 				InstanceManagement.convertToInstances(scope, classIndex, attributes, valsNominal, data);
