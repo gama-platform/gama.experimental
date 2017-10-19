@@ -5,6 +5,7 @@
  <module>../cict.gaml.extensions.netcdf</module> 
  <module>../cict.gaml.extensions.VR</module> 
  <module>../femto.st.gama.feature.mpi</module> 
+ <module>../femto.st.gama.hpc</module> 
  <module>../femto.st.gama.mpi</module> 
  <module>../idees.gama.features.weka</module> 
  <module>../idees.gama.weka</module> 
