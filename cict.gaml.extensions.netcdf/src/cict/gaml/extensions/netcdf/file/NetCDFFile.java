@@ -44,8 +44,9 @@ import ucar.nc2.Variable;
 		buffer_type = IType.MAP,
 		buffer_content = IType.LIST,
 		buffer_index = IType.STRING,
-		concept = { IConcept.FILE, IConcept.R })
-public class NetCDFFile extends GamaFile<GamaMap, IList<?>> {
+		concept = { IConcept.FILE, IConcept.R },
+		doc = @doc ("Represents multi-dimensional arrays encoded in NetCDF format"))
+public class NetCDFFile extends GamaFile<GamaMap<String, IList<?>>, IList<?>> {
 
 	final GamaMap<String, IList<?>> ncdata = GamaMapFactory.create(Types.STRING, Types.LIST);
 
