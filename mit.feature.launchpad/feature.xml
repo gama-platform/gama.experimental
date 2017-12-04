@@ -21,9 +21,10 @@
    </url>
 
    <plugin
-         id="cict.gaml.extensions.VR"
+         id="mit.gaml.extension.launchpad"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
