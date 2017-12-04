@@ -15,27 +15,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import javax.sound.midi.MidiUnavailableException;
-
 import msi.gama.common.interfaces.IDisplaySurface;
 import msi.gama.common.interfaces.IEventLayerDelegate;
 import msi.gama.common.interfaces.IGraphics;
-import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.ILocation;
 import msi.gama.outputs.layers.AbstractLayer;
 import msi.gama.outputs.layers.EventLayerStatement;
 import msi.gama.outputs.layers.IDisplayLayerBox;
-import msi.gama.outputs.layers.IEventLayerListener;
 import msi.gama.outputs.layers.ILayerStatement;
-import msi.gama.runtime.GAMA;
+import msi.gama.precompiler.GamlAnnotations.doc;
+import msi.gama.precompiler.GamlAnnotations.example;
+import msi.gama.precompiler.GamlAnnotations.operator;
+import msi.gama.precompiler.IConcept;
+import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gaml.expressions.IExpression;
-import msi.gaml.operators.Cast;
+import msi.gama.util.GamaListFactory;
+import msi.gama.util.IList;
 import msi.gaml.statements.Arguments;
-import msi.gaml.statements.CreateStatement;
 import msi.gaml.statements.IExecutable;
 import msi.gaml.types.IType;
 import net.thecodersbreakfast.lp4j.api.BackBufferOperation;
@@ -44,7 +43,8 @@ import net.thecodersbreakfast.lp4j.api.Color;
 import net.thecodersbreakfast.lp4j.api.Launchpad;
 import net.thecodersbreakfast.lp4j.api.LaunchpadClient;
 import net.thecodersbreakfast.lp4j.api.LaunchpadListener;
-import net.thecodersbreakfast.lp4j.emulator.Example.MyListener;
+import net.thecodersbreakfast.lp4j.api.LaunchpadListenerAdapter;
+import net.thecodersbreakfast.lp4j.api.Pad;
 import net.thecodersbreakfast.lp4j.midi.MidiDeviceConfiguration;
 import net.thecodersbreakfast.lp4j.midi.MidiLaunchpad;
 
@@ -60,7 +60,7 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 	}
 
 //	EventListener listener;
-	MyListener myListener;
+	MyLPListener myListener;
 	IScope executionScope;
 	
 	public LaunchPadEventLayer() {		
@@ -96,9 +96,10 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 //		final IExpression actionName = definition.getFacet(IKeyword.ACTION);
 //		executionScope = surface.getScope().copy("of EventLayer");
 		try {
+			System.out.println("minipad");
 			launchpad = new MidiLaunchpad(MidiDeviceConfiguration.autodetect());
 			client = launchpad.getClient();
-			myListener = new MyListener(client);
+			myListener = new MyLPListener(client);
 			launchpad.setListener((LaunchpadListener) myListener);
 
 			client.reset();
@@ -155,128 +156,90 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 		return false;
 	}
 
-	private class EventListener implements IEventLayerListener {
-
-		private final static int MOUSE_PRESS = 0;
-		private final static int MOUSE_RELEASED = 1;
-		private final static int MOUSE_CLICKED = 2;
-		private final static int MOUSE_MOVED = 4;
-		private final static int MOUSE_ENTERED = 5;
-		private final static int MOUSE_EXITED = 6;
-		private final static int KEY_PRESSED = 3;
-
-		private final int listenedEvent;
-		private final IDisplaySurface surface;
-		private final String event, actionName;
-
-		public EventListener(final IDisplaySurface display, final String event, final String action) {
-			actionName = action;
-			this.event = event;
-			listenedEvent = getListeningEvent(event);
-			surface = display;
-		}
-
-		public void dispose() {
-			surface.removeListener(this);
-		}
-
-		public int getListeningEvent(final String eventTypeName) {
-			if (eventTypeName.equals(IKeyword.MOUSE_DOWN)) {
-				return MOUSE_PRESS;
-			}
-			if (eventTypeName.equals(IKeyword.MOUSE_UP)) {
-				return MOUSE_RELEASED;
-			}
-			if (eventTypeName.equals(IKeyword.MOUSE_CLICKED)) {
-				return MOUSE_CLICKED;
-			}
-			if (eventTypeName.equals(IKeyword.MOUSE_MOVED)) {
-				return MOUSE_MOVED;
-			}
-			if (eventTypeName.equals(IKeyword.MOUSE_ENTERED)) {
-				return MOUSE_ENTERED;
-			}
-			if (eventTypeName.equals(IKeyword.MOUSE_EXITED)) {
-				return MOUSE_EXITED;
-			}
-			return KEY_PRESSED;
-		}
-
-		@Override
-		public void mouseClicked(final int x, final int y, final int button) {
-			if (MOUSE_CLICKED == listenedEvent && button == 1) {
-				executeEvent(x, y);
-			}
-		}
-
-		@Override
-		public void mouseDown(final int x, final int y, final int button) {
-			if (MOUSE_PRESS == listenedEvent && button == 1) {
-				executeEvent(x, y);
-			}
-		}
-
-		@Override
-		public void mouseUp(final int x, final int y, final int button) {
-			if (MOUSE_RELEASED == listenedEvent && button == 1) {
-				executeEvent(x, y);
-			}
-		}
-
-		@Override
-		public void mouseMove(final int x, final int y) {
-			if (MOUSE_MOVED == listenedEvent) {
-				executeEvent(x, y);
-			}
-		}
-
-		@Override
-		public void mouseEnter(final int x, final int y) {
-			if (MOUSE_ENTERED == listenedEvent) {
-				executeEvent(x, y);
-			}
-		}
-
-		@Override
-		public void mouseExit(final int x, final int y) {
-			if (MOUSE_EXITED == listenedEvent) {
-				executeEvent(x, y);
-			}
-		}
-
-		private void executeEvent(final int x, final int y) {
-			final IAgent agent = ((EventLayerStatement) definition).executesInSimulation()
-					? executionScope.getSimulation() : executionScope.getExperiment();
-			final IExecutable executer = agent == null ? null : agent.getSpecies().getAction(actionName);
-			if (executer == null) {
-				return;
-			}
-			final ILocation pp = getModelCoordinatesFrom(x, y, surface);
-			if (pp == null) {
-				return;
-			}
-			if (pp.getX() < 0 || pp.getY() < 0 || pp.getX() >= surface.getEnvWidth()
-					|| pp.getY() >= surface.getEnvHeight()) {
-				if (MOUSE_EXITED != listenedEvent) {
-					return;
-				}
-			}
-			GAMA.runAndUpdateAll(() -> executionScope.execute(executer, agent, null));
-
-		}
-
-		/**
-		 * Method keyPressed()
-		 * 
-		 * @see msi.gama.outputs.layers.IEventLayerListener#keyPressed(java.lang.Character)
-		 */
-		@Override
-		public void keyPressed(final String c) {
-			if (c.equals(event)) {
-				executeEvent(-1, -1);
-			}
-		}
+	@operator (
+			value = "getPad",
+			can_be_const = false,
+			category = { IOperatorCategory.USER_CONTROL },
+			concept = { IConcept.LAYER })
+	@doc (
+			value = "get position of pressed pad",
+			examples = @example (
+					value = "getPad()",
+					test = false))
+	public static ILocation getPad(Integer idc) throws GamaRuntimeException {
+		 GamaPoint p=new GamaPoint(pressedPad.getX(),pressedPad.getY());
+		 return p;
 	}
+	
+	
+
+	@operator (
+			value = "getButton",
+			can_be_const = false,
+			category = { IOperatorCategory.USER_CONTROL },
+			concept = { IConcept.LAYER })
+	@doc (
+			value = "get Button list values",
+			examples = @example (
+					value = "getButton()",
+					test = false))
+	public static IList getButton(Integer idx) throws GamaRuntimeException {		
+		 IList p=GamaListFactory.create();
+		 p.add(pressedButton.values());
+		 return p;
+	}
+
+
+	private void executeEvent() {
+		final IAgent agent = ((EventLayerStatement) definition).executesInSimulation()
+				? executionScope.getSimulation() : executionScope.getExperiment();
+//		String actionName=(String) definition.getFacet("action").value(agent.getScope());
+				String actionName= ((EventLayerStatement) definition).getFacet("action").toString();
+		final IExecutable executer = agent == null ? null : agent.getSpecies().getAction(actionName);
+		if (executer == null) {
+			return;
+		}
+		executionScope.execute(executer, agent, null);
+
+	}
+
+	static Pad pressedPad;
+	static Button pressedButton;
+    public class MyLPListener extends LaunchpadListenerAdapter {
+
+        private final LaunchpadClient client;
+
+        public MyLPListener(LaunchpadClient client) {
+            this.client = client;
+        }
+
+        @Override
+        public void onPadPressed(Pad pad, long timestamp) {
+            client.setPadLight(pad, Color.YELLOW, BackBufferOperation.NONE);
+            pressedPad=pad;
+            System.out.println("onPadPressed "+pad.getX()+" "+pad.getY());
+        }
+
+        @Override
+        public void onPadReleased(Pad pad, long timestamp) {
+            client.setPadLight(pad, Color.BLACK, BackBufferOperation.NONE);
+            pressedPad=pad;
+
+            executeEvent();
+            System.out.println("onPadReleased "+pad.getX()+" "+pad.getY());
+        }
+
+        @Override
+        public void onButtonReleased(Button button, long timestamp) {
+            client.setButtonLight(button, Color.BLACK, BackBufferOperation.NONE);
+            pressedButton=button;
+            switch (button) {
+                case STOP:
+                    stop.countDown();
+                    break;
+            }
+        }
+    }
 
 	@Override
 	protected void privateDrawDisplay(final IScope scope, final IGraphics g) throws GamaRuntimeException {
@@ -301,10 +264,13 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 
 	@Override
 	public boolean createFrom(IScope scope, List<Map<String, Object>> inits, Integer max, Object source, Arguments init,
-			EventLayerStatement statement) {
+			EventLayerStatement stm) {
 		// TODO Auto-generated method stub
-//		System.out.println("LAUNCHPAD event layer delegate");
-		if(!launch) {
+
+		executionScope = scope;
+		System.out.println("LAUNCHPAD event layer delegate"+stm.getFacetValue(scope, "action"));
+		if(!launch) {			
+			definition=stm;
 			firstLaunchOn(null);
 		}
 		return false;
