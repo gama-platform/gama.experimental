@@ -158,6 +158,7 @@
  <module>../miat.gama.extension.ifcfile</module> 
  <module>../miat.gama.feature.ifcfile</module> 
  <module>../mit.feature.launchpad</module> 
+ <module>../mit.gaml.extension.launchpad</module> 
  <module>../msi.gama.experimental.p2updatesite</module> 
  <module>../simtools.gama.feature.gamanalyzer</module> 
  <module>../simtools.gamanalyzer.fr</module> 
