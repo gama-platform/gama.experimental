@@ -49,7 +49,7 @@ import net.thecodersbreakfast.lp4j.midi.MidiDeviceConfiguration;
 import net.thecodersbreakfast.lp4j.midi.MidiLaunchpad;
 
 /**
- * Written by marilleau
+ * Written by Arnaud Grignard & Huynh Quang Nghi (CC2017)
  */
 
 public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDelegate  {
@@ -59,7 +59,6 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 		super.setPositionAndSize(box, g);
 	}
 
-//	EventListener listener;
 	MyLPListener myListener;
 	IScope executionScope;
 	
@@ -71,63 +70,33 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 	}
 
 	@Override
-	public void enableOn(final IDisplaySurface surface) {
-//		surface.addListener(listener);
-	}
-
-	@Override
 	public void disableOn(final IDisplaySurface surface) {
 		super.disableOn(surface);
-//		surface.removeListener(listener);
 	}
 
-    private static CountDownLatch stop = new CountDownLatch(1);
-    
-    
     public static boolean launch=false;
-
 	Launchpad launchpad ;
 	LaunchpadClient client;
 	@Override
 	public void firstLaunchOn(final IDisplaySurface surface) {
 		super.firstLaunchOn(surface);
 		launch=true;
-//		final IExpression eventType = definition.getFacet(IKeyword.NAME);
-//		final IExpression actionName = definition.getFacet(IKeyword.ACTION);
-//		executionScope = surface.getScope().copy("of EventLayer");
 		try {
-			System.out.println("minipad");
+			System.out.println("LaunchPad launched");
 			launchpad = new MidiLaunchpad(MidiDeviceConfiguration.autodetect());
 			client = launchpad.getClient();
 			myListener = new MyLPListener(client);
 			launchpad.setListener((LaunchpadListener) myListener);
-
 			client.reset();
-			client.setButtonLight(Button.STOP, Color.RED, BackBufferOperation.NONE);
-
-//	        stop.await();
-//	        client.reset();
-//	        launchpad.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
-		// Evaluated in the display surface scope to gather variables defined in
-		// there
-//		final String currentEvent = Cast.asString(surface.getScope(), eventType.value(surface.getScope()));
-//		final String currentAction = Cast.asString(surface.getScope(), actionName.value(surface.getScope()));
-
-//		listener = new EventListener(surface, currentEvent, currentAction);
-//		surface.addListener(listener);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-//		listener.dispose();
-
         try {
         	client.reset();
 			launchpad.close();
@@ -142,19 +111,6 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 		return "Event layer";
 	}
 
-	// We explicitly translate by the origin of the surface
-	@Override
-	public ILocation getModelCoordinatesFrom(final int xOnScreen, final int yOnScreen, final IDisplaySurface g) {
-		if (xOnScreen == -1 && yOnScreen == -1)
-			return new GamaPoint(0, 0);
-		return g.getModelCoordinates();
-	}
-
-	// AD: Fix for Issue #1511
-	@Override
-	public boolean containsScreenPoint(final int x, final int y) {
-		return false;
-	}
 
 	@operator (
 			value = "getPad",
@@ -162,7 +118,7 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 			category = { IOperatorCategory.USER_CONTROL },
 			concept = { IConcept.LAYER })
 	@doc (
-			value = "get position of pressed pad",
+			value = "get pad pressed pad position",
 			examples = @example (
 					value = "getPad()",
 					test = false))
@@ -179,21 +135,25 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 			category = { IOperatorCategory.USER_CONTROL },
 			concept = { IConcept.LAYER })
 	@doc (
-			value = "get Button list values",
+			value = "get button pressed name",
 			examples = @example (
 					value = "getButton()",
 					test = false))
-	public static IList getButton(Integer idx) throws GamaRuntimeException {		
-		 IList p=GamaListFactory.create();
-		 p.add(pressedButton.values());
-		 return p;
+	public static String getButton(Integer idx) throws GamaRuntimeException {		
+		String name;
+		if(pressedButton!=null){
+			name =  pressedButton.name();	
+		}else{
+			name="NULL";
+		}
+		
+		return name;
 	}
 
 
 	private void executeEvent() {
 		final IAgent agent = ((EventLayerStatement) definition).executesInSimulation()
 				? executionScope.getSimulation() : executionScope.getExperiment();
-//		String actionName=(String) definition.getFacet("action").value(agent.getScope());
 				String actionName= ((EventLayerStatement) definition).getFacet("action").toString();
 		final IExecutable executer = agent == null ? null : agent.getSpecies().getAction(actionName);
 		if (executer == null) {
@@ -217,27 +177,24 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
         public void onPadPressed(Pad pad, long timestamp) {
             client.setPadLight(pad, Color.YELLOW, BackBufferOperation.NONE);
             pressedPad=pad;
-            System.out.println("onPadPressed "+pad.getX()+" "+pad.getY());
         }
 
         @Override
         public void onPadReleased(Pad pad, long timestamp) {
             client.setPadLight(pad, Color.BLACK, BackBufferOperation.NONE);
             pressedPad=pad;
-
             executeEvent();
-            System.out.println("onPadReleased "+pad.getX()+" "+pad.getY());
         }
-
+        
+        @Override
+        public void onButtonPressed(Button button, long timestamp) {
+            client.setButtonLight(button, Color.YELLOW, BackBufferOperation.NONE);
+            pressedButton=button;
+        }
         @Override
         public void onButtonReleased(Button button, long timestamp) {
             client.setButtonLight(button, Color.BLACK, BackBufferOperation.NONE);
             pressedButton=button;
-            switch (button) {
-                case STOP:
-                    stop.countDown();
-                    break;
-            }
         }
     }
 
