@@ -115,6 +115,26 @@
 			<version>1.7.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>ummisco.gama.ui.navigator</groupId>
+			<artifactId>ummisco.gama.ui.navigator</artifactId>
+			<version>1.7.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>msi.gama</groupId>
+			<artifactId>ummisco.gama.ui.shared</artifactId>
+			<version>1.7.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>msi.gama</groupId>
+			<artifactId>ummisco.gama.ui.modeling</artifactId>
+			<version>1.7.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>msi.gama</groupId>
+			<artifactId>msi.gama.application</artifactId>
+			<version>1.7.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.lang.gaml</artifactId>
 			<version>1.7.0-SNAPSHOT</version>
