@@ -9,6 +9,7 @@ Require-Bundle: msi.gama.core;visibility:=reexport,
 Bundle-ClassPath: .,
  lib/bridj-0.7.0.jar,
  lib/slf4j-api-1.7.2.jar,
- lib/webcam-capture-0.3.12-SNAPSHOT.jar
+ lib/webcam-capture-0.3.12-SNAPSHOT.jar,
+ lib/opencv-2413.jar
 Export-Package: cict.gaml.extensions.webcam
 Bundle-ActivationPolicy: lazy
