@@ -153,6 +153,48 @@ public class RSkill extends Skill {
 	}
 
 	@operator (
+			value = "startR",
+			content_type = IType.CONTAINER,
+			index_type = ITypeProvider.FIRST_CONTENT_TYPE,
+			category = { IOperatorCategory.GRAPH },
+			concept = { IConcept.STATISTIC, IConcept.CAST })
+	@doc (
+			value = "to_R_dataframe(speciesname)",
+			masterDoc = true,
+			comment = "convert agent attributes to dataframe of R",
+			examples = @example (
+					value = "to_R_dataframe(people)",
+					isExecutable = false),
+			see = { "R_eval" })
+	public String startR(final IScope scope) {
+		re = Rengine.getMainEngine();
+
+		if (re == null) {
+
+			re = new Rengine(args, false, new TextConsole());
+
+			if (loadedLib == null) {
+				loadedLib = (GamaList) dataConvert_R2G(re.eval("search()"));
+			}
+		} else {
+			scope.getSimulation().postDisposeAction(scope1 -> {
+				GamaList l = (GamaList) dataConvert_R2G(re.eval("search()"));
+				for (int i = 0; i < l.size(); i++) {
+					if (((String) l.get(i)).contains("package:") && loadedLib != null
+							&& !loadedLib.contains(l.get(i))) {
+						// System.out.println(l.get(i));
+						re.eval("detach(\"" + l.get(i) + "\")");
+					}
+				}
+				re.idleEval("rm(list=ls(all=TRUE))");
+				re.idleEval("gc()");
+				return null;
+			});
+		}
+
+		return "R started";
+	}
+	@operator (
 			value = "to_R_dataframe",
 			content_type = IType.CONTAINER,
 			index_type = ITypeProvider.FIRST_CONTENT_TYPE,
@@ -285,25 +327,7 @@ public class RSkill extends Skill {
 		re=Rengine.getMainEngine();
 		
 		if(re==null) {			
-			
-			re = new Rengine(args, false, new TextConsole());
-
-			if(loadedLib==null) {
-				loadedLib=(GamaList) dataConvert_R2G(re.eval("search()"));
-			}
-		}else {
-			scope.getSimulation().postDisposeAction(scope1 -> {
-				GamaList l=(GamaList) dataConvert_R2G(re.eval("search()"));
-				for(int i=0;i<l.size();i++) {
-					if(((String) l.get(i)).contains("package:") && !loadedLib.contains(l.get(i))) {
-//						System.out.println(l.get(i));
-						re.eval("detach(\""+l.get(i)+"\")");
-					}
-				}
-				re.idleEval("rm(list=ls(all=TRUE))");
-				re.idleEval("gc()");
-				return null;
-			});
+			return null;
 		}
 
 
