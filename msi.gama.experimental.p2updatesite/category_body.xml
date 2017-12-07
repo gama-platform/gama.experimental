@@ -8,5 +8,6 @@
  <feature  url="features/mit.feature.launchpad_1.0.0.qualifier.jar" id="mit.feature.launchpad" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/simtools.gama.feature.gamanalyzer_1.0.0.qualifier.jar" id="simtools.gama.feature.gamanalyzer" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/ummisco.gama.feature.camisole_1.0.0.qualifier.jar" id="ummisco.gama.feature.camisole" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
+ <feature  url="features/ummisco.gama.feature.markdown.documentation_1.0.0.qualifier.jar" id="ummisco.gama.feature.markdown.documentation" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/ummisco.gaml.feature.rjava_1.0.0.qualifier.jar" id="ummisco.gaml.feature.rjava" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
 
