@@ -18,7 +18,9 @@
  <module>../simtools.gamanalyzer.fr</module> 
  <module>../ummisco.gama.camisole</module> 
  <module>../ummisco.gama.feature.camisole</module> 
+ <module>../ummisco.gama.feature.markdown.documentation</module> 
  <module>../ummisco.gama.gaming</module> 
+ <module>../ummisco.gama.markdown.documentation</module> 
  <module>../ummisco.gama.remote.gui</module> 
  <module>../ummisco.gaml.extensions.rjava</module> 
  <module>../ummisco.gaml.feature.rjava</module> 
