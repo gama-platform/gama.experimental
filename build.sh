@@ -70,5 +70,5 @@ generate_p2updatesite_category
 git_push
 
 cd msi.gama.experimental.parent &&
-mvn clean install &&
+mvn clean install -U &&
 cd -

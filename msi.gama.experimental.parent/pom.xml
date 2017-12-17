@@ -116,6 +116,26 @@
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
+			<artifactId>msi.gama.application</artifactId>
+			<version>1.7.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ummisco.gama.ui.navigator</groupId>
+			<artifactId>ummisco.gama.ui.navigator</artifactId>
+			<version>1.7.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>msi.gama</groupId>
+			<artifactId>ummisco.gama.ui.modeling</artifactId>
+			<version>1.7.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>msi.gama</groupId>
+			<artifactId>ummisco.gama.ui.shared</artifactId>
+			<version>1.7.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.lang.gaml</artifactId>
 			<version>1.7.0-SNAPSHOT</version>
 		</dependency>
@@ -164,7 +184,9 @@
  <module>../simtools.gamanalyzer.fr</module> 
  <module>../ummisco.gama.camisole</module> 
  <module>../ummisco.gama.feature.camisole</module> 
+ <module>../ummisco.gama.feature.markdown.documentation</module> 
  <module>../ummisco.gama.gaming</module> 
+ <module>../ummisco.gama.markdown.documentation</module> 
  <module>../ummisco.gama.remote.gui</module> 
  <module>../ummisco.gaml.extensions.rjava</module> 
  <module>../ummisco.gaml.feature.rjava</module> 

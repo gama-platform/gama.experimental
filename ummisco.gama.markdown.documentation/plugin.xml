@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.handlers">
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:navigator.menu?after=menu.gama.import">
+         <separator
+               name="ummisco.gamadelio.separatorMenu"
+               visible="true">
+         </separator>
+         <command
+               commandId="ummisco.gamadelio.generateMD"
+               icon="icons/menu.generateMD.png"
+               id="ummisco.gamadelio.menu.generateMD"
+               label="Generate Markdown Documentation"
+               tooltip="Generate Markdown Documentation of a Model">
+               <visibleWhen
+		              checkEnabled="false">
+		                 <!--and>
+		              <test
+		                    property="org.eclipse.core.resources.name"
+		                    value="*.gaml">
+		              </test>
+		              <instanceof value="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/>
+		              </and-->
+		              <or>
+			             <with variable="activeMenuSelection">
+			            	 <iterate>
+			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/>
+			             	</iterate>
+			             </with>
+			             <with variable="activeMenuSelection">
+			            	 <iterate>
+			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedProject"/>
+			             	</iterate>
+			             </with>
+			             <with variable="activeMenuSelection">
+			            	 <iterate>
+			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedFolder"/>
+			             	</iterate>
+			             </with>
+		             </or>
+                     <!--instanceof value="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/-->
+		        </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="src.GenerateMDHandler"
+            id="ummisco.gamadelio.generateMD"
+            name="Generate Markdown Documentation from GAML">
+      </command>
+   </extension>
+
+</plugin>
