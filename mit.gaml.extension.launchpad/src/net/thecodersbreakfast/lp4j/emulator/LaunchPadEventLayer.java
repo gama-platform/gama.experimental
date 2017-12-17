@@ -30,6 +30,7 @@ import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.IConcept;
 import msi.gama.precompiler.IOperatorCategory;
+import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
@@ -76,7 +77,7 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 
     public static boolean launch=false;
 	Launchpad launchpad ;
-	LaunchpadClient client;
+	public static LaunchpadClient client;
 	@Override
 	public void firstLaunchOn(final IDisplaySurface surface) {
 		super.firstLaunchOn(surface);
@@ -112,45 +113,6 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 	}
 
 
-	@operator (
-			value = "getPad",
-			can_be_const = false,
-			category = { IOperatorCategory.USER_CONTROL },
-			concept = { IConcept.LAYER })
-	@doc (
-			value = "get pad pressed pad position",
-			examples = @example (
-					value = "getPad()",
-					test = false))
-	public static ILocation getPad(Integer idc) throws GamaRuntimeException {
-		 GamaPoint p=new GamaPoint(pressedPad.getX(),pressedPad.getY());
-		 return p;
-	}
-	
-	
-
-	@operator (
-			value = "getButton",
-			can_be_const = false,
-			category = { IOperatorCategory.USER_CONTROL },
-			concept = { IConcept.LAYER })
-	@doc (
-			value = "get button pressed name",
-			examples = @example (
-					value = "getButton()",
-					test = false))
-	public static String getButton(Integer idx) throws GamaRuntimeException {		
-		String name;
-		if(pressedButton!=null){
-			name =  pressedButton.name();	
-		}else{
-			name="NULL";
-		}
-		
-		return name;
-	}
-
-
 	private void executeEvent() {
 		final IAgent agent = ((EventLayerStatement) definition).executesInSimulation()
 				? executionScope.getSimulation() : executionScope.getExperiment();
@@ -160,11 +122,11 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 			return;
 		}
 		executionScope.execute(executer, agent, null);
-
+		//GAMA.getExperiment().refreshAllOutputs();
 	}
 
-	static Pad pressedPad;
-	static Button pressedButton;
+	public static Pad pressedPad;
+	public static Button pressedButton;
     public class MyLPListener extends LaunchpadListenerAdapter {
 
         private final LaunchpadClient client;
