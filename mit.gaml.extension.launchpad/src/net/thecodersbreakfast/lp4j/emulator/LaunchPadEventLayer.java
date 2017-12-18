@@ -182,23 +182,15 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 	}
 
 	@Override
-	public boolean createFrom(IScope scope, List<Map<String, Object>> inits, Integer max, Object source, Arguments init,
-			EventLayerStatement stm) {
+	public boolean createFrom(IScope scope, Object source, EventLayerStatement statement) {
 		// TODO Auto-generated method stub
-
 		executionScope = scope;
-		System.out.println("LAUNCHPAD event layer delegate"+stm.getFacetValue(scope, "action"));
+		System.out.println("LAUNCHPAD event layer delegate "+statement.getFacetValue(scope, "action"));
 		if(!launch) {			
-			definition=stm;
+			definition=statement;
 			firstLaunchOn(null);
 		}
 		return false;
-	}
-
-	@Override
-	public IType<?> fromFacetType() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
