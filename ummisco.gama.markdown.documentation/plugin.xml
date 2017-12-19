@@ -39,11 +39,6 @@
 			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedProject"/>
 			             	</iterate>
 			             </with>
-			             <with variable="activeMenuSelection">
-			            	 <iterate>
-			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedFolder"/>
-			             	</iterate>
-			             </with>
 		             </or>
                      <!--instanceof value="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/-->
 		        </visibleWhen>
@@ -53,7 +48,7 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="src.GenerateMDHandler"
+            defaultHandler="markdownSyntactic.GenerateMDHandler"
             id="ummisco.gamadelio.generateMD"
             name="Generate Markdown Documentation from GAML">
       </command>
