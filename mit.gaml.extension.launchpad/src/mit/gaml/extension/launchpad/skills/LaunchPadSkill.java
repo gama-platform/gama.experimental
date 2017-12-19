@@ -1,4 +1,4 @@
-package net.thecodersbreakfast.lp4j.skills;
+package mit.gaml.extension.launchpad.skills;
 
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
@@ -28,8 +28,6 @@ import net.thecodersbreakfast.lp4j.api.Color;
 import net.thecodersbreakfast.lp4j.api.Launchpad;
 import net.thecodersbreakfast.lp4j.api.LaunchpadClient;
 import net.thecodersbreakfast.lp4j.api.LaunchpadListener;
-import net.thecodersbreakfast.lp4j.emulator.LaunchPadEventLayer;
-import net.thecodersbreakfast.lp4j.emulator.LaunchPadEventLayer.MyLPListener;
 import net.thecodersbreakfast.lp4j.midi.MidiDeviceConfiguration;
 import net.thecodersbreakfast.lp4j.midi.MidiLaunchpad;
 

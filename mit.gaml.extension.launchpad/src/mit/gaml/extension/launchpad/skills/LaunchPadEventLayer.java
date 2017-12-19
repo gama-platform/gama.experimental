@@ -8,36 +8,20 @@
  * 
  *
  **********************************************************************************************/
-package net.thecodersbreakfast.lp4j.emulator;
+package mit.gaml.extension.launchpad.skills;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-
 import msi.gama.common.interfaces.IDisplaySurface;
 import msi.gama.common.interfaces.IEventLayerDelegate;
 import msi.gama.common.interfaces.IGraphics;
 import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.ILocation;
 import msi.gama.outputs.layers.AbstractLayer;
 import msi.gama.outputs.layers.EventLayerStatement;
 import msi.gama.outputs.layers.IDisplayLayerBox;
 import msi.gama.outputs.layers.ILayerStatement;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gaml.statements.Arguments;
 import msi.gaml.statements.IExecutable;
-import msi.gaml.types.IType;
 import net.thecodersbreakfast.lp4j.api.BackBufferOperation;
 import net.thecodersbreakfast.lp4j.api.Button;
 import net.thecodersbreakfast.lp4j.api.Color;
