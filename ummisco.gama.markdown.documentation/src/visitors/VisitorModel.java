@@ -100,7 +100,7 @@ public class VisitorModel implements SyntacticVisitor {
 	}
 	/**
 	 * Method used to visit a ISyntacticElement (expecting world species here), generating the markdown Text of it
-	 * @param exp {@code ISyntacticElement}, the ISyntacticElement representing the section world that will be used to generate the markdown code
+	 * @param element {@code ISyntacticElement}, the ISyntacticElement representing the section world that will be used to generate the markdown code
 	 */
 	public void visit(ISyntacticElement element) {
 		
@@ -135,6 +135,7 @@ public class VisitorModel implements SyntacticVisitor {
 			visitorAttributes.setText(mDText);
 			element.visitChildren(visitorAttributes);
 			mDText=visitorAttributes.getText();
+			mDText.append(MarkdownTools.endTable());
 
 			//Visit the actions and add the text of actions
 			mDText.append(MarkdownTools.goBeginLine());
@@ -143,6 +144,7 @@ public class VisitorModel implements SyntacticVisitor {
 			visitorActions.setText(mDText);
 			element.visitChildren(visitorActions);
 			mDText=visitorActions.getText();
+			mDText.append(MarkdownTools.endTable());
 
 			//Visit the reflexes and add the text of reflexes
 			mDText.append(MarkdownTools.goBeginLine());
@@ -151,6 +153,7 @@ public class VisitorModel implements SyntacticVisitor {
 			visitorReflexes.setText(mDText);
 			element.visitChildren(visitorReflexes);
 			mDText=visitorReflexes.getText();
+			mDText.append(MarkdownTools.endTable());
 		}
 	}
 }

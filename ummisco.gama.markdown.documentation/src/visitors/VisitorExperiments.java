@@ -105,24 +105,6 @@ public class VisitorExperiments implements SyntacticVisitor{
 			visitorParameters.setText(mDText);
 			element.visitChildren(visitorParameters);
 			mDText=visitorParameters.getText();
-			
-			//Add the reflexes to the Text
-			mDText.append(MarkdownTools.goBeginLine());
-			mDText.append(MarkdownTools.goBeginLine());
-			mDText.append(MarkdownTools.addSubSubSubHeader(IParser.MARKDOWN_LABEL_REFLEXES));
-			visitorReflexes.setText(mDText);
-			element.visitChildren(visitorReflexes);
-			visitorReflexes.first=true;
-			mDText=visitorReflexes.getText();
-
-			//Add the actions to the Text
-			mDText.append(MarkdownTools.goBeginLine());
-			mDText.append(MarkdownTools.goBeginLine());
-			mDText.append(MarkdownTools.addSubSubSubHeader(IParser.MARKDOWN_LABEL_ACTIONS));
-			visitorActions.setText(mDText);
-			element.visitChildren(visitorActions);
-			visitorActions.first=true;
-			mDText=visitorActions.getText();
 
 			//Add the attributes to the Text
 			mDText.append(MarkdownTools.goBeginLine());
@@ -132,6 +114,27 @@ public class VisitorExperiments implements SyntacticVisitor{
 			element.visitChildren(visitorAttributes);
 			visitorAttributes.first=true;
 			mDText=visitorAttributes.getText();
+			mDText.append(MarkdownTools.endTable());
+			
+			//Add the reflexes to the Text
+			mDText.append(MarkdownTools.goBeginLine());
+			mDText.append(MarkdownTools.goBeginLine());
+			mDText.append(MarkdownTools.addSubSubSubHeader(IParser.MARKDOWN_LABEL_REFLEXES));
+			visitorReflexes.setText(mDText);
+			element.visitChildren(visitorReflexes);
+			visitorReflexes.first=true;
+			mDText=visitorReflexes.getText();
+			mDText.append(MarkdownTools.endTable());
+
+			//Add the actions to the Text
+			mDText.append(MarkdownTools.goBeginLine());
+			mDText.append(MarkdownTools.goBeginLine());
+			mDText.append(MarkdownTools.addSubSubSubHeader(IParser.MARKDOWN_LABEL_ACTIONS));
+			visitorActions.setText(mDText);
+			element.visitChildren(visitorActions);
+			visitorActions.first=true;
+			mDText=visitorActions.getText();
+			mDText.append(MarkdownTools.endTable());
 
 			//Add the displays to the Text
 			mDText.append(MarkdownTools.goBeginLine());

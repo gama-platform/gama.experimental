@@ -67,7 +67,7 @@ public class VisitorAspects implements SyntacticVisitor{
 			//Display the aspect as an item of a markdown list
 			mDText.append(IParser.MARKDOWN_KEYWORD_LIST+IParser.MARKDOWN_KEYWORD_SPACE+element.getName());
 			//Add the commentaries surrounding the aspect
-			mDText.append(MarkdownTools.addQuote(MarkdownTools.getCommentsFromElement(element.getElement())));
+			mDText.append(MarkdownTools.addCode(MarkdownTools.getCommentsFromElement(element.getElement())));
 		}
 	}
 }

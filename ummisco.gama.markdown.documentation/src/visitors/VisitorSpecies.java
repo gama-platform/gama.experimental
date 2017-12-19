@@ -149,6 +149,7 @@ public class VisitorSpecies implements SyntacticVisitor{
 			visitorAttributes.first=true;
 			element.visitChildren(visitorAttributes);
 			mDText=visitorAttributes.getText();
+			mDText.append(MarkdownTools.endTable());
 
 			//Add the actions of the species
 			mDText.append(MarkdownTools.goBeginLine());
@@ -158,6 +159,7 @@ public class VisitorSpecies implements SyntacticVisitor{
 			visitorActions.first=true;
 			element.visitChildren(visitorActions);
 			mDText=visitorActions.getText();
+			mDText.append(MarkdownTools.endTable());
 
 			//Add the reflexes of the species
 			mDText.append(MarkdownTools.goBeginLine());
@@ -167,6 +169,7 @@ public class VisitorSpecies implements SyntacticVisitor{
 			visitorReflexes.first=true;
 			element.visitChildren(visitorReflexes);
 			mDText=visitorReflexes.getText();
+			mDText.append(MarkdownTools.endTable());
 
 			//Add the aspects of the species
 			mDText.append(MarkdownTools.goBeginLine());

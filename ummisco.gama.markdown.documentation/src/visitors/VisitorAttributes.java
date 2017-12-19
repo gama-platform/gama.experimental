@@ -1,5 +1,6 @@
 package visitors;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import markdownSyntactic.IParser;
@@ -61,25 +62,25 @@ public class VisitorAttributes implements SyntacticVisitor{
 			//If it is the first element, then creates the header of the tables of the attributes
 			if(first)
 			{
-				mDText.append(MarkdownTools.goBeginLine());
-				mDText.append(MarkdownTools.goBeginLine());
-				mDText.append("Type | Name ");
-				mDText.append(MarkdownTools.goBeginLine());
-				mDText.append("--- | --- ");
+				mDText.append(MarkdownTools.beginTable());
+				ArrayList<String> header = new ArrayList<String>();
+				header.add("Type");
+				header.add("Name");
+				mDText.append(MarkdownTools.addTableHeader(header));
 				first=false;
 			}
 			//Add the argument to the table ( type | Attribute name )
 			//But first try to determine if the type is not a built-in type
 			//in order to make a link with the documentation of the species and put the link in the left column
-			mDText.append(MarkdownTools.goBeginLine());
+			mDText.append(MarkdownTools.beginRow());
 			String type = element.getKeyword();
 			if(Types.get(type).toString().equals("unknown"))
 			{
 				type=MarkdownTools.addLink(type, speciesLink.get(type));
 			}
-			mDText.append(type+" | "+IParser.MARKDOWN_KEYWORD_SPACE+element.getName());
+			mDText.append(MarkdownTools.addCell(type));
 			//Add the type of the attributes in the right column
-			mDText.append(MarkdownTools.addBr()+MarkdownTools.addCode(MarkdownTools.getCommentsFromElement(element.getElement())));
+			mDText.append(MarkdownTools.addCell(element.getName()+MarkdownTools.addBr()+MarkdownTools.addCode(MarkdownTools.getCommentsFromElement(element.getElement()))));
 		}
 	}
 	/**
