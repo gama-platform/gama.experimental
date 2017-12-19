@@ -24,6 +24,14 @@ public class IParser {
 	public static String GAMA_KEYWORD_UNKNOWN = "unknown";
 	public static String GAMA_KEYWORD_VALUE = "value";
 	public static String GAMA_KEYWORD_WHEN = "when";
+	public static String HTML_BEGIN_ARRAY = "<table>";
+	public static String HTML_BEGIN_CELL = "<td>";
+	public static String HTML_BEGIN_HEADER = "<th>";
+	public static String HTML_BEGIN_ROW = "<tr>";
+	public static String HTML_END_ARRAY = "</table>";
+	public static String HTML_END_CELL = "</td>";
+	public static String HTML_END_HEADER = "</th>";
+	public static String HTML_END_ROW = "</tr>";
 	public static String JOB_NAME = "Generating Documentation";
 	public static String MARKDOWN_LABEL_GRID = "Grid";
 	public static String MARKDOWN_KEYWORD_HEADER = "#";

@@ -1,5 +1,7 @@
 package visitors;
 
+import java.util.ArrayList;
+
 import markdownSyntactic.IParser;
 import markdownSyntactic.MarkdownTools;
 import msi.gaml.compilation.ast.ISyntacticElement;
@@ -63,19 +65,18 @@ public class VisitorReflexes implements SyntacticVisitor{
 			//If it is the first reflex visited, we add the header of the table of reflexes
 			if(first)
 			{
-				mDText.append(MarkdownTools.goBeginLine());
-				mDText.append(MarkdownTools.goBeginLine());
-				mDText.append("Type | Name ");
-				mDText.append(MarkdownTools.goBeginLine());
-				mDText.append("--- | --- ");
+				mDText.append(MarkdownTools.beginTable());
+				ArrayList<String> header = new ArrayList<String>();
+				header.add("Type");
+				header.add("Name");
+				mDText.append(MarkdownTools.addTableHeader(header));
 				first=false;
 			}
 			//We add ( reflex | name of the reflex ) in the table
-			mDText.append(MarkdownTools.goBeginLine());
-			mDText.append(element.getKeyword()+" | "+IParser.MARKDOWN_KEYWORD_SPACE+element.getName());
-			mDText.append(MarkdownTools.addBr());
+			mDText.append(MarkdownTools.beginRow());
+			mDText.append(MarkdownTools.addCell(element.getKeyword()));
 			//We add the commentaries provided by the comments in GAML
-			mDText.append(MarkdownTools.addCode(MarkdownTools.getCommentsFromElement(element.getElement())));
+			mDText.append(MarkdownTools.addCell(IParser.MARKDOWN_KEYWORD_SPACE+element.getName()+MarkdownTools.addBr()+MarkdownTools.addCode(MarkdownTools.getCommentsFromElement(element.getElement()))));
 		}
 	}
 }

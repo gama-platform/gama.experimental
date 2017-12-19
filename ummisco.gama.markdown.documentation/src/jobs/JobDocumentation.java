@@ -148,7 +148,7 @@ public abstract class JobDocumentation extends WorkspaceJob {
 		mDText.append(MarkdownTools.goBeginLine());
 		mDText.append(MarkdownTools.addLine());
 		mDText.append(MarkdownTools.goBeginLine());
-		mDText.append(MarkdownTools.addSubHeader(IParser.MARKDOWN_LABEL_SPECIES));
+		mDText.append(MarkdownTools.addSubHeader(IParser.MARKDOWN_LABEL_SPECIES+" ("+speciesLink.keySet().size()+")"));
 		
 		//Sorts the species alphabetically
 		List<String> species = new ArrayList( Arrays.asList(speciesLink.keySet().toArray()));
@@ -166,7 +166,7 @@ public abstract class JobDocumentation extends WorkspaceJob {
 		mDText.append(MarkdownTools.addLine());
 		mDText.append(MarkdownTools.goBeginLine());
 		
-		mDText.append(MarkdownTools.addSubHeader(IParser.MARKDOWN_LABEL_EXPERIMENTS));
+		mDText.append(MarkdownTools.addSubHeader(IParser.MARKDOWN_LABEL_EXPERIMENTS+" ("+experimentsLink.keySet().size()+")"));
 		
 
 		//Sorts the experiments alphabetically
@@ -194,7 +194,7 @@ public abstract class JobDocumentation extends WorkspaceJob {
 	
 	/**
 	 * Method to generate the documentation of a given file (can be the documentation of a whole model)
-	 * @param aFile
+	 * @param aFile {@code WrappedGamaFile} the file that will be used for documentation
 	 */
 	public void generateForWrappedGamaFile(WrappedGamaFile aFile)
 	{ 

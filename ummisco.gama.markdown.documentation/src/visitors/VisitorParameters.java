@@ -24,7 +24,7 @@ public class VisitorParameters implements SyntacticVisitor{
 	}
 	/**
 	 * Method used to visit a ISyntacticElement (expecting parameters here), generating the markdown Text of it
-	 * @param exp {@code ISyntacticElement}, the ISyntacticElement representing a Parameter that will be used to generate the markdown code
+	 * @param element {@code ISyntacticElement}, the ISyntacticElement representing a Parameter that will be used to generate the markdown code
 	 */
 	public void visit(ISyntacticElement element) {
 		if(element.getKeyword().equals("parameter"))

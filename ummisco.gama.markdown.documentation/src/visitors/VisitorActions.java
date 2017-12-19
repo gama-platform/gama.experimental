@@ -1,5 +1,6 @@
 package visitors;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -63,18 +64,18 @@ public class VisitorActions implements SyntacticVisitor {
 			//If it is the first element, define the header of the table of actions
 			if(first)
 			{
-				mDText.append(MarkdownTools.goBeginLine());
-				mDText.append(MarkdownTools.goBeginLine());
-				mDText.append("Type | Name ");
-				mDText.append(MarkdownTools.goBeginLine());
-				mDText.append("--- | --- ");
+				mDText.append(MarkdownTools.beginTable());
+				ArrayList<String> header = new ArrayList<String>();
+				header.add("Type");
+				header.add("Name");
+				mDText.append(MarkdownTools.addTableHeader(header));
 				first=false;
 			}
 			VisitorDebug.DEBUG("          doing the action "+element.getName());
 			//Add the action to the table (Return type | Action_name( type_param name_param, .... ) )
 			//But first try to determine if the return type (if there is any) is not a built-in type
 			//in order to make a link with the documentation of the species and put the link in the left column
-			mDText.append(MarkdownTools.goBeginLine());
+			mDText.append(MarkdownTools.beginRow());
 			if((element.hasFacet(IParser.GAMA_KEYWORD_TYPE))&&(element.getExpressionAt(IParser.GAMA_KEYWORD_TYPE).toString().equals("null")==false))
 			{
 				String type = element.getExpressionAt(IParser.GAMA_KEYWORD_TYPE).toString();
@@ -82,21 +83,30 @@ public class VisitorActions implements SyntacticVisitor {
 				{
 					type=MarkdownTools.addLink(type, speciesLink.get(type));
 				}
-				mDText.append(type);
+				mDText.append(MarkdownTools.addCell(type));
 			}
-			mDText.append(" | ");
+			else
+			{
+				mDText.append(MarkdownTools.addCell(""));
+			}
+			StringBuilder cellValue = new StringBuilder();
 			
 			//Add the name of the actions and its parameters in the right column
-			mDText.append(IParser.MARKDOWN_KEYWORD_SPACE+element.getName());
-			mDText.append("(");
-			visitorArgs.setText(mDText);
+			cellValue.append(IParser.MARKDOWN_KEYWORD_SPACE+element.getName());
+			cellValue.append("(");
+			visitorArgs.setText(cellValue);
 			element.visitChildren(visitorArgs);
-			mDText=visitorArgs.getText();
-			mDText.append(")");
-			mDText.append(MarkdownTools.addBr());
+			cellValue=visitorArgs.getText();
+			cellValue.append(")");
+			
+			
+			cellValue.append(MarkdownTools.addBr());
 			
 			//Add commentaries given by the GAML code (using /** */)
-			mDText.append(MarkdownTools.addCode(MarkdownTools.getCommentsFromElement(element.getElement())));
+			cellValue.append(MarkdownTools.addCode(MarkdownTools.getCommentsFromElement(element.getElement())));
+			mDText.append(MarkdownTools.addCell(cellValue.toString()));
+			cellValue=null;
+			mDText.append(MarkdownTools.endRow());
 		}
 	}
 	
