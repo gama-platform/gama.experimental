@@ -1,49 +1,33 @@
 /**
-* Name: Event Feature
-* Author: Arnaud Grignard & Patrick Taillandier
-* Description: Model which shows how to use the event layer to trigger an action according to an event occuring in the display. The experiment 
-* has two displays : one for the changing color event, one for the changing shape event.
-* Tags: gui
+* Name: Launch Pad Event Feature
+* Author: Arnaud Grignard & Huynh Quang Nghi
+* Description: Model which shows how to use the event layer to trigger an action with a LaunchPAd Novation
+* Tags: tangible interface, gui
  */
 model event_layer_model
 
-
-global
+global skills:[launchpadskill]
 {
-
-//number of agents to create
-	int nbAgent <- 500;
-	init
-	{
-	}
-
-	//Action to change the color of the agents, according to the point to know which agents we're in intersection with the point
-	action change_color
-	{
-		point p <- getPad(0);
-		write p;
-//		write getButton(0);
-		ask cell[ int(p.x *8 + p.y)]
-		{
-			write self;
-			if (color = # green)
-			{
-				color <- # red;
-			} else
-			{
-				color <- # green;
-			}
-
+	map<string,rgb> function_map <-["UP"::#red,"DOWN"::#green,"LEFT"::#blue,"RIGHT"::#yellow,"SESSION"::#cyan,"USER_1"::#magenta,"USER_2"::#black,"MIXER"::#white];
+	init{}
+	action updateGrid
+	{   
+		if(function_map.keys contains buttonPressed and buttonPressed != "MIXER"){
+		    ask cell[ int(padPressed.y *8 + padPressed.x)]{color <- function_map[buttonPressed];}
+		    do setPadLight color:"yellow";
 		}
-		//change the color of the agents
-		//		list<cell> selected_agents <- cell overlapping (circle(10) at_location #user_location);
-		//		ask selected_agents
-		//		{
-		//			color <- color = °green ? °pink : °green;
-		//		}
-
+		if(buttonPressed = "MIXER"){
+			ask cell[ int(padPressed.y *8 + padPressed.x)]{color <- function_map[buttonPressed];}
+		}		
+		write buttonPressed;
+		if(buttonPressed="ARM"){
+			do resetPad;
+		}
 	}
-
+	
+	reflex when:cycle=0{
+		do resetPad;
+	}
 }
 
 grid cell width: 8 height: 8
@@ -58,13 +42,7 @@ experiment Displays type: gui
 		display View_change_color type: opengl
 		{
 			grid cell lines: # black;
-
-			//event, launches the action change_shape if the event mouse_down (ie. the user clicks on the layer event) is triggered
-			// The block is executed in the context of the experiment, so we have to ask the simulation to do it. 
-			event "pad_down" type: "launchpad" action: change_color;
+			event "pad_down2" type: "launchpad" action: updateGrid;
 		}
-
 	}
-
 }
-
