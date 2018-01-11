@@ -15,6 +15,7 @@ import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.GamlAnnotations.var;
 import msi.gama.precompiler.GamlAnnotations.vars;
+import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
@@ -38,9 +39,9 @@ import net.thecodersbreakfast.lp4j.midi.MidiLaunchpad;
 		type = IType.STRING,
 		doc = @doc ("get button pressed name")),
 		@var (
-			name = "padPressed",
-			type = IType.POINT,
-			doc = @doc ("get pad pressed name"))})
+		name = "padPressed",
+		type = IType.POINT,
+		doc = @doc ("get pad pressed name"))})
 
 
 @doc ("The launchpad skill is intended to interact with a simulation using a launchpad interface")
@@ -57,13 +58,6 @@ public class LaunchPadSkill  extends Skill{
 		}
 		return name;
 	}
-
-	/*@setter ("buttonPressed" )
-	public void setButtonPressed(String s) {
-		if(LaunchPadEventLayer.pressedButton!=null){
-		  LaunchPadEventLayer.client.setButtonLight(LaunchPadEventLayer.pressedButton, Color.RED, BackBufferOperation.NONE);
-		}
-	}*/
 	
 	@getter ("padPressed")
 	public ILocation getPadPressed() {
@@ -71,26 +65,26 @@ public class LaunchPadSkill  extends Skill{
 		return p;	
 	}
 
-	/*@setter ("padPressed" )
-	public void setPadPressed(ILocation l) {
-		if(LaunchPadEventLayer.pressedPad!=null){
-			LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.RED, BackBufferOperation.NONE);
-		}
-	}*/
-	
-	
-	
-	@action (
-			name = "resetPad",
-			doc = @doc (
-					examples = { @example ("do resetPad;") },
-					value = "initialize the pad"))
-
+	@action (name = "resetPad",
+			 doc = @doc (
+			 examples = { @example ("do resetPad;") },
+			 value = "reset the pad"))
 	public void resetPad(final IScope scope) throws GamaRuntimeException {
-		LaunchPadEventLayer.client.reset();
+		if(LaunchPadEventLayer.client !=null){
+			LaunchPadEventLayer.client.reset();	
+		}
 		return;
 	}
 	
+	@action (
+			name = "updateDisplay",
+			doc = @doc (
+			examples = { @example ("do updateDisplay;") },
+			value = "update GAMA Display"))
+	public void updateDisplay(final IScope scope) throws GamaRuntimeException {
+		GAMA.getExperiment().refreshAllOutputs();
+		return;
+	}
 	
 	@action (
 			name = "setPadLight",
@@ -107,7 +101,6 @@ public class LaunchPadSkill  extends Skill{
 
 	public void setPadLight(final IScope scope) throws GamaRuntimeException {
 		final String colorString = scope.hasArg("color") ? (String) scope.getArg("color", IType.STRING) : "black";
-		System.out.println("colorString" + colorString);
 		if(LaunchPadEventLayer.pressedPad!=null){	
 			if(colorString.equals("amber")){
 				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.AMBER, BackBufferOperation.NONE);	
