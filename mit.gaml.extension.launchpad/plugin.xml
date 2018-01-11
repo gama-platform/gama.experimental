@@ -7,7 +7,7 @@
 <extension
          point="gama.event_layer">
       <implementation
-            class="net.thecodersbreakfast.lp4j.emulator.LaunchPadEventLayer">
+            class="mit.gaml.extension.launchpad.skills.LaunchPadEventLayer">
       </implementation>
    </extension>
 </plugin>
