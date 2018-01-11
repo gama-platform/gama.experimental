@@ -12,6 +12,7 @@ global skills:[launchpadskill]
 	init{}
 	action updateGrid
 	{   
+		write buttonPressed;
 		if(function_map.keys contains buttonPressed and buttonPressed != "MIXER"){
 		    ask cell[ int(padPressed.y *8 + padPressed.x)]{color <- function_map[buttonPressed];}
 		    do setPadLight color:"yellow";
@@ -19,14 +20,18 @@ global skills:[launchpadskill]
 		if(buttonPressed = "MIXER"){
 			ask cell[ int(padPressed.y *8 + padPressed.x)]{color <- function_map[buttonPressed];}
 		}		
-		write buttonPressed;
+		
 		if(buttonPressed="ARM"){
 			do resetPad;
+			ask cell{
+				color<-#white;
+			}
 		}
+		do updateDisplay;
 	}
 	
-	reflex when:cycle=0{
-		do resetPad;
+	init{
+	  do resetPad;	
 	}
 }
 
@@ -46,3 +51,6 @@ experiment Displays type: gui
 		}
 	}
 }
+
+
+
