@@ -102,8 +102,8 @@ public class LaunchPadSkill  extends Skill{
 	public void setPadLight(final IScope scope) throws GamaRuntimeException {
 		final String colorString = scope.hasArg("color") ? (String) scope.getArg("color", IType.STRING) : "black";
 		if(LaunchPadEventLayer.pressedPad!=null){	
-			if(colorString.equals("amber")){
-				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.AMBER, BackBufferOperation.NONE);	
+			if(colorString.equals("brown")){
+				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.BROWN, BackBufferOperation.NONE);	
 			}
 			if(colorString.equals("black")){
 				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.BLACK, BackBufferOperation.NONE);	
@@ -111,14 +111,23 @@ public class LaunchPadSkill  extends Skill{
 			if(colorString.equals("green")){
 				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.GREEN, BackBufferOperation.NONE);	
 			}
+			if(colorString.equals("darkgreen")){
+				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.DARKGREEN, BackBufferOperation.NONE);	
+			}
 			if(colorString.equals("orange")){
 				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.ORANGE, BackBufferOperation.NONE);	
 			}
 			if(colorString.equals("red")){
 				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.RED, BackBufferOperation.NONE);	
 			}
+			if(colorString.equals("darkred")){
+				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.DARKRED, BackBufferOperation.NONE);	
+			}
 			if(colorString.equals("yellow")){
 				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.YELLOW, BackBufferOperation.NONE);	
+			}
+			if(colorString.equals("lightyellow")){
+				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.LIGHTYELLOW, BackBufferOperation.NONE);	
 			}
 		}
 		return;
