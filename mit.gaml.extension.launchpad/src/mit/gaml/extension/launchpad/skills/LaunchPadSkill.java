@@ -1,36 +1,28 @@
 package mit.gaml.extension.launchpad.skills;
 
-import msi.gama.common.interfaces.IKeyword;
-import msi.gama.metamodel.agent.IAgent;
+
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.ILocation;
-import msi.gama.metamodel.shape.IShape;
 import msi.gama.precompiler.IConcept;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.getter;
-import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.GamlAnnotations.var;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaColor;
-import msi.gama.util.path.IPath;
-import msi.gaml.operators.Maths;
+import msi.gama.util.GamaList;
+import msi.gaml.operators.Cast;
 import msi.gaml.skills.Skill;
-import msi.gaml.types.GamaGeometryType;
 import msi.gaml.types.IType;
 import net.thecodersbreakfast.lp4j.api.BackBufferOperation;
+import net.thecodersbreakfast.lp4j.api.Button;
 import net.thecodersbreakfast.lp4j.api.Color;
-import net.thecodersbreakfast.lp4j.api.Launchpad;
-import net.thecodersbreakfast.lp4j.api.LaunchpadClient;
-import net.thecodersbreakfast.lp4j.api.LaunchpadListener;
-import net.thecodersbreakfast.lp4j.midi.MidiDeviceConfiguration;
-import net.thecodersbreakfast.lp4j.midi.MidiLaunchpad;
+
 
 
 
@@ -52,7 +44,7 @@ public class LaunchPadSkill  extends Skill{
 	public String getButtonPressed() {
 		String name;
 		if(LaunchPadEventLayer.pressedButton!=null){
-			name =  LaunchPadEventLayer.pressedButton.name();	
+			name =  LaunchPadEventLayer.pressedButton.name();
 		}else{
 			name="NULL";
 		}
@@ -130,6 +122,37 @@ public class LaunchPadSkill  extends Skill{
 				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.LIGHTYELLOW, BackBufferOperation.NONE);	
 			}
 		}
+		return;
+	}
+	
+	
+	@action (
+			name = "setButtonLight",
+			args = { @arg (
+					name = "colors",
+					type = IType.LIST,
+					optional = false,
+					doc = @doc ("Color of the top button "))
+
+			},
+			doc = @doc (
+					examples = { @example ("do setButtonLight colors: colors;") },
+					value = "set the color of the top buttons"))
+
+	public void setButtonLight(final IScope scope) throws GamaRuntimeException {
+		//final GamaList function_map = scope.hasArg("color") ?  (GamaList) scope.getArg("color", IType.LIST) : "black"
+		//final GamaList<String> colors = (GamaList<String>) Cast.asList(null, scope.getArg("colors", IType.LIST));
+		if(LaunchPadEventLayer.client !=null){
+			LaunchPadEventLayer.client.setButtonLight(Button.UP, Color.GREEN, BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.DOWN, Color.RED, BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.LEFT, Color.ORANGE, BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.RIGHT, Color.YELLOW, BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.SESSION, Color.BROWN, BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.USER_1, Color.LIGHTYELLOW, BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.USER_2, Color.DARKGREEN, BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.MIXER, Color.BLACK, BackBufferOperation.NONE);	
+		}
+		
 		return;
 	}
 
