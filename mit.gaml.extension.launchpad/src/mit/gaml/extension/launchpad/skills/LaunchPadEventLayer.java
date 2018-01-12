@@ -134,12 +134,12 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
         
         @Override
         public void onButtonPressed(Button button, long timestamp) {
-            client.setButtonLight(button, Color.YELLOW, BackBufferOperation.NONE);
+            //client.setButtonLight(button, Color.YELLOW, BackBufferOperation.NONE);
             pressedButton=button;
         }
         @Override
         public void onButtonReleased(Button button, long timestamp) {
-            client.setButtonLight(button, Color.BLACK, BackBufferOperation.NONE);
+            //client.setButtonLight(button, Color.BLACK, BackBufferOperation.NONE);
             pressedButton=button;
         }
     }
