@@ -3,6 +3,7 @@ package mit.gaml.extension.launchpad.skills;
 
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.ILocation;
+import msi.gama.metamodel.shape.IShape;
 import msi.gama.precompiler.IConcept;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
@@ -22,8 +23,6 @@ import msi.gaml.types.IType;
 import net.thecodersbreakfast.lp4j.api.BackBufferOperation;
 import net.thecodersbreakfast.lp4j.api.Button;
 import net.thecodersbreakfast.lp4j.api.Color;
-
-
 
 
 @vars ({ @var (
@@ -140,20 +139,17 @@ public class LaunchPadSkill  extends Skill{
 					value = "set the color of the top buttons"))
 
 	public void setButtonLight(final IScope scope) throws GamaRuntimeException {
-		//final GamaList function_map = scope.hasArg("color") ?  (GamaList) scope.getArg("color", IType.LIST) : "black"
-		//final GamaList<String> colors = (GamaList<String>) Cast.asList(null, scope.getArg("colors", IType.LIST));
+		final GamaList color_Map = (GamaList) scope.getArg("colors", IType.LIST);
 		if(LaunchPadEventLayer.client !=null){
-			LaunchPadEventLayer.client.setButtonLight(Button.UP, Color.GREEN, BackBufferOperation.NONE);
-			LaunchPadEventLayer.client.setButtonLight(Button.DOWN, Color.RED, BackBufferOperation.NONE);
-			LaunchPadEventLayer.client.setButtonLight(Button.LEFT, Color.ORANGE, BackBufferOperation.NONE);
-			LaunchPadEventLayer.client.setButtonLight(Button.RIGHT, Color.YELLOW, BackBufferOperation.NONE);
-			LaunchPadEventLayer.client.setButtonLight(Button.SESSION, Color.BROWN, BackBufferOperation.NONE);
-			LaunchPadEventLayer.client.setButtonLight(Button.USER_1, Color.LIGHTYELLOW, BackBufferOperation.NONE);
-			LaunchPadEventLayer.client.setButtonLight(Button.USER_2, Color.DARKGREEN, BackBufferOperation.NONE);
-			LaunchPadEventLayer.client.setButtonLight(Button.MIXER, Color.BLACK, BackBufferOperation.NONE);	
+			LaunchPadEventLayer.client.setButtonLight(Button.UP, LaunchPadEventLayer.colorMap.get(color_Map.get(0)), BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.DOWN, LaunchPadEventLayer.colorMap.get(color_Map.get(1)), BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.LEFT, LaunchPadEventLayer.colorMap.get(color_Map.get(2)), BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.RIGHT, LaunchPadEventLayer.colorMap.get(color_Map.get(3)), BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.SESSION, LaunchPadEventLayer.colorMap.get(color_Map.get(4)), BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.USER_1, LaunchPadEventLayer.colorMap.get(color_Map.get(5)), BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.USER_2, LaunchPadEventLayer.colorMap.get(color_Map.get(6)), BackBufferOperation.NONE);
+			LaunchPadEventLayer.client.setButtonLight(Button.MIXER, LaunchPadEventLayer.colorMap.get(color_Map.get(7)), BackBufferOperation.NONE);	
 		}
-		
 		return;
 	}
-
 }

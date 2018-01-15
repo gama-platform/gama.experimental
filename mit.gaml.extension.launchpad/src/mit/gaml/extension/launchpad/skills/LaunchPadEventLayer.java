@@ -11,6 +11,8 @@
 package mit.gaml.extension.launchpad.skills;
 
 import java.io.IOException;
+import java.util.HashMap;
+
 import msi.gama.common.interfaces.IDisplaySurface;
 import msi.gama.common.interfaces.IEventLayerDelegate;
 import msi.gama.common.interfaces.IGraphics;
@@ -46,6 +48,17 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 
 	MyLPListener myListener;
 	IScope executionScope;
+	public static HashMap<String, Color> colorMap = new HashMap<String, Color>() {{
+	    put("black",Color.BLACK);
+	    put("red",Color.RED);
+	    put("darkred",Color.DARKRED);
+	    put("green",Color.GREEN);
+	    put("darkgreen",Color.DARKGREEN);
+	    put("orange",Color.ORANGE);
+	    put("brown",Color.BROWN);
+	    put("yellow",Color.YELLOW);
+	    put("lightyellow",Color.LIGHTYELLOW);
+	}};
 	
 	public LaunchPadEventLayer() {		
 	}
