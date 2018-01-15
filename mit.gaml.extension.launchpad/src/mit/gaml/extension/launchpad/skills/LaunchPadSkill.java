@@ -132,7 +132,6 @@ public class LaunchPadSkill  extends Skill{
 					type = IType.LIST,
 					optional = false,
 					doc = @doc ("Color of the top button "))
-
 			},
 			doc = @doc (
 					examples = { @example ("do setButtonLight colors: colors;") },
