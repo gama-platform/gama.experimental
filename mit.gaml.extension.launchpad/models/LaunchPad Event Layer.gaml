@@ -1,7 +1,7 @@
 /**
 * Name: Launch Pad Event Feature
 * Author: Arnaud Grignard 
-* Description: Model which shows how to use the event layer to trigger an action with a LaunchPAd Novation
+* Description: Model which shows how to use the event layer to trigger an action with a LaunchPad Novation (This model only work with the launchpad plugins extension available in GAMA 1.7 since January 2018)
 * Tags: tangible interface, gui, launchpad
  */
 model event_layer_model
@@ -41,13 +41,10 @@ experiment Displays type: gui
 {
 	output
 	{
-		display View_change_color type: opengl
+		display View_change_color 
 		{
-			grid cell lines: # black;
+			grid cell lines: #black;
 			event "pad_down2" type: "launchpad" action: updateGrid;
 		}
 	}
 }
-
-
-
