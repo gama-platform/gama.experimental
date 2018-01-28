@@ -128,8 +128,7 @@ public class RSkill extends Skill {
 					@example(" R_eval(\"data(iris)\")") }))
 	public Object primREval(final IScope scope) throws GamaRuntimeException {
 		// re = new Rengine(args, false, new TextConsole());
-		initEnv(scope);
-
+	
 
 
 		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split(System.getProperty("line.separator"));
@@ -152,21 +151,13 @@ public class RSkill extends Skill {
 		return dataConvert_R2G(x);
 	}
 
-	@operator (
-			value = "startR",
-			content_type = IType.CONTAINER,
-			index_type = ITypeProvider.FIRST_CONTENT_TYPE,
-			category = { IOperatorCategory.GRAPH },
-			concept = { IConcept.STATISTIC, IConcept.CAST })
-	@doc (
-			value = "to_R_dataframe(speciesname)",
-			masterDoc = true,
-			comment = "convert agent attributes to dataframe of R",
-			examples = @example (
-					value = "to_R_dataframe(people)",
-					isExecutable = false),
-			see = { "R_eval" })
+	
+	@action(name = "startR", doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
+					@example("startR") }))
+	
 	public String startR(final IScope scope) {
+		initEnv(scope);
+
 		re = Rengine.getMainEngine();
 
 		if (re == null) {
@@ -311,7 +302,6 @@ public class RSkill extends Skill {
 				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
 				fieldSysPath.setAccessible( true );
 				fieldSysPath.set( null, null );
-//				System.loadLibrary("jri");
 				
 			}catch(Exception ex) {
 				scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
@@ -319,6 +309,7 @@ public class RSkill extends Skill {
 			}
 //			System.out.println(System.getProperty("java.library.path"));
 		}
+		System.loadLibrary("jri");
 //		if(System.getenv("R_HOME")==null) {
 //			return "missing R_HOME";
 //		}

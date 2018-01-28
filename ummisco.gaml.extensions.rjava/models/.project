@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>comodel</name>
-	<comment>ummisco.gaml.extensions.rjava</comment>
+	<comment>rjava plugin</comment>
 	<projects>
 	</projects>
 	<buildSpec>
