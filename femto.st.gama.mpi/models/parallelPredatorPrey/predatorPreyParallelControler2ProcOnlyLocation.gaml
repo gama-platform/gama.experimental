@@ -39,16 +39,15 @@ global skills:[MPI_Network] {
 		   		p <- evaluate_sub_model(exp,"ask predator where (each.location.x > 100){remove self from: scheduled_predators; do die;}");
 			
 				/* Get agents in the overlap zone  and send them to neighbor */
-				list<prey> preyList <- evaluate_sub_model(exp,"(prey where (each.location.x > 90 and each.location.x < 100)) collect (each)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
-				list<predator> predatorList <- evaluate_sub_model(exp,"(predator where (each.location.x > 90 and each.location.x < 100)) collect (each)"); //([each.location,each.max_energy,each.max_transfert,each.energy_consum])");
+				list<point> preyList <- evaluate_sub_model(exp,"(prey where (each.location.x > 90 and each.location.x < 100)) collect (each.location)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
+				list<point> predatorList <- evaluate_sub_model(exp,"(predator where (each.location.x > 90 and each.location.x < 100)) collect (each.location)"); //([each.location,each.max_energy,each.max_transfert,each.energy_consum])");
 	    	    do MPI_SEND mesg: preyList dest: destinataire stag: 50;
 	    	    do MPI_SEND mesg: predatorList dest: destinataire stag: 50;
-				write("*** 0 sends overlap, loop " + l + " size " + length(preyList));
+				write("*** 0 sends overlap, loop " + l);
 				
 				/* Receive overlap zone from neighbor  */
-				list lpreys <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
-		        write ("------------- toto " + length(lpreys));
-				list<predator> lpreds <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
+				list<point> lpreys <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
+		        list<point> lpreds <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
 		        write("*** 0 receive overlap. received = " + lpreys + " loop " + lpreds);
 		        		        
 		        int nbCreatePrey <- evaluate_sub_model(exp,"create_preys(" + lpreys + ", false)");
@@ -60,15 +59,15 @@ global skills:[MPI_Network] {
 				write "*** 0 model run, step" + st + " prey " + p;
 				
 				/* Gather agents that have moved in the other part  and send then on the other side */
-				list<prey> outcomePreyList <- evaluate_sub_model(exp,"(scheduled_preys where (each.location.x > 100)) collect (each.location)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
-				list<predator> outcomePredatorList <- evaluate_sub_model(exp,"(scheduled_predators where (each.location.x > 100)) collect (each.location)"); //each.max_energy,each.max_transfert,each.energy_consum])");
+				list<point> outcomePreyList <- evaluate_sub_model(exp,"(scheduled_preys where (each.location.x > 100)) collect (each.location)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
+				list<point> outcomePredatorList <- evaluate_sub_model(exp,"(scheduled_predators where (each.location.x > 100)) collect (each.location)"); //each.max_energy,each.max_transfert,each.energy_consum])");
 		    	do MPI_SEND mesg: outcomePreyList dest: destinataire stag: 50;
 		    	do MPI_SEND mesg: outcomePredatorList dest: destinataire stag: 50;
 				write ("*** 0, after send outcomes, step " + l );
 				
 		    	/*  Receive incominig agents and create them in my part */
-				list<prey> incomePreyList <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
-		        list<predator> incomePredatorList <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
+				list<point> incomePreyList <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
+		        list<point> incomePredatorList <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
 		        int nbCreatePrey <- evaluate_sub_model(exp,"create_preys("+incomePreyList+", true)");
 		        int nbCreatePred <- evaluate_sub_model(exp,"create_predators("+incomePredatorList+", true)");
 				write ("*** 0, after incomes, step " + l );	
@@ -93,7 +92,7 @@ global skills:[MPI_Network] {
 				list<point> predatorList <- evaluate_sub_model(exp,"(predator where (each.location.x > 100 and each.location.x < 110)) collect (each.location)"); //each.max_energy,each.max_transfert,each.energy_consum])");
 		    	do MPI_SEND mesg: preyList dest: destinataire stag: 50;
 		    	do MPI_SEND mesg: predatorList dest: destinataire stag: 50;
-				write("*** 1 sends overlap, loop " + l + " size " + length(preyList));
+				write("*** 1 sends overlap, loop " + l);
 		    		
 		        /* Receive overlap zone from neighbor  */
 		        list<point> lpreys <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
