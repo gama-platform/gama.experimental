@@ -128,8 +128,7 @@ public class RSkill extends Skill {
 					@example(" R_eval(\"data(iris)\")") }))
 	public Object primREval(final IScope scope) throws GamaRuntimeException {
 		// re = new Rengine(args, false, new TextConsole());
-		initEnv(scope);
-
+	
 
 
 		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split(System.getProperty("line.separator"));
@@ -152,6 +151,40 @@ public class RSkill extends Skill {
 		return dataConvert_R2G(x);
 	}
 
+	
+	@action(name = "startR", doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
+					@example("startR") }))
+	
+	public String startR(final IScope scope) {
+		initEnv(scope);
+
+		re = Rengine.getMainEngine();
+
+		if (re == null) {
+
+			re = new Rengine(args, false, new TextConsole());
+
+			if (loadedLib == null) {
+				loadedLib = (GamaList) dataConvert_R2G(re.eval("search()"));
+			}
+		} else {
+			scope.getSimulation().postDisposeAction(scope1 -> {
+				GamaList l = (GamaList) dataConvert_R2G(re.eval("search()"));
+				for (int i = 0; i < l.size(); i++) {
+					if (((String) l.get(i)).contains("package:") && loadedLib != null
+							&& !loadedLib.contains(l.get(i))) {
+						// System.out.println(l.get(i));
+						re.eval("detach(\"" + l.get(i) + "\")");
+					}
+				}
+				re.idleEval("rm(list=ls(all=TRUE))");
+				re.idleEval("gc()");
+				return null;
+			});
+		}
+
+		return "R started";
+	}
 	@operator (
 			value = "to_R_dataframe",
 			content_type = IType.CONTAINER,
@@ -269,7 +302,6 @@ public class RSkill extends Skill {
 				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
 				fieldSysPath.setAccessible( true );
 				fieldSysPath.set( null, null );
-//				System.loadLibrary("jri");
 				
 			}catch(Exception ex) {
 				scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
@@ -277,6 +309,7 @@ public class RSkill extends Skill {
 			}
 //			System.out.println(System.getProperty("java.library.path"));
 		}
+		System.loadLibrary("jri");
 //		if(System.getenv("R_HOME")==null) {
 //			return "missing R_HOME";
 //		}
@@ -285,25 +318,7 @@ public class RSkill extends Skill {
 		re=Rengine.getMainEngine();
 		
 		if(re==null) {			
-			
-			re = new Rengine(args, false, new TextConsole());
-
-			if(loadedLib==null) {
-				loadedLib=(GamaList) dataConvert_R2G(re.eval("search()"));
-			}
-		}else {
-			scope.getSimulation().postDisposeAction(scope1 -> {
-				GamaList l=(GamaList) dataConvert_R2G(re.eval("search()"));
-				for(int i=0;i<l.size();i++) {
-					if(((String) l.get(i)).contains("package:") && !loadedLib.contains(l.get(i))) {
-//						System.out.println(l.get(i));
-						re.eval("detach(\""+l.get(i)+"\")");
-					}
-				}
-				re.idleEval("rm(list=ls(all=TRUE))");
-				re.idleEval("gc()");
-				return null;
-			});
+			return null;
 		}
 
 

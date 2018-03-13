@@ -28,7 +28,6 @@ import msi.gama.metamodel.population.IPopulation;
 import msi.gama.metamodel.shape.ILocation;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
-import msi.gama.precompiler.GamlAnnotations.args;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.species;
 import msi.gama.runtime.IScope;
@@ -150,11 +149,6 @@ public class ClusterBuilder extends GamlAgent {
 			@arg(name = "max_num_clusters", type = IType.INT, optional = true, doc = @doc("the maximum number of clusters")),
 			@arg(name = "min_num_clusters", type = IType.INT, optional = true, doc = @doc("the maximum number of clusters")),
 			@arg(name = "seed", type = IType.INT, optional = true, doc = @doc("random number seed to be used")) })
-	// @args(names = { "agents", "attributes", "bin_value", "cut_off_factor",
-	// "distance_f",
-	// "max_iterations", "max_kmeans", "max_kmeans_for_children",
-	// "max_kmeans_for_children",
-	// "max_num_clusters", "min_num_clusters", "seed" })
 	public List<List<IAgent>> primClusteringXMeans(final IScope scope) throws GamaRuntimeException {
 		final IList<IAgent> agents = scope.getListArg("agents");
 		final IList<String> attributes = scope.getListArg("attributes");
@@ -220,9 +214,6 @@ public class ClusterBuilder extends GamlAgent {
 			@arg(name = "dont_replace_missing_values", optional = true), @arg(name = "max_iterations", optional = true),
 			@arg(name = "num_clusters", optional = true), @arg(name = "preserve_instances_order", optional = true),
 			@arg(name = "seed", optional = true) })
-	// @args(names = { "agents", "attributes", "distance_f",
-	// "dont_replace_missing_values",
-	// "max_iterations", "num_clusters", "preserve_instances_order", "seed" })
 	public List<List<IAgent>> primClusteringSimpleKMeans(final IScope scope) throws GamaRuntimeException {
 		final IList<IAgent> agents = scope.getListArg("agents");
 		final IList<String> attributes = scope.getListArg("attributes");
@@ -270,8 +261,12 @@ public class ClusterBuilder extends GamlAgent {
 	 * number of clusters minStdDev -- set minimum allowable standard deviation
 	 * seed -- The random number seed to be used.
 	 */
-	@action(name = "clustering_em")
-	@args(names = { "agents", "attributes", "max_iterations", "num_clusters", "min_std_dev", "seed" })
+
+	@action(name = "clustering_em", args = { @arg(name = "agents", type = IType.LIST, optional = false),
+			@arg(name = "attributes", type = IType.LIST, optional = false), 
+			@arg(name = "max_iterations", optional = true), 
+			@arg(name = "num_clusters", optional = true), 
+			@arg(name = "min_std_dev", optional = true) })
 	public List<List<IAgent>> primClusteringEM(final IScope scope) throws GamaRuntimeException {
 		final IList<IAgent> agents = scope.getListArg("agents");
 		final IList<String> attributes = scope.getListArg("attributes");
@@ -307,8 +302,11 @@ public class ClusterBuilder extends GamlAgent {
 	 * number of clusters minStdDev -- set minimum allowable standard deviation
 	 * seed -- The random number seed to be used.
 	 */
-	@action(name = "clustering_farthestFirst")
-	@args(names = { "agents", "attributes", "num_clusters", "seed" })
+
+	@action(name = "clustering_farthestFirst", args = { @arg(name = "agents", type = IType.LIST, optional = false),
+			@arg(name = "attributes", type = IType.LIST, optional = false), 
+			@arg(name = "num_clusters", optional = true), 
+			@arg(name = "seed", optional = true) })
 	public List<List<IAgent>> primClusteringFarthestFirst(final IScope scope) throws GamaRuntimeException {
 		final IList<IAgent> agents = scope.getListArg("agents");
 		final IList<String> attributes = scope.getListArg("attributes");
@@ -340,8 +338,11 @@ public class ClusterBuilder extends GamlAgent {
 	 * epsilon-range-queries minPoints -- minimun number of DataObjects required
 	 * in an epsilon-range-query
 	 */
-	@action(name = "clustering_DBScan")
-	@args(names = { "agents", "attributes", "distance_f", "epsilon", "min_points" })
+
+	@action(name = "clustering_DBScan", args = { @arg(name = "agents", type = IType.LIST, optional = false),
+			@arg(name = "attributes", type = IType.LIST, optional = false), @arg(name = "distance_f", optional = true),
+			@arg(name = "epsilon", optional = true), 
+			@arg(name = "min_points", optional = true) })
 	public List<List<IAgent>> primClusteringDBScan(final IScope scope) throws GamaRuntimeException {
 		final IList<IAgent> agents = (IList<IAgent>) (scope.hasArg("agents") ? scope.getListArg("agents")
 				: this.getAttribute("agents"));
@@ -383,8 +384,12 @@ public class ClusterBuilder extends GamlAgent {
 	 * category utility threshold by which to prune nodes seed -- random number
 	 * seed to be used.
 	 */
-	@action(name = "clustering_cobweb")
-	@args(names = { "agents", "attributes", "acuity", "cutoff", "seed" })
+
+
+	@action(name = "clustering_cobweb", args = { @arg(name = "agents", type = IType.LIST, optional = false),
+			@arg(name = "attributes", type = IType.LIST, optional = false), @arg(name = "acuity", optional = true),
+			@arg(name = "cutoff", optional = true), 
+			@arg(name = "seed", optional = true) })
 	public List<List<IAgent>> primClusteringCobweb(final IScope scope) throws GamaRuntimeException {
 		final IList<IAgent> agents = scope.getListArg("agents");
 		final IList<String> attributes = scope.getListArg("attributes");
