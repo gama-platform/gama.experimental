@@ -80,7 +80,7 @@ public class MPISkill extends Skill{
 	}, doc = @doc(value = "", returns = "", examples = { @example("") }))
 	public void send(IScope scope)
 	{
-		System.out.println("xxxxxxxxxxx ");
+		System.out.println("xxxxxHHHHxxxxxx ");
 		GamaList mesg = ((GamaList) (scope.getArg(IMPISkill.MESG, IType.LIST)));
 		int dest = ((Integer) scope.getArg(IMPISkill.DEST, IType.INT)).intValue();
 		int stag = ((Integer) scope.getArg(IMPISkill.STAG, IType.INT)).intValue();
