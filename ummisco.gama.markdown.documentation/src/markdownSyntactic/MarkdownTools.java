@@ -22,7 +22,7 @@ public class MarkdownTools {
 	 */
 	public static String goBeginLine()
 	{
-		return " \n ";
+		return "\n";
 	}
 	/**
 	 * Method that returns the comments defined in GAML from an Element
