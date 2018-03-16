@@ -9,7 +9,7 @@ model prey_predator
 
 global {
 	int nb_preys_init <- 200;
-	int nb_predators_init <- 200;
+	int nb_predators_init <- 100;
 	float prey_max_energy <- 1.0;
 	float prey_max_transfert <- 0.1 ;
 	float prey_energy_consum <- 0.05;
@@ -19,10 +19,48 @@ global {
 	int nb_preys -> {length (prey)};
 	int nb_predators -> {length (predator)};
 	geometry shape <- square(200#m);
+	list<prey> scheduled_preys <- [];
+	list<predator> scheduled_predators <- [];
+	
+	
+	int create_preys(list<point> lp, bool scheduled)
+	{
+		point p;
+		loop p over:lp
+		{
+			create prey number:1
+			{
+				location <- p;
+				if (scheduled) {
+					scheduled_preys <- scheduled_preys + self;
+				}
+			}
+		}
+		return length(lp);		
+	}
+
+	int create_predators(list<point> lp, bool scheduled)
+	{
+		point p;
+		loop p over:lp
+		{
+			create predator number:1
+			{
+				location <- p;
+				if (scheduled) {
+					scheduled_preys <- scheduled_preys + self;
+				}
+			}
+		}
+		return length(lp);		
+	}
+
 	
 	init {
 		create prey number: nb_preys_init ; 
 		create predator number: nb_predators_init ;
+		scheduled_preys <- list(prey);
+		scheduled_predators <- list(predator);
 		
 		write "Init";
 		write "nb_preys_init: " + nb_preys_init;
@@ -31,7 +69,10 @@ global {
  	}
 	
 	reflex aff {
-		write "Message at cycle " + cycle ;
+		write "Message at cycle " + cycle+ " " + scheduled_predators;
+		
+		save scheduled_predators type:"shp" to:"imgs/scheduled"+seed+"_"+cycle+ "_preda.shp";
+		save scheduled_preys type:"shp" to:"imgs/scheduled"+seed+"_"+cycle+"_preys.shp"; 
 	}
 	
 	reflex stop when: cycle>100 {
@@ -58,6 +99,8 @@ species generic_species {
 	}
 		
 	reflex die when: energy <= 0 {
+		remove self from:scheduled_predators;
+		remove self from:scheduled_preys;
 		do die ;
 	}
 	
@@ -66,7 +109,7 @@ species generic_species {
 	}
 }
 
-species prey parent: generic_species {
+species prey parent: generic_species schedules:scheduled_preys {
 	rgb color <- #blue;
 	float max_energy <- prey_max_energy ;
 	float max_transfert <- prey_max_transfert ;
@@ -79,7 +122,7 @@ species prey parent: generic_species {
 	}
 }
 	
-species predator parent: generic_species {
+species predator parent: generic_species schedules:scheduled_predators {
 	rgb color <- #red ;
 	float max_energy <- predator_max_energy ;
 	float energy_transfert <- predator_energy_transfert ;
@@ -88,6 +131,9 @@ species predator parent: generic_species {
 		
 	reflex eat when: ! empty(reachable_preys) {
 		ask one_of (reachable_preys) {
+			remove self from:scheduled_predators;
+			remove self from:scheduled_preys;
+		
 			do die ;
 		}
 		energy <- energy + energy_transfert ;

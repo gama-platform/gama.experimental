@@ -421,7 +421,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 		for (final IfcRepresentation r : w.getRepresentation().getRepresentations()) {
 			for (final IfcRepresentationItem it : r.getItems()) {
 				IfcRepresentationItem item = it;
-				if (item instanceof IfcBooleanClippingResult) {
+				while (item instanceof IfcBooleanClippingResult) {
 					IfcBooleanClippingResult bdr = (IfcBooleanClippingResult) item;
 					IfcBooleanOperand op = bdr.getFirstOperand();
 					item = (IfcRepresentationItem) op;

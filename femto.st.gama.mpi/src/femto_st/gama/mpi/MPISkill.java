@@ -3,7 +3,6 @@ package femto_st.gama.mpi;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaList;
-import msi.gama.util.GamaListFactory;
 import mpi.*;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
@@ -81,12 +80,13 @@ public class MPISkill extends Skill{
 	}, doc = @doc(value = "", returns = "", examples = { @example("") }))
 	public void send(IScope scope)
 	{
-		
+		System.out.println("xxxxxHHHHxxxxxx ");
 		GamaList mesg = ((GamaList) (scope.getArg(IMPISkill.MESG, IType.LIST)));
 		int dest = ((Integer) scope.getArg(IMPISkill.DEST, IType.INT)).intValue();
 		int stag = ((Integer) scope.getArg(IMPISkill.STAG, IType.INT)).intValue();
 
-		byte[] message = StreamConverter.convertObjectToStream(scope, mesg).getBytes();
+		System.out.println("xxxxxxxxxxx " + StreamConverter.convertNetworkObjectToStream(scope, mesg));
+		byte[] message = StreamConverter.convertNetworkObjectToStream(scope, mesg).getBytes();
 		int [] size = new int[1];
 		size[0]=message.length;
 
@@ -121,7 +121,7 @@ public class MPISkill extends Skill{
 	    	System.out.println("MPI send Error"+mpiex);
 	    }
 
-		GamaList rcvMesg = (GamaList) StreamConverter.convertStreamToObject(scope, new String(message));
+		GamaList rcvMesg = (GamaList) StreamConverter.convertNetworkStreamToObject(scope, new String(message));
 		
 		return rcvMesg;
 	}
