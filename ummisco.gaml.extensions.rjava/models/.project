@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>comodel</name>
+	<name>GAMA to RJava</name>
 	<comment>rjava plugin</comment>
 	<projects>
 	</projects>
@@ -16,11 +16,4 @@
 		<nature>msi.gama.application.gamaNature</nature>
 		<nature>msi.gama.application.pluginNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>models/Animated GIF Loading.gaml</name>
-			<type>1</type>
-			<location>C:/Users/hqngh/AppData/Local/Temp/Data Importation/models/Animated GIF Loading.gaml</location>
-		</link>
-	</linkedResources>
 </projectDescription>
