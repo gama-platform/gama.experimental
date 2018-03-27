@@ -10,7 +10,6 @@
  **********************************************************************************************/
 package cict.gaml.extensions.netcdf.file;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,12 +33,10 @@ import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayFloat;
-import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
-import ucar.nc2.dataset.NetcdfDataset;
 
 @file (
 		name = "nc",
@@ -226,106 +223,10 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList<?>>, IList<?>> {
 
 	}
 
-	static NetcdfFile ncIn;
-
-	static String strXiDim="xi_rho", strEtaDim="eta_rho", strZDim="s_rho", strTimeDim="time";
-	static int nbTimeRecords; // Pour vérification chaque moi (car change dans certaines sorties ROMS)
-	private static void open(String filename) throws IOException {
-
-		try {
-			if (ncIn == null || (new File(ncIn.getLocation()).compareTo(new File(filename)) != 0)) {
-				// MainFrame.getStatusBar().setMessage(Resources.MSG_OPEN +
-				// filename);
-				System.out.println("On ouvre le fichier : " + filename);
-				ncIn = NetcdfDataset.openFile(filename, null);
-				nbTimeRecords = ncIn.findDimension(strTimeDim).getLength();
-
-				// modif tim 11 dec 2007:
-				// Array xTimeTp1 = ncIn.findVariable(strTime).read();
-				// System.out.println(" rank = "+ rank);
-				// double t0 = xTimeTp1.getFloat(xTimeTp1.getIndex().set(rank));
-				// time_tp1 -= time_tp1 % 60;
-				// xTimeTp1 = null;
-				// System.out.print("1er scrum_time = " + t0 + "\n");
-				// fin modif
-
-			}
-			// System.out.print("POINT 2 Open dataset " + filename + "\n");
-
-		} catch (IOException e) {
-			throw new IOException("Problem opening dataset " + filename + " - " + e.getMessage());
-		} catch (NullPointerException e) {
-			throw new IOException(
-					"Problem reading  strTimeDim  dimension at location " + filename + " : " + e.getMessage());
-		}
-	}
-
-	static int nx, ny, nz;
-	/**
-	 * Origin for grid index
-	 */
-	static int ipo, jpo;
-	private void getDimNC() throws IOException {
-
-		try {
-			nx = ncIn.findDimension(strXiDim).getLength();
-			ny = ncIn.findDimension(strEtaDim).getLength();
-			nz = ncIn.findDimension(strZDim).getLength();
-		} catch (NullPointerException e) {
-			throw new IOException(
-					"Problem reading dimensions from dataset " + ncIn.getLocation() + " : " + e.getMessage());
-		}
-		System.out.println("nx = " + nx);
-		System.out.println("ny = " + ny);
-		System.out.println("nz = " + nz);
-
-		ipo = jpo = 0;
-	}
-
-	static void setAllFieldsTp1AtTime(int rank) throws IOException {
-
-		int[] origin = new int[] { rank, 0, 1, 1 };
-		// double time_tp0 = time_tp1;
-
-		try {
-			 float[] u_tp1 = (float[]) ncIn.findVariable("s_rho").read(origin, new int[] { 3 }).reduce()
-					.copyToNDJavaArray();
-			 for(float s:u_tp1) {
-				 System.out.println(s);
-			 }
-
-
-
-
-
-
-
-		} catch (IOException e) {
-			throw new IOException("P1 - Problem extracting fields at location " + ncIn.getLocation().toString() + " : "
-					+ e.getMessage());
-		} catch (InvalidRangeException e) {
-			throw new IOException("P2 - Problem extracting fields at location " + ncIn.getLocation().toString() + " : "
-					+ e.getMessage());
-		} catch (NullPointerException e) {
-			throw new IOException("P3 - Problem extracting fields at location " + ncIn.getLocation().toString() + " : "
-					+ e.getMessage());
-		}
-
-
-	}
-
 	public static void main(final String args[]) throws Exception {
-		final String fileName = "D:/ROMS/SENEGAL_Y1980M1.nc.1";
-
-		open(fileName);
-
-		int rank = 1;
-		setAllFieldsTp1AtTime(rank);
-	}
-	public static void main1(final String args[]) throws Exception {
 
 		// Open the file and check to make sure it's valid.
-		final String filename = "D:/ROMS/SENEGAL_Y1980M1.nc.1";
+		final String filename = "D:/roms-benguela.nc";
 		NetcdfFile dataFile = null;
 
 		try {
