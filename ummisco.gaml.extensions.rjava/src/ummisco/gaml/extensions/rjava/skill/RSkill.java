@@ -185,6 +185,27 @@ public class RSkill extends Skill {
 
 		return "R started";
 	}
+
+	@operator (
+			value = "to_R_data",
+			content_type = IType.CONTAINER,
+			index_type = ITypeProvider.FIRST_CONTENT_TYPE,
+			category = { IOperatorCategory.GRAPH },
+			concept = { IConcept.STATISTIC, IConcept.CAST })
+	@doc (
+			value = "to_R_data(speciesname)",
+			masterDoc = true,
+			comment = "convert agent attributes to data type of R",
+			examples = @example (
+					value = "to_R_data(people)",
+					isExecutable = false),
+			see = { "R_eval" })
+	public static Object toRData(final IScope scope,final Object o) {
+		return dataConvert_G2R(o);
+	}
+	
+	
+	
 	@operator (
 			value = "to_R_dataframe",
 			content_type = IType.CONTAINER,
