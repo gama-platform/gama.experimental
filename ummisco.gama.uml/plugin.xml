@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:navigator.menu?after=menu.gama.import">
+         <command
+               commandId="ummisco.gama.uml.generateUML"
+               icon="icons/menu.generateUML.png"
+               id="ummisco.gama.uml.generateUML"
+               label="Generate UML from the Model"
+               tooltip="Generate UML file of a Model">
+               <visibleWhen
+		              checkEnabled="false">
+		                 <!--and>
+		              <test
+		                    property="org.eclipse.core.resources.name"
+		                    value="*.gaml">
+		              </test>
+		              <instanceof value="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/>
+		              </and-->
+		              <or>
+			             <with variable="activeMenuSelection">
+			            	 <iterate>
+			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/>
+			             	</iterate>
+			             </with>
+			             <with variable="activeMenuSelection">
+			            	 <iterate>
+			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedProject"/>
+			             	</iterate>
+			             </with>
+		             </or>
+                     <!--instanceof value="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/-->
+		        </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="GenerateUMLHandler"
+            id="ummisco.gama.uml.generateUML"
+            name="Generate UML from Model">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+   </extension>
+
+</plugin>
