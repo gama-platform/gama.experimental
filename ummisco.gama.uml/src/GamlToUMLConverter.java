@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class GamlToUMLConverter {
 	public Map<String,Map<String,ISyntacticElement>> associations;
 	public Map<String,Map<String,ISyntacticElement>> compositions;
 	public Map<String,String> generalizations;
+	public ArrayList<String> speciesName;
 	public int id=0;
 	
 	SyntacticVisitor visitorForSpecies = new SyntacticVisitor()
@@ -35,13 +37,19 @@ public class GamlToUMLConverter {
 		public void visit(ISyntacticElement element) {
 			if((element.isSpecies())||(element.getKeyword().equals(IParser.GAMA_KEYWORD_GRID)))
 			{
-				id=id+1;
-				species.put(Integer.toString(id), element);
-				visitorForSpeciesChildren.setSpecies(Integer.toString(id));
-				visitorForSpeciesFacets.setSpecies(Integer.toString(id));
-				element.visitAllChildren(visitorForSpeciesChildren);
-				element.visitFacets(visitorForSpeciesFacets);
-				element.visitSpecies(visitorForSpecies);
+				if(speciesName.contains(element.getName())==false)
+				{
+					id=id+1;
+					//System.out.println(element.getName()+" is not in "+species);
+					species.put(Integer.toString(id), element);
+					speciesName.add(element.getName());
+					visitorForSpeciesChildren.setSpecies(Integer.toString(id));
+					visitorForSpeciesFacets.setSpecies(Integer.toString(id));
+					element.visitAllChildren(visitorForSpeciesChildren);
+					element.visitFacets(visitorForSpeciesFacets);
+					element.visitSpecies(visitorForSpecies);
+				}
+				
 			}
 		}
 	};
@@ -61,6 +69,7 @@ public class GamlToUMLConverter {
 		associations = new HashMap<String,Map<String,ISyntacticElement>>();
 		compositions = new HashMap<String,Map<String,ISyntacticElement>>();
 		generalizations = new HashMap<String,String>();
+		this.speciesName = new ArrayList<String>();
 		visitorForSpeciesChildren = new VisitorForSpeciesChildren(this);
 		visitorForSpeciesFacets = new VisitorForSpeciesFacets(this);
 		loadSpecies();
@@ -120,7 +129,7 @@ public class GamlToUMLConverter {
 	}
 	public String getIdParent(String name)
 	{
-		System.out.println("Looking for parent of : "+name);
+		//System.out.println("Looking for parent of : "+name);
 		if(generalizations.containsKey(name))
 		{
 			return getIdSpecies(generalizations.get(name));
@@ -140,10 +149,10 @@ public class GamlToUMLConverter {
 	}
 	public void generateSpecies()
 	{
-		System.out.println("GENERALIZATIONS + "+this.generalizations);
+		//System.out.println("GENERALIZATIONS + "+this.generalizations);
 		for(String aSpecies : species.keySet())
 		{
-			System.out.println("DOING SPECIES "+aSpecies+" "+species.get(aSpecies).getName());
+			//System.out.println("DOING SPECIES "+aSpecies+" "+species.get(aSpecies).getName());
 			umlText.nextLine();
 			umlText.append("\t <"+IParser.XML_TAG_CLASS+" xmi:type=\""+IParser.XML_KEYWORD_CLASS+"\" "+IParser.XML_KEYWORD_ID+"=\""+aSpecies+"\" name=\""+species.get(aSpecies).getName()+"\">");
 			String idParent = getIdParent(aSpecies);

@@ -14,6 +14,7 @@ public class JobUMLConverter extends WorkspaceJob
 		super(IParser.JOB_NAME_TO_UML);
 		this.modelFile=modelFile;
 		this.directory=directory;
+		System.out.println(this.directory);
 	}
 
 	public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
