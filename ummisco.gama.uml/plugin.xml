@@ -21,18 +21,11 @@
 		              </test>
 		              <instanceof value="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/>
 		              </and-->
-		              <or>
 			             <with variable="activeMenuSelection">
 			            	 <iterate>
 			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/>
 			             	</iterate>
 			             </with>
-			             <with variable="activeMenuSelection">
-			            	 <iterate>
-			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedProject"/>
-			             	</iterate>
-			             </with>
-		             </or>
                      <!--instanceof value="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/-->
 		        </visibleWhen>
          </command>
