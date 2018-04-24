@@ -10,13 +10,13 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import ummisco.gama.ui.navigator.contents.WrappedGamaFile;
 import ummisco.gama.ui.navigator.contents.WrappedResource;
 
-public class GenerateUMLHandler extends AbstractHandler {
+public class GenerateUMLLightHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// TODO Auto-generated method stub
 		
-ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
+		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 		
 		//Define the output directory
 		DirectoryDialog directorySelector = new DirectoryDialog(Display.getCurrent().getActiveShell());
@@ -37,7 +37,7 @@ ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage
                     directorySelector.setFilterPath(file_to_convert.getResource().getLocation().toOSString());
              		String selectedDirectoryName = directorySelector.open();
              		//Do for a model
-             		JobUMLConverter myJob = new JobUMLConverter(((WrappedGamaFile) o), selectedDirectoryName);
+             		JobUMLConverterLight myJob = new JobUMLConverterLight(((WrappedGamaFile) o), selectedDirectoryName);
              		myJob.schedule();
              	}
             }
