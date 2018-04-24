@@ -58,7 +58,7 @@ public class GamlToUMLConverter {
 	 * Constructor of GamlToUMLConverter
 	 * @param modelFile {@code WrappedGamaFile} the Wrapped Gama File containing the model
 	 */
-	public GamlToUMLConverter(WrappedGamaFile modelFile)
+	public GamlToUMLConverter(WrappedGamaFile modelFile, boolean light)
 	{
 		this.model=GAML.getContents(URI.createURI(modelFile.getResource().getLocationURI().toString()));
 		importedModelsURIs = GamlResourceIndexer.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString()));
@@ -74,7 +74,7 @@ public class GamlToUMLConverter {
 		visitorForSpeciesFacets = new VisitorForSpeciesFacets(this);
 		loadSpecies();
 		generateBeginning();
-		generateSpecies();
+		generateSpecies(light);
 		generateEnding();
 		//System.out.println(umlText);
 	}
@@ -147,7 +147,7 @@ public class GamlToUMLConverter {
 		umlText.nextLine();
 		umlText.append("</uml:Model>");
 	}
-	public void generateSpecies()
+	public void generateSpecies(boolean light)
 	{
 		//System.out.println("GENERALIZATIONS + "+this.generalizations);
 		for(String aSpecies : species.keySet())
@@ -162,82 +162,105 @@ public class GamlToUMLConverter {
 				this.id=this.id+1;
 				umlText.append("\t \t <"+IParser.XML_TAG_GENERALIZATION+" xmi:id=\""+this.id+"\" general=\""+idParent+"\"/>");
 			}
-			if(attributes.containsKey(aSpecies))
+			if(light==false)
 			{
-				for(String anAttribute : attributes.get(aSpecies).keySet())
+				if(attributes.containsKey(aSpecies))
 				{
-					umlText.nextLine();
-					umlText.append("\t \t <"+IParser.XML_TAG_ATTRIBUTE+" "+IParser.XML_KEYWORD_ID+"=\""+anAttribute+"\" name=\""+attributes.get(aSpecies).get(anAttribute).getName()+"\" visibility=\"public\" isUnique=\"false\"" );
-					String type=attributes.get(aSpecies).get(anAttribute).getKeyword();
-				    if(Types.get(type).toString().equals("unknown"))
-				    {
-				    	umlText.append(" type=\""+getIdSpecies(type)+"\" association=\""+getIdAssociationFromAttribute(aSpecies,attributes.get(aSpecies).get(anAttribute).getName())+"\">");
-				    }
-				    else
-				    {
-				    	umlText.append(">");
-					    umlText.nextLine();
-					    umlText.append("\t \t \t <"+IParser.XML_TAG_TYPE+" xmi:type=\"uml:PrimitiveType\" href=\""+IParser.MAP_BUILT_IN_TYPES.get(type)+"\"/>");
-				    }
-				    umlText.nextLine();
-				    umlText.append("\t \t </"+IParser.XML_TAG_ATTRIBUTE+">");
-				}
-			}
-			if(operations.containsKey(aSpecies))
-			{
-				for(String anOperation : operations.get(aSpecies).keySet())
-				{
-					umlText.nextLine();
-					umlText.append("\t \t <"+IParser.XML_TAG_OPERATION+" "+IParser.XML_KEYWORD_ID+"=\""+anOperation+"\" name=\""+operations.get(aSpecies).get(anOperation).getName()+"\" visibility=\"public\" >" );
-					if((operations.get(aSpecies).get(anOperation).hasFacet(IParser.GAMA_KEYWORD_TYPE))&&(operations.get(aSpecies).get(anOperation).getExpressionAt(IParser.GAMA_KEYWORD_TYPE).toString().equals("null")==false))
+					for(String anAttribute : attributes.get(aSpecies).keySet())
 					{
-						String type = operations.get(aSpecies).get(anOperation).getExpressionAt(IParser.GAMA_KEYWORD_TYPE).toString();
-						this.id = this.id+1;						
 						umlText.nextLine();
-						umlText.append("\t \t \t <"+IParser.XML_TAG_PARAMETER+" xmi:id=\""+this.id+"\"  isUnique=\"false\" direction=\"return\" ");
-						if(Types.get(type).toString().equals(IParser.GAMA_KEYWORD_UNKNOWN))
-						{
-							umlText.append("type=\""+getIdSpecies(type)+"\" >");
-						}
-						else
-						{
-							umlText.append(">");
+						umlText.append("\t \t <"+IParser.XML_TAG_ATTRIBUTE+" "+IParser.XML_KEYWORD_ID+"=\""+anAttribute+"\" name=\""+attributes.get(aSpecies).get(anAttribute).getName()+"\" visibility=\"public\" isUnique=\"false\"" );
+						String type=attributes.get(aSpecies).get(anAttribute).getKeyword();
+					    if(Types.get(type).toString().equals("unknown"))
+					    {
+					    	umlText.append(" type=\""+getIdSpecies(type)+"\" association=\""+getIdAssociationFromAttribute(aSpecies,attributes.get(aSpecies).get(anAttribute).getName())+"\">");
+					    }
+					    else
+					    {
+					    	umlText.append(">");
 						    umlText.nextLine();
-						    umlText.append("\t \t \t \t <"+IParser.XML_TAG_TYPE+" xmi:type=\"uml:PrimitiveType\" href=\""+IParser.MAP_BUILT_IN_TYPES.get(type)+"\"/>");
-						}
+						    umlText.append("\t \t \t <"+IParser.XML_TAG_TYPE+" xmi:type=\"uml:PrimitiveType\" href=\""+IParser.MAP_BUILT_IN_TYPES.get(type)+"\"/>");
+					    }
 					    umlText.nextLine();
-					    umlText.append("\t \t \t </"+IParser.XML_TAG_PARAMETER+">");
+					    umlText.append("\t \t </"+IParser.XML_TAG_ATTRIBUTE+">");
 					}
-					SyntacticVisitor visitorForArgs = new SyntacticVisitor()
+				}
+				if(operations.containsKey(aSpecies))
+				{
+					for(String anOperation : operations.get(aSpecies).keySet())
 					{
-						public void visit(ISyntacticElement element) {
-							if(element.getKeyword().equals(IParser.GAMA_KEYWORD_ARG))
+						umlText.nextLine();
+						umlText.append("\t \t <"+IParser.XML_TAG_OPERATION+" "+IParser.XML_KEYWORD_ID+"=\""+anOperation+"\" name=\""+operations.get(aSpecies).get(anOperation).getName()+"\" visibility=\"public\" >" );
+						if((operations.get(aSpecies).get(anOperation).hasFacet(IParser.GAMA_KEYWORD_TYPE))&&(operations.get(aSpecies).get(anOperation).getExpressionAt(IParser.GAMA_KEYWORD_TYPE).toString().equals("null")==false))
+						{
+							String type = operations.get(aSpecies).get(anOperation).getExpressionAt(IParser.GAMA_KEYWORD_TYPE).toString();
+							this.id = this.id+1;						
+							umlText.nextLine();
+							umlText.append("\t \t \t <"+IParser.XML_TAG_PARAMETER+" xmi:id=\""+this.id+"\"  isUnique=\"false\" direction=\"return\" ");
+							if(Types.get(type).toString().equals(IParser.GAMA_KEYWORD_UNKNOWN))
 							{
-								id = id+1;		
-								String type = element.getExpressionAt(IParser.GAMA_KEYWORD_TYPE).toString();
-							    umlText.nextLine();
-								umlText.append("\t \t \t <"+IParser.XML_TAG_PARAMETER+" xmi:id=\""+id+"\"  isUnique=\"false\"");
-								
-								if(Types.get(type).toString().equals(IParser.GAMA_KEYWORD_UNKNOWN))
-								{
-									umlText.append(" type=\""+getIdSpecies(type)+"\" >");
-								}
-								else
-								{
-									umlText.append(">");
-								    umlText.nextLine();
-								    umlText.append("\t \t \t \t <"+IParser.XML_TAG_TYPE+" xmi:type=\"uml:PrimitiveType\" href=\""+IParser.MAP_BUILT_IN_TYPES.get(type)+"\"/>");
-								}
-								 umlText.nextLine();
-								 umlText.append("\t \t \t </"+IParser.XML_TAG_PARAMETER+">");
+								umlText.append("type=\""+getIdSpecies(type)+"\" >");
 							}
+							else
+							{
+								umlText.append(">");
+							    umlText.nextLine();
+							    umlText.append("\t \t \t \t <"+IParser.XML_TAG_TYPE+" xmi:type=\"uml:PrimitiveType\" href=\""+IParser.MAP_BUILT_IN_TYPES.get(type)+"\"/>");
+							}
+						    umlText.nextLine();
+						    umlText.append("\t \t \t </"+IParser.XML_TAG_PARAMETER+">");
 						}
-					};
-					operations.get(aSpecies).get(anOperation).visitAllChildren(visitorForArgs);
-				    umlText.nextLine();
-				    umlText.append("\t \t </"+IParser.XML_TAG_OPERATION+">");
+						SyntacticVisitor visitorForArgs = new SyntacticVisitor()
+						{
+							public void visit(ISyntacticElement element) {
+								if(element.getKeyword().equals(IParser.GAMA_KEYWORD_ARG))
+								{
+									id = id+1;		
+									String type = element.getExpressionAt(IParser.GAMA_KEYWORD_TYPE).toString();
+								    umlText.nextLine();
+									umlText.append("\t \t \t <"+IParser.XML_TAG_PARAMETER+" xmi:id=\""+id+"\"  isUnique=\"false\"");
+									
+									if(Types.get(type).toString().equals(IParser.GAMA_KEYWORD_UNKNOWN))
+									{
+										umlText.append(" type=\""+getIdSpecies(type)+"\" >");
+									}
+									else
+									{
+										umlText.append(">");
+									    umlText.nextLine();
+									    umlText.append("\t \t \t \t <"+IParser.XML_TAG_TYPE+" xmi:type=\"uml:PrimitiveType\" href=\""+IParser.MAP_BUILT_IN_TYPES.get(type)+"\"/>");
+									}
+									 umlText.nextLine();
+									 umlText.append("\t \t \t </"+IParser.XML_TAG_PARAMETER+">");
+								}
+							}
+						};
+						operations.get(aSpecies).get(anOperation).visitAllChildren(visitorForArgs);
+					    umlText.nextLine();
+					    umlText.append("\t \t </"+IParser.XML_TAG_OPERATION+">");
+					}
+				}
+			
+			}
+			else
+			{
+				if(attributes.containsKey(aSpecies))
+				{
+					for(String anAttribute : attributes.get(aSpecies).keySet())
+					{
+						String type=attributes.get(aSpecies).get(anAttribute).getKeyword();
+					    if(Types.get(type).toString().equals("unknown"))
+					    {
+					    	umlText.nextLine();
+							umlText.append("\t \t <"+IParser.XML_TAG_ATTRIBUTE+" "+IParser.XML_KEYWORD_ID+"=\""+anAttribute+"\" name=\""+attributes.get(aSpecies).get(anAttribute).getName()+"\" visibility=\"public\" isUnique=\"false\"" );
+					    	umlText.append(" type=\""+getIdSpecies(type)+"\" association=\""+getIdAssociationFromAttribute(aSpecies,attributes.get(aSpecies).get(anAttribute).getName())+"\">");
+						    umlText.nextLine();
+						    umlText.append("\t \t </"+IParser.XML_TAG_ATTRIBUTE+">");
+					    }
+					}
 				}
 			}
+
 		    umlText.nextLine();
 		    umlText.append("\t </"+IParser.XML_TAG_CLASS+">");
 		}
