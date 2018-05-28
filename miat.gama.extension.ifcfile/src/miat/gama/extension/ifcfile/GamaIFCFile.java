@@ -475,6 +475,13 @@ public class GamaIFCFile extends GamaGeometryFile {
 							String name = mat.getName().getDecodedValue();
 							materials.put(name,mls.getLayerThickness().value);
 						}
+					} else if (ms instanceof IfcMaterialLayerSet) {
+						IfcMaterialLayerSet ls = (IfcMaterialLayerSet) ms;
+						for (IfcMaterialLayer mls : ls.getMaterialLayers()) {
+							IfcMaterial mat = mls.getMaterial();
+							String name = mat.getName().getDecodedValue();
+							materials.put(name,mls.getLayerThickness().value);
+						}
 					}
 				}
 			}
@@ -531,6 +538,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 		}
 		return null;
 	}
+	
+
 
 	public IShape createSpace(final IScope scope, final IfcSpace s) {
 		if (s.getObjectPlacement() == null)
