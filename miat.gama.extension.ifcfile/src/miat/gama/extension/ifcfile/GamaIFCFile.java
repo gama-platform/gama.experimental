@@ -31,6 +31,11 @@ import ifc2x3javatoolbox.ifc2x3tc1.IfcDirection;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcDoor;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcExtrudedAreaSolid;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcLocalPlacement;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcMaterial;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcMaterialLayer;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcMaterialLayerSet;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcMaterialLayerSetUsage;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcMaterialSelect;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcObjectDefinition;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcObjectPlacement;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcOpeningElement;
@@ -40,6 +45,8 @@ import ifc2x3javatoolbox.ifc2x3tc1.IfcProperty;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcPropertySet;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcPropertySingleValue;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRectangleProfileDef;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcRelAssociates;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcRelAssociatesMaterial;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRelDecomposes;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRelDefines;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRelDefinesByProperties;
@@ -62,6 +69,8 @@ import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
+import msi.gama.util.GamaMap;
+import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IList;
 import msi.gama.util.file.GamaGeometryFile;
 import msi.gaml.operators.Spatial;
@@ -397,9 +406,10 @@ public class GamaIFCFile extends GamaGeometryFile {
 	}
 
 	public IShape createWall(final IScope scope, final IfcWall w, final Map<IfcProduct, Double> depths) {
-		String name = w.getName().toString();
+		//String name = w.getName().toString();
 		if (w.getObjectPlacement() == null)
 			return null;
+		
 		final Axe newAxe = new Axe();
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, w.getObjectPlacement(), aps);
@@ -443,10 +453,34 @@ public class GamaIFCFile extends GamaGeometryFile {
 								line.getLocation().getY() - line.getPoints().get(0).getY()));
 				box.setAttribute(IKeyword.NAME, w.getName().getDecodedValue());
 				addAttribtutes(w, box);
+				getMaterial(w,box);
 				return box;
 			}
 		}
 		return null;
+	}
+	
+	private void getMaterial(IfcProduct p, IShape shape) {
+		GamaMap<String, Double> materials = GamaMapFactory.create();
+		for (IfcRelAssociates ra : p.getHasAssociations_Inverse()) {
+			if (ra instanceof IfcRelAssociatesMaterial ) {
+				IfcRelAssociatesMaterial ram = (IfcRelAssociatesMaterial) ra;
+				IfcMaterialSelect ms = ram.getRelatingMaterial();
+				if (ms != null) {
+					if (ms instanceof IfcMaterialLayerSetUsage) {
+						IfcMaterialLayerSetUsage mlsu = (IfcMaterialLayerSetUsage) ms;
+						IfcMaterialLayerSet ls = mlsu.getForLayerSet();
+						for (IfcMaterialLayer mls : ls.getMaterialLayers()) {
+							IfcMaterial mat = mls.getMaterial();
+							String name = mat.getName().getDecodedValue();
+							materials.put(name,mls.getLayerThickness().value);
+						}
+					}
+				}
+			}
+		}
+
+		shape.getAttributes().put("materials", materials);
 	}
 
 	public IShape createSlab(final IScope scope, final IfcSlab s) {
@@ -473,6 +507,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 						box.setAttribute(IKeyword.NAME, s.getName().getDecodedValue());
 						newAxe.transform(box);
 						addAttribtutes(s, box);
+
+						getMaterial(s,box);
 						box = Spatial.Transformations.translated_by(scope, box, new GamaPoint(0, 0, -depth));
 						return box;
 					} else if (solid.getSweptArea() instanceof IfcArbitraryClosedProfileDef) {
@@ -484,6 +520,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 							shape.setAttribute(IKeyword.NAME, s.getName().getDecodedValue());
 							addAttribtutes(s, shape);
 							newAxe.transform(shape);
+
+							getMaterial(s,shape);
 							return shape;
 						}
 						return null;
