@@ -43,6 +43,7 @@ import ifc2x3javatoolbox.ifc2x3tc1.IfcPolyline;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcProduct;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcProperty;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcPropertySet;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcPropertySetDefinition;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcPropertySingleValue;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRectangleProfileDef;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRelAssociates;
@@ -50,13 +51,16 @@ import ifc2x3javatoolbox.ifc2x3tc1.IfcRelAssociatesMaterial;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRelDecomposes;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRelDefines;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRelDefinesByProperties;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcRelDefinesByType;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRepresentation;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRepresentationItem;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcRoof;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcSlab;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcSpace;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcTypeObject;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcWall;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcWindow;
+import ifc2x3javatoolbox.ifc2x3tc1.IfcWindowStyle;
 import ifc4javatoolbox.ifcmodel.IfcModel;
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.geometry.GeometryUtils;
@@ -586,6 +590,15 @@ public class GamaIFCFile extends GamaGeometryFile {
 		return null;
 	}
 
+	public void managePropertySet(IfcPropertySet ps, IShape shape) {
+		for (final IfcProperty p : ps.getHasProperties()) {
+			if (p instanceof IfcPropertySingleValue) {
+				shape.setAttribute(p.getName().getDecodedValue(),
+						((IfcPropertySingleValue) p).getNominalValue().toString());
+
+			}
+		}
+	}
 	public void addAttribtutes(final IfcProduct product, final IShape shape) {
 		shape.setAttribute("type", product.getClass().getSimpleName());
 		if (product.getIsDefinedBy_Inverse() == null)
@@ -594,15 +607,19 @@ public class GamaIFCFile extends GamaGeometryFile {
 			if (rd instanceof IfcRelDefinesByProperties) {
 				final IfcRelDefinesByProperties rlp = (IfcRelDefinesByProperties) rd;
 				if (rlp.getRelatingPropertyDefinition() instanceof IfcPropertySet) {
-					final IfcPropertySet ps = (IfcPropertySet) rlp.getRelatingPropertyDefinition();
-					for (final IfcProperty p : ps.getHasProperties()) {
-						if (p instanceof IfcPropertySingleValue) {
-							shape.setAttribute(p.getName().getDecodedValue(),
-									((IfcPropertySingleValue) p).getNominalValue().toString());
-
-						}
+					managePropertySet((IfcPropertySet) rlp.getRelatingPropertyDefinition(),shape);
+				}
+			} else if (rd instanceof IfcRelDefinesByType) {
+				final IfcRelDefinesByType rls = (IfcRelDefinesByType) rd;
+				if(rls.getRelatingType() == null) continue;
+				IfcTypeObject type = rls.getRelatingType();
+				if (type.getHasPropertySets() == null) continue;
+				for (IfcPropertySetDefinition def : type.getHasPropertySets()) {
+					if (def instanceof IfcPropertySet) {
+						managePropertySet((IfcPropertySet) def,shape);
 					}
 				}
+				
 			}
 		}
 	}
