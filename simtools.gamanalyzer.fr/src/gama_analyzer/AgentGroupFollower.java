@@ -896,8 +896,8 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 	String nom_espece = Analyse_statement.getAnalyseStatementVariable(); 
 	String nom_contrainte = Analyse_statement.getAnalyseStatementConstraint(); 
 
-	public AgentGroupFollower(final IPopulation s) throws GamaRuntimeException {
-		super(s);
+	public AgentGroupFollower(final IPopulation s, final int index) throws GamaRuntimeException {
+		super(s,index);
 		mydata = new StorableData();
 		multidata = new StorableData();
 		virtualAgents=new ArrayList<IAgent>();
@@ -1409,7 +1409,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 									nv.add(nc);
 									sp.setChildren(nv);
 								}
-								GamlAgent nagent=new GamlAgent(this.getPopulationFor("agent"));
+								GamlAgent nagent=new GamlAgent(this.getPopulationFor("agent"),i);
 //								this.getPopulationFor("agent").add(nagent);
 
 								nagent._init_(scope);
