@@ -138,7 +138,7 @@ public class UnitySkillOld extends NetworkSkill{
 	
 	protected GamaUnityMessage createNewUnityMessage(final IScope scope, final Object sender, final Object receivers, final Object unityAction,
 			final Object contents) {
-		return new GamaUnityMessage(scope, sender, receivers, unityAction, contents);
+		return new GamaUnityMessage(scope, sender, receivers, unityAction, "unityObject", "unityAttribute", "unityValue", contents);
 	}
 	
 	
@@ -162,7 +162,7 @@ public class UnitySkillOld extends NetworkSkill{
 		final List<String> serverNames = (List<String>) agent.getAttribute(INetworkSkill.NET_AGENT_SERVER);
 		final Map<String, IConnector> connections = getRegisteredServers(scope);
 		for (final String servName : serverNames) {
-			System.out.println("______________>> " + message.getAction());
+			System.out.println("______________>> " + message.getUnityAction());
 		
 			connections.get(servName).send(agent, destName, message);
 		}
