@@ -29,7 +29,8 @@
 	 * @author drogoul
 	 */
 
-	@vars({ @var(name = GamaUnityMessage.SENDER, type = IType.NONE, doc = {
+	@vars({ 
+			@var(name = GamaUnityMessage.SENDER, type = IType.NONE, doc = {
 			@doc("Returns the sender that has sent this message") }),
 			@var(name = GamaUnityMessage.CONTENTS, type = IType.NONE, doc = {
 					@doc("Returns the contents of this message, as a list of arbitrary objects") }),
@@ -52,6 +53,7 @@
 		public final static String ACTION = "unityAction";
 		
 		protected Object unityAction;
+
 
 
 

@@ -166,13 +166,21 @@ public class UnitySkill extends NetworkSkill{
 		final IAgent agent = scope.getAgent();
 		final List<String> serverNames = (List<String>) agent.getAttribute(INetworkSkill.NET_AGENT_SERVER);
 		final Map<String, IConnector> connections = getRegisteredServers(scope);
-		for (final String servName : serverNames)
+		for (final String servName : serverNames) {
+			System.out.println("______________>> " + message.getAction());
+		
 			connections.get(servName).send(agent, destName, message);
+		}
 		
 		System.out.println("Message sent from UnitySkill "+message.stringValue(scope));
 	}
 	
 	//----------------------------------
+	
+	
+	
+	
+	
 
 	
 
