@@ -10,31 +10,22 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
-import msi.gama.common.interfaces.IKeyword;
+import com.thoughtworks.xstream.XStream;
+
 import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.precompiler.ISymbolKind;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.facet;
-import msi.gama.precompiler.GamlAnnotations.facets;
-import msi.gama.precompiler.GamlAnnotations.inside;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.GamlAnnotations.symbol;
-import msi.gama.precompiler.GamlAnnotations.usage;
+import msi.gama.precompiler.IConcept;
+import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaColor;
-import msi.gaml.descriptions.IDescription;
-import msi.gaml.operators.Cast;
 import msi.gaml.skills.Skill;
-import msi.gaml.statements.AbstractStatement;
 import msi.gaml.types.IType;
-import ummisco.gama.network.skills.INetworkSkill;
+import ummisco.gama.unity.messages.GamaUnityMessage;
 import ummisco.gama.unity.mqtt.SubscribeCallback;
 import ummisco.gama.unity.mqtt.Utils;
 
@@ -51,15 +42,17 @@ import ummisco.gama.unity.mqtt.Utils;
 public class UnitySkill extends Skill {
 
   public static final String SKILL_NAME = "unity";
-	
   public static final String BROKER_URL = "tcp://localhost:1883";
+  
   public static final MqttConnectOptions options = new MqttConnectOptions();
   
-  public static final String TOPIC_FORM = "changeForm";
   public static final String TOPIC_COLOR = "changeColor";
   public static final String TOPIC_POSITION = "changePosition";
   public static final String TOPIC_UNITY = "Unity";
   public static final String TOPIC_GAMA = "Gama";
+  public static final String TOPIC_SET = "Set";
+  public static final String TOPIC_GET = "Get";
+  
   public static int nbr = 1;
   public static MqttClient client = null;
   public static SubscribeCallback subscribeCallback = new SubscribeCallback();
@@ -106,7 +99,52 @@ public class UnitySkill extends Skill {
       return clientId;
   }
 
-  @operator(value = "setUnityPosition", doc = { @doc("Sends the new position to the unity element.") }, category = { IOperatorCategory.STRING }) 
+
+
+@action(name = "sendUnityMessage",
+	args = { @arg ( name = "senderU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
+			 @arg ( name = "actionU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
+	         @arg ( name = "objectU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
+	         @arg ( name = "attributeU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
+	         @arg ( name = "valueU", type = IType.STRING, optional = false, doc = @doc ("The client ID"))
+		},
+	doc = @doc ( value = "Send a message to unity.", returns = "true if it is in the base.", examples = { @example ("") }))
+	public static String sendMqttMessage(final IScope scope) {
+		
+		String sender = (String) scope.getArg("senderU", IType.STRING);
+		String action = (String) scope.getArg("actionU", IType.STRING);
+		String object = (String) scope.getArg("objectU", IType.STRING);
+		String attribute = (String) scope.getArg("attributeU", IType.STRING);
+		String value = (String) scope.getArg("valueU", IType.STRING);
+		
+		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, attribute, value, "content");
+		XStream xstream = new XStream();
+		final String stringMessage = xstream.toXML(messageUnity);
+		
+		System.out.println(" --->>>>   the message --> "+stringMessage);
+		
+	      final MqttTopic unityTopic = client.getTopic(TOPIC_UNITY);
+	     // final String stringMessage = "{sender:"+sender+", action:"+action+", object:"+object+", attribute:"+attribute+", value:"+value+"}";
+	      try {
+	    	 // unityTopic.publish(new MqttMessage(stringMessage.getBytes()));
+				
+			//--------
+				 MqttMessage message = new MqttMessage();
+				 message.setPayload(stringMessage.getBytes());
+				 unityTopic.publish(message);
+			// --------
+				 
+			} catch (MqttPersistenceException e) {
+				e.printStackTrace();
+			} catch (MqttException e) {
+				e.printStackTrace();
+			}
+	      System.out.println("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
+	    return "Message sent!";
+	}
+
+
+  @operator(value = "setUnityPosition", doc = { @doc("Sends a message to unity") }, category = { IOperatorCategory.STRING }) 
   public static String changePosition(final IScope scope, Double position) {
   	
       final MqttTopic positionTopic = client.getTopic(TOPIC_UNITY);
