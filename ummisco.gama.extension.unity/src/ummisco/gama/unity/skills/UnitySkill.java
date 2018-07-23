@@ -29,7 +29,7 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.unity.messages.GamaUnityMessage;
-import ummisco.gama.unity.messages.Item;
+import ummisco.gama.unity.messages.ItemAttributes;
 import ummisco.gama.unity.mqtt.SubscribeCallback;
 import ummisco.gama.unity.mqtt.Utils;
 
@@ -123,10 +123,10 @@ public class UnitySkill extends Skill {
 		
 		
 		
-		ArrayList<Item>  item = new ArrayList();
+		ArrayList<ItemAttributes>  item = new ArrayList();
 		for (Map.Entry<?, ?> entry : attribute.entrySet())
 		{
-		    Item it = new Item(entry.getKey(), entry.getValue()); 
+			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue()); 
 		    item.add(it);
 		}
 		
