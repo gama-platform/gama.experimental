@@ -2,6 +2,9 @@ package ummisco.gama.unity.skills;
 
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -26,6 +29,7 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.unity.messages.GamaUnityMessage;
+import ummisco.gama.unity.messages.Item;
 import ummisco.gama.unity.mqtt.SubscribeCallback;
 import ummisco.gama.unity.mqtt.Utils;
 
@@ -105,7 +109,7 @@ public class UnitySkill extends Skill {
 	args = { @arg ( name = "senderU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
 			 @arg ( name = "actionU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
 	         @arg ( name = "objectU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
-	         @arg ( name = "attributeU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
+	         @arg ( name = "attributeU", type = IType.MAP, optional = false, doc = @doc ("The client ID")),
 	         @arg ( name = "valueU", type = IType.STRING, optional = false, doc = @doc ("The client ID"))
 		},
 	doc = @doc ( value = "Send a message to unity.", returns = "true if it is in the base.", examples = { @example ("") }))
@@ -114,10 +118,23 @@ public class UnitySkill extends Skill {
 		String sender = (String) scope.getArg("senderU", IType.STRING);
 		String action = (String) scope.getArg("actionU", IType.STRING);
 		String object = (String) scope.getArg("objectU", IType.STRING);
-		String attribute = (String) scope.getArg("attributeU", IType.STRING);
+		Map<String, String> attribute = (Map<String, String>) scope.getArg("attributeU", IType.MAP);
 		String value = (String) scope.getArg("valueU", IType.STRING);
 		
-		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, attribute, value, "content");
+		
+		
+		ArrayList<Item>  item = new ArrayList();
+		for (Map.Entry<?, ?> entry : attribute.entrySet())
+		{
+		    Item it = new Item(entry.getKey(), entry.getValue()); 
+		    item.add(it);
+		}
+		
+		//GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, attribute, value, "content");
+		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, item, value, "content");
+		
+		
+		
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(messageUnity);
 		
@@ -235,10 +252,7 @@ public class UnitySkill extends Skill {
  
   
   
-  
-  
-  
-  
+
   
   
   

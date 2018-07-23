@@ -10,7 +10,9 @@
 	 **********************************************************************************************/
 	package ummisco.gama.unity.messages;
 
-	import msi.gama.common.interfaces.IKeyword;
+	import java.util.Map;
+
+import msi.gama.common.interfaces.IKeyword;
 	import msi.gama.common.util.StringUtils;
 	import msi.gama.extensions.messaging.GamaMessage;
 	import msi.gama.precompiler.GamlAnnotations.doc;
@@ -41,13 +43,13 @@
 			@var(name = GamaUnityMessage.EMISSION_TIMESTAMP, type = IType.INT, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
 			
-			@var(name = GamaUnityMessage.ACTION, type = IType.INT, doc = {
+			@var(name = GamaUnityMessage.ACTION, type = IType.STRING, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
-			@var(name = GamaUnityMessage.OBJECT, type = IType.INT, doc = {
+			@var(name = GamaUnityMessage.OBJECT, type = IType.STRING, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
-			@var(name = GamaUnityMessage.ATTRIBUTE, type = IType.INT, doc = {
+			@var(name = GamaUnityMessage.ATTRIBUTE, type = IType.MAP, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
-			@var(name = GamaUnityMessage.VALUE, type = IType.INT, doc = {
+			@var(name = GamaUnityMessage.VALUE, type = IType.STRING, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") })
 			})
 	public class GamaUnityMessage extends GamaMessage {
@@ -113,6 +115,7 @@
 		
 		@setter(GamaUnityMessage.ATTRIBUTE)
 		public void setUnityAttribute(final Object unityAttribute) {
+			
 			this.unityAttribute = unityAttribute;
 		}
 		
@@ -139,7 +142,7 @@
 
 		@Override
 		public GamaUnityMessage copy(final IScope scope) throws GamaRuntimeException {
-			return new GamaUnityMessage(scope, getSender(), getReceivers(), getUnityAction(), getUnityObject(), getUnityAttribute(), getUnityValue(), getContents(scope));
+			return new GamaUnityMessage(scope, getSender(), getReceivers(), getUnityAction(), getUnityObject(), (Map<?, ?>) getUnityAttribute(), getUnityValue(), getContents(scope));
 		}
 
 		/**
