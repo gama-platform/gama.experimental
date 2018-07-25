@@ -11,7 +11,7 @@ import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.GamlAnnotations.var;
+import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
@@ -25,11 +25,11 @@ import net.thecodersbreakfast.lp4j.api.Button;
 import net.thecodersbreakfast.lp4j.api.Color;
 
 
-@vars ({ @var (
+@vars ({ @variable (
 		name = "buttonPressed",
 		type = IType.STRING,
 		doc = @doc ("get button pressed name")),
-		@var (
+		@variable (
 		name = "padPressed",
 		type = IType.POINT,
 		doc = @doc ("get pad pressed name"))})
