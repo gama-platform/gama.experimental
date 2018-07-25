@@ -1,10 +1,10 @@
-import msi.gaml.descriptions.IDescription.FacetVisitor;
+import msi.gaml.descriptions.IDescription.IFacetVisitor;
 
 import java.util.HashMap;
 
 import msi.gaml.descriptions.IExpressionDescription;
 
-public class VisitorForSpeciesFacets extends FacetVisitor{
+public class VisitorForSpeciesFacets implements IFacetVisitor{
 
 	GamlToUMLConverter converter;
 	String species;

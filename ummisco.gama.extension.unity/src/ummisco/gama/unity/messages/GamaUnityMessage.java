@@ -18,7 +18,7 @@ import msi.gama.common.interfaces.IKeyword;
 	import msi.gama.precompiler.GamlAnnotations.doc;
 	import msi.gama.precompiler.GamlAnnotations.getter;
 	import msi.gama.precompiler.GamlAnnotations.setter;
-	import msi.gama.precompiler.GamlAnnotations.var;
+	import msi.gama.precompiler.GamlAnnotations.variable;
 	import msi.gama.precompiler.GamlAnnotations.vars;
 	import msi.gama.runtime.IScope;
 	import msi.gama.runtime.exceptions.GamaRuntimeException;
@@ -32,24 +32,24 @@ import msi.gama.common.interfaces.IKeyword;
 	 */
 
 	@vars({ 
-			@var(name = GamaUnityMessage.SENDER, type = IType.NONE, doc = {
+			@variable(name = GamaUnityMessage.SENDER, type = IType.NONE, doc = {
 			@doc("Returns the sender that has sent this message") }),
-			//@var(name = GamaUnityMessage.CONTENTS, type = IType.NONE, doc = {
+			//@variable(name = GamaUnityMessage.CONTENTS, type = IType.NONE, doc = {
 			//		@doc("Returns the contents of this message, as a list of arbitrary objects") }),
-			@var(name = GamaUnityMessage.UNREAD, type = IType.BOOL, init = IKeyword.TRUE, doc = {
+			@variable(name = GamaUnityMessage.UNREAD, type = IType.BOOL, init = IKeyword.TRUE, doc = {
 					@doc("Returns whether this message is unread or not") }),
-			@var(name = GamaUnityMessage.RECEPTION_TIMESTAMP, type = IType.INT, doc = {
+			@variable(name = GamaUnityMessage.RECEPTION_TIMESTAMP, type = IType.INT, doc = {
 					@doc("Returns the reception time stamp of this message (I.e. at what cycle it has been received)") }),
-			@var(name = GamaUnityMessage.EMISSION_TIMESTAMP, type = IType.INT, doc = {
+			@variable(name = GamaUnityMessage.EMISSION_TIMESTAMP, type = IType.INT, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
 			
-			@var(name = GamaUnityMessage.ACTION, type = IType.STRING, doc = {
+			@variable(name = GamaUnityMessage.ACTION, type = IType.STRING, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
-			@var(name = GamaUnityMessage.OBJECT, type = IType.STRING, doc = {
+			@variable(name = GamaUnityMessage.OBJECT, type = IType.STRING, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
-			@var(name = GamaUnityMessage.ATTRIBUTE, type = IType.MAP, doc = {
+			@variable(name = GamaUnityMessage.ATTRIBUTE, type = IType.MAP, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
-			@var(name = GamaUnityMessage.VALUE, type = IType.STRING, doc = {
+			@variable(name = GamaUnityMessage.VALUE, type = IType.STRING, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") })
 			})
 	public class GamaUnityMessage extends GamaMessage {
@@ -151,7 +151,7 @@ import msi.gama.common.interfaces.IKeyword;
 		 * @see msi.gama.common.interfaces.ITyped#getType()
 		 */
 		@Override
-		public IType<?> getType() {
+		public IType<?> getGamlType() {
 			return Types.get(IType.MESSAGE);
 		}
 
