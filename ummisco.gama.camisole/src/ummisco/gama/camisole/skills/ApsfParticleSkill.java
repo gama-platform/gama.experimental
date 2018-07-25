@@ -14,7 +14,7 @@ import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.GamlAnnotations.var;
+import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaList;
@@ -28,17 +28,17 @@ import ummisco.gama.apsf.spaces.SoilLocation;
 
 
 @vars({ 
-	@var(name = IApsfParticleSkill.FOLLOWED_PARTICLE, type = IType.NONE, doc = @doc("followed particle in the soil")),
-	@var(name = IKeyword.LOCATION, type = IType.POINT, doc = @doc("location")),
-	@var(name = IApsfParticleSkill.MY_NEIGHBORS, type =IType.LIST, doc = @doc("neighbors of cell")),
-	@var(name = IApsfParticleSkill.MY_NEIGHBORS_LOCAL, type =IType.LIST, doc = @doc("local neighbors of cell")),
-	@var(name = IKeyword.SIZE, type = IType.FLOAT, doc = @doc("location")),
-	@var(name = IApsfParticleSkill.I, type = IType.INT, doc = @doc("i location of particle in the soil")),
-	@var(name = IApsfParticleSkill.J, type = IType.INT, doc = @doc("j location of particle in the soil")),
-	@var(name = IApsfParticleSkill.K, type = IType.INT, doc = @doc("k location of particle in the soil")),
-	@var(name = IApsfParticleSkill.SCALE, type = IType.INT, doc = @doc("scale location of particle in the soil")),
-	@var(name = IApsfParticleSkill.ORGANIC_MATTER, type = IType.FLOAT, doc = @doc("quantity of organic matter in the particle")),
-	@var(name = IApsfParticleSkill.PARTICLE_TYPE, type = IType.STRING, doc = @doc("scale location of particle in the soil"))
+	@variable(name = IApsfParticleSkill.FOLLOWED_PARTICLE, type = IType.NONE, doc = @doc("followed particle in the soil")),
+	@variable(name = IKeyword.LOCATION, type = IType.POINT, doc = @doc("location")),
+	@variable(name = IApsfParticleSkill.MY_NEIGHBORS, type =IType.LIST, doc = @doc("neighbors of cell")),
+	@variable(name = IApsfParticleSkill.MY_NEIGHBORS_LOCAL, type =IType.LIST, doc = @doc("local neighbors of cell")),
+	@variable(name = IKeyword.SIZE, type = IType.FLOAT, doc = @doc("location")),
+	@variable(name = IApsfParticleSkill.I, type = IType.INT, doc = @doc("i location of particle in the soil")),
+	@variable(name = IApsfParticleSkill.J, type = IType.INT, doc = @doc("j location of particle in the soil")),
+	@variable(name = IApsfParticleSkill.K, type = IType.INT, doc = @doc("k location of particle in the soil")),
+	@variable(name = IApsfParticleSkill.SCALE, type = IType.INT, doc = @doc("scale location of particle in the soil")),
+	@variable(name = IApsfParticleSkill.ORGANIC_MATTER, type = IType.FLOAT, doc = @doc("quantity of organic matter in the particle")),
+	@variable(name = IApsfParticleSkill.PARTICLE_TYPE, type = IType.STRING, doc = @doc("scale location of particle in the soil"))
 	})
 
 @skill(name = IApsfParticleSkill.SKILL_NAME, concept = { IConcept.SKILL })

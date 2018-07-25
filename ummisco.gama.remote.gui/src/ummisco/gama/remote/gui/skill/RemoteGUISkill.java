@@ -10,7 +10,7 @@ import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.GamlAnnotations.var;
+import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
@@ -19,23 +19,23 @@ import msi.gaml.types.IType;
 import ummisco.gama.network.skills.INetworkSkill;
 import ummisco.gama.remote.gui.connector.MQTTConnector;
 
-@vars ({ @var (
+@vars ({ @variable (
 		name = IRemoteGUISkill.NET_AGENT_NAME,
 		type = IType.STRING,
 		doc = @doc ("Net ID of the agent")),
-		@var (
+		@variable (
 				name = IRemoteGUISkill.SERVER_URL,
 				type = IType.STRING,
 				doc = @doc ("Net ID of the agent")),
-		@var (
+		@variable (
 				name = IRemoteGUISkill.LOGIN,
 				type = IType.STRING,
 				doc = @doc ("Net ID of the agent")),
-		@var (
+		@variable (
 				name = IRemoteGUISkill.PASSWORD,
 				type = IType.STRING,
 				doc = @doc ("Net ID of the agent")),
-		@var (
+		@variable (
 				name = IRemoteGUISkill.EXPOSED_VAR_LIST,
 				type = IType.LIST,
 				doc = @doc ("Net ID of the agent")) })
