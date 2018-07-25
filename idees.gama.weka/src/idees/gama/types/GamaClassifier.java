@@ -25,7 +25,7 @@ public class GamaClassifier  implements IValue{
 	}
 
 	@Override
-	public IType<?> getType() {
+	public IType<?> getGamlType() {
 		return Types.get(GamaClassifierType.id);
 	}
 
@@ -64,6 +64,7 @@ public class GamaClassifier  implements IValue{
 	public void setValsNominal(Map<String, IList<String>> valsNominal) {
 		this.valsNominal = valsNominal;
 	}
+
 
 	
 	
