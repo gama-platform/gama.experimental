@@ -49,8 +49,8 @@ import msi.gama.common.interfaces.IKeyword;
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
 			@variable(name = GamaUnityMessage.ATTRIBUTE, type = IType.MAP, doc = {
 					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
-			@variable(name = GamaUnityMessage.VALUE, type = IType.STRING, doc = {
-					@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") })
+			@variable(name = GamaUnityMessage.TOPIC, type = IType.STRING, doc = {
+					@doc("Returns the topic of this message (I.e. topic Speed to change a unity GameObject speed.)") })
 			})
 	public class GamaUnityMessage extends GamaMessage {
 
@@ -64,26 +64,26 @@ import msi.gama.common.interfaces.IKeyword;
 		public final static String ACTION = "unityAction";
 		public final static String OBJECT = "unityObject";
 		public final static String ATTRIBUTE = "unityAttribute";
-		public final static String VALUE = "unityValue";
+		public final static String TOPIC = "unityTopic";
 		
 		protected Object unityAction;
 		protected Object unityObject;
 		protected Object unityAttribute;
-		protected Object unityValue;
+		protected Object unityTopic;
 		
 
 
 
 
 		public GamaUnityMessage(final IScope scope, final Object sender, final Object receivers, 
-				final Object unityAction, final Object unityObject, final Object unityAttribute, final Object unityValue, 
+				final Object unityAction, final Object unityObject, final Object unityAttribute, final Object topic, 
 				final Object content)
 				throws GamaRuntimeException {
 			super(scope, sender, receivers, content);
 			setUnityAction(unityAction);
 			setUnityObject(unityObject);
 			setUnityAttribute(unityAttribute);
-			setUnityValue(unityValue);
+			setUnityTopic(unityTopic);
 		}
 
 		
@@ -119,14 +119,14 @@ import msi.gama.common.interfaces.IKeyword;
 			this.unityAttribute = unityAttribute;
 		}
 		
-		@getter(GamaUnityMessage.VALUE)
-		public Object getUnityValue() {
-			return unityValue;
+		@getter(GamaUnityMessage.TOPIC)
+		public Object getUnityTopic() {
+			return unityTopic;
 		}
 		
-		@setter(GamaUnityMessage.VALUE)
-		public void setUnityValue(final Object unityValue) {
-			this.unityValue = unityValue;
+		@setter(GamaUnityMessage.TOPIC)
+		public void setUnityTopic(final Object unityTopic) {
+			this.unityTopic = unityTopic;
 		}
 	
 
@@ -142,7 +142,7 @@ import msi.gama.common.interfaces.IKeyword;
 
 		@Override
 		public GamaUnityMessage copy(final IScope scope) throws GamaRuntimeException {
-			return new GamaUnityMessage(scope, getSender(), getReceivers(), getUnityAction(), getUnityObject(), (Map<?, ?>) getUnityAttribute(), getUnityValue(), getContents(scope));
+			return new GamaUnityMessage(scope, getSender(), getReceivers(), getUnityAction(), getUnityObject(), (Map<?, ?>) getUnityAttribute(), getUnityTopic(), getContents(scope));
 		}
 
 		/**
