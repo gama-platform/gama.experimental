@@ -50,14 +50,14 @@ public class UnitySkill extends Skill {
   
   public static final MqttConnectOptions options = new MqttConnectOptions();
   
-  public static final String TOPIC_COLOR = "changeColor";
-  public static final String TOPIC_POSITION = "changePosition";
-  public static final String TOPIC_UNITY = "Unity";
+  public static final String TOPIC_MAIN = "Unity";
+  public static final String TOPIC_MONO_FREE = "monoFree";
+  public static final String TOPIC_POSITION = "position";
+  public static final String TOPIC_COLOR = "color";
   public static final String TOPIC_GAMA = "Gama";
   public static final String TOPIC_SET = "Set";
   public static final String TOPIC_GET = "Get";
   
-  public static int nbr = 1;
   public static MqttClient client = null;
   public static SubscribeCallback subscribeCallback = new SubscribeCallback();
   public ArrayList<String> mailBox = new ArrayList<String>();
@@ -67,7 +67,6 @@ public class UnitySkill extends Skill {
   //@Override
 	public Object privateExecuteIn(final IScope scope) throws GamaRuntimeException {
 		final IAgent agent = scope.getAgent();
-		nbr++;
 		return " ";
 	}
   
@@ -110,7 +109,7 @@ public class UnitySkill extends Skill {
 			 @arg ( name = "actionU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
 	         @arg ( name = "objectU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
 	         @arg ( name = "attributeU", type = IType.MAP, optional = false, doc = @doc ("The client ID")),
-	         @arg ( name = "valueU", type = IType.STRING, optional = false, doc = @doc ("The client ID"))
+	         @arg ( name = "topicU", type = IType.STRING, optional = false, doc = @doc ("The client ID"))
 		},
 	doc = @doc ( value = "Send a message to unity.", returns = "true if it is in the base.", examples = { @example ("") }))
 	public static String sendMqttMessage(final IScope scope) {
@@ -119,19 +118,19 @@ public class UnitySkill extends Skill {
 		String action = (String) scope.getArg("actionU", IType.STRING);
 		String object = (String) scope.getArg("objectU", IType.STRING);
 		Map<String, String> attribute = (Map<String, String>) scope.getArg("attributeU", IType.MAP);
-		String value = (String) scope.getArg("valueU", IType.STRING);
+		String topic = (String) scope.getArg("topicU", IType.STRING);
 		
 		
 		
-		ArrayList<ItemAttributes>  item = new ArrayList();
+		ArrayList<ItemAttributes>  items = new ArrayList();
 		for (Map.Entry<?, ?> entry : attribute.entrySet())
 		{
 			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue()); 
-		    item.add(it);
+		    items.add(it);
 		}
 		
 		//GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, attribute, value, "content");
-		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, item, value, "content");
+		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, items, topic, "content");
 		
 		
 		
@@ -140,7 +139,7 @@ public class UnitySkill extends Skill {
 		
 		System.out.println(" --->>>>   the message --> "+stringMessage);
 		
-	      final MqttTopic unityTopic = client.getTopic(TOPIC_UNITY);
+	      final MqttTopic unityTopic = client.getTopic(topic);
 	     // final String stringMessage = "{sender:"+sender+", action:"+action+", object:"+object+", attribute:"+attribute+", value:"+value+"}";
 	      try {
 	    	 // unityTopic.publish(new MqttMessage(stringMessage.getBytes()));
@@ -164,7 +163,7 @@ public class UnitySkill extends Skill {
   @operator(value = "setUnityPosition", doc = { @doc("Sends a message to unity") }, category = { IOperatorCategory.STRING }) 
   public static String changePosition(final IScope scope, Double position) {
   	
-      final MqttTopic positionTopic = client.getTopic(TOPIC_UNITY);
+      final MqttTopic positionTopic = client.getTopic(TOPIC_MAIN);
       final String StPosition = position + "";
       try {
 			positionTopic.publish(new MqttMessage(StPosition.getBytes()));
