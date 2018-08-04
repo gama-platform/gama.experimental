@@ -105,11 +105,11 @@ public class UnitySkill extends Skill {
 
 
 @action(name = "sendUnityMessage",
-	args = { @arg ( name = "senderU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
-			 @arg ( name = "actionU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
-	         @arg ( name = "objectU", type = IType.STRING, optional = false, doc = @doc ("The client ID")),
-	         @arg ( name = "attributeU", type = IType.MAP, optional = false, doc = @doc ("The client ID")),
-	         @arg ( name = "topicU", type = IType.STRING, optional = false, doc = @doc ("The client ID"))
+	args = { @arg ( name = "senderU", type = IType.STRING, optional = false, doc = @doc ("The sender")),
+			 @arg ( name = "actionU", type = IType.STRING, optional = false, doc = @doc ("The method name on unity game object")),
+	         @arg ( name = "objectU", type = IType.STRING, optional = false, doc = @doc ("The game object name")),
+	         @arg ( name = "attributeU", type = IType.MAP, optional = false, doc = @doc ("The attribute list and their values")),
+	         @arg ( name = "topicU", type = IType.STRING, optional = false, doc = @doc ("The topic"))
 		},
 	doc = @doc ( value = "Send a message to unity.", returns = "true if it is in the base.", examples = { @example ("") }))
 	public static String sendMqttMessage(final IScope scope) {
@@ -158,6 +158,12 @@ public class UnitySkill extends Skill {
 	      System.out.println("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
 	    return "Message sent!";
 	}
+
+
+
+
+
+
 
 
   @operator(value = "setUnityPosition", doc = { @doc("Sends a message to unity") }, category = { IOperatorCategory.STRING }) 
@@ -240,7 +246,7 @@ public class UnitySkill extends Skill {
  
  
  @action(name = "getMqttMessage", args = { @arg ( name = "idClient", type = IType.STRING, optional = false, doc = @doc ("predicate name"))},
-			doc = @doc ( value = "Get the next received mqtt message.", returns = "The message content if there is received message, null otherwise.", examples = { @example ("") }))
+			doc = @doc ( value = "Get the next received mqtt message.", returns = "The message content if there is a received message, null otherwise.", examples = { @example ("") }))
    public String getMqttMessage(final IScope scope) {
 	 String clientId = Utils.getMacAddress() +"-"+ scope.getArg("idClient", IType.STRING)+"-pub";
 	 
