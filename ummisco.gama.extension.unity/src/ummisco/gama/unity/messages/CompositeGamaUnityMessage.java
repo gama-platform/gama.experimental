@@ -34,7 +34,7 @@ public class CompositeGamaUnityMessage extends GamaUnityMessage {
 	
 	public CompositeGamaUnityMessage(IScope scope, GamaUnityMessage message)
 	{
-		super(scope,message.getSender(),message.getReceivers(), message.getUnityAction(), message.getUnityObject(), (Map<?, ?>) message.getUnityAttribute(), message.getUnityValue(), message.getContents(scope));
+		super(scope,message.getSender(),message.getReceivers(), message.getUnityAction(), message.getUnityObject(), (Map<?, ?>) message.getUnityAttribute(), message.getUnityTopic(), message.getContents(scope));
 		this.contents = StreamConverter.convertNetworkObjectToStream(scope, (message.getContents(scope)));
 		this.emissionTimeStamp = message.getEmissionTimestamp();
 		this.setUnread(true);
