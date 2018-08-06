@@ -12,13 +12,19 @@
 package ummisco.gama.unity.skills;
 
 public interface IUnitySkill {
-	
-	//Topics hierarchy
-	public final static String MAIN_TOPIC = "unity";
-	public final static String ASK = "ask";
-	public final static String RESPONSE = "response";
-	public final static String GET = "get";
-	public final static String SET = "set";
-	
+
+	// Topics hierarchy
+
+	public final static String TOPIC_ASK = "ask";
+	public final static String TOPIC_REPLAY = "replay";
+	public final static String TOPIC_NOTIFICATION = "replay";
+	public final static String TOPIC_SET = "set";
+	public final static String TOPIC_GET = "get";
+
+	public static final String TOPIC_MAIN = "Unity";
+	public static final String TOPIC_MONO_FREE = "monoFree";
+	public static final String TOPIC_POSITION = "position";
+	public static final String TOPIC_COLOR = "color";
+	public static final String TOPIC_GAMA = "Gama";
 
 }
