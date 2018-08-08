@@ -90,14 +90,14 @@ public class UnitySkill extends Skill {
 		return clientId;
 	}
 
-	@action(name = "sendUnityMessage", args = {
+	@action(name = "send_unity_message", args = {
 			@arg(name = "senderU", type = IType.STRING, optional = false, doc = @doc("The sender")),
 			@arg(name = "actionU", type = IType.STRING, optional = false, doc = @doc("The method name on unity game object")),
 			@arg(name = "objectU", type = IType.STRING, optional = false, doc = @doc("The game object name")),
 			@arg(name = "attributeU", type = IType.MAP, optional = false, doc = @doc("The attribute list and their values")),
 			@arg(name = "topicU", type = IType.STRING, optional = false, doc = @doc("The topic")) }, doc = @doc(value = "Send a message to unity.", returns = "true if it is in the base.", examples = {
 					@example("") }))
-	public static String sendMqttMessage(final IScope scope) {
+	public static String sendUnityMqttMessage(final IScope scope) {
 
 		String sender = (String) scope.getArg("senderU", IType.STRING);
 		String action = (String) scope.getArg("actionU", IType.STRING);
@@ -142,14 +142,14 @@ public class UnitySkill extends Skill {
 		return "Message sent!";
 	}
 
-	@action(name = "getUnityValue", args = {
+	@action(name = "get_unity_field", args = {
 			@arg(name = "senderU", type = IType.STRING, optional = false, doc = @doc("The sender")),
 			@arg(name = "actionU", type = IType.STRING, optional = false, doc = @doc("The method name on unity game object")),
 			@arg(name = "objectU", type = IType.STRING, optional = false, doc = @doc("The game object name")),
 			@arg(name = "attributeU", type = IType.MAP, optional = false, doc = @doc("The attribute list and their values")),
 			@arg(name = "topicU", type = IType.STRING, optional = false, doc = @doc("The topic")) }, doc = @doc(value = "Send a message to unity.", returns = "true if it is in the base.", examples = {
 					@example("") }))
-	public static synchronized Object getUnityValue(final IScope scope) {
+	public static synchronized String getUnityField(final IScope scope) {
 
 		String sender = (String) scope.getArg("senderU", IType.STRING);
 		String action = (String) scope.getArg("actionU", IType.STRING);
@@ -181,16 +181,46 @@ public class UnitySkill extends Skill {
 			e.printStackTrace();
 		}
 
-		System.out.println("Message sent! Now, I have to wait for topic " + topic);
-		/*
-		 * boolean replayReceived = false; while(!replayReceived) { try {
-		 * Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
-		 * 
-		 * String replayMsg = subscribeCallback.getNextReplayMessage();
-		 * 
-		 * if(replayMsg != null) { System.out.println("Answer received"); replayReceived
-		 * = true; return replayMsg; } }
-		 */
+		return "Message sent!";
+	}
+
+	@action(name = "set_unity_field", args = {
+			@arg(name = "senderU", type = IType.STRING, optional = false, doc = @doc("The sender")),
+			@arg(name = "actionU", type = IType.STRING, optional = false, doc = @doc("The method name on unity game object")),
+			@arg(name = "objectU", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "attributeU", type = IType.MAP, optional = false, doc = @doc("The attribute list and their values")),
+			@arg(name = "topicU", type = IType.STRING, optional = false, doc = @doc("The topic")) }, doc = @doc(value = "Send a message to unity.", returns = "true if it is in the base.", examples = {
+					@example("") }))
+	public static synchronized String setUnityField(final IScope scope) {
+
+		String sender = (String) scope.getArg("senderU", IType.STRING);
+		String action = (String) scope.getArg("actionU", IType.STRING);
+		String object = (String) scope.getArg("objectU", IType.STRING);
+		Map<String, String> attribute = (Map<String, String>) scope.getArg("attributeU", IType.MAP);
+		String topic = (String) scope.getArg("topicU", IType.STRING);
+
+		ArrayList<ItemAttributes> items = new ArrayList();
+		for (Map.Entry<?, ?> entry : attribute.entrySet()) {
+			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue());
+			items.add(it);
+		}
+
+		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, items, topic,
+				"content");
+
+		XStream xstream = new XStream();
+		final String stringMessage = xstream.toXML(messageUnity);
+
+		final MqttTopic unityTopic = client.getTopic(topic);
+		try {
+			MqttMessage message = new MqttMessage();
+			message.setPayload(stringMessage.getBytes());
+			unityTopic.publish(message);
+		} catch (MqttPersistenceException e) {
+			e.printStackTrace();
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
 		return "Message sent!";
 	}
 
@@ -271,7 +301,7 @@ public class UnitySkill extends Skill {
 		return clientId;
 	}
 
-	@action(name = "subscribeToTopic", args = {
+	@action(name = "subscribe_To_Topic", args = {
 			@arg(name = "idClient", type = IType.STRING, optional = false, doc = @doc("Client Id")),
 			@arg(name = "topic", type = IType.STRING, optional = false, doc = @doc("Topic Name")) }, doc = @doc(value = "Subscribe a client to a topic", returns = "true if success, false otherwise", examples = {
 					@example("") }))
@@ -292,22 +322,22 @@ public class UnitySkill extends Skill {
 		return "Subscribed to topic!";
 	}
 
-	@action(name = "getMqttMessage", doc = @doc(value = "Get the next received mqtt message.", returns = "The message content if there is a received message, null otherwise.", examples = {
+	@action(name = "get_unity_message", doc = @doc(value = "Get the next received mqtt message.", returns = "The message content if there is a received message, null otherwise.", examples = {
 			@example("") }))
-	public String getMqttMessage(final IScope scope) {
+	public String getUnityMessage(final IScope scope) {
 		return subscribeCallback.getNextMessage();
 
 	}
 
-	@action(name = "getReplayMqttMessage", doc = @doc(value = "Get the next received mqtt message.", returns = "The message content if there is a received message, null otherwise.", examples = {
+	@action(name = "get_unity_replay", doc = @doc(value = "Get the next received mqtt message.", returns = "The message content if there is a received message, null otherwise.", examples = {
 			@example("") }))
-	public String getReplayMqttMessage(final IScope scope) {
+	public String getReplayUnityMessage(final IScope scope) {
 		return subscribeCallback.getNextReplayMessage();
 	}
 
-	@action(name = "getNotificationMqttMessage", doc = @doc(value = "Get the next received mqtt message.", returns = "The message content if there is a received message, null otherwise.", examples = {
+	@action(name = "get_unity_notification", doc = @doc(value = "Get the next received mqtt message.", returns = "The message content if there is a received message, null otherwise.", examples = {
 			@example("") }))
-	public String getNotificationMqttMessage(final IScope scope) {
+	public String getUnityNotificationMessage(final IScope scope) {
 		return subscribeCallback.getNextNotificationMessage();
 	}
 
