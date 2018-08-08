@@ -53,6 +53,8 @@ public class SubscribeCallback implements MqttCallback {
     	if(replayMailBox.size() > 0) {
     		String msg = replayMailBox.get(0).toString();
     		replayMailBox.remove(0);
+    		System.out.println("replayMailBox size is: "+replayMailBox.size());
+    		System.out.println("And message is : "+msg);
     		return msg;
     	}else {
     		return null;
