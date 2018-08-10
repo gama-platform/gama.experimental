@@ -28,7 +28,9 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.unity.messages.GamaUnityMessage;
+import ummisco.gama.unity.messages.SetTopicMessage;
 import ummisco.gama.unity.messages.ItemAttributes;
+import ummisco.gama.unity.messages.PluralActionTopicMessage;
 import ummisco.gama.unity.mqtt.SubscribeCallback;
 import ummisco.gama.unity.mqtt.Utils;
 
@@ -89,6 +91,16 @@ public class UnitySkill extends Skill {
 
 		return clientId;
 	}
+	
+	//TODO 
+	// add the actions bellow: 
+	//-----------------------
+	// setUnityFields
+	// getUnityFields
+	// setUnityColor
+	// setUnityPosition
+	// callUnityAction
+	// setUnityPropertie
 
 	@action(name = "send_unity_message", args = {
 			@arg(name = "senderU", type = IType.STRING, optional = false, doc = @doc("The sender")),
@@ -184,34 +196,34 @@ public class UnitySkill extends Skill {
 		return "Message sent!";
 	}
 
-	@action(name = "set_unity_field", args = {
-			@arg(name = "senderU", type = IType.STRING, optional = false, doc = @doc("The sender")),
-			@arg(name = "actionU", type = IType.STRING, optional = false, doc = @doc("The method name on unity game object")),
-			@arg(name = "objectU", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "attributeU", type = IType.MAP, optional = false, doc = @doc("The attribute list and their values")),
-			@arg(name = "topicU", type = IType.STRING, optional = false, doc = @doc("The topic")) }, doc = @doc(value = "Send a message to unity.", returns = "true if it is in the base.", examples = {
+	@action(name = "setUnityFields", args = {
+			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "attributes", type = IType.MAP, optional = false, doc = @doc("The attribute list and their values")) }, 
+			doc = @doc(value = "Set a set of fields of a unity game object.", returns = "void", examples = {
 					@example("") }))
-	public static synchronized String setUnityField(final IScope scope) {
+	public static synchronized void setUnityField(final IScope scope) {
 
-		String sender = (String) scope.getArg("senderU", IType.STRING);
-		String action = (String) scope.getArg("actionU", IType.STRING);
-		String object = (String) scope.getArg("objectU", IType.STRING);
-		Map<String, String> attribute = (Map<String, String>) scope.getArg("attributeU", IType.MAP);
-		String topic = (String) scope.getArg("topicU", IType.STRING);
+		String sender = (String) scope.getAgent().getName();
+		String receiver = (String) scope.getArg("objectName", IType.STRING);
+		String objectName = (String) scope.getArg("objectName", IType.STRING);
+		Map<String, String> attributes = (Map<String, String>) scope.getArg("attributes", IType.MAP);
 
+		
 		ArrayList<ItemAttributes> items = new ArrayList();
-		for (Map.Entry<?, ?> entry : attribute.entrySet()) {
+		for (Map.Entry<?, ?> entry : attributes.entrySet()) {
 			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue());
 			items.add(it);
 		}
 
-		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, items, topic,
-				"content");
+		SetTopicMessage setMessage = new SetTopicMessage(scope, sender, receiver, objectName, items);
 
 		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(messageUnity);
+		final String stringMessage = xstream.toXML(setMessage);
+		
+		System.out.println("Message to send to set Topic is : ");
+		System.out.println(stringMessage);
 
-		final MqttTopic unityTopic = client.getTopic(topic);
+		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_SET);
 		try {
 			MqttMessage message = new MqttMessage();
 			message.setPayload(stringMessage.getBytes());
@@ -221,8 +233,53 @@ public class UnitySkill extends Skill {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
-		return "Message sent!";
+		
 	}
+	
+	
+	
+	
+	@action(name = "callUnityPluralAction", args = {
+			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "actionName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "attributes", type = IType.MAP, optional = false, doc = @doc("The attribute list and their values")) }, 
+			doc = @doc(value = "Call a unity game object method that has several parameters.", returns = "void", examples = {
+					@example("") }))
+	public static synchronized void callUnityPluralAction(final IScope scope) {
+
+		String sender = (String) scope.getAgent().getName();
+		String receiver = (String) scope.getArg("objectName", IType.STRING);
+		String objectName = (String) scope.getArg("objectName", IType.STRING);
+		String actionName = (String) scope.getArg("actionName", IType.STRING);
+		Map<String, String> attributes = (Map<String, String>) scope.getArg("attributes", IType.MAP);
+
+		
+		ArrayList<ItemAttributes> items = new ArrayList();
+		for (Map.Entry<?, ?> entry : attributes.entrySet()) {
+			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue());
+			items.add(it);
+		}
+
+		PluralActionTopicMessage setMessage = new PluralActionTopicMessage(scope, sender, receiver, objectName, actionName, items);
+
+		XStream xstream = new XStream();
+		final String stringMessage = xstream.toXML(setMessage);
+		
+		System.out.println("Message to send to set Topic is : ");
+		System.out.println(stringMessage);
+
+		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MULTIPLE_FREE);
+		try {
+			MqttMessage message = new MqttMessage();
+			message.setPayload(stringMessage.getBytes());
+			unityTopic.publish(message);
+		} catch (MqttPersistenceException e) {
+			e.printStackTrace();
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	@operator(value = "setUnityPosition", doc = { @doc("Sends a message to unity") }, category = {
 			IOperatorCategory.STRING })

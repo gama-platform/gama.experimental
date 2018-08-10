@@ -26,9 +26,9 @@ import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
 /**
- * The Class GamaMessageProxy.
+ * The Class GamaUnityMessage.
  *
- * @author drogoul
+ * @author youcef sklab
  */
 
 @vars({ @variable(name = GamaUnityMessage.SENDER, type = IType.NONE, doc = {
