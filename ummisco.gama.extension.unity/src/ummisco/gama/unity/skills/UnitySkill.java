@@ -30,6 +30,7 @@ import msi.gaml.types.IType;
 import ummisco.gama.unity.messages.GamaUnityMessage;
 import ummisco.gama.unity.messages.SetTopicMessage;
 import ummisco.gama.unity.messages.ItemAttributes;
+import ummisco.gama.unity.messages.MonoActionTopicMessage;
 import ummisco.gama.unity.messages.PluralActionTopicMessage;
 import ummisco.gama.unity.mqtt.SubscribeCallback;
 import ummisco.gama.unity.mqtt.Utils;
@@ -238,6 +239,46 @@ public class UnitySkill extends Skill {
 	
 	
 	
+
+	
+	@action(name = "callUnityMonoAction", args = {
+			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "actionName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "attribute", type = IType.STRING, optional = false, doc = @doc("The attribute list and their values")) }, 
+			doc = @doc(value = "Call a unity game object method that has one parameter", returns = "void", examples = {
+					@example("") }))
+	public static synchronized void callUnityMonoAction(final IScope scope) {
+
+		String sender = (String) scope.getAgent().getName();
+		String receiver = (String) scope.getArg("objectName", IType.STRING);
+		String objectName = (String) scope.getArg("objectName", IType.STRING);
+		String actionName = (String) scope.getArg("actionName", IType.STRING);
+		String attribute = (String) scope.getArg("attribute", IType.STRING);
+
+		
+		
+
+		MonoActionTopicMessage topicMessage = new MonoActionTopicMessage(scope, sender, receiver, objectName, actionName, attribute);
+
+		XStream xstream = new XStream();
+		final String stringMessage = xstream.toXML(topicMessage);
+		
+		System.out.println("Message to send to MonoActionTopicMessage Topic is : ");
+		System.out.println(stringMessage);
+
+		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MONO_FREE);
+		try {
+			MqttMessage message = new MqttMessage();
+			message.setPayload(stringMessage.getBytes());
+			unityTopic.publish(message);
+		} catch (MqttPersistenceException e) {
+			e.printStackTrace();
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 	@action(name = "callUnityPluralAction", args = {
 			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
@@ -260,12 +301,12 @@ public class UnitySkill extends Skill {
 			items.add(it);
 		}
 
-		PluralActionTopicMessage setMessage = new PluralActionTopicMessage(scope, sender, receiver, objectName, actionName, items);
+		PluralActionTopicMessage topicMessage = new PluralActionTopicMessage(scope, sender, receiver, objectName, actionName, items);
 
 		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(setMessage);
+		final String stringMessage = xstream.toXML(topicMessage);
 		
-		System.out.println("Message to send to set Topic is : ");
+		System.out.println("Message to send to PluralActionTopicMessage Topic is : ");
 		System.out.println(stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MULTIPLE_FREE);
