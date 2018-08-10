@@ -28,6 +28,7 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.unity.messages.GamaUnityMessage;
+import ummisco.gama.unity.messages.GetTopicMessage;
 import ummisco.gama.unity.messages.SetTopicMessage;
 import ummisco.gama.unity.messages.ItemAttributes;
 import ummisco.gama.unity.messages.MonoActionTopicMessage;
@@ -155,34 +156,29 @@ public class UnitySkill extends Skill {
 		return "Message sent!";
 	}
 
-	@action(name = "get_unity_field", args = {
-			@arg(name = "senderU", type = IType.STRING, optional = false, doc = @doc("The sender")),
-			@arg(name = "actionU", type = IType.STRING, optional = false, doc = @doc("The method name on unity game object")),
-			@arg(name = "objectU", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "attributeU", type = IType.MAP, optional = false, doc = @doc("The attribute list and their values")),
-			@arg(name = "topicU", type = IType.STRING, optional = false, doc = @doc("The topic")) }, doc = @doc(value = "Send a message to unity.", returns = "true if it is in the base.", examples = {
+	@action(name = "getUnityField", args = {
+			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "attribute", type = IType.STRING, optional = false, doc = @doc("The field name")),
+			}, doc = @doc(value = "Get a unity game object field value", returns = "void", examples = {
 					@example("") }))
-	public static synchronized String getUnityField(final IScope scope) {
+	public static synchronized void getUnityField(final IScope scope) {
 
-		String sender = (String) scope.getArg("senderU", IType.STRING);
-		String action = (String) scope.getArg("actionU", IType.STRING);
-		String object = (String) scope.getArg("objectU", IType.STRING);
-		Map<String, String> attribute = (Map<String, String>) scope.getArg("attributeU", IType.MAP);
-		String topic = (String) scope.getArg("topicU", IType.STRING);
+		String sender = (String) scope.getAgent().getName();
+		String receiver = (String) scope.getArg("objectName", IType.STRING);
+		String objectName = (String) scope.getArg("objectName", IType.STRING);
+		String attribute = (String) scope.getArg("attribute", IType.STRING);
 
-		ArrayList<ItemAttributes> items = new ArrayList();
-		for (Map.Entry<?, ?> entry : attribute.entrySet()) {
-			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue());
-			items.add(it);
-		}
-
-		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, items, topic,
-				"content");
+		GetTopicMessage topicMessage = new GetTopicMessage(scope, sender, receiver, objectName, attribute);
+		
+		
 
 		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(messageUnity);
+		final String stringMessage = xstream.toXML(topicMessage);
+		
+		System.out.println("Message to send to Get Topic is : ");
+		System.out.println(stringMessage);
 
-		final MqttTopic unityTopic = client.getTopic(topic);
+		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_GET);
 
 		try {
 			MqttMessage message = new MqttMessage();
@@ -193,8 +189,6 @@ public class UnitySkill extends Skill {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
-
-		return "Message sent!";
 	}
 
 	@action(name = "setUnityFields", args = {
