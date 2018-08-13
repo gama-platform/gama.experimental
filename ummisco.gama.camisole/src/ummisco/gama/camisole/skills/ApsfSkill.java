@@ -18,7 +18,7 @@ import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.GamlAnnotations.var;
+import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gaml.skills.Skill;
 import msi.gaml.species.GamlSpecies;
@@ -32,12 +32,12 @@ import ummisco.gama.apsf.template.Template;
 import ummisco.gama.camisole.InputData;
 import ummisco.gama.camisole.SoilFactory;
 
-@vars({ @var(name = IApsfSkill.APSF_SOIL, type = IType.NONE, doc = @doc("Contains the virtual soil")),
-	@var(name = IApsfSkill.APSF_SOIL_FACTORY, type = IType.NONE, doc = @doc("Contains the virtual soil")),
-	@var(name = IApsfSkill.DEVELOPPED_TEMPLATE, type = IType.MAP, doc = @doc("Contains the virtual soil")),
-	@var(name = IApsfSkill.SOIL_DIVIDING, type = IType.INT, doc = @doc("soil dividing")),
-	@var(name = IApsfSkill.SOIL_SIZE, type = IType.FLOAT, doc = @doc("size of the soil in m")),
-	@var(name = IApsfSkill.COUPLED_MODEL, type = IType.LIST, doc = @doc("models")) })
+@vars({ @variable(name = IApsfSkill.APSF_SOIL, type = IType.NONE, doc = @doc("Contains the virtual soil")),
+	@variable(name = IApsfSkill.APSF_SOIL_FACTORY, type = IType.NONE, doc = @doc("Contains the virtual soil")),
+	@variable(name = IApsfSkill.DEVELOPPED_TEMPLATE, type = IType.MAP, doc = @doc("Contains the virtual soil")),
+	@variable(name = IApsfSkill.SOIL_DIVIDING, type = IType.INT, doc = @doc("soil dividing")),
+	@variable(name = IApsfSkill.SOIL_SIZE, type = IType.FLOAT, doc = @doc("size of the soil in m")),
+	@variable(name = IApsfSkill.COUPLED_MODEL, type = IType.LIST, doc = @doc("models")) })
 @skill(name = IApsfSkill.SKILL_NAME, concept = { IConcept.SKILL })
 
 public class ApsfSkill extends Skill {

@@ -3,20 +3,19 @@ package femto_st.gama.mpi;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaList;
-import msi.gama.util.GamaListFactory;
 import mpi.*;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.GamlAnnotations.var;
+import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.serializer.factory.StreamConverter;
 
-@vars({ @var(name = IMPISkill.MPI_RANK, type = IType.INT, doc = @doc("Init MPI Brocker"))})
+@vars({ @variable(name = IMPISkill.MPI_RANK, type = IType.INT, doc = @doc("Init MPI Brocker"))})
 @skill(name=IMPISkill.MPI_NETWORK, concept = { IConcept.GUI, IConcept.COMMUNICATION, IConcept.SKILL })
 public class MPISkill extends Skill{
 	static boolean isMPIInit = false;
@@ -81,12 +80,13 @@ public class MPISkill extends Skill{
 	}, doc = @doc(value = "", returns = "", examples = { @example("") }))
 	public void send(IScope scope)
 	{
-		
+		System.out.println("xxxxxHHHHxxxxxx ");
 		GamaList mesg = ((GamaList) (scope.getArg(IMPISkill.MESG, IType.LIST)));
 		int dest = ((Integer) scope.getArg(IMPISkill.DEST, IType.INT)).intValue();
 		int stag = ((Integer) scope.getArg(IMPISkill.STAG, IType.INT)).intValue();
 
-		byte[] message = StreamConverter.convertObjectToStream(scope, mesg).getBytes();
+		System.out.println("xxxxxxxxxxx " + StreamConverter.convertNetworkObjectToStream(scope, mesg));
+		byte[] message = StreamConverter.convertNetworkObjectToStream(scope, mesg).getBytes();
 		int [] size = new int[1];
 		size[0]=message.length;
 
@@ -121,7 +121,7 @@ public class MPISkill extends Skill{
 	    	System.out.println("MPI send Error"+mpiex);
 	    }
 
-		GamaList rcvMesg = (GamaList) StreamConverter.convertStreamToObject(scope, new String(message));
+		GamaList rcvMesg = (GamaList) StreamConverter.convertNetworkStreamToObject(scope, new String(message));
 		
 		return rcvMesg;
 	}

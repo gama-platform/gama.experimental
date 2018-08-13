@@ -1,26 +1,13 @@
 package gama_analyzer;
 
-import java.util.LinkedList;
-
-import com.thoughtworks.xstream.XStreamer;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
-
-import weka.core.xml.XStream;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.species;
-import msi.gama.precompiler.GamlAnnotations.var;
 import msi.gama.runtime.IScope;
-import msi.gama.util.GamaList;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IList;
 import msi.gama.util.matrix.GamaFloatMatrix;
-import msi.gama.util.matrix.GamaIntMatrix;
 import msi.gama.util.matrix.GamaMatrix;
 import msi.gama.util.matrix.GamaObjectMatrix;
-import msi.gaml.operators.Cast;
-import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
 public class StorableData {

@@ -128,8 +128,7 @@ public class RSkill extends Skill {
 					@example(" R_eval(\"data(iris)\")") }))
 	public Object primREval(final IScope scope) throws GamaRuntimeException {
 		// re = new Rengine(args, false, new TextConsole());
-		initEnv(scope);
-
+	
 
 
 		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split(System.getProperty("line.separator"));
@@ -152,21 +151,13 @@ public class RSkill extends Skill {
 		return dataConvert_R2G(x);
 	}
 
-	@operator (
-			value = "startR",
-			content_type = IType.CONTAINER,
-			index_type = ITypeProvider.FIRST_CONTENT_TYPE,
-			category = { IOperatorCategory.GRAPH },
-			concept = { IConcept.STATISTIC, IConcept.CAST })
-	@doc (
-			value = "to_R_dataframe(speciesname)",
-			masterDoc = true,
-			comment = "convert agent attributes to dataframe of R",
-			examples = @example (
-					value = "to_R_dataframe(people)",
-					isExecutable = false),
-			see = { "R_eval" })
+	
+	@action(name = "startR", doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
+					@example("startR") }))
+	
 	public String startR(final IScope scope) {
+		initEnv(scope);
+
 		re = Rengine.getMainEngine();
 
 		if (re == null) {
@@ -194,6 +185,27 @@ public class RSkill extends Skill {
 
 		return "R started";
 	}
+
+	@operator (
+			value = "to_R_data",
+			content_type = IType.CONTAINER,
+			index_type = ITypeProvider.FIRST_CONTENT_TYPE,
+			category = { IOperatorCategory.GRAPH },
+			concept = { IConcept.STATISTIC, IConcept.CAST })
+	@doc (
+			value = "to_R_data(speciesname)",
+			masterDoc = true,
+			comment = "convert agent attributes to data type of R",
+			examples = @example (
+					value = "to_R_data(people)",
+					isExecutable = false),
+			see = { "R_eval" })
+	public static Object toRData(final IScope scope,final Object o) {
+		return dataConvert_G2R(o);
+	}
+	
+	
+	
 	@operator (
 			value = "to_R_dataframe",
 			content_type = IType.CONTAINER,
@@ -261,7 +273,13 @@ public class RSkill extends Skill {
 	}
 
 	public static Object dataConvert_G2R(Object o) {
-		Object res=o.toString();
+		Object res="\""+o.toString()+"\"";
+		if(o instanceof Integer || o instanceof Double) {
+			res = o.toString();
+		}
+		if(o instanceof Boolean) {
+			res = (Boolean) o ? "TRUE" : "FALSE";
+		}
 		if(o instanceof GamaColor) {
 			res="\""+((GamaColor)o).stringValue(null)+"\"";
 		}
@@ -269,12 +287,12 @@ public class RSkill extends Skill {
 			res="\""+((GamaImageFile)o).getPath(null)+"\"";
 		}
 		
-		if(o instanceof IAgent) {
-			res="\""+o+"\"";
-		}
-		if(o instanceof String) {
-			res="\""+o+"\"";
-		}
+//		if(o instanceof IAgent) {
+//			res="\""+o+"\"";
+//		}
+//		if(o instanceof String) {
+//			res="\""+o+"\"";
+//		}
 		if(o instanceof GamaPoint) {
 			res="\""+((GamaPoint)o).x+","+((GamaPoint)o).y+"\"";
 		}
@@ -311,7 +329,6 @@ public class RSkill extends Skill {
 				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
 				fieldSysPath.setAccessible( true );
 				fieldSysPath.set( null, null );
-//				System.loadLibrary("jri");
 				
 			}catch(Exception ex) {
 				scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
@@ -319,16 +336,22 @@ public class RSkill extends Skill {
 			}
 //			System.out.println(System.getProperty("java.library.path"));
 		}
-//		if(System.getenv("R_HOME")==null) {
-//			return "missing R_HOME";
-//		}
+		System.loadLibrary("jri");
+		
+		if(System.getenv("R_HOME")==null) {
+            throw GamaRuntimeException.error("The R_HOME environment variable is not set. R cannot be run.", scope);			
+		}
 	}
 	public REXP Reval(final IScope scope, final String cmd) {
-		re=Rengine.getMainEngine();
-		
-		if(re==null) {			
-			return null;
+		try {			
+			re=Rengine.getMainEngine();
+			if(re==null) {			
+				return null;
+			}
+		}catch(Exception ex) {
+			throw GamaRuntimeException.error("R cannot be found ...", scope);
 		}
+		
 
 
 

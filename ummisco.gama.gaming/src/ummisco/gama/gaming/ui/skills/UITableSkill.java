@@ -9,46 +9,46 @@ import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.GamlAnnotations.var;
+import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaList;
 import msi.gaml.types.IType;
 
-@vars ({ @var (
+@vars ({ @variable (
 		name = IUILocatedSkill.AGENT_LOCATION,
 		type = IType.POINT,
 		doc = @doc ("locked location")),
-		@var (
+		@variable (
 				name = IUILocatedSkill.AGENT_LOCKED_WIDTH,
 				type = IType.FLOAT,
 				doc = @doc ("locked width")),
-		@var (
+		@variable (
 				name = IUILocatedSkill.AGENT_LOCKED_HEIGHT,
 				type = IType.FLOAT,
 				doc = @doc ("locked height")),
-		@var (
+		@variable (
 				name = IUILocatedSkill.AGENT_UI_WIDTH,
 				type = IType.FLOAT,
 				doc = @doc ("resized width")),
-		@var (
+		@variable (
 				name = IUILocatedSkill.AGENT_UI_HEIGHT,
 				type = IType.FLOAT,
 				doc = @doc ("resized height")),
-		@var (
+		@variable (
 				name = IUITableSkill.NUMBER_OF_LINES,
 				type = IType.INT,
 				doc = @doc ("number of displayed lines")),
-		@var (
+		@variable (
 				name = IUITableSkill.NUMBER_OF_COLUMNS,
 				type = IType.INT,
 				doc = @doc ("number of columns")),
-		@var (
+		@variable (
 				name = IUITableSkill.MATRIX_DATA,
 				type = IType.CONTAINER,
 				doc = @doc ("resized height")),
-		@var (
+		@variable (
 				name = IUILocatedSkill.AGENT_DISPLAY,
 				type = IType.STRING,
 				doc = @doc ("map of location")) })
