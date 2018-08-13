@@ -26,7 +26,7 @@ import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
 /**
- * The Class SetTopicMessage.
+ * The Class GetTopicMessage.
  *
  * @author youcef sklab
  */
