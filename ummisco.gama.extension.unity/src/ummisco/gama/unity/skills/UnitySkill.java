@@ -1,9 +1,7 @@
 package ummisco.gama.unity.skills;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -19,10 +17,8 @@ import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.skills.Skill;
@@ -30,12 +26,13 @@ import msi.gaml.types.IType;
 import ummisco.gama.unity.messages.ColorTopicMessage;
 import ummisco.gama.unity.messages.GamaUnityMessage;
 import ummisco.gama.unity.messages.GetTopicMessage;
-import ummisco.gama.unity.messages.SetTopicMessage;
 import ummisco.gama.unity.messages.ItemAttributes;
 import ummisco.gama.unity.messages.MonoActionTopicMessage;
 import ummisco.gama.unity.messages.MoveTopicMessage;
 import ummisco.gama.unity.messages.PluralActionTopicMessage;
 import ummisco.gama.unity.messages.PositionTopicMessage;
+import ummisco.gama.unity.messages.PropertyTopicMessage;
+import ummisco.gama.unity.messages.SetTopicMessage;
 import ummisco.gama.unity.mqtt.SubscribeCallback;
 import ummisco.gama.unity.mqtt.Utils;
 
@@ -99,14 +96,14 @@ public class UnitySkill extends Skill {
 	
 	//TODO 
 	// add the actions bellow: 
-	//-----------------------
+	// ------------------------
 	// setUnityFields --> Done
 	// getUnityField --> Done
 	// setUnityColor --> Done
 	// setUnityPosition --> Done
 	// callUnityPluralAction --> Done
 	// callUnityMonoAction --> Done
-	// setUnityPropertie --> 
+	// setUnityProperty --> 
 	// unityMove -->  Done
 
 	@action(name = "send_unity_message", args = {
@@ -237,7 +234,40 @@ public class UnitySkill extends Skill {
 	}
 	
 	
-	
+	@action(name = "setUnityProperty", args = {
+			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "propertyName", type = IType.STRING, optional = false, doc = @doc("The property name")) , 
+			@arg(name = "propertyValue", type = IType.STRING, optional = false, doc = @doc("The property value")) },
+			doc = @doc(value = "Set a property value.", returns = "void", examples = {
+					@example("") }))
+	public static synchronized void setUnityProperty(final IScope scope) {
+
+		String sender = (String) scope.getAgent().getName();
+		String receiver = (String) scope.getArg("objectName", IType.STRING);
+		String objectName = (String) scope.getArg("objectName", IType.STRING);
+		String propertyName = (String) scope.getArg("propertyName", IType.STRING);
+		String propertyValue = (String) scope.getArg("propertyValue", IType.STRING);
+
+		PropertyTopicMessage topicMessage = new PropertyTopicMessage(scope, sender, receiver, objectName, propertyName, propertyValue);
+
+		XStream xstream = new XStream();
+		final String stringMessage = xstream.toXML(topicMessage);
+		
+		System.out.println("Message to send to set Topic is : ");
+		System.out.println(stringMessage);
+
+		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_PROPERTY);
+		try {
+			MqttMessage message = new MqttMessage();
+			message.setPayload(stringMessage.getBytes());
+			unityTopic.publish(message);
+		} catch (MqttPersistenceException e) {
+			e.printStackTrace();
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 	
 	@action(name = "callUnityMonoAction", args = {
