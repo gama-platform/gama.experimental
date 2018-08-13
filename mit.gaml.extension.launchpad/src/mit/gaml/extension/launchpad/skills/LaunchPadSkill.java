@@ -90,7 +90,7 @@ public class LaunchPadSkill extends Skill {
 		System.out.println("colorString" + colorString);
 		if (LaunchPadEventLayer.pressedPad != null) {
 			if (colorString.equals("amber")) {
-				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.AMBER,
+				LaunchPadEventLayer.client.setPadLight(LaunchPadEventLayer.pressedPad, Color.BROWN,
 						BackBufferOperation.NONE);
 			}
 			if (colorString.equals("black")) {
