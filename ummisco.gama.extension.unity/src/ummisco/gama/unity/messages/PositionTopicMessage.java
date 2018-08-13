@@ -26,73 +26,58 @@ import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
 /**
- * The Class PluralActionTopicMessage.
+ * The Class PositionTopicMessage.
  *
  * @author youcef sklab
  */
 
-@vars({ @variable(name = PluralActionTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
+@vars({ @variable(name = PositionTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
 		@doc("Returns the concerned unity game object name") }),
-		@variable(name = PluralActionTopicMessage.METHOD_NAME, type = IType.STRING, doc = {
-			@doc("Returns the unity game object method name") }),
-		@variable(name = PluralActionTopicMessage.ATTRIBUTES_LIST, type = IType.MAP, doc = {
+		@variable(name = PositionTopicMessage.POSITION, type = IType.MAP, doc = {
 				@doc("Returns the attribtes list of the message") }), })
-public class PluralActionTopicMessage extends GamaMessage {
+public class PositionTopicMessage extends GamaMessage {
 
 	public final static String OBJECT_NAME = "objectName";
-	public final static String METHOD_NAME = "methodName";
-	public final static String ATTRIBUTES_LIST = "attributes";
+	public final static String POSITION = "position";
 
 	protected Object objectName;
-	protected Object methodName;
-	protected Object attributes;
+	protected Object position;
 
-	public PluralActionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object methodName,
-			final Object attributes, final Object content) throws GamaRuntimeException {
+	public PositionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object position,
+			final Object content) throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
-		setMethodName(methodName);
-		setAttributesList(attributes);
+		setPosition(position);
 	}
 
-	public PluralActionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object methodName,
-			final Object attributes) throws GamaRuntimeException {
+	public PositionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, 
+			final Object position) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
 		setObjectName(objectName);
-		setMethodName(methodName);
-		setAttributesList(attributes);
+		setPosition(position);
 	}
 
-	@getter(PluralActionTopicMessage.OBJECT_NAME)
+	@getter(PositionTopicMessage.OBJECT_NAME)
 	public Object getObjectName() {
 		return objectName;
 	}
 
-	@setter(PluralActionTopicMessage.OBJECT_NAME)
+	@setter(PositionTopicMessage.OBJECT_NAME)
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
 	
-	@getter(PluralActionTopicMessage.METHOD_NAME)
-	public Object getMethodName() {
-		return methodName;
+
+	@getter(PositionTopicMessage.POSITION)
+	public Object getPosition() {
+		return position;
 	}
 
-	@setter(PluralActionTopicMessage.METHOD_NAME)
-	public void setMethodName(final Object methodName) {
-		this.methodName = methodName;
-	}
-
-	@getter(PluralActionTopicMessage.ATTRIBUTES_LIST)
-	public Object getAttributesList() {
-		return attributes;
-	}
-
-	@setter(PluralActionTopicMessage.ATTRIBUTES_LIST)
-	public void setAttributesList(final Object attributesList) {
-		this.attributes = attributesList;
+	@setter(PositionTopicMessage.POSITION)
+	public void setPosition(final Object position) {
+		this.position = position;
 	}
 
 	@Override
@@ -107,8 +92,8 @@ public class PluralActionTopicMessage extends GamaMessage {
 	}
 
 	@Override
-	public PluralActionTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new PluralActionTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getMethodName(), (Map<?, ?>) getAttributesList(),
+	public PositionTopicMessage copy(final IScope scope) throws GamaRuntimeException {
+		return new PositionTopicMessage(scope, getSender(), getReceivers(), getObjectName(), (Map<?, ?>) getPosition(),
 				getContents(scope));
 	}
 

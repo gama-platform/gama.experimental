@@ -26,73 +26,58 @@ import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
 /**
- * The Class PluralActionTopicMessage.
+ * The Class SetTopicMessage.
  *
  * @author youcef sklab
  */
 
-@vars({ @variable(name = PluralActionTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
+@vars({ @variable(name = ColorTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
 		@doc("Returns the concerned unity game object name") }),
-		@variable(name = PluralActionTopicMessage.METHOD_NAME, type = IType.STRING, doc = {
-			@doc("Returns the unity game object method name") }),
-		@variable(name = PluralActionTopicMessage.ATTRIBUTES_LIST, type = IType.MAP, doc = {
-				@doc("Returns the attribtes list of the message") }), })
-public class PluralActionTopicMessage extends GamaMessage {
+		@variable(name = ColorTopicMessage.COLOR, type = IType.STRING, doc = {
+				@doc("Returns the color") }), })
+public class ColorTopicMessage extends GamaMessage {
 
 	public final static String OBJECT_NAME = "objectName";
-	public final static String METHOD_NAME = "methodName";
-	public final static String ATTRIBUTES_LIST = "attributes";
+	public final static String COLOR = "color";
 
 	protected Object objectName;
-	protected Object methodName;
-	protected Object attributes;
+	protected Object color;
 
-	public PluralActionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object methodName,
-			final Object attributes, final Object content) throws GamaRuntimeException {
+	public ColorTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName,
+			final Object color, final Object content) throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
-		setMethodName(methodName);
-		setAttributesList(attributes);
+		setColor(color);
 	}
 
-	public PluralActionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object methodName,
-			final Object attributes) throws GamaRuntimeException {
+	public ColorTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName,
+			final Object color) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
 		setObjectName(objectName);
-		setMethodName(methodName);
-		setAttributesList(attributes);
+		setColor(color);
 	}
 
-	@getter(PluralActionTopicMessage.OBJECT_NAME)
+	@getter(ColorTopicMessage.OBJECT_NAME)
 	public Object getObjectName() {
 		return objectName;
 	}
 
-	@setter(PluralActionTopicMessage.OBJECT_NAME)
+	@setter(ColorTopicMessage.OBJECT_NAME)
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
 	
-	@getter(PluralActionTopicMessage.METHOD_NAME)
-	public Object getMethodName() {
-		return methodName;
+
+	@getter(ColorTopicMessage.COLOR)
+	public Object getColor() {
+		return color;
 	}
 
-	@setter(PluralActionTopicMessage.METHOD_NAME)
-	public void setMethodName(final Object methodName) {
-		this.methodName = methodName;
-	}
-
-	@getter(PluralActionTopicMessage.ATTRIBUTES_LIST)
-	public Object getAttributesList() {
-		return attributes;
-	}
-
-	@setter(PluralActionTopicMessage.ATTRIBUTES_LIST)
-	public void setAttributesList(final Object attributesList) {
-		this.attributes = attributesList;
+	@setter(ColorTopicMessage.COLOR)
+	public void setColor(final Object color) {
+		this.color = color;
 	}
 
 	@Override
@@ -107,8 +92,8 @@ public class PluralActionTopicMessage extends GamaMessage {
 	}
 
 	@Override
-	public PluralActionTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new PluralActionTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getMethodName(), (Map<?, ?>) getAttributesList(),
+	public ColorTopicMessage copy(final IScope scope) throws GamaRuntimeException {
+		return new ColorTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getColor(),
 				getContents(scope));
 	}
 
