@@ -20,8 +20,6 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.11.1",
  org.eclipse.ui.forms;bundle-version="3.6.200",
  msi.gama.lang.gaml,
  ummisco.gama.ui.modeling
-Import-Package: msi.gama.lang.gaml.ui.internal,
- org.apache.commons.io,
+Import-Package: org.apache.commons.io,
  org.eclipse.compare,
- org.eclipse.ui.commands,
- ummisco.gama.ui.navigator.contents
+ org.eclipse.ui.commands

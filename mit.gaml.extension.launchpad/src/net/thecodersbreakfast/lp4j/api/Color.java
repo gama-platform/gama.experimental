@@ -47,14 +47,20 @@ public final class Color {
     public static final Color BLACK = CACHE[0][0];
     /** Red (red 3, green 0) */
     public static final Color RED = CACHE[3][0];
+    /** Red (red 2, green 0) */
+    public static final Color DARKRED = CACHE[2][0];
     /** Green (red 0, green 3) */
     public static final Color GREEN = CACHE[0][3];
+    /** Green (red 0, green 2) */
+    public static final Color DARKGREEN = CACHE[0][2];
     /** Orange (red 3, green 2) */
     public static final Color ORANGE = CACHE[3][2];
     /** Amber (red 3, green 3) */
-    public static final Color AMBER = CACHE[3][3];
+    public static final Color BROWN = CACHE[3][3];
     /** Yellow (red 2, green 3) */
     public static final Color YELLOW = CACHE[2][3];
+    /** Light_yellow (red ?, green ?) */
+    public static final Color LIGHTYELLOW = CACHE[1][3];
 
     /**
      * Factory method

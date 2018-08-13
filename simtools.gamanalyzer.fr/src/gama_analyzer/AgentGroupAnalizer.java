@@ -9,8 +9,8 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 @species(name = "AgGroupAnalizer")
 public class AgentGroupAnalizer extends ClusterBuilder  {
 	
-	public AgentGroupAnalizer(final IPopulation s) throws GamaRuntimeException {
-			super(s);
+	public AgentGroupAnalizer(final IPopulation s, final int index) throws GamaRuntimeException {
+			super(s,index);
 	}
 	
 //	@action(name = "creation_cluster")

@@ -422,9 +422,9 @@ public class NetCDFFile extends GamaFile<GamaMap<String, IList<?>>, IList<?>> {
 	}
 
 	@Override
-	public IContainerType<?> getType() {
-		// TODO Auto-generated method stub
-		return null;
+	public IContainerType getGamlType() {
+		final IType ct = getBuffer() == null ? Types.NO_TYPE : getBuffer().getGamlType().getContentType();
+		return Types.FILE.of(ct);
 	}
 
 }

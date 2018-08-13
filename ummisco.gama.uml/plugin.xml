@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:navigator.menu?after=menu.gama.import">
+         <menu
+               icon="icons/menu.generateUML.png"
+               label="UML Generator">
+            <command
+                  commandId="ummisco.gama.uml.generateHeavyUML"
+                  id="ummisco.gama.uml.generateHeavyUML"
+                  label="Generate the whole model"
+                  tooltip="Generate UML file of a Model">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="activeMenuSelection">
+                     <iterate>
+                        <adapt
+                              type="ummisco.gama.ui.navigator.contents.WrappedGamaFile">
+                        </adapt>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="ummisco.gama.uml.generateLightUML"
+                  id="ummisco.gama.uml.generateLightUML"
+                  label="Generate only Classes"
+                  style="push"
+                  tooltip="Generate only the classes of the Model">
+                   <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="activeMenuSelection">
+                     <iterate>
+                        <adapt
+                              type="ummisco.gama.ui.navigator.contents.WrappedGamaFile">
+                        </adapt>
+                     </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="GenerateUMLHeavyHandler"
+            id="ummisco.gama.uml.generateHeavyUML"
+            name="Generate UML from Model">
+      </command>
+      <command
+            defaultHandler="GenerateUMLLightHandler"
+            id="ummisco.gama.uml.generateLightUML"
+            name="Generate UML from Model">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+   </extension>
+
+</plugin>

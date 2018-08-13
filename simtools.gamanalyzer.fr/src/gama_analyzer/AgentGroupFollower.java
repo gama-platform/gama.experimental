@@ -1,10 +1,17 @@
 package gama_analyzer;
 
-import msi.gama.common.interfaces.IKeyword;	 
-import msi.gama.common.geometry.GeometryUtils;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import com.thoughtworks.xstream.XStream;
+
+import autres.Analyse_statement;
 import msi.gama.metamodel.agent.GamlAgent;
 import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.agent.MinimalAgent;
 import msi.gama.metamodel.population.IPopulation;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.GamaShape;
@@ -15,71 +22,56 @@ import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.species;
-import msi.gama.precompiler.GamlAnnotations.var;
+import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
+import msi.gama.util.GamaListFactory;
+import msi.gama.util.GamaMap;
+import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IList;
-import msi.gaml.species.ISpecies;
-import msi.gaml.types.GamaGeometryType;
-import msi.gaml.types.IType;
-import msi.gaml.variables.Variable;
-import msi.gaml.types.Types;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-
-import autres.Analyse_statement;
-import msi.gama.util.*;
 import msi.gama.util.matrix.GamaFloatMatrix;
 import msi.gama.util.matrix.GamaMatrix;
 import msi.gama.util.matrix.GamaObjectMatrix;
 import msi.gaml.operators.Cast;
-import msi.gaml.operators.Random;
 import msi.gaml.operators.Maths;
-
-import java.awt.Color;
-import java.lang.Object;
-import java.lang.Math;
-
-
-
-import com.thoughtworks.xstream.*;
+import msi.gaml.operators.Random;
+import msi.gaml.species.ISpecies;
+import msi.gaml.types.GamaGeometryType;
+import msi.gaml.types.IType;
+import msi.gaml.types.Types;
+import msi.gaml.variables.Variable;
 
 @vars({
-	@var(name = "varmap", type = IType.MAP, doc = @doc("")),
-	@var(name = "numvarmap", type = IType.MAP, doc = @doc("")),
-	@var(name = "qualivarmap", type = IType.MAP, doc = @doc("")),
-	@var(name = "metadatahistory", type = IType.MATRIX,doc = @doc("")),
-	@var(name = "lastdetailedvarvalues", type = IType.MATRIX, doc = @doc("")),		
-	@var(name = "averagehistory", type = IType.MATRIX, doc = @doc("")),
-	@var(name = "stdevhistory", type = IType.MATRIX, doc = @doc("")),
-	@var(name = "minhistory", type = IType.MATRIX, doc = @doc("")),
-	@var(name = "maxhistory", type = IType.MATRIX, doc = @doc("")),
-	@var(name = "distribhistoryparams", type = IType.MATRIX, doc = @doc("")),
-	@var(name = "distribhistory", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "varmap", type = IType.MAP, doc = @doc("")),
+	@variable(name = "numvarmap", type = IType.MAP, doc = @doc("")),
+	@variable(name = "qualivarmap", type = IType.MAP, doc = @doc("")),
+	@variable(name = "metadatahistory", type = IType.MATRIX,doc = @doc("")),
+	@variable(name = "lastdetailedvarvalues", type = IType.MATRIX, doc = @doc("")),		
+	@variable(name = "averagehistory", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "stdevhistory", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "minhistory", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "maxhistory", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "distribhistoryparams", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "distribhistory", type = IType.MATRIX, doc = @doc("")),
 
-	@var(name = "multi_metadatahistory", type = IType.MATRIX,doc = @doc("")),
-	@var(name = "multi_lastdetailedvarvalues", type = IType.MATRIX, doc = @doc("")),		
-	@var(name = "multi_averagehistory", type = IType.MATRIX, doc = @doc("")),
-	@var(name = "multi_stdevhistory", type = IType.MATRIX, doc = @doc("")),
-	@var(name = "multi_minhistory", type = IType.MATRIX, doc = @doc("")),
-	@var(name = "multi_maxhistory", type = IType.MATRIX, doc = @doc("")),
-	@var(name = "multi_distribhistoryparams", type = IType.MATRIX, doc = @doc("")),
-	@var(name = "multi_distribhistory", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "multi_metadatahistory", type = IType.MATRIX,doc = @doc("")),
+	@variable(name = "multi_lastdetailedvarvalues", type = IType.MATRIX, doc = @doc("")),		
+	@variable(name = "multi_averagehistory", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "multi_stdevhistory", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "multi_minhistory", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "multi_maxhistory", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "multi_distribhistoryparams", type = IType.MATRIX, doc = @doc("")),
+	@variable(name = "multi_distribhistory", type = IType.MATRIX, doc = @doc("")),
 
-	@var(name = "color", type = IType.COLOR, doc = @doc("couleur de l'agent_group_follower")),
-	@var(name = "dbscann", type = IType.INT, init = "3", doc = @doc("number of points for DBSCAN")),
-	@var(name = "dbscane", type = IType.FLOAT, init = "25", doc = @doc("epsilon for DBSCAN")),
-	@var(name = "display_mode", type = IType.STRING, doc = @doc("displaying global or SimGlobal")),
-	@var(name = "clustering_mode", type = IType.STRING, doc = @doc("dbscan, none")),
-	@var(name = "allSimShape", type = IType.LIST, doc = @doc("shape of all the simulation of the agent folllower")),
-	@var(name = "colorList", type = IType.LIST, doc = @doc("color correponding to each simulation"))
+	@variable(name = "color", type = IType.COLOR, doc = @doc("couleur de l'agent_group_follower")),
+	@variable(name = "dbscann", type = IType.INT, init = "3", doc = @doc("number of points for DBSCAN")),
+	@variable(name = "dbscane", type = IType.FLOAT, init = "25", doc = @doc("epsilon for DBSCAN")),
+	@variable(name = "display_mode", type = IType.STRING, doc = @doc("displaying global or SimGlobal")),
+	@variable(name = "clustering_mode", type = IType.STRING, doc = @doc("dbscan, none")),
+	@variable(name = "allSimShape", type = IType.LIST, doc = @doc("shape of all the simulation of the agent folllower")),
+	@variable(name = "colorList", type = IType.LIST, doc = @doc("color correponding to each simulation"))
 })
 
 @species(name = "agent_group_follower")
@@ -896,8 +888,8 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 	String nom_espece = Analyse_statement.getAnalyseStatementVariable(); 
 	String nom_contrainte = Analyse_statement.getAnalyseStatementConstraint(); 
 
-	public AgentGroupFollower(final IPopulation s) throws GamaRuntimeException {
-		super(s);
+	public AgentGroupFollower(final IPopulation s, final int index) throws GamaRuntimeException {
+		super(s,index);
 		mydata = new StorableData();
 		multidata = new StorableData();
 		virtualAgents=new ArrayList<IAgent>();
@@ -1409,7 +1401,7 @@ public class AgentGroupFollower extends ClusterBuilder //implements  MessageList
 									nv.add(nc);
 									sp.setChildren(nv);
 								}
-								GamlAgent nagent=new GamlAgent(this.getPopulationFor("agent"));
+								GamlAgent nagent=new GamlAgent(this.getPopulationFor("agent"),i);
 //								this.getPopulationFor("agent").add(nagent);
 
 								nagent._init_(scope);

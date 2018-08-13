@@ -55,8 +55,8 @@ import weka.core.ManhattanDistance;
 @species(name = "cluster_builder")
 public class ClusterBuilder extends GamlAgent {
 
-	public ClusterBuilder(final IPopulation s) throws GamaRuntimeException {
-		super(s);
+	public ClusterBuilder(final IPopulation s, final int index) throws GamaRuntimeException {
+		super(s, index);
 	}
 
 	private Instances convertToInstances(final IScope scope, final IList<String> attributes, final IList<IAgent> agents)
