@@ -26,6 +26,7 @@ public interface IUnitySkill {
 	public static final String TOPIC_MONO_FREE = "monoFree";
 	public static final String TOPIC_MULTIPLE_FREE = "multipleFree";
 	public static final String TOPIC_POSITION = "position";
+	public static final String TOPIC_MOVE = "move";
 	public static final String TOPIC_COLOR = "color";
 	public final static String TOPIC_REPLAY = "replay";
 	public final static String TOPIC_NOTIFICATION = "notification";

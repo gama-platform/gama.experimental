@@ -33,6 +33,7 @@ import ummisco.gama.unity.messages.GetTopicMessage;
 import ummisco.gama.unity.messages.SetTopicMessage;
 import ummisco.gama.unity.messages.ItemAttributes;
 import ummisco.gama.unity.messages.MonoActionTopicMessage;
+import ummisco.gama.unity.messages.MoveTopicMessage;
 import ummisco.gama.unity.messages.PluralActionTopicMessage;
 import ummisco.gama.unity.messages.PositionTopicMessage;
 import ummisco.gama.unity.mqtt.SubscribeCallback;
@@ -102,10 +103,11 @@ public class UnitySkill extends Skill {
 	// setUnityFields --> Done
 	// getUnityField --> Done
 	// setUnityColor --> Done
-	// setUnityPosition -->
+	// setUnityPosition --> Done
 	// callUnityPluralAction --> Done
 	// callUnityMonoAction --> Done
 	// setUnityPropertie --> 
+	// unityMove -->  Done
 
 	@action(name = "send_unity_message", args = {
 			@arg(name = "senderU", type = IType.STRING, optional = false, doc = @doc("The sender")),
@@ -382,6 +384,48 @@ public class UnitySkill extends Skill {
 		System.out.println(" --->>>>   the message --> " + stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_POSITION);
+	
+		try {
+			MqttMessage message = new MqttMessage();
+			message.setPayload(stringMessage.getBytes());
+			unityTopic.publish(message);
+		} catch (MqttPersistenceException e) {
+			e.printStackTrace();
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+		System.out.println("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
+	}
+
+	
+	
+	
+	@action(name = "unityMove", args = {
+			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "position", type = IType.MAP, optional = false, doc = @doc("The position values (x,y,z)")),
+			}, doc = @doc(value = "Set the position of a unity game object", returns = "void", examples = {
+					@example("") }))
+	public static synchronized void unityMove(final IScope scope) {
+
+		String sender = (String) scope.getAgent().getName();
+		String receiver = (String) scope.getArg("objectName", IType.STRING);
+		String objectName = (String) scope.getArg("objectName", IType.STRING);
+		Map<String, String> position = (Map<String, String>) scope.getArg("position", IType.MAP);
+		
+		ArrayList<ItemAttributes> items = new ArrayList();
+		for (Map.Entry<?, ?> entry : position.entrySet()) {
+			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue());
+			items.add(it);
+		}
+
+		MoveTopicMessage topicMessage = new MoveTopicMessage(scope, sender, receiver, objectName, items);
+
+		XStream xstream = new XStream();
+		final String stringMessage = xstream.toXML(topicMessage);
+
+		System.out.println(" --->>>>   the message --> " + stringMessage);
+
+		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MOVE);
 	
 		try {
 			MqttMessage message = new MqttMessage();
