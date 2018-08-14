@@ -23,7 +23,9 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
+import ummisco.gama.dev.utils.DEBUG;
 import ummisco.gama.unity.messages.ColorTopicMessage;
+import ummisco.gama.unity.messages.CreateTopicMessage;
 import ummisco.gama.unity.messages.GamaUnityMessage;
 import ummisco.gama.unity.messages.GetTopicMessage;
 import ummisco.gama.unity.messages.ItemAttributes;
@@ -74,7 +76,7 @@ public class UnitySkill extends Skill {
 			options.setCleanSession(false);
 			options.setWill(client.getTopic("home/LWT"), "I'm gone :(".getBytes(), 0, false);
 			client.connect(options);
-			System.out.println("Client : " + scope.getArg("idClient", IType.STRING) + " connected with success!");
+			DEBUG.LOG("Client : " + scope.getArg("idClient", IType.STRING) + " connected with success!");
 		} catch (MqttException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -135,7 +137,7 @@ public class UnitySkill extends Skill {
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(messageUnity);
 
-		System.out.println(" --->>>>   the message --> " + stringMessage);
+		DEBUG.LOG(" --->>>>   the message --> " + stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(topic);
 		// final String stringMessage = "{sender:"+sender+", action:"+action+",
@@ -154,7 +156,7 @@ public class UnitySkill extends Skill {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
-		System.out.println("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
+		DEBUG.LOG("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
 		return "Message sent!";
 	}
 
@@ -177,8 +179,8 @@ public class UnitySkill extends Skill {
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(topicMessage);
 		
-		System.out.println("Message to send to Get Topic is : ");
-		System.out.println(stringMessage);
+		DEBUG.LOG("Message to send to Get Topic is : ");
+		DEBUG.LOG(stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_GET);
 
@@ -217,8 +219,8 @@ public class UnitySkill extends Skill {
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(setMessage);
 		
-		System.out.println("Message to send to set Topic is : ");
-		System.out.println(stringMessage);
+		DEBUG.LOG("Message to send to set Topic is : ");
+		DEBUG.LOG(stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_SET);
 		try {
@@ -253,8 +255,8 @@ public class UnitySkill extends Skill {
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(topicMessage);
 		
-		System.out.println("Message to send to set Topic is : ");
-		System.out.println(stringMessage);
+		DEBUG.LOG("Message to send to set Topic is : ");
+		DEBUG.LOG(stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_PROPERTY);
 		try {
@@ -292,8 +294,8 @@ public class UnitySkill extends Skill {
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(topicMessage);
 		
-		System.out.println("Message to send to MonoActionTopicMessage Topic is : ");
-		System.out.println(stringMessage);
+		DEBUG.LOG("Message to send to MonoActionTopicMessage Topic is : ");
+		DEBUG.LOG(stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MONO_FREE);
 		try {
@@ -335,8 +337,8 @@ public class UnitySkill extends Skill {
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(topicMessage);
 		
-		System.out.println("Message to send to PluralActionTopicMessage Topic is : ");
-		System.out.println(stringMessage);
+		DEBUG.LOG("Message to send to PluralActionTopicMessage Topic is : ");
+		DEBUG.LOG(stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MULTIPLE_FREE);
 		try {
@@ -370,8 +372,8 @@ public class UnitySkill extends Skill {
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(topicMessage);
 		
-		System.out.println("Message to send to Get Topic is : ");
-		System.out.println(stringMessage);
+		DEBUG.LOG("Message to send to Get Topic is : ");
+		DEBUG.LOG(stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_COLOR);
 
@@ -411,7 +413,7 @@ public class UnitySkill extends Skill {
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(topicMessage);
 
-		System.out.println(" --->>>>   the message --> " + stringMessage);
+		DEBUG.LOG(" --->>>>   the message --> " + stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_POSITION);
 	
@@ -424,7 +426,7 @@ public class UnitySkill extends Skill {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
-		System.out.println("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
+		DEBUG.LOG("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
 	}
 
 	
@@ -453,7 +455,7 @@ public class UnitySkill extends Skill {
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(topicMessage);
 
-		System.out.println(" --->>>>   the message --> " + stringMessage);
+		DEBUG.LOG(" --->>>>   the message --> " + stringMessage);
 
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MOVE);
 	
@@ -466,7 +468,47 @@ public class UnitySkill extends Skill {
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
-		System.out.println("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
+		DEBUG.LOG("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
+	}
+	
+	
+	
+	
+	@action(name = "newUnityObject", args = {
+			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "type", type = IType.STRING, optional = false, doc = @doc("The object type")),
+			@arg(name = "color", type = IType.STRING, optional = false, doc = @doc("The object color")),
+			@arg(name = "position", type = IType.STRING, optional = false, doc = @doc("The object position")),
+			}, doc = @doc(value = "Create a new unity game object on the scene and set its initial color and position", returns = "void", examples = {
+					@example("") }))
+	public static synchronized void newUnityObject(final IScope scope) {
+
+		String sender = (String) scope.getAgent().getName();
+		String receiver = (String) scope.getArg("objectName", IType.STRING);
+		String objectName = (String) scope.getArg("objectName", IType.STRING);
+		String type = (String) scope.getArg("type", IType.STRING);
+		String color = (String) scope.getArg("color", IType.STRING);
+		String position = (String) scope.getArg("position", IType.STRING);
+
+		CreateTopicMessage topicMessage = new CreateTopicMessage(scope, sender, receiver, objectName, type, color, position);
+		
+		XStream xstream = new XStream();
+		final String stringMessage = xstream.toXML(topicMessage);
+		
+		DEBUG.LOG("Message to send to create object topic Topic is : ");
+		DEBUG.LOG(stringMessage);
+
+		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_CREATE_OBJECT);
+
+		try {
+			MqttMessage message = new MqttMessage();
+			message.setPayload(stringMessage.getBytes());
+			unityTopic.publish(message);
+		} catch (MqttPersistenceException e) {
+			e.printStackTrace();
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
 	}
 
 	
@@ -482,7 +524,7 @@ public class UnitySkill extends Skill {
 
 		colorTopic.publish(new MqttMessage(temperature.getBytes()));
 
-		System.out.println("Published data. Topic: " + colorTopic.getName() + "  Message: " + temperature);
+		DEBUG.LOG("Published data. Topic: " + colorTopic.getName() + "  Message: " + temperature);
 	}
 
 	
@@ -514,7 +556,7 @@ public class UnitySkill extends Skill {
 			client.setCallback(subscribeCallback);
 			// client.connect();
 			client.subscribe(topic);
-			System.out.println("Subscriber is now listening to " + topic);
+			DEBUG.LOG("Subscriber is now listening to " + topic);
 		} catch (MqttException e) {
 			e.printStackTrace();
 			System.exit(1);
