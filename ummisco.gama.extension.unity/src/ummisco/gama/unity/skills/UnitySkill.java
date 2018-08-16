@@ -510,6 +510,47 @@ public class UnitySkill extends Skill {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	@action(name = "unityNotificationSubscribe", args = {
+			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			
+			@arg(name = "fieldType", type = IType.STRING, optional = false, doc = @doc("fieldType: a field or a property in the game object")),
+			@arg(name = "fieldName", type = IType.STRING, optional = false, doc = @doc("fieldName: The field name")),
+			@arg(name = "fieldValue ", type = IType.STRING, optional = false, doc = @doc("fieldValue: The field value")),
+			@arg(name = "fieldOperator ", type = IType.STRING, optional = false, doc = @doc("fieldOperator: The comparaison operator")),
+			}, doc = @doc(value = "Subscribe to the notification mechanism, allowing unity to notify Gama when the condition on the specified field has been met.", returns = "void", examples = {
+					@example("") }))
+	public static synchronized void unityNotificationSubscribe(final IScope scope) {
+
+		String sender = (String) scope.getAgent().getName();
+		String receiver = (String) scope.getArg("objectName", IType.STRING);
+		String objectName = (String) scope.getArg("objectName", IType.STRING);
+		String fieldType = (String) scope.getArg("fieldType", IType.STRING);
+		String fieldName = (String) scope.getArg("fieldName", IType.STRING);
+		String fieldValue = (String) scope.getArg("fieldValue", IType.STRING);
+		String fieldOperator = (String) scope.getArg("fieldOperator", IType.STRING);
+
+		CreateTopicMessage topicMessage = new CreateTopicMessage(scope, sender, receiver, objectName, fieldType, fieldName, fieldValue, fieldOperator);
+		
+		XStream xstream = new XStream();
+		final String stringMessage = xstream.toXML(topicMessage);
+		
+		DEBUG.LOG("Message to send to create object topic Topic is : ");
+		DEBUG.LOG(stringMessage);
+
+		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_NOTIFICATION);
+
+		try {
+			MqttMessage message = new MqttMessage();
+			message.setPayload(stringMessage.getBytes());
+			unityTopic.publish(message);
+		} catch (MqttPersistenceException e) {
+			e.printStackTrace();
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+	}
 
 	
 	
