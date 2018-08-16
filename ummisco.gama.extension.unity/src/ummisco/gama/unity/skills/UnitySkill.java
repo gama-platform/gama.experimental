@@ -620,8 +620,8 @@ public class UnitySkill extends Skill {
 	public String getReplayUnityMessage(final IScope scope) {
 		return subscribeCallback.getNextReplayMessage();
 	}
-
-	@action(name = "get_unity_notification", doc = @doc(value = "Get the next received mqtt message.", returns = "The message content if there is a received message, null otherwise.", examples = {
+	
+	@action(name = "get_unity_notification", doc = @doc(value = "Get the next received mqtt notification message.", returns = "The message content if there is a received message, null otherwise.", examples = {
 			@example("") }))
 	public String getUnityNotificationMessage(final IScope scope) {
 		return subscribeCallback.getNextNotificationMessage();

@@ -33,6 +33,8 @@ public interface IUnitySkill {
 	public final static String TOPIC_REPLAY = "replay";
 	public final static String TOPIC_NOTIFICATION = "subscribeToNotification";
 	
+	public final static String TOPIC_NOTIFICATION_RECEIVED = "notification";
+	
 	
 	// scene manipulation topics
 	public final static String TOPIC_CREATE_OBJECT = "create";
