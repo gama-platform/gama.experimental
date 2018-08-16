@@ -29,7 +29,7 @@ public class SubscribeCallback implements MqttCallback {
         	replayMailBox.add(message);
             System.out.println("A replay has been recevied");
         }else 
-	        if(topic.equals(IUnitySkill.TOPIC_NOTIFICATION)){
+	        if(topic.equals(IUnitySkill.TOPIC_NOTIFICATION_RECEIVED)){
 	        	notificationiMailBox.add(message);
 	        	 System.out.println("A notification has been recevied");
 	        }else {
@@ -60,6 +60,8 @@ public class SubscribeCallback implements MqttCallback {
     		return null;
     	}
     }
+    
+
     
     public String getNextNotificationMessage(){
     	if(notificationiMailBox.size() > 0) {
