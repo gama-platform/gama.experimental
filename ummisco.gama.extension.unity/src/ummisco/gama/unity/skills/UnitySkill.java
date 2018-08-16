@@ -31,6 +31,7 @@ import ummisco.gama.unity.messages.GetTopicMessage;
 import ummisco.gama.unity.messages.ItemAttributes;
 import ummisco.gama.unity.messages.MonoActionTopicMessage;
 import ummisco.gama.unity.messages.MoveTopicMessage;
+import ummisco.gama.unity.messages.NotificationTopicMessage;
 import ummisco.gama.unity.messages.PluralActionTopicMessage;
 import ummisco.gama.unity.messages.PositionTopicMessage;
 import ummisco.gama.unity.messages.PropertyTopicMessage;
@@ -514,16 +515,17 @@ public class UnitySkill extends Skill {
 	
 	@action(name = "unityNotificationSubscribe", args = {
 			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			
+			@arg(name = "notificationId", type = IType.STRING, optional = false, doc = @doc("notificationId: the notification ID to communicate when notifying an agent by unity")),
 			@arg(name = "fieldType", type = IType.STRING, optional = false, doc = @doc("fieldType: a field or a property in the game object")),
 			@arg(name = "fieldName", type = IType.STRING, optional = false, doc = @doc("fieldName: The field name")),
-			@arg(name = "fieldValue ", type = IType.STRING, optional = false, doc = @doc("fieldValue: The field value")),
-			@arg(name = "fieldOperator ", type = IType.STRING, optional = false, doc = @doc("fieldOperator: The comparaison operator")),
+			@arg(name = "fieldValue", type = IType.STRING, optional = false, doc = @doc("fieldValue: The field value")),
+			@arg(name = "fieldOperator", type = IType.STRING, optional = false, doc = @doc("fieldOperator: The comparaison operator")),
 			}, doc = @doc(value = "Subscribe to the notification mechanism, allowing unity to notify Gama when the condition on the specified field has been met.", returns = "void", examples = {
 					@example("") }))
 	public static synchronized void unityNotificationSubscribe(final IScope scope) {
 
 		String sender = (String) scope.getAgent().getName();
+		String notificationId = (String) scope.getArg("notificationId", IType.STRING);
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
 		String fieldType = (String) scope.getArg("fieldType", IType.STRING);
@@ -531,7 +533,7 @@ public class UnitySkill extends Skill {
 		String fieldValue = (String) scope.getArg("fieldValue", IType.STRING);
 		String fieldOperator = (String) scope.getArg("fieldOperator", IType.STRING);
 
-		CreateTopicMessage topicMessage = new CreateTopicMessage(scope, sender, receiver, objectName, fieldType, fieldName, fieldValue, fieldOperator);
+		NotificationTopicMessage topicMessage = new NotificationTopicMessage(scope, sender, receiver, notificationId, objectName, fieldType, fieldName, fieldValue, fieldOperator);
 		
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(topicMessage);

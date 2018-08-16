@@ -26,12 +26,14 @@ import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
 /**
- * The Class CreateTopicMessage.
+ * The Class NotificationTopicMessage.
  *
  * @author youcef sklab
  */
 
-@vars({ @variable(name = NotificationTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
+@vars({ @variable(name = NotificationTopicMessage.NOTIFICATION_ID, type = IType.STRING, doc = {
+		@doc("Returns the notificaionId") }),
+	@variable(name = NotificationTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
 		@doc("Returns the concerned unity game object name") }),
 		@variable(name = NotificationTopicMessage.FIELD_TYPE, type = IType.STRING, doc = {
 				@doc("Returns the observed fielsd's type (a field or a property") }),
@@ -45,40 +47,55 @@ import msi.gaml.types.Types;
 
 public class NotificationTopicMessage extends GamaMessage {
 
+	public final static String NOTIFICATION_ID = "notificationId";
 	public final static String OBJECT_NAME = "objectName";
-	public final static String FIELD_TYPE = "type";
+	public final static String FIELD_TYPE = "fieldType";
 	public final static String FIELD_NAME = "fieldName";
-	public final static String FIELD_VALUE = "value";
-	public final static String FIELD_OPERATOR = "operator";
+	public final static String FIELD_VALUE = "fieldValue";
+	public final static String FIELD_OPERATOR = "fieldOperator";
 
+	protected Object notificationId;
 	protected Object objectName;
-	protected Object type;
+	protected Object fieldType;
 	protected Object fieldName;
-	protected Object value;
-	protected Object operator;
+	protected Object fieldValue;
+	protected Object fieldOperator;
+	
 
-	public NotificationTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName,
-			final Object type, final Object fieldName, final Object value, final Object operator, final Object content) throws GamaRuntimeException {
+	public NotificationTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object notificationId, final Object objectName,
+			final Object fieldType, final Object fieldName, final Object fieldValue, final Object fieldOperator, final Object content) throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
+		setNotificationId(notificationId);
 		setObjectName(objectName);
-		setType(type);
+		setFieldType(fieldType);
 		setFieldName(fieldName);
-		setValue(value);
-		setOperator(operator);
+		setFieldValue(fieldValue);
+		setFieldOperator(fieldOperator);
 	}
 
-	public NotificationTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, 
-			final Object type, final Object fieldName, final Object value, final Object operator) throws GamaRuntimeException {
+	public NotificationTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object notificationId, final Object objectName, 
+			final Object fieldType, final Object fieldName, final Object fieldValue, final Object fieldOperator) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
+		setNotificationId(notificationId);
 		setObjectName(objectName);
-		setType(type);
+		setFieldType(fieldType);
 		setFieldName(fieldName);
-		setValue(value);
-		setOperator(operator);
+		setFieldValue(fieldValue);
+		setFieldOperator(fieldOperator);
 	}
 
+	@getter(NotificationTopicMessage.NOTIFICATION_ID)
+	public Object getNotificationId() {
+		return notificationId;
+	}
+
+	@setter(NotificationTopicMessage.NOTIFICATION_ID)
+	public void setNotificationId(final Object notificationId) {
+		this.notificationId = notificationId;
+	}
+	
 	@getter(NotificationTopicMessage.OBJECT_NAME)
 	public Object getObjectName() {
 		return objectName;
@@ -91,13 +108,13 @@ public class NotificationTopicMessage extends GamaMessage {
 	
 
 	@getter(NotificationTopicMessage.FIELD_TYPE)
-	public Object getType() {
-		return type;
+	public Object getFieldType() {
+		return fieldType;
 	}
 
 	@setter(NotificationTopicMessage.FIELD_TYPE)
-	public void setType(final Object type) {
-		this.type = type;
+	public void setFieldType(final Object fieldType) {
+		this.fieldType = fieldType;
 	}
 	
 	
@@ -114,23 +131,23 @@ public class NotificationTopicMessage extends GamaMessage {
 	}
 	
 	@getter(NotificationTopicMessage.FIELD_VALUE)
-	public Object getValue() {
-		return value;
+	public Object getFieldValue() {
+		return fieldValue;
 	}
 
 	@setter(NotificationTopicMessage.FIELD_VALUE)
-	public void setValue(final Object value) {
-		this.value = value;
+	public void setFieldValue(final Object fieldValue) {
+		this.fieldValue = fieldValue;
 	}
 	
 	@getter(NotificationTopicMessage.FIELD_OPERATOR)
-	public Object getOperator() {
-		return operator;
+	public Object getFieldOperator() {
+		return fieldOperator;
 	}
 
 	@setter(NotificationTopicMessage.FIELD_OPERATOR)
-	public void setOperator(final Object operator) {
-		this.operator = operator;
+	public void setFieldOperator(final Object fieldOperator) {
+		this.fieldOperator = fieldOperator;
 	}
 	
 
@@ -147,7 +164,7 @@ public class NotificationTopicMessage extends GamaMessage {
 
 	@Override
 	public NotificationTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new NotificationTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getType(), getFieldName(), getValue(), getOperator(),
+		return new NotificationTopicMessage(scope, getSender(), getReceivers(), getNotificationId(), getObjectName(), getFieldType(), getFieldName(), getFieldValue(), getFieldOperator(),
 				getContents(scope));
 	}
 
