@@ -31,7 +31,7 @@ public interface IUnitySkill {
 	public static final String TOPIC_MOVE = "move";
 	public static final String TOPIC_COLOR = "color";
 	public final static String TOPIC_REPLAY = "replay";
-	public final static String TOPIC_NOTIFICATION = "notification";
+	public final static String TOPIC_NOTIFICATION = "subscribeToNotification";
 	
 	
 	// scene manipulation topics
