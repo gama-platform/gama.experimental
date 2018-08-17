@@ -44,7 +44,6 @@ import msi.gaml.types.Types;
 		@variable(name = NotificationTopicMessage.FIELD_OPERATOR, type = IType.STRING, doc = {
 				@doc("Returns the comparaison operator") }),
 		})
-
 public class NotificationTopicMessage extends GamaMessage {
 
 	public final static String NOTIFICATION_ID = "notificationId";
