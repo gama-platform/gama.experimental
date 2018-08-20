@@ -41,16 +41,15 @@ import ummisco.gama.unity.messages.SetTopicMessage;
 import ummisco.gama.unity.mqtt.SubscribeCallback;
 import ummisco.gama.unity.mqtt.Utils;
 
+
 /**
- * @author
- * @symbol(name = "StartUnity", kind = ISymbolKind.SINGLE_STATEMENT,
- *              with_sequence = false, concept = { IConcept.SYSTEM })
- * @inside(kinds = { ISymbolKind.BEHAVIOR, ISymbolKind.SEQUENCE_STATEMENT,
- *               ISymbolKind.LAYER })
- * @doc(value = "The statement allow to move the ball.", usages = {
- * @usage(value = "Move a Ball in unity scene", examples =
- *              { @example("StartUnity;") }) })
+ * UnitySkill : This class is intended to define the minimal set of behaviours required from an agent that is able to
+ * communicate with unity angine in order to visulaize GAMA simulations. Each member that has a meaning in GAML is annotated with the respective tags (vars, getter, setter, init,
+ * action & args)
+ *
  */
+
+@doc ("The unity skill is intended to define the minimal set of behaviors required for agents that are able to communicate with the unity engine in order to visualize GAMA simulations in different terminals")
 @skill(name = UnitySkill.SKILL_NAME, concept = { IConcept.NETWORK, IConcept.COMMUNICATION, IConcept.SKILL })
 public class UnitySkill extends Skill {
 	//
@@ -61,7 +60,8 @@ public class UnitySkill extends Skill {
 
 	public static MqttClient client = null;
 	public static SubscribeCallback subscribeCallback = new SubscribeCallback();
-	public ArrayList<String> mailBox = new ArrayList<String>();
+	
+	//public ArrayList<String> mailBox = new ArrayList<String>();
 
 	// @Override
 	public Object privateExecuteIn(final IScope scope) throws GamaRuntimeException {
@@ -69,10 +69,17 @@ public class UnitySkill extends Skill {
 		return " ";
 	}
 
-	@action(name = "connectMqttClient", args = {
-			@arg(name = "idClient", type = IType.STRING, optional = false, doc = @doc("predicate name")) }, 
-			doc = @doc(value = "Generates a client ID and connects it to the Mqtt server.", returns = "The client generated identifier.", examples = {
-					@example("") }))
+	@action ( 
+			name = "connectMqttClient", 
+			args = { @arg ( 
+							name = "idClient", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("predicate name")) }, 
+			doc = @doc ( 
+						value = "Generates a client ID and connects it to the Mqtt server.", 
+						returns = "The client generated identifier.", 
+						examples = { @example("") }))
 	public static String connectMqttClient(final IScope scope) {
 		String clientId = Utils.getMacAddress() + "-" + scope.getArg("idClient", IType.STRING) + "-pub";
 		try {
@@ -99,21 +106,39 @@ public class UnitySkill extends Skill {
 		return clientId;
 	}
 
-	@action(name = "send_unity_message", args = {
-			@arg(name = "senderU", type = IType.STRING, optional = false, doc = @doc("The sender")),
-			@arg(name = "actionU", type = IType.STRING, optional = false, doc = @doc("The method name on unity game object")),
-			@arg(name = "objectU", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "attributeU", type = IType.MAP, optional = false, doc = @doc("The attribute list and their values")),
-			@arg(name = "topicU", type = IType.STRING, optional = false, doc = @doc("The topic")) }, 
-			doc = @doc(value = "Send a message to unity.", returns = "true if it is in the base.", examples = {
-					@example("") }))
-	public static String sendUnityMqttMessage(final IScope scope) 
+	//TODO: Youcef-> Review this action to remove some attributes, make it more generic and fix data structure issues
+	@action ( 
+				name = "send_unity_message", 
+				args = { @arg ( 
+								name = "sender", 
+								type = IType.STRING, 
+								optional = false, 
+								doc = @doc("The sender")),
+						@arg ( 
+								name = "objectName", 
+								type = IType.STRING,
+								optional = false, 
+								doc = @doc("The game object name")),
+						@arg ( 
+								name = "attributes",
+								type = IType.MAP, 
+								optional = false, 
+								doc = @doc( "The attribute list and their values")),
+						@arg ( 
+								name = "topic", 
+								type = IType.STRING, 
+								optional = false, 
+								doc = @doc("The topic")) }, 
+				doc = @doc ( 
+							value = "The generic form of a message to send to Unity engine. ", 
+							returns = "true if it is in the base.", 
+							examples = { @example("") }))
+	public static Boolean sendUnityMqttMessage(final IScope scope) 
 	{
-		String sender = (String) scope.getArg("senderU", IType.STRING);
-		String action = (String) scope.getArg("actionU", IType.STRING);
-		String object = (String) scope.getArg("objectU", IType.STRING);
-		Map<String, String> attribute = (Map<String, String>) scope.getArg("attributeU", IType.MAP);
-		String topic = (String) scope.getArg("topicU", IType.STRING);
+		String sender = (String) scope.getArg("sender", IType.STRING);
+		String objectName = (String) scope.getArg("objectName", IType.STRING);
+		Map<String, String> attribute = (Map<String, String>) scope.getArg("attributs", IType.MAP);
+		String topic = (String) scope.getArg("topic", IType.STRING);
 
 		ArrayList<ItemAttributes> items = new ArrayList();
 		for (Map.Entry<?, ?> entry : attribute.entrySet()) {
@@ -121,8 +146,7 @@ public class UnitySkill extends Skill {
 			items.add(it);
 		}
 
-		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, "receiver", action, object, items, topic,
-				"content");
+		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, objectName, "Not set", objectName, items, topic, "content");
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(messageUnity);
 		final MqttTopic unityTopic = client.getTopic(topic);
@@ -130,21 +154,36 @@ public class UnitySkill extends Skill {
 			MqttMessage message = new MqttMessage();
 			message.setPayload(stringMessage.getBytes());
 			unityTopic.publish(message);
+			DEBUG.LOG("New message sent to Unity. Topic: " + unityTopic.getName() + "   Message: " + stringMessage);
+			return true;
 		} catch (MqttPersistenceException e) {
 			e.printStackTrace();
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
-		DEBUG.LOG("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
-		return "Message sent!";
+		
+		return false;
 	}
 
-	@action(name = "getUnityField", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "attribute", type = IType.STRING, optional = false, doc = @doc("The field name")), }, 
-			doc = @doc(value = "Get a unity game object field value", returns = "void", examples = {
-					@example("") }))
-	public static synchronized void getUnityField(final IScope scope) 
+	
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action(
+			name = "getUnityField", 
+			args = { @arg (
+							name = "objectName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The game object name")),
+					@arg (
+							name = "attribute", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The field name")), }, 
+			doc = @doc (
+					value = "Get a unity game object field value", 
+					returns = "void", 
+					examples = { @example("") }))
+	public static void getUnityField(final IScope scope) 
 	{
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
@@ -167,12 +206,24 @@ public class UnitySkill extends Skill {
 		}
 	}
 
-	@action(name = "setUnityFields", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "attributes", type = IType.MAP, optional = false, doc = @doc("The attribute list and their values")) }, 
-			doc = @doc(value = "Set a set of fields of a unity game object.", returns = "void", examples = {
-					@example("") }))
-	public static synchronized void setUnityField(final IScope scope) 
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action (
+			name = "setUnityFields", 
+			args = { @arg (
+							name = "objectName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The game object name")),
+					@arg (
+							name = "attributes", 
+							type = IType.MAP, 
+							optional = false, 
+							doc = @doc("The attribute list and their values")) }, 
+			doc = @doc (
+							value = "Set a set of fields of a unity game object.", 
+							returns = "void", 
+							examples = { @example("") }))
+	public static void setUnityField(final IScope scope) 
 	{
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
@@ -201,13 +252,30 @@ public class UnitySkill extends Skill {
 
 	}
 
-	@action(name = "setUnityProperty", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "propertyName", type = IType.STRING, optional = false, doc = @doc("The property name")),
-			@arg(name = "propertyValue", type = IType.STRING, optional = false, doc = @doc("The property value")) }, 
-			doc = @doc(value = "Set a property value.", returns = "void", examples = {
-					@example("") }))
-	public static synchronized void setUnityProperty(final IScope scope) 
+	
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action ( 
+			name = "setUnityProperty", 
+			args = { @arg ( 
+							name = "objectName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The game object name")),
+					@arg (
+							name = "propertyName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The property name")),
+					@arg ( 
+							name = "propertyValue", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The property value")) }, 
+			doc = @doc ( 
+						value = "Set a property value.", 
+						returns = "void", 
+						examples = { @example("") }))
+	public static void setUnityProperty(final IScope scope) 
 	{
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
@@ -232,13 +300,30 @@ public class UnitySkill extends Skill {
 
 	}
 
-	@action(name = "callUnityMonoAction", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "actionName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "attribute", type = IType.STRING, optional = false, doc = @doc("The attribute list and their values")) }, 
-			doc = @doc(value = "Call a unity game object method that has one parameter", returns = "void", examples = {
-					@example("") }))
-	public static synchronized void callUnityMonoAction(final IScope scope) 
+	
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action	( 
+				name = "callUnityMonoAction", 
+				args = { @arg ( 
+								name = "objectName", 
+								type = IType.STRING, 
+								optional = false, 
+								doc = @doc("The game object name")),
+						@arg (
+								name = "actionName", 
+								type = IType.STRING, 
+								optional = false, 
+								doc = @doc("The game object name")),
+						@arg ( 
+								name = "attribute", 
+								type = IType.STRING, 
+								optional = false, 
+								doc = @doc("The attribute list and their values")) }, 
+				doc = @doc ( 
+							value = "Call a unity game object method that has one parameter", 
+							returns = "void", 
+							examples = { @example("") }))
+	public static void callUnityMonoAction(final IScope scope) 
 	{
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
@@ -262,12 +347,29 @@ public class UnitySkill extends Skill {
 		}
 	}
 
-	@action(name = "callUnityPluralAction", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "actionName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "attributes", type = IType.MAP, optional = false, doc = @doc("The attribute list and their values")) }, doc = @doc(value = "Call a unity game object method that has several parameters.", returns = "void", examples = {
-					@example("") }))
-	public static synchronized void callUnityPluralAction(final IScope scope) 
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action	(	
+			name = "callUnityPluralAction", 
+			args = { @arg ( 
+							name = "objectName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The game object name")),
+					@arg (
+							name = "actionName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The game object name")),
+					@arg ( 
+							name = "attributes", 
+							type = IType.MAP, 
+							optional = false, 
+							doc = @doc("The attribute list and their values")) }, 
+			doc = @doc ( 
+						value = "Call a unity game object method that has several parameters.",
+						returns = "void", 
+						examples = { @example("") }))
+	public static void callUnityPluralAction(final IScope scope) 
 	{
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
@@ -296,12 +398,24 @@ public class UnitySkill extends Skill {
 		}
 	}
 
-	@action(name = "setUnityColor", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "color", type = IType.STRING, optional = false, doc = @doc("The color name")), }, 
-			doc = @doc(value = "Set a unity game object color", returns = "void", examples = {
-					@example("") }))
-	public static synchronized void setUnityColor(final IScope scope) 
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action (	
+			name = "setUnityColor", 
+			args = { @arg ( 
+							name = "objectName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The game object name")),
+					@arg ( 
+							name = "color", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The color name")), }, 
+			doc = @doc ( 
+						value = "Set a unity game object color", 
+						returns = "void", 
+						examples = { @example("") }))
+	public static void setUnityColor(final IScope scope) 
 	{
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
@@ -323,12 +437,24 @@ public class UnitySkill extends Skill {
 		}
 	}
 
-	@action(name = "setUnityPosition", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "position", type = IType.MAP, optional = false, doc = @doc("The position values (x,y,z)")), }, 
-			doc = @doc(value = "Set the position of a unity game object", returns = "void", examples = {
-					@example("") }))
-	public static synchronized void setUnityPosition(final IScope scope) 
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action ( 
+			name = "setUnityPosition", 
+			args = { @arg ( 
+							name = "objectName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The game object name")),
+					@arg ( 
+							name = "position", 
+							type = IType.MAP, 
+							optional = false, 
+							doc = @doc("The position values (x,y,z)")), }, 
+			doc = @doc ( 
+						value = "Set the position of a unity game object", 
+						returns = "void", 
+						examples = { @example("") }))
+	public static void setUnityPosition(final IScope scope) 
 	{
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
@@ -356,11 +482,23 @@ public class UnitySkill extends Skill {
 		}
 	}
 
-	@action(name = "unityMove", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "position", type = IType.MAP, optional = false, doc = @doc("The position values (x,y,z)")), }, 
-			doc = @doc(value = "Set the position of a unity game object", returns = "void", examples = {
-					@example("") }))
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action	( 
+			name = "unityMove", 
+			args = { @arg ( 
+							name = "objectName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The game object name")),
+					@arg ( 
+							name = "position", 
+							type = IType.MAP, 
+							optional = false, 
+							doc = @doc("The position values (x,y,z)")), }, 
+			doc = @doc ( 
+						value = "Set the position of a unity game object", 
+						returns = "void", 
+						examples = { @example("") }))
 	public static synchronized void unityMove(final IScope scope) 
 	{
 		String sender = (String) scope.getAgent().getName();
@@ -390,13 +528,33 @@ public class UnitySkill extends Skill {
 		DEBUG.LOG("New message sent to Unity. Topic: " + unityTopic.getName() + "   Number: " + stringMessage);
 	}
 
-	@action(name = "newUnityObject", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "type", type = IType.STRING, optional = false, doc = @doc("The object type")),
-			@arg(name = "color", type = IType.STRING, optional = false, doc = @doc("The object color")),
-			@arg(name = "position", type = IType.STRING, optional = false, doc = @doc("The object position")), }, 
-			doc = @doc(value = "Create a new unity game object on the scene and set its initial color and position", returns = "void", examples = {
-					@example("") }))
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action ( 
+			name = "newUnityObject", 
+			args = { @arg ( 
+							name = "objectName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The game object name")),
+					@arg ( 
+							name = "type", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The object type")),
+					@arg ( 
+							name = "color", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The object color")),
+					@arg ( 
+							name = "position", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("The object position")), }, 
+			doc = @doc ( 
+						value = "Create a new unity game object on the scene and set its initial color and position", 
+						returns = "void", 
+						examples = { @example("") }))
 	public static synchronized void newUnityObject(final IScope scope) 
 	{
 		String sender = (String) scope.getAgent().getName();
@@ -423,15 +581,44 @@ public class UnitySkill extends Skill {
 		}
 	}
 
-	@action(name = "unityNotificationSubscribe", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
-			@arg(name = "notificationId", type = IType.STRING, optional = false, doc = @doc("notificationId: the notification ID to communicate when notifying an agent by unity")),
-			@arg(name = "fieldType", type = IType.STRING, optional = false, doc = @doc("fieldType: a field or a property in the game object")),
-			@arg(name = "fieldName", type = IType.STRING, optional = false, doc = @doc("fieldName: The field name")),
-			@arg(name = "fieldValue", type = IType.STRING, optional = false, doc = @doc("fieldValue: The field value")),
-			@arg(name = "fieldOperator", type = IType.STRING, optional = false, doc = @doc("fieldOperator: The comparaison operator")), }, doc = @doc(value = "Subscribe to the notification mechanism, allowing unity to notify Gama when the condition on the specified field has been met.", returns = "void", examples = {
-					@example("") }))
-	public static synchronized void unityNotificationSubscribe(final IScope scope) 
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action ( 
+			name = "unityNotificationSubscribe", 
+			args = { @arg ( 
+							name = "objectName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc ( "The game object name" ) ),
+					@arg ( 
+							name = "notificationId", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc ( "notificationId: the notification ID to communicate when notifying an agent by unity")),
+					@arg ( 
+							name = "fieldType", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("fieldType: a field or a property in the game object")),
+					@arg ( 
+							name = "fieldName", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("fieldName: The field name")),
+					@arg ( 
+							name = "fieldValue", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("fieldValue: The field value")),
+					@arg ( 
+							name = "fieldOperator", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc ( "fieldOperator: The comparaison operator")), }, 
+			doc = @doc ( 
+						value = "Subscribe to the notification mechanism, allowing unity to notify Gama when the condition on the specified field has been met.", 
+						returns = "void", 
+						examples = { @example("") }))
+	public synchronized void unityNotificationSubscribe(final IScope scope) 
 	{
 		String sender = (String) scope.getAgent().getName();
 		String notificationId = (String) scope.getArg("notificationId", IType.STRING);
@@ -459,10 +646,19 @@ public class UnitySkill extends Skill {
 			e.printStackTrace();
 		}
 	}
-
-	@action(name = "disconnectMqttClient", args = {
-			@arg(name = "idClient", type = IType.STRING, optional = false, doc = @doc("predicate name")) }, doc = @doc(value = "Disconnect the client from the Mqtt server.", returns = "true if it is in the base.", examples = {
-					@example("") }))
+	
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action ( 
+			name = "disconnectMqttClient", 
+			args = { @arg ( 
+							name = "idClient", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("predicate name")) }, 
+			doc = @doc ( 
+						value = "Disconnect the client from the Mqtt server.", 
+						returns = "true if it is in the base.", 
+						examples = { @example("") }))
 	public static String disconnectMqttClient(final IScope scope) {
 		String clientId = Utils.getMacAddress() + "-" + scope.getArg("idClient", IType.STRING) + "-pub";
 		try {
@@ -475,11 +671,23 @@ public class UnitySkill extends Skill {
 		return clientId;
 	}
 
-	@action(name = "subscribe_To_Topic", args = {
-			@arg(name = "idClient", type = IType.STRING, optional = false, doc = @doc("Client Id")),
-			@arg(name = "topic", type = IType.STRING, optional = false, doc = @doc("Topic Name")) }, 
-			doc = @doc(value = "Subscribe a client to a topic", returns = "true if success, false otherwise", examples = {
-					@example("") }))
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action ( 
+			name = "subscribe_To_Topic", 
+			args = { @arg ( 
+							name = "idClient", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("Client Id")),
+					@arg ( 
+							name = "topic", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("Topic Name")) }, 
+			doc =  @doc ( 
+						value = "Subscribe a client to a topic", 
+						returns = "true if success, false otherwise", 
+						examples = { @example("") }))
 	public String SubscribeToTopic(final IScope scope) {
 		String clientId = Utils.getMacAddress() + "-" + scope.getArg("idClient", IType.STRING) + "-pub";
 		final String topic = (String) scope.getArg("topic", IType.STRING);
@@ -495,30 +703,43 @@ public class UnitySkill extends Skill {
 		}
 		return "Subscribed to the topic: " + topic;
 	}
-
-	@action(name = "get_unity_message", doc = @doc(value = "Get the next received mqtt message.", 
-			returns = "The message content if there is a received message, null otherwise.", examples = {
-			@example("") }))
-	public String getUnityMessage(final IScope scope) {
+	
+	
+	//TODO Youcef-> Review this action with better description and genericity support
+	@action ( 
+			name = "get_unity_message", 
+			doc = @doc(value = "Get the next received mqtt message.", 
+			returns = "The message content if there is a received message, null otherwise.", 
+			examples = { @example("") }))
+	public synchronized String getUnityMessage(final IScope scope) {
 		return subscribeCallback.getNextMessage();
 	}
 
-	@action(name = "get_unity_replay", doc = @doc(value = "Get the next received mqtt message.", 
-			returns = "The message content if there is a received message, null otherwise.", examples = {
-			@example("") }))
-	public String getReplayUnityMessage(final IScope scope) {
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action ( 
+			name = "get_unity_replay", 
+			doc = @doc(value = "Get the next received mqtt message.", 
+			returns = "The message content if there is a received message, null otherwise.", 
+			examples = { @example("") }))
+	public synchronized String getReplayUnityMessage(final IScope scope) {
 		return subscribeCallback.getNextReplayMessage();
 	}
 
-	@action(name = "get_unity_notification", doc = @doc(value = "Get the next received mqtt notification message.", 
-			returns = "The message content if there is a received message, null otherwise.", examples = {
-			@example("") }))
-	public String getUnityNotificationMessage(final IScope scope) {
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action ( 
+			name = "get_unity_notification", 
+			doc = @doc(value = "Get the next received mqtt notification message.", 
+			returns = "The message content if there is a received message, null otherwise.", 
+			examples = { @example("") }))
+	public synchronized String getUnityNotificationMessage(final IScope scope) {
 		return subscribeCallback.getNextNotificationMessage();
 	}
 
-	@operator(value = "isNotificationTrue", doc = { @doc("Check if the notification has been received") }, category = {
-			IOperatorCategory.LOGIC })
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@operator ( 
+			value = "isNotificationTrue", 
+			doc = { @doc("Check if the notification has been received") }, 
+			category = { IOperatorCategory.LOGIC })
 	public static synchronized boolean isNotificationTrue(final IScope scope, String notificationId) {
 
 		DEBUG.LOG("subscribeCallback.notificationiMailBox.size()  is:  " + subscribeCallback.notificationiMailBox.size());
