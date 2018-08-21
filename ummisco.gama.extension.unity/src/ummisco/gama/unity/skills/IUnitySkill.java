@@ -38,6 +38,7 @@ public interface IUnitySkill {
 	
 	// scene manipulation topics
 	public final static String TOPIC_CREATE_OBJECT = "create";
+	public final static String TOPIC_DESTROY_OBJECT = "destroy";
 	
 	
 	public static final String TOPIC_GAMA = "Gama";
