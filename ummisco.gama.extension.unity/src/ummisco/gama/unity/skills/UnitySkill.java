@@ -27,6 +27,7 @@ import ummisco.gama.serializer.factory.StreamConverter;
 import ummisco.gama.serializer.gamaType.converters.ConverterScope;
 import ummisco.gama.unity.messages.ColorTopicMessage;
 import ummisco.gama.unity.messages.CreateTopicMessage;
+import ummisco.gama.unity.messages.DestroyTopicMessage;
 import ummisco.gama.unity.messages.GamaUnityMessage;
 import ummisco.gama.unity.messages.GetTopicMessage;
 import ummisco.gama.unity.messages.ItemAttributes;
@@ -580,6 +581,40 @@ public class UnitySkill extends Skill {
 			e.printStackTrace();
 		}
 	}
+	
+	//TODO: Youcef-> Review this action with better description and genericity support
+		@action ( 
+				name = "destroyUnityObject", 
+				args = { @arg ( 
+								name = "objectName", 
+								type = IType.STRING, 
+								optional = false, 
+								doc = @doc("The game object name")) }, 
+				doc = @doc ( 
+							value = "Destroy a unity game object", 
+							returns = "void", 
+							examples = { @example("") }))
+		public static synchronized void destroyUnityObject(final IScope scope) 
+		{
+			String sender = (String) scope.getAgent().getName();
+			String receiver = (String) scope.getArg("objectName", IType.STRING);
+			String objectName = (String) scope.getArg("objectName", IType.STRING);
+		
+			DestroyTopicMessage topicMessage = new DestroyTopicMessage(scope, sender, receiver, objectName);
+			XStream xstream = new XStream();
+			final String stringMessage = xstream.toXML(topicMessage);
+			final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_DESTROY_OBJECT);
+
+			try {
+				MqttMessage message = new MqttMessage();
+				message.setPayload(stringMessage.getBytes());
+				unityTopic.publish(message);
+			} catch (MqttPersistenceException e) {
+				e.printStackTrace();
+			} catch (MqttException e) {
+				e.printStackTrace();
+			}
+		}
 
 	//TODO: Youcef-> Review this action with better description and genericity support
 	@action ( 
