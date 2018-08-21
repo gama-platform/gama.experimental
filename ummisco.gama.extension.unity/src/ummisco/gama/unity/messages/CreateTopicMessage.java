@@ -37,7 +37,7 @@ import msi.gaml.types.Types;
 				@doc("Returns the type of the object to create") }),
 		@variable(name = CreateTopicMessage.COLOR, type = IType.STRING, doc = {
 				@doc("Returns the color of the object to create") }),
-		@variable(name = CreateTopicMessage.POSITION, type = IType.STRING, doc = {
+		@variable(name = CreateTopicMessage.POSITION, type = IType.MAP, doc = {
 				@doc("Returns the position of the object to create") }),})
 public class CreateTopicMessage extends GamaMessage {
 
