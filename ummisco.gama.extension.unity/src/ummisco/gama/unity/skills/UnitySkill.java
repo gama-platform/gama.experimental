@@ -549,11 +549,11 @@ public class UnitySkill extends Skill {
 							doc = @doc("The object color")),
 					@arg ( 
 							name = "position", 
-							type = IType.STRING, 
+							type = IType.MAP, 
 							optional = false, 
 							doc = @doc("The object position")), }, 
 			doc = @doc ( 
-						value = "Create a new unity game object on the scene and set its initial color and position", 
+						value = "Create a new unity game object on the scene and set its initial color and position. Supported fomes are: Capsule, Cube, Cylinder and Sphere", 
 						returns = "void", 
 						examples = { @example("") }))
 	public static synchronized void newUnityObject(final IScope scope) 
@@ -563,10 +563,18 @@ public class UnitySkill extends Skill {
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
 		String type = (String) scope.getArg("type", IType.STRING);
 		String color = (String) scope.getArg("color", IType.STRING);
-		String position = (String) scope.getArg("position", IType.STRING);
+		
+		Map<String, String> position = (Map<String, String>) scope.getArg("position", IType.MAP);
+
+		ArrayList<ItemAttributes> items = new ArrayList();
+		for (Map.Entry<?, ?> entry : position.entrySet()) {
+			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue());
+			items.add(it);
+		}
+		
 
 		CreateTopicMessage topicMessage = new CreateTopicMessage(scope, sender, receiver, objectName, type, color,
-				position);
+				items);
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(topicMessage);
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_CREATE_OBJECT);
@@ -609,6 +617,8 @@ public class UnitySkill extends Skill {
 				MqttMessage message = new MqttMessage();
 				message.setPayload(stringMessage.getBytes());
 				unityTopic.publish(message);
+				
+				DEBUG.LOG("Message Destroy sent: "+stringMessage);
 			} catch (MqttPersistenceException e) {
 				e.printStackTrace();
 			} catch (MqttException e) {
