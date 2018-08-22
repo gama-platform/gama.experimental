@@ -495,7 +495,12 @@ public class UnitySkill extends Skill {
 							name = "position", 
 							type = IType.MAP, 
 							optional = false, 
-							doc = @doc("The position values (x,y,z)")), }, 
+							doc = @doc("The position values (x,y,z)")),
+					@arg ( 
+							name = "speed", 
+							type = IType.INT, 
+							optional = false, 
+							doc = @doc("speed")),}, 
 			doc = @doc ( 
 						value = "Set the position of a unity game object", 
 						returns = "void", 
@@ -506,13 +511,14 @@ public class UnitySkill extends Skill {
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
 		Map<String, String> position = (Map<String, String>) scope.getArg("position", IType.MAP);
+		int speed = (int) scope.getArg("speed", IType.INT);
 
 		ArrayList<ItemAttributes> items = new ArrayList();
 		for (Map.Entry<?, ?> entry : position.entrySet()) {
 			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue());
 			items.add(it);
 		}
-		MoveTopicMessage topicMessage = new MoveTopicMessage(scope, sender, receiver, objectName, items);
+		MoveTopicMessage topicMessage = new MoveTopicMessage(scope, sender, receiver, objectName, items, speed);
 		XStream xstream = new XStream();
 		final String stringMessage = xstream.toXML(topicMessage);
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MOVE);

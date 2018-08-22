@@ -26,7 +26,7 @@ import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
 /**
- * The Class PositionTopicMessage.
+ * The Class MoveTopicMessage.
  *
  * @author youcef sklab
  */
@@ -34,29 +34,35 @@ import msi.gaml.types.Types;
 @vars({ @variable(name = MoveTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
 		@doc("Returns the concerned unity game object name") }),
 		@variable(name = MoveTopicMessage.POSITION, type = IType.MAP, doc = {
-				@doc("Returns the attribtes list of the message") }), })
+				@doc("Returns the attribtes list of the message") }),
+		@variable(name = MoveTopicMessage.SPEED, type = IType.INT, doc = {
+				@doc("Returns the object mouvment speed") }),})
 public class MoveTopicMessage extends GamaMessage {
 
 	public final static String OBJECT_NAME = "objectName";
 	public final static String POSITION = "position";
+	public final static String SPEED = "speed";
 
 	protected Object objectName;
 	protected Object position;
+	protected Object speed;
 
-	public MoveTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object position,
+	public MoveTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object position, final Object speed,
 			final Object content) throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
 		setPosition(position);
+		setSpeed(speed);
 	}
 
 	public MoveTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, 
-			final Object position) throws GamaRuntimeException {
+			final Object position, final Object speed) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
 		setObjectName(objectName);
 		setPosition(position);
+		setSpeed(speed);
 	}
 
 	@getter(MoveTopicMessage.OBJECT_NAME)
@@ -79,6 +85,16 @@ public class MoveTopicMessage extends GamaMessage {
 	public void setPosition(final Object position) {
 		this.position = position;
 	}
+	
+	@getter(MoveTopicMessage.SPEED)
+	public Object getSpeed() {
+		return speed;
+	}
+
+	@setter(MoveTopicMessage.SPEED)
+	public void setSpeed(final Object speed) {
+		this.speed = speed;
+	}
 
 	@Override
 	public String serialize(final boolean includingBuiltIn) {
@@ -93,7 +109,7 @@ public class MoveTopicMessage extends GamaMessage {
 
 	@Override
 	public MoveTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new MoveTopicMessage(scope, getSender(), getReceivers(), getObjectName(), (Map<?, ?>) getPosition(),
+		return new MoveTopicMessage(scope, getSender(), getReceivers(), getObjectName(), (Map<?, ?>) getPosition(), getSpeed(),
 				getContents(scope));
 	}
 
