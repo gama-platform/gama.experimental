@@ -21,7 +21,7 @@ global skills: [network] {
 	int z <- 0;
 	int colorIndex <- 0;
 	int formIndex <- 0;
-	int speed <- 100;
+	int speed <- 10;
 	int obstacleCounter <- 0;
 	list colorlist <- ["black", "red", "blue", "white", "yellow"];
 	list formList <- ["Capsule", "Cube", "Cylinder", "Sphere"];
@@ -36,7 +36,7 @@ global skills: [network] {
 			do subscribe_To_Topic idClient: agentName topic: "Gama";
 			do subscribe_To_Topic idClient: agentName topic: "replay";
 			do subscribe_To_Topic idClient: agentName topic: "notification";
-			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player" fieldType: "field" fieldName: "count" fieldValue: "3" fieldOperator: "==";
+			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player" fieldType: "field" fieldName: "count" fieldValue: "4" fieldOperator: "==";
 		}
 
 	}
@@ -55,28 +55,11 @@ species GamaAgent skills: [unity] {
 			isNewPosition <- true;
 			isNewColor <- true;
 			isCenter <- false;
-			x <- x + 1;
-			if (x >= 4) {
-				x <- -4;
-				z <- z + 1;
-			}
-
-			if (z >= 4) {
-				z <- -4;
-			}
-
-			colorIndex <- colorIndex + 1;
-			if (colorIndex >= 5) {
-				colorIndex <- 0;
-			}
-		
-			formIndex <- formIndex + 1;
-			if (formIndex >= 4) {
-				formIndex <- 0;
-			}
-				
-			
-
+			x<-rnd(-8,8);
+			z<-rnd(-8,8);
+			colorIndex <- rnd(0,4);
+			formIndex <- rnd(0,3);
+			speed <- rnd(10, 150);
 		}
 
 		if (dif = 9) {
@@ -92,8 +75,8 @@ species GamaAgent skills: [unity] {
 	reflex resetPositionToCenter when: isCenter {
 	// Move the specified object to the introduced position
 		map<string, string> pos <- map<string, string>(["x"::0, "y"::0, "z"::0]);
-		do setUnityPosition objectName: "TestObject" position: pos;
-		//do  unityMove objectName: "Player" position:pos; 
+		//do setUnityPosition objectName: "TestObject" position: pos;
+		do  setUnityPosition objectName: "Player" position:pos; 
 		isCenter <- false;
 		write "Comme back to center! x=" + 0 + " y=" + 0 + " z=" + 0;
 	}
@@ -101,12 +84,21 @@ species GamaAgent skills: [unity] {
 	reflex moveToNewPosition when: isNewPosition 
 	{	
 		
-		
+		//z <- 7;
 		// Move the specified object to the introduced position
 		map<string, string> pos <- map<string, string>(["x"::x, "y"::y, "z"::z]);
-		do unityMove objectName: "TestObject" position: pos speed:speed+((cycle mod 9) * cycle);
+		//do unityMove objectName: "TestObject" position: pos speed:speed*((cycle mod 6));
+		do unityMove objectName: "Player" position: pos speed:speed;
 		isNewPosition <- false;
 		write "Move to new position!  x=" + x + " y=" + y + " z=" + z;
+		
+		// Create new GameObject:
+		if(obstacleCounter < 4 and cycle > 10){
+				obstacleCounter <- obstacleCounter + 1;
+				map<string, string> posi <- map<string, string>(["x"::x, "y"::1, "z"::z]);
+				do  newUnityObject objectName: "Test_"+obstacleCounter type:(formList[formIndex]) color:(colorlist[colorIndex]) position:posi; 
+				write " Create New Object";
+		}
 		
 		// Create new GameObject:
 		
@@ -119,6 +111,22 @@ species GamaAgent skills: [unity] {
 		do setUnityColor objectName: "TestObject" color: colorEl;
 		write "message color topic sent!";
 	}
+	
+	
+	reflex checkNotification when: !isNotifiyed {
+		isNotifiyed <- isNotificationTrue("Notification_01");
+	}
+	
+	reflex endGame when: isNotifiyed
+	{
+		do destroyUnityObject objectName: "Player";
+		write "Game Over  --------------- The end";
+		do die;
+	}
+	
+	
+	
+	
 
 	
 	

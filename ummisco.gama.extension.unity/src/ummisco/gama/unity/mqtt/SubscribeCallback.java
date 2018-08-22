@@ -17,7 +17,7 @@ public class SubscribeCallback implements MqttCallback {
 
 	public ArrayList<MqttMessage> mailBox = new ArrayList<MqttMessage>();
 	public ArrayList<MqttMessage> replayMailBox = new ArrayList<MqttMessage>();
-	public ArrayList<MqttMessage> notificationiMailBox = new ArrayList<MqttMessage>();
+	public ArrayList<MqttMessage> notificationMailBox = new ArrayList<MqttMessage>();
 
 	// @Override
 	public void connectionLost(Throwable cause) {
@@ -35,7 +35,7 @@ public class SubscribeCallback implements MqttCallback {
 			replayMailBox.add(message);
 			DEBUG.LOG("A replay has been recevied");
 		} else if (topic.equals(IUnitySkill.TOPIC_NOTIFICATION_RECEIVED)) {
-			notificationiMailBox.add(message);
+			notificationMailBox.add(message);
 			DEBUG.LOG("A notification has been recevied");
 		} else {
 			mailBox.add(message);
@@ -67,9 +67,9 @@ public class SubscribeCallback implements MqttCallback {
 	}
 
 	public String getNextNotificationMessage() {
-		if (notificationiMailBox.size() > 0) {
-			String msg = notificationiMailBox.get(0).toString();
-			notificationiMailBox.remove(0);
+		if (notificationMailBox.size() > 0) {
+			String msg = notificationMailBox.get(0).toString();
+			notificationMailBox.remove(0);
 			return msg;
 		} else {
 			return null;

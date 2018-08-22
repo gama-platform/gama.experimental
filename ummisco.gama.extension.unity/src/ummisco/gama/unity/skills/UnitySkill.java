@@ -1,6 +1,7 @@
 package ummisco.gama.unity.skills;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Map;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -54,9 +55,14 @@ import ummisco.gama.unity.mqtt.Utils;
 @skill(name = UnitySkill.SKILL_NAME, concept = { IConcept.NETWORK, IConcept.COMMUNICATION, IConcept.SKILL })
 public class UnitySkill extends Skill {
 	//
-	public static final String SKILL_NAME = "unity";
+	//public static final String SKILL_NAME = "unity";
 	public static final String BROKER_URL = "tcp://localhost:1883";
-
+	
+	public static final String SKILL_NAME = "unity";
+	//public static final String BROKER_URL = "tcp://195.221.248.15:1935";
+	//public static final String DEFAULT_PASSWORD = "gama_demo";
+	//public static final String DEFAULT_USER = "gama_demo";
+	
 	public static final MqttConnectOptions options = new MqttConnectOptions();
 
 	public static MqttClient client = null;
@@ -86,6 +92,15 @@ public class UnitySkill extends Skill {
 		try {
 			client = new MqttClient(BROKER_URL, clientId);
 			options.setCleanSession(false);
+	//		options.setPassword(DEFAULT_PASSWORD.toCharArray());
+	//		options.setUserName(DEFAULT_USER);
+			
+			
+		//	
+		//	public static String DEFAULT_LOCAL_NAME = "gama-" + Calendar.getInstance().getTimeInMillis() + "@";
+		//	
+			
+			
 			options.setWill(client.getTopic("home/LWT"), "I'm gone :(".getBytes(), 0, false);
 			client.connect(options);
 			DEBUG.LOG("Client : " + scope.getArg("idClient", IType.STRING) + " connected with success!");
@@ -793,17 +808,17 @@ public class UnitySkill extends Skill {
 			category = { IOperatorCategory.LOGIC })
 	public static synchronized boolean isNotificationTrue(final IScope scope, String notificationId) {
 
-		DEBUG.LOG("subscribeCallback.notificationiMailBox.size()  is:  " + subscribeCallback.notificationiMailBox.size());
-		if (subscribeCallback.notificationiMailBox.size() > 0) {
+		DEBUG.LOG("subscribeCallback.notificationMailBox.size()  is:  " + subscribeCallback.notificationMailBox.size());
+		if (subscribeCallback.notificationMailBox.size() > 0) {
 
-			for (MqttMessage msg : subscribeCallback.notificationiMailBox) {
+			for (MqttMessage msg : subscribeCallback.notificationMailBox) {
 				String message = msg.toString();
 				final ConverterScope cScope = new ConverterScope(scope);
 				final XStream xstream = StreamConverter.loadAndBuild(cScope);
 				final NotificationMessage notifMsg = (NotificationMessage) xstream.fromXML(message);
 
 				if (notifMsg.notificationId.equals(notificationId)) {
-					subscribeCallback.notificationiMailBox.remove(0);
+					subscribeCallback.notificationMailBox.remove(0);
 					return true;
 				}
 			}
