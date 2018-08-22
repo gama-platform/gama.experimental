@@ -1,10 +1,10 @@
 /***
-* Name: CubeCollector
+* Name: UnitySkill_AllActionsCollection
 * Author: sklab
-* Description: 
+* Description: This model is used as a collection of all existant actions and operators!
 * Tags: Tag1, Tag2, TagN
 ***/
-model CubeCollector
+model UnitySkill_AllActionsCollection
 
 global skills: [network] {
 	string sentMsg <- "";
@@ -162,7 +162,7 @@ species GamaAgent skills: [unity] {
 	
 }
 
-experiment CubeCollectorGame type: gui {
+experiment UnitySkill_AllActionsCollection type: gui {
 	map<string, point>
 	anchors <- ["center"::#center, "top_left"::#top_left, "left_center"::#left_center, "bottom_left"::#bottom_left, "bottom_center"::#bottom_center, "bottom_right"::#bottom_right, "right_center"::#right_center, "top_right"::#top_right, "top_center"::#top_center];
 	output {

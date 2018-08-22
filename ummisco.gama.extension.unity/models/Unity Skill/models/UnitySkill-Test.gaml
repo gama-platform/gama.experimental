@@ -1,11 +1,11 @@
 /***
-* Name: NewUnitySkill
+* Name: UnitySkill_Tests
 * Author: sklab
-* Description: 
+* Description: This model is used to run experiments on new developped actions and operators, without a particular purpose!
 * Tags: Tag1, Tag2, TagN
 ***/
 
-model NewUnitySkill
+model UnitySkill_Tests
 
  
 global skills: [network]
@@ -26,8 +26,6 @@ global skills: [network]
 			do subscribe_To_Topic idClient:agentName topic:"Gama";
 			do subscribe_To_Topic idClient:agentName topic:"replay";
 			do subscribe_To_Topic idClient:agentName topic:"notification";
-			
-			
 			
 			
 		}
@@ -168,7 +166,7 @@ species GamaAgent skills: [unity]
 
 }
 
-experiment NewUnitySkill_19_07_18 type: gui 
+experiment UnitySkill_Tests_Experiment type: gui 
 {
 	
 	map<string, point> anchors <- ["center"::# center, "top_left"::# top_left, "left_center"::# left_center, "bottom_left"::# bottom_left, "bottom_center"::#
