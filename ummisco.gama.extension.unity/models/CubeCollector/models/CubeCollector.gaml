@@ -35,7 +35,7 @@ global skills: [network] {
 			do subscribe_To_Topic idClient: agentName topic: "Gama";
 			do subscribe_To_Topic idClient: agentName topic: "replay";
 			do subscribe_To_Topic idClient: agentName topic: "notification";
-			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player" fieldType: "field" fieldName: "count" fieldValue: "3" fieldOperator: "==";
+			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player" fieldType: "field" fieldName: "count" fieldValue: "5" fieldOperator: "==";
 		}
 
 	}
