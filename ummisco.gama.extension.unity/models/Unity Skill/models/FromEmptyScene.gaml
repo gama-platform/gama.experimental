@@ -1,5 +1,5 @@
 /***
-* Name: CubeCollector
+* Name: FromEmptyScene
 * Author: youcef sklab
 * Description: This model is a game that shows how to make a Gama agent manage a Unity scene by a mean of MQTT protocol. 
 * It's consists of an agent which controls a ball in the scene by repeatedly sending a message to indicate the new position (randomly)
@@ -9,9 +9,9 @@
 * the cubes. After having received a notification that the total collected cubes have reached the needed threshold, the simulation stops. 
 * Tags: Tag1, Tag2, TagN
 ***/
-model CubeCollector
+model FromEmptyScene
 
-global skills: [network] {
+global skills: [unity] {
 	bool isNotifiyed <- false; // if true, a notification is received
 	bool isCenter <- false; //  if true, go back to the scene center
 	bool isNewPosition <- false; // if true, move the ball to a new position
@@ -26,30 +26,87 @@ global skills: [network] {
 	int obstacleCounter <- 0;
 	list colorlist <- ["black", "red", "blue", "white", "yellow"];
 	list formList <- ["Capsule", "Cube", "Cylinder", "Sphere"];
+	
+	list playerList <- ["Player", "Player01"];
+	
 
 	init {
-		create GamaAgent number: 1 {
-			color <- rnd_color(255); 
-			shape <- sphere(4);
-			
-			
-			// connect to the Mqtt server
-			do connectMqttClient(self.name); 
-			write "connected";
-			
-			// subscribe to get notifiyed by the object: Player, when its field: count of type: field,  is eaqual (operator ==) to 4 
-			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player" fieldType: "field" fieldName: "count" fieldValue: "4" fieldOperator: "==";
-			
-			// subscribe to the topic: notification, in order to receive notifications 
-			do subscribe_To_Topic idClient: self.name topic: "notification";
+		create GamaAgent number: 2 
+		{
+	
 			
 		}
+		
+		do connectMqttClient(self.name); 
+		write "Agent "+self.name+ " connected";
+		
+		// Create the North wall
+		map<string, string> posi <- map<string, string>(["x"::0, "y"::1, "z"::12]);
+		do newUnityObject objectName: "NorthWall" type:"Cube" color:"black" position: posi;
+		// Set localScale of the NorthWall
+		do setUnityProperty objectName: "NorthWall" propertyName:"localScale" propertyValue:"(25.0,2.0,0.3)";
+		do setUnityProperty objectName: "NorthWall" propertyName:"isTrigger" propertyValue:"true";
+		//Disable collisions with the wal
+		do setUnityProperty objectName: "NorthWall" propertyName:"detectCollisions" propertyValue:"false";
+	 	
+	 	
+	 	
+		// Create the South Wall
+		posi <- map<string, string>(["x"::0, "y"::1, "z"::-12]);
+		do newUnityObject objectName: "SouthWall" type:"Cube" color:"blue" position: posi;
+		// Set localScale of the SouthWall
+		do setUnityProperty objectName: "SouthWall" propertyName:"localScale" propertyValue:"(25.0,2.0,0.3)";
+		do setUnityProperty objectName: "SouthWall" propertyName:"detectCollisions" propertyValue:"false";
+	
+	 	
+		// Create the East Wall
+		posi <- map<string, string>(["x"::12, "y"::1, "z"::0]);
+		do newUnityObject objectName: "EastWall" type:"Cube" color:"red" position: posi;
+		// Set localScale of the EastWall
+		do setUnityProperty objectName: "EastWall" propertyName:"localScale" propertyValue:"(24.0,2.0,0.3)";
+		// Set localEulerAngles of the EastWall
+		do setUnityProperty objectName: "EastWall" propertyName:"localEulerAngles" propertyValue:"(0,90,0)";
+		do setUnityProperty objectName: "EastWall" propertyName:"detectCollisions" propertyValue:"false";
+		
+		
+		// Create the West Wall
+		posi <- map<string, string>(["x"::-12, "y"::1, "z"::0]);
+		do newUnityObject objectName: "WestWall" type:"Cube" color:"red" position: posi;
+		// Set localScale of the WestWall
+		do setUnityProperty objectName: "WestWall" propertyName:"localScale" propertyValue:"(24.0,2.0,0.3)";
+		// Set localEulerAngles of the WestWall
+		do setUnityProperty objectName: "WestWall" propertyName:"localEulerAngles" propertyValue:"(0,90,0)";
+		do setUnityProperty objectName: "WestWall" propertyName:"detectCollisions" propertyValue:"false";
+		
+	
+	
+		
 
 	}
 
 }
 
 species GamaAgent skills: [unity] {
+	
+	string playerName <- (self.name = "GamaAgent0" ? "Player" : "Player01") ;
+	int totalCount <-  (self.name = "GamaAgent0" ? 2 : 4) ;
+	init{
+		color <- rnd_color(255); 
+		shape <- sphere(4);
+		
+		// connect to the Mqtt server
+		do connectMqttClient(self.name); 
+		write "Agent "+self.name+" connected to server";
+			
+		// subscribe (to unity engine) to get notifiyed by the object: Player, when its field: count of type: field,  is eaqual (operator ==) to 4 
+		do unityNotificationSubscribe notificationId: self.name+"_Notification_01" objectName: playerName fieldType: "field" fieldName: "count" fieldValue: string(totalCount) fieldOperator: "==";
+			
+		// subscribe to the topic: notification, (Mqtt server) in order to receive notifications 
+		do subscribe_To_Topic idClient: self.name topic: "notification";
+			
+		write "Agent "+self.name+ " initialized with player "+playerName;
+		
+	}
 
 	aspect base {
 		draw shape color: color;
@@ -78,10 +135,13 @@ species GamaAgent skills: [unity] {
 	reflex resetPositionToCenter when: isCenter 
 	{
 		
+		int newX <- rnd(0,2);
+		int newZ <- rnd(0,2);
+		
 		// Reset the Ball to the center scene center (not a move)
-		map<string, string> pos <- map<string, string>(["x"::0, "y"::0, "z"::0]);
+		map<string, string> pos <- map<string, string>(["x"::newX, "y"::0, "z"::newZ]);
 		//do setUnityPosition objectName: "TestObject" position: pos;
-		do setUnityPosition objectName: "Player" position: pos;
+		do setUnityPosition objectName: playerName position: pos;
 		isCenter <- false;
 		write "Comme back to center! x=" + 0 + " y=" + 0 + " z=" + 0;
 	}
@@ -91,7 +151,7 @@ species GamaAgent skills: [unity] {
 		// Move the ball to the new position (not a position reset). The movement speed is specified too.
 		map<string, string> pos <- map<string, string>(["x"::x, "y"::y, "z"::z]);
 		//do unityMove objectName: "TestObject" position: pos speed:speed;
-		do unityMove objectName: "Player" position: pos speed: speed;
+		do unityMove objectName: playerName position: pos speed: speed;
 		isNewPosition <- false;
 		write "Move to new position!  x=" + x + " y=" + y + " z=" + z;
 
@@ -109,24 +169,26 @@ species GamaAgent skills: [unity] {
 		isNewColor <- false;
 		string colorEl <- colorlist[colorIndex];
 		//Change the Ball's color to red
-		do setUnityColor objectName: "Player" color: colorEl;
+		do setUnityColor objectName: playerName color: colorEl;
 		write "message color topic sent!";
 	}
 
 
 	// Check if a notification is received
 	reflex checkNotification when: !isNotifiyed {
-		isNotifiyed <- isNotificationTrue("Notification_01");
+		isNotifiyed <- isNotificationTrue(self.name+"_Notification_01");
 	}
 
 
 	reflex endGame when: isNotifiyed {
-		do destroyUnityObject objectName: "Player";
+		do destroyUnityObject objectName: playerName;
 		write "Game Over  --------------- The end";
 		do die;
 	}
 
 }
+
+
 
 experiment RunGame type: gui {
 	map<string, point>
