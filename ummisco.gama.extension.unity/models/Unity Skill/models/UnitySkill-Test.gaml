@@ -19,13 +19,13 @@ global skills: [network]
 		{
 			color <- rnd_color(255);
 			shape <- sphere(4);
-			string agentName <- "Agent 1";
-			do connectMqttClient(agentName);
+			
+			do connectMqttClient(self.name);
 			write "connected";
 			
-			do subscribe_To_Topic idClient:agentName topic:"Gama";
-			do subscribe_To_Topic idClient:agentName topic:"replay";
-			do subscribe_To_Topic idClient:agentName topic:"notification";
+			do subscribe_To_Topic idClient:self.name topic:"Gama";
+			do subscribe_To_Topic idClient:self.name topic:"replay";
+			do subscribe_To_Topic idClient:self.name topic:"notification";
 			
 			
 		}

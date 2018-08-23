@@ -57,6 +57,9 @@ public class UnitySkill extends Skill {
 	//
 	//public static final String SKILL_NAME = "unity";
 	public static final String BROKER_URL = "tcp://localhost:1883";
+	//public static final String BROKER_URL = "tcp://iot.eclipse.org:1883";
+	
+	
 	
 	public static final String SKILL_NAME = "unity";
 	//public static final String BROKER_URL = "tcp://195.221.248.15:1935";
@@ -91,7 +94,7 @@ public class UnitySkill extends Skill {
 		String clientId = Utils.getMacAddress() + "-" + scope.getArg("idClient", IType.STRING) + "-pub";
 		try {
 			client = new MqttClient(BROKER_URL, clientId);
-			options.setCleanSession(false);
+			options.setCleanSession(true);
 	//		options.setPassword(DEFAULT_PASSWORD.toCharArray());
 	//		options.setUserName(DEFAULT_USER);
 			
