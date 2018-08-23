@@ -39,9 +39,10 @@ global skills: [unity] {
 		do connectMqttClient(self.name); 
 		write "Agent "+self.name+ " connected";
 		
+		do callUnityMonoAction objectName: "Player" actionName:"setWinText"  attribute:"------------  Game ON ---------------- !";  
+		do callUnityMonoAction objectName: "Player01" actionName:"setWinText"  attribute:"------------  Game ON ---------------- !";  
 		
-		map<string, string> attributesList <- map<string, string>(["winText"::"------------  Game ON ---------------- !"]);
-		do setUnityFields objectName: "Player" attributes: attributesList;	
+		//do setUnityFields objectName: "Player" attributes: attributesList;	
 		
 		// Create the North wall
 		map<string, string> posi <- map<string, string>(["x"::0, "y"::1, "z"::12]);
@@ -184,10 +185,9 @@ species GamaAgent skills: [unity] {
 
 	reflex endGame when: isNotifiyed {
 		
-		map<string, string> attributesList <- map<string, string>(["winText"::"Game Over!"]);
-		do setUnityFields objectName: self.name attributes: attributesList;	
+		do callUnityMonoAction objectName: playerName actionName:"setWinText"  attribute:"Game Over!";  
 		
-		do destroyUnityObject objectName: playerName;
+		//do destroyUnityObject objectName: playerName;
 		write "Game Over  --------------- The end";
 		do die;
 	}
