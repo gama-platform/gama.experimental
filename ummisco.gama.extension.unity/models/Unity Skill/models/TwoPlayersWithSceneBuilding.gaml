@@ -1,15 +1,14 @@
 /***
-* Name: FromEmptyScene
+* Name: TwoPlayersWithSceneBuilding
 * Author: youcef sklab
-* Description: This model is a game that shows how to make a Gama agent manage a Unity scene by a mean of MQTT protocol. 
-* It's consists of an agent which controls a ball in the scene by repeatedly sending a message to indicate the new position (randomly)
-*  to move towards.  At the beginning, the agent subscribes to the notification system and indicates for how many collected cubes 
-* it wishes to be notified from unity engine. During the first simulation cycles, for each new position sent, an obstacle (object) 
-* is created on the scene (at most 5 obstacles). So, the agent moves the ball by specifying its new positions and tries to collect 
-* the cubes. After having received a notification that the total collected cubes have reached the needed threshold, the simulation stops. 
+* Description: This model is like the CubeCollector but with two players. 
+*  The aim here is to show that it is possible to set up the unity scene.
 * Tags: Tag1, Tag2, TagN
 ***/
-model FromEmptyScene
+model TwoPlayersWithSceneBuilding
+
+
+
 
 global skills: [unity] {
 	bool isNotifiyed <- false; // if true, a notification is received
@@ -31,21 +30,25 @@ global skills: [unity] {
 	
 
 	init {
-		create GamaAgent number: 2 
-		{
-	
-			
-		}
+			create GamaAgent number: 2 
+			{
+		
+				
+			}
 		
 		do connectMqttClient(self.name); 
 		write "Agent "+self.name+ " connected";
+		
+		
+		map<string, string> attributesList <- map<string, string>(["winText"::"------------  Game ON ---------------- !"]);
+		do setUnityFields objectName: "Player" attributes: attributesList;	
 		
 		// Create the North wall
 		map<string, string> posi <- map<string, string>(["x"::0, "y"::1, "z"::12]);
 		do newUnityObject objectName: "NorthWall" type:"Cube" color:"black" position: posi;
 		// Set localScale of the NorthWall
 		do setUnityProperty objectName: "NorthWall" propertyName:"localScale" propertyValue:"(25.0,2.0,0.3)";
-		do setUnityProperty objectName: "NorthWall" propertyName:"isTrigger" propertyValue:"true";
+		//do setUnityProperty objectName: "NorthWall" propertyName:"isTrigger" propertyValue:"true";
 		//Disable collisions with the wal
 		do setUnityProperty objectName: "NorthWall" propertyName:"detectCollisions" propertyValue:"false";
 	 	
@@ -77,9 +80,6 @@ global skills: [unity] {
 		// Set localEulerAngles of the WestWall
 		do setUnityProperty objectName: "WestWall" propertyName:"localEulerAngles" propertyValue:"(0,90,0)";
 		do setUnityProperty objectName: "WestWall" propertyName:"detectCollisions" propertyValue:"false";
-		
-	
-	
 		
 
 	}
@@ -183,6 +183,10 @@ species GamaAgent skills: [unity] {
 
 
 	reflex endGame when: isNotifiyed {
+		
+		map<string, string> attributesList <- map<string, string>(["winText"::"Game Over!"]);
+		do setUnityFields objectName: self.name attributes: attributesList;	
+		
 		do destroyUnityObject objectName: playerName;
 		write "Game Over  --------------- The end";
 		do die;
