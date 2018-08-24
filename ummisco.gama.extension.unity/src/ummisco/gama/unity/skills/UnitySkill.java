@@ -1,7 +1,7 @@
 package ummisco.gama.unity.skills;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+
 import java.util.Map;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -9,6 +9,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
+
+
 import com.thoughtworks.xstream.XStream;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.precompiler.GamlAnnotations.action;
@@ -24,6 +26,7 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.dev.utils.DEBUG;
+
 import ummisco.gama.serializer.factory.StreamConverter;
 import ummisco.gama.serializer.gamaType.converters.ConverterScope;
 import ummisco.gama.unity.messages.ColorTopicMessage;
@@ -85,7 +88,7 @@ public class UnitySkill extends Skill {
 							name = "idClient", 
 							type = IType.STRING, 
 							optional = false, 
-							doc = @doc("predicate name")) }, 
+							doc = @doc("Agent name")) }, 
 			doc = @doc ( 
 						value = "Generates a client ID and connects it to the Mqtt server.", 
 						returns = "The client generated identifier.", 
@@ -99,14 +102,26 @@ public class UnitySkill extends Skill {
 	//		options.setUserName(DEFAULT_USER);
 			
 			
+			
+		//	final MqttConnectOptions connOpts = new MqttConnectOptions();
+		//	connOpts.setCleanSession(true);
+			//subscribeCallback = new SubscribeCallback();
+			//client.setCallback(subscribeCallback);
+			//connOpts.setCleanSession(true);
+			//connOpts.setKeepAliveInterval(30);
+			//client.connect(connOpts);
+			
+			
+			
+			
 		//	
 		//	public static String DEFAULT_LOCAL_NAME = "gama-" + Calendar.getInstance().getTimeInMillis() + "@";
 		//	
 			
 			
-			options.setWill(client.getTopic("home/LWT"), "I'm gone :(".getBytes(), 0, false);
+		//	options.setWill(client.getTopic("home/LWT"), "I'm gone :(".getBytes(), 0, false);
 			client.connect(options);
-			DEBUG.LOG("Client : " + scope.getArg("idClient", IType.STRING) + " connected with success!");
+			DEBUG.LOG("Client : " + clientId + " connected with success!");
 		} catch (MqttException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -731,8 +746,10 @@ public class UnitySkill extends Skill {
 	public static String disconnectMqttClient(final IScope scope) {
 		String clientId = Utils.getMacAddress() + "-" + scope.getArg("idClient", IType.STRING) + "-pub";
 		try {
+			
 			if (client.isConnected())
 				client.disconnect();
+			   DEBUG.LOG("Client : " + clientId + " disconnected with success!");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
