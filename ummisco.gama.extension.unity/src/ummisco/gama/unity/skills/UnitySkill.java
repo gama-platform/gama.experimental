@@ -62,8 +62,7 @@ import ummisco.gama.unity.mqtt.Utils;
 @doc ("The unity skill is intended to define the minimal set of behaviors required for agents that are able to communicate with the unity engine in order to visualize GAMA simulations in different terminals")
 @skill(name = UnitySkill.SKILL_NAME, concept = { IConcept.NETWORK, IConcept.COMMUNICATION, IConcept.SKILL })
 public class UnitySkill extends Skill {
-	//
-	//public static final String SKILL_NAME = "unity";
+
 	public static final String BROKER_URL = "tcp://localhost:1883";
 	//public static final String BROKER_URL = "tcp://iot.eclipse.org:1883";
 	
@@ -79,8 +78,10 @@ public class UnitySkill extends Skill {
 	public static MqttClient client = null;
 	public static SubscribeCallback subscribeCallback = new SubscribeCallback();
 	
-	//public ArrayList<String> mailBox = new ArrayList<String>();
+	
 
+	
+	
 	// @Override
 	public Object privateExecuteIn(final IScope scope) throws GamaRuntimeException {
 		final IAgent agent = scope.getAgent();
@@ -136,7 +137,7 @@ public class UnitySkill extends Skill {
 				if (client.isConnected())
 					client.disconnect();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 			return null;
@@ -144,12 +145,6 @@ public class UnitySkill extends Skill {
 
 		return clientId;
 	}
-
-	
-	
-	
-
-	
 	
 	
 	//TODO: Youcef-> Review this action to remove some attributes, make it more generic and fix data structure issues
@@ -193,8 +188,9 @@ public class UnitySkill extends Skill {
 		}
 
 		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, objectName, "Not set", objectName, items, topic, "content");
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(messageUnity);
+	
+		 
+		final String stringMessage = getXStream(scope).toXML(messageUnity);
 		final MqttTopic unityTopic = client.getTopic(topic);
 		try {
 			MqttMessage message = new MqttMessage();
@@ -237,8 +233,8 @@ public class UnitySkill extends Skill {
 		String attribute = (String) scope.getArg("attribute", IType.STRING);
 
 		GetTopicMessage topicMessage = new GetTopicMessage(scope, sender, receiver, objectName, attribute);
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(topicMessage);
+		
+		final String stringMessage = getXStream(scope).toXML(topicMessage);
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_GET);
 
 		try {
@@ -281,10 +277,13 @@ public class UnitySkill extends Skill {
 			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue());
 			items.add(it);
 		}
-
+		//TODO: change to support GamaMap in Unity side.
 		SetTopicMessage setMessage = new SetTopicMessage(scope, sender, receiver, objectName, items);
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(setMessage);
+				
+		final String stringMessage = getXStream(scope).toXML(setMessage);
+		
+		//DEBUG.LOG("-------> Le message: "+stringMessage);
+		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_SET);
 		try {
 			MqttMessage message = new MqttMessage();
@@ -379,8 +378,8 @@ public class UnitySkill extends Skill {
 
 		PropertyTopicMessage topicMessage = new PropertyTopicMessage(scope, sender, receiver, objectName, propertyName,
 				propertyValue);
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(topicMessage);
+	
+		final String stringMessage = getXStream(scope).toXML(topicMessage);
 		
 		DEBUG.LOG("Property Message ------------------------------------------------_> ");
 		DEBUG.LOG(stringMessage);
@@ -398,80 +397,6 @@ public class UnitySkill extends Skill {
 
 	}
 
-	
-	
-	
-	
-	
-	/* 
-	
-	
-	
-	//TODO: Youcef-> Review this action with better description and genericity support
-	@action ( 
-			name = "setUnityProperty", 
-			args = { @arg ( 
-							name = "objectName", 
-							type = IType.STRING, 
-							optional = false, 
-							doc = @doc("The game object name")),
-					@arg (
-							name = "propertyName", 
-							type = IType.STRING, 
-							optional = false, 
-							doc = @doc("The property name")),
-					@arg ( 
-							name = "propertyValue", 
-							type = IType.STRING, 
-							optional = false, 
-							doc = @doc("The property value")) }, 
-			doc = @doc ( 
-						value = "Set a property value.", 
-						returns = "void", 
-						examples = { @example("") }))
-	public static void setUnityProperty(final IScope scope) 
-	{
-		String sender = (String) scope.getAgent().getName();
-		String receiver = (String) scope.getArg("objectName", IType.STRING);
-		String objectName = (String) scope.getArg("objectName", IType.STRING);
-		String propertyName = (String) scope.getArg("propertyName", IType.STRING);
-		String propertyValue = (String) scope.getArg("propertyValue", IType.STRING);
-
-		PropertyTopicMessage topicMessage = new PropertyTopicMessage(scope, sender, receiver, objectName, propertyName,
-				propertyValue);
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(topicMessage);
-		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_PROPERTY);
-		try {
-			MqttMessage message = new MqttMessage();
-			message.setPayload(stringMessage.getBytes());
-			unityTopic.publish(message);
-		} catch (MqttPersistenceException e) {
-			e.printStackTrace();
-		} catch (MqttException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	
-	
-	*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//TODO: Youcef-> Review this action with better description and genericity support
 	@action	( 
 				name = "callUnityMonoAction", 
 				args = { @arg ( 
@@ -486,7 +411,7 @@ public class UnitySkill extends Skill {
 								doc = @doc("The game object name")),
 						@arg ( 
 								name = "attribute", 
-								type = IType.STRING, 
+								type = IType.NONE, 
 								optional = false, 
 								doc = @doc("The attribute list and their values")) }, 
 				doc = @doc ( 
@@ -499,12 +424,16 @@ public class UnitySkill extends Skill {
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
 		String actionName = (String) scope.getArg("actionName", IType.STRING);
-		String attribute = (String) scope.getArg("attribute", IType.STRING);
+		Object attribute = (Object) scope.getArg("attribute", IType.NONE);
 
 		MonoActionTopicMessage topicMessage = new MonoActionTopicMessage(scope, sender, receiver, objectName,
 				actionName, attribute);
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(topicMessage);
+	
+		final String stringMessage = getXStream(scope).toXML(topicMessage);
+		
+		DEBUG.LOG("-> Message ------------------------------------------------> ");
+		DEBUG.LOG(stringMessage);
+		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MONO_FREE);
 		try {
 			MqttMessage message = new MqttMessage();
@@ -554,8 +483,8 @@ public class UnitySkill extends Skill {
 		}
 		PluralActionTopicMessage topicMessage = new PluralActionTopicMessage(scope, sender, receiver, objectName,
 				actionName, items);
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(topicMessage);
+	
+		final String stringMessage = getXStream(scope).toXML(topicMessage);
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MULTIPLE_FREE);
 		try {
 			MqttMessage message = new MqttMessage();
@@ -590,11 +519,18 @@ public class UnitySkill extends Skill {
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
-		final GamaColor color = scope.hasArg("color") ? (GamaColor) scope.getArg("color", IType.COLOR) : null;
+		
+		final GamaColor col = scope.hasArg("color") ? (GamaColor) scope.getArg("color", IType.COLOR) : new GamaColor(255, 0, 255);
+		final rgbColor  color = new rgbColor(col.getRed(), col.getGreen(), col.getBlue());
 
 		ColorTopicMessage topicMessage = new ColorTopicMessage(scope, sender, receiver, objectName, color.getRed(), color.getGreen(), color.getBlue());
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(topicMessage);
+
+		final String stringMessage = getXStream(scope).toXML(topicMessage);
+		
+		DEBUG.LOG("COLOR MESSAGE    --  >: ");
+		DEBUG.LOG(stringMessage);
+		
+		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_COLOR);
 	
 		try {
@@ -638,8 +574,8 @@ public class UnitySkill extends Skill {
 		
 		
 		
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(topicMessage);
+
+		final String stringMessage = getXStream(scope).toXML(topicMessage);
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_POSITION);
 
 		try {
@@ -692,8 +628,8 @@ public class UnitySkill extends Skill {
 		
 		MoveTopicMessage topicMessage = new MoveTopicMessage(scope, sender, receiver, objectName, items, speed);
 		
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(topicMessage);
+
+		final String stringMessage = getXStream(scope).toXML(topicMessage);
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MOVE);
 
 		try {
@@ -746,10 +682,13 @@ public class UnitySkill extends Skill {
 		final GamaColor col = scope.hasArg("color") ? (GamaColor) scope.getArg("color", IType.COLOR) : new GamaColor(255, 0, 255);
 		final rgbColor  color = new rgbColor(col.getRed(), col.getGreen(), col.getBlue());
 	
+		DEBUG.LOG(" -----------> "+col.stringValue(scope)); 
+	
+		
 		CreateTopicMessage topicMessage = new CreateTopicMessage(scope, sender, receiver, objectName, type, color,
 				position);
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(topicMessage);
+
+		final String stringMessage = getXStream(scope).toXML(topicMessage);
 		
 		DEBUG.LOG("The Message is : "+stringMessage);
 		
@@ -785,8 +724,8 @@ public class UnitySkill extends Skill {
 			String objectName = (String) scope.getArg("objectName", IType.STRING);
 		
 			DestroyTopicMessage topicMessage = new DestroyTopicMessage(scope, sender, receiver, objectName);
-			XStream xstream = new XStream();
-			final String stringMessage = xstream.toXML(topicMessage);
+
+			final String stringMessage = getXStream(scope).toXML(topicMessage);
 			final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_DESTROY_OBJECT);
 
 			try {
@@ -827,7 +766,7 @@ public class UnitySkill extends Skill {
 							doc = @doc("fieldName: The field name")),
 					@arg ( 
 							name = "fieldValue", 
-							type = IType.STRING, 
+							type = IType.NONE, 
 							optional = false, 
 							doc = @doc("fieldValue: The field value")),
 					@arg ( 
@@ -847,14 +786,14 @@ public class UnitySkill extends Skill {
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
 		String fieldType = (String) scope.getArg("fieldType", IType.STRING);
 		String fieldName = (String) scope.getArg("fieldName", IType.STRING);
-		String fieldValue = (String) scope.getArg("fieldValue", IType.STRING);
+		Object fieldValue = (Object) scope.getArg("fieldValue", IType.NONE);
 		String fieldOperator = (String) scope.getArg("fieldOperator", IType.STRING);
 
 		NotificationTopicMessage topicMessage = new NotificationTopicMessage(scope, sender, receiver, notificationId,
 				objectName, fieldType, fieldName, fieldValue, fieldOperator);
 
-		XStream xstream = new XStream();
-		final String stringMessage = xstream.toXML(topicMessage);
+
+		final String stringMessage = getXStream(scope).toXML(topicMessage);
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_NOTIFICATION);
 
 		try {
@@ -984,6 +923,15 @@ public class UnitySkill extends Skill {
 			return false;
 		}
 		return false;
+	}
+	
+	
+	public static XStream getXStream(final IScope scope) {
+		
+		final ConverterScope cScope = new ConverterScope(scope);
+		final XStream xstream = StreamConverter.loadAndBuild(cScope);
+		
+		return xstream;
 	}
 
 }
