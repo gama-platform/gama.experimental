@@ -30,11 +30,11 @@ global skills: [network] {
 			color <- rnd_color(255);
 			shape <- sphere(4);
 			
-			do connectMqttClient(self.name);
+			do connectMqttClient();
 			write "connected";
-			do subscribe_To_Topic idClient: self.name topic: "Gama";
-			do subscribe_To_Topic idClient: self.name topic: "replay";
-			do subscribe_To_Topic idClient: self.name topic: "notification";
+			do subscribe_To_Topic topic: "Gama";
+			do subscribe_To_Topic topic: "replay";
+			do subscribe_To_Topic topic: "notification";
 			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player" fieldType: "field" fieldName: "count" fieldValue: "5" fieldOperator: "==";
 		}
 

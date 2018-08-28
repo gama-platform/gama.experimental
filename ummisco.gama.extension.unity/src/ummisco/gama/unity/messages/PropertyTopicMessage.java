@@ -35,17 +35,20 @@ import msi.gaml.types.Types;
 		@doc("Returns the concerned unity game object name") }),
 		@variable(name = PropertyTopicMessage.PROPERTY, type = IType.STRING, doc = {
 				@doc("Returns the property name the message") }),
-		@variable(name = PropertyTopicMessage.VALUE, type = IType.STRING, doc = {
+		@variable(name = PropertyTopicMessage.VALUE, type = IType.NONE, doc = {
 				@doc("Returns the property value the message") })})
 public class PropertyTopicMessage extends GamaMessage {
 
 	public final static String OBJECT_NAME = "objectName";
 	public final static String PROPERTY = "property";
+	public final static String VALUE_TYPE = "valueType";
 	public final static String VALUE = "value";
 
 	protected Object objectName;
 	protected Object property;
+	protected Object valueType;
 	protected Object value;
+	
 
 	public PropertyTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object property, final Object value,
 			final Object content) throws GamaRuntimeException {
@@ -53,7 +56,9 @@ public class PropertyTopicMessage extends GamaMessage {
 
 		setObjectName(objectName);
 		setProperty(property);
+		setValueType(value.getClass().getSimpleName());
 		setValue(value);
+		
 	}
 
 	public PropertyTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, 
@@ -62,6 +67,7 @@ public class PropertyTopicMessage extends GamaMessage {
 
 		setObjectName(objectName);
 		setProperty(property);
+		setValueType(value.getClass().getSimpleName());
 		setValue(value);
 	}
 
@@ -85,6 +91,17 @@ public class PropertyTopicMessage extends GamaMessage {
 	public void setProperty(final Object property) {
 		this.property = property;
 	}
+	
+	@getter(PropertyTopicMessage.VALUE_TYPE)
+	public Object getValueType() {
+		return valueType;
+	}
+
+	@setter(PropertyTopicMessage.VALUE_TYPE)
+	public void setValueType(final Object valueType) {
+		this.valueType = valueType;
+	}
+	
 	
 	@getter(PropertyTopicMessage.VALUE)
 	public Object getValue() {

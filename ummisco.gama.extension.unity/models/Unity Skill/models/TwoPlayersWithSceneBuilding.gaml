@@ -17,7 +17,7 @@ global skills: [unity] {
 	init {
 		create GamaAgent number: 2 {	}
 		
-		do connectMqttClient(self.name); 
+		do connectMqttClient(); 
 		write "Agent "+self.name+ " connected";
 
 		do callUnityMonoAction objectName: "Player"   actionName:"setWinText"  attribute:" --- Game ON --- ";  
@@ -69,9 +69,10 @@ global skills: [unity] {
 	}
 	
 	reflex chekGameOver when: isGameOver {
-			do disconnectMqttClient(self.name); 
+			do disconnectMqttClient(); 
 			do die;
 		}
+	
 }
 
 species GamaAgent skills: [unity] {
@@ -100,14 +101,14 @@ species GamaAgent skills: [unity] {
 		shape <- sphere(4);
 		
 		// connect to the Mqtt server
-		do connectMqttClient(self.name); 
+		do connectMqttClient(); 
 		write "Agent "+self.name+" connected to server";
 			
 		// subscribe (to unity engine) to get notifiyed by the object: Player, when its field: count of type: field,  is eaqual (operator ==) to 4 
 		do unityNotificationSubscribe notificationId: self.name+"_Notification_01" objectName: playerName fieldType: "field" fieldName: "count" fieldValue: string(totalCount) fieldOperator: "==";
 			
 		// subscribe to the topic: notification, (Mqtt server) in order to receive notifications 
-		do subscribe_To_Topic idClient: self.name topic: "notification";
+		do subscribe_To_Topic topic: "notification";
 			
 		write "Agent "+self.name+ " initialized with player "+playerName;
 		
@@ -200,7 +201,7 @@ species GamaAgent skills: [unity] {
 	
 	reflex chekGameOver when: isGameOver {
 			write "Game Over  --------------- The end";
-			do disconnectMqttClient(self.name);
+			do disconnectMqttClient();
 		}
 
 }
