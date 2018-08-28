@@ -1,17 +1,18 @@
 /***
 * Name: UnitySkill_Tests
 * Author: sklab
-* Description: This model is used to run experiments on new developped actions and operators, without a particular purpose!
+* Description: Check all new actions.
 * Tags: Tag1, Tag2, TagN
 ***/
 
 model UnitySkill_Tests
 
  
-global skills: [network]
+global skills: [unity]
 { 
 	string sentMsg <- "";
 	string receivedMsg <- "";
+	string playerName <- "Player";
 	bool isNotifiyed <- false;
 	init
 	{
@@ -20,17 +21,51 @@ global skills: [network]
 			color <- rnd_color(255);
 			shape <- sphere(4);
 			
-			do connectMqttClient(self.name);
+			do connectMqttClient();
 			write "connected";
 			
-			do subscribe_To_Topic idClient:self.name topic:"Gama";
-			do subscribe_To_Topic idClient:self.name topic:"replay";
-			do subscribe_To_Topic idClient:self.name topic:"notification";
-			
-			
+			do subscribe_To_Topic topic:"Gama";
+			do subscribe_To_Topic topic:"replay";
+			do subscribe_To_Topic topic:"notification";
 		}
+		
+		do callUnityMonoAction objectName: playerName actionName:"setWinText"  attribute:"- Game ON -";  
+		
+		// Create the North wall
+		//TODO Change position to point
+		do newUnityObject objectName: "NorthWall" type:"Cube" color:rgb(255,1,255)  position: {0,1,12};
+		// Set localScale of the NorthWall
+		do setUnityProperty objectName: "NorthWall" propertyName:"localScale" propertyValue:{25.0,2.0,0.3};
+		//do setUnityProperty objectName: "NorthWall" propertyName:"isTrigger" propertyValue:"true";
+		//Disable collisions with the wall
+		do setUnityProperty objectName: "NorthWall" propertyName:"detectCollisions" propertyValue:false;
+	 	
+		// Create the South Wall
+	
+		do newUnityObject objectName: "SouthWall" type:"Cube" color:rgb(255,200,0)  position: {0,1,-12};
+		// Set localScale of the SouthWall
+		do setUnityProperty objectName: "SouthWall" propertyName:"localScale" propertyValue:{25.0,2.0,0.3};
+		do setUnityProperty objectName: "SouthWall" propertyName:"detectCollisions" propertyValue:false;
+	 	
+		// Create the East Wall
+		do newUnityObject objectName: "EastWall" type:"Cube" color:rgb(100,100,100) position: {12,1,0};
+		// Set localScale of the EastWall
+		do setUnityProperty objectName: "EastWall" propertyName:"localScale" propertyValue:{24.0,2.0,0.3};
+		// Set localEulerAngles of the EastWall
+		do setUnityProperty objectName: "EastWall" propertyName:"localEulerAngles" propertyValue:{0,90,0};
+		do setUnityProperty objectName: "EastWall" propertyName:"detectCollisions" propertyValue:false;
+		
+		// Create the West Wall
+		do newUnityObject objectName: "WestWall" type:"Cube" color:rgb(250,50,200) position: {-12,1,0};
+		// Set localScale of the WestWall
+		do setUnityProperty objectName: "WestWall" propertyName:"localScale" propertyValue:{24.0,2.0,0.3};
+		// Set localEulerAngles of the WestWall
+		do setUnityProperty objectName: "WestWall" propertyName:"localEulerAngles" propertyValue:{0,90,0};
+		do setUnityProperty objectName: "WestWall" propertyName:"detectCollisions" propertyValue:false;
 	}
 }
+
+
 
 species GamaAgent skills: [unity]
 {
@@ -39,36 +74,92 @@ species GamaAgent skills: [unity]
 		draw shape color: color;
 	}
 
-	reflex subscribeToNotification when: cycle = 2
+	reflex writeCycle
+	{
+		write"\n \n - Cycle "+cycle+" - \n";
+	}
+		
+
+	reflex doTest when: cycle = 100
+	{
+		do doTest thisIsTest:"ceci est un test";
+		do doTest thisIsTest:12;
+		do doTest thisIsTest:0.45;
+		do doTest thisIsTest:map<string, string>(["speed"::35]);
+		do doTest thisIsTest:{1,0,5};
+		do doTest thisIsTest:rgb(255,1,1);
+		do doTest thisIsTest:0.45;
+		
+		do die;
+	}
+
+	reflex subscribeToNotification when: cycle = 1
 	{
 		//To be notifyied when totalBox is greater or equal to 5; 
-		do unityNotificationSubscribe notificationId:"Notification_01" objectName: "Player" fieldType:"field" fieldName:"count" fieldValue:"1" fieldOperator:">";
+		do unityNotificationSubscribe notificationId:"Notification_01" objectName: playerName fieldType:"field" fieldName:"count" fieldValue:"1" fieldOperator:">";
+		write "Agent subscribed to unity notification";
 	}
 	
-	reflex mainTopic when: cycle mod 5 = 1
-	{
-		//string bb <- setUnityPosition(0.1); 
-		map<string,string> mapAtt <- ["moveHorizontal"::"0.5", "moveVertical"::"0.5"];
-		//do send_unity_message senderU:"me" actionU:"UpdatePosition" objectU: "Player" attributeU:mapAtt topicU: "Unity"; 
-	}
-	
-	
-	reflex setTopic when: cycle = 2
-	{
-		//Change the value of the field speed on the game object Player
-		int speed<- 35;
-		map<string,string> attributesList <- map<string, string>(["speed"::speed]);
-		//do  setUnityFields objectName: "Player" attributes:attributesList; 
-		//write "Set value sent ";
-	}
-	
-	reflex getTopic when: cycle = 3
+	reflex getTopic when: cycle = 2
 	{
 		//Get a field value (the value of the field speed) from a unity game object (Player)
-		int speed<- 50;
-	//	do  getUnityField objectName: "Player" attribute:"speed"; 
-	//	write "Ask for replay sent ";
+		do  getUnityField objectName: playerName attribute:"speed"; 
+		write "Request to get the speed value is sent!";
 	}
+	
+	reflex setTopic when: cycle = 4
+	{
+		//Change the value of the field speed on the game object Player
+		// it is possible to pas several attributes and their values
+		map<string,string> attributesList <- map<string, string>(["speed"::35]);
+		do  setUnityFields objectName: playerName attributes:attributesList; 
+	}
+	
+	reflex getTopic when: cycle = 6
+	{
+		//Get a field value (the value of the field speed) from a unity game object (Player)
+		do  getUnityField objectName: playerName attribute:"speed"; 
+		write "Request to get the speed value is sent!";
+	}
+	
+	reflex setPositionTopic when: cycle = 7 
+	{
+		do setUnityPosition objectName: playerName position:{1,0,5};
+		write "New position request sent to positionTopic";
+	}
+	
+	
+	reflex setColorTopic when: cycle = 8
+	{
+		//Change the color of an object
+		do setUnityColor  objectName: playerName color:rgb(255,1,1); 
+		write "New color  request sent to colorTopic";
+	}
+	
+	reflex moveTopic when: cycle  = 1
+	{
+		//Change the color value of the specified game object
+		do unityMove objectName: playerName position:{5,5,5}; 
+		write "New position to move towards is sent to to moveTopic";
+	}
+	
+	
+	reflex propertyTopic when: cycle  = 1
+	{
+		//Change the value of a given property of a unity game object (Player)
+		do  setUnityProperty objectName: playerName propertyName:"isKinematic" propertyValue:true; 
+		//write "message color topic sent!";
+	}
+	
+	
+	// ----------- end ------------
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	reflex monoFreeTopic when: cycle mod 9 = 1
@@ -76,53 +167,22 @@ species GamaAgent skills: [unity]
 		//Call the method setSpeed of the game object Player, with the parameter: s, and the value: speed
 		int speed<- 50;
 		//map<string,string> att <- map<string, string>(["s"::speed]);
-		//do callUnityMonoAction objectName: "Player" actionName:"setSpeed"  attribute:string(speed);  
+		//do callUnityMonoAction objectName: playerName actionName:"setSpeed"  attribute:string(speed);  
 	//	write "message mono free topic sent!";
 	}
 	
 	reflex multipleFreeTopic when: cycle < 3
 	{
 		//Call a method (changeAllAttributes) -- having several parameters in the map list attributesList - on a unity game object Player. The called method is 
-		int speed<- 50;
-		map<string,string> attributesList <- ["s"::speed, "count"::"This is count text from gama", "win"::"This is win text from Gama"];
-		//do callUnityPluralAction objectName: "Player" actionName:"changeAllAttributes"  attributes:attributesList; 
+		map<string,string> attributesList <- ["s"::50, "count"::"This is count text from gama", "win"::"This is win text from Gama"];
+		//do callUnityPluralAction objectName: playerName actionName:"changeAllAttributes"  attributes:attributesList; 
 	 	//write "message speed sent!";
 	 	
 	}
 	
 	
-	reflex colorTopic when: cycle mod 10 = 1
-	{
-		//Change the color value, to red, of the game object Player.
-		//do setUnityColor  objectName: "Player" color:"red"; 
-		//write "message color topic sent!";
-	}
 	
 	
-	reflex positionTopic //when: cycle mod 6 = 1
-	{
-		//Change the color value of the specified game object
-		map<string,string>  pos<- map<string, string>(["x"::cycle/100,"y"::"0.0","z"::"0.0"]);
-		string test <- "";
-		//do  setUnityPosition  objectName: "Player" position:pos; 
-		//write "message color topic sent!";
-	}
-	
-	reflex moveTopic when: cycle  = 5
-	{
-		//Change the color value of the specified game object
-		map<string,string> pos <- map<string, string>(["x"::1,"y"::"0","z"::"1"]);
-		string test <- "";
-		//do  unityMove objectName: "Player" position:pos; 
-		//write "message color topic sent!";
-	}
-	
-	reflex propertyTopic when: cycle  = 2
-	{
-		//Change the value of a given property of a unity game object (Player)
-		//do  setUnityProperty objectName: "Player" propertyName:"isKinematic" propertyValue:"true"; 
-		//write "message color topic sent!";
-	}
 	
 	
 	reflex createNewObjectTopic when: cycle  = 15
@@ -133,14 +193,14 @@ species GamaAgent skills: [unity]
 	}
 	
 
-	reflex getMessage {
-		//string mes <- get_unity_message();
-		//write "received Message is :" + mes;
-	}
-	
-	reflex getReplayMessage {
-		//string mes <- get_unity_replay();
-		//write "cycle = "+cycle+" and received Replay message is : --------------------> " + mes;
+	reflex getReplayMessage 
+	{
+		// Get the requested field value.
+		//TODO: Add the fieldName as a parameter
+		string fieldValue <- get_unity_replay(); 
+		if(fieldValue!="null"){
+			write "The requested field value is: " + fieldValue;
+		}
 	}
 	
 	reflex getNotificationMessage {
@@ -148,13 +208,16 @@ species GamaAgent skills: [unity]
 		//write "cycle = "+cycle+" and received notification message is : --------------------> " + mes;
 	}
 	
-	reflex checkNotification23 when: !isNotifiyed{
+	reflex checkNotification when: !isNotifiyed{
 		isNotifiyed <- isNotificationTrue("Notification_01");
-		write "Notification Note Received Yet ";
+	//	write "Notification Note Received Yet ";
+
 	}
 	
+	
+	
 	reflex checkNotification{
-		write "isNotifiyed----->>>> "+isNotifiyed;
+		//write "isNotifiyed----->>>> "+isNotifiyed;
 		if(isNotifiyed){
 			write "---------------------------------------------- The end";
 			do die;

@@ -35,9 +35,9 @@ import msi.gaml.types.Types;
 		@doc("Returns the concerned unity game object name") }),
 		@variable(name = CreateTopicMessage.TYPE, type = IType.STRING, doc = {
 				@doc("Returns the type of the object to create") }),
-		@variable(name = CreateTopicMessage.COLOR, type = IType.STRING, doc = {
+		@variable(name = CreateTopicMessage.COLOR, type = IType.COLOR, doc = {
 				@doc("Returns the color of the object to create") }),
-		@variable(name = CreateTopicMessage.POSITION, type = IType.MAP, doc = {
+		@variable(name = CreateTopicMessage.POSITION, type = IType.POINT, doc = {
 				@doc("Returns the position of the object to create") }),})
 public class CreateTopicMessage extends GamaMessage {
 

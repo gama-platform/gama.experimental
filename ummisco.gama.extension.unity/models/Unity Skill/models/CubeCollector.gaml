@@ -34,14 +34,14 @@ global skills: [network] {
 			
 			
 			// connect to the Mqtt server
-			do connectMqttClient(self.name); 
+			do connectMqttClient(); 
 			write "connected";
 			
 			// subscribe to get notifiyed by the object: Player, when its field: count of type: field,  is eaqual (operator ==) to 4 
 			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player" fieldType: "field" fieldName: "count" fieldValue: "4" fieldOperator: "==";
 			
 			// subscribe to the topic: notification, in order to receive notifications 
-			do subscribe_To_Topic idClient: self.name topic: "notification";
+			do subscribe_To_Topic topic: "notification";
 			
 		}
 

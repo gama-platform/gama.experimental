@@ -33,30 +33,42 @@ import msi.gaml.types.Types;
 
 @vars({ @variable(name = ColorTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
 		@doc("Returns the concerned unity game object name") }),
-		@variable(name = ColorTopicMessage.COLOR, type = IType.STRING, doc = {
-				@doc("Returns the color") }), })
+		@variable(name = ColorTopicMessage.RED, type = IType.INT, doc = {
+				@doc("Returns the red component") }), 
+		@variable(name = ColorTopicMessage.GREEN, type = IType.INT, doc = {
+				@doc("Returns the green component") }), 
+		@variable(name = ColorTopicMessage.BLUE, type = IType.INT, doc = {
+				@doc("Returns the blue component") }), })
 public class ColorTopicMessage extends GamaMessage {
 
 	public final static String OBJECT_NAME = "objectName";
-	public final static String COLOR = "color";
+	public final static String RED = "red";
+	public final static String GREEN = "green";
+	public final static String BLUE = "blue";
 
 	protected Object objectName;
-	protected Object color;
+	protected Object red;
+	protected Object green;
+	protected Object blue;
 
 	public ColorTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName,
-			final Object color, final Object content) throws GamaRuntimeException {
+			final Object red, final Object green, final Object blue, final Object content) throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
-		setColor(color);
+		setRed(red);
+		setGreen(green);
+		setBlue(blue);
 	}
 
 	public ColorTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName,
-			final Object color) throws GamaRuntimeException {
+			final Object red, final Object green, final Object blue) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
 		setObjectName(objectName);
-		setColor(color);
+		setRed(red);
+		setGreen(green);
+		setBlue(blue);
 	}
 
 	@getter(ColorTopicMessage.OBJECT_NAME)
@@ -70,14 +82,36 @@ public class ColorTopicMessage extends GamaMessage {
 	}
 	
 
-	@getter(ColorTopicMessage.COLOR)
-	public Object getColor() {
-		return color;
+	@getter(ColorTopicMessage.RED)
+	public Object getRed() {
+		return red;
 	}
 
-	@setter(ColorTopicMessage.COLOR)
-	public void setColor(final Object color) {
-		this.color = color;
+	@setter(ColorTopicMessage.RED)
+	public void setRed(final Object red) {
+		this.red = red;
+	}
+	
+	
+	@getter(ColorTopicMessage.GREEN)
+	public Object getGreen() {
+		return green;
+	}
+
+	@setter(ColorTopicMessage.GREEN)
+	public void setGreen(final Object green) {
+		this.green = green;
+	}
+	
+	
+	@getter(ColorTopicMessage.BLUE)
+	public Object getBlue() {
+		return blue;
+	}
+
+	@setter(ColorTopicMessage.BLUE)
+	public void setBlue(final Object blue) {
+		this.blue  = blue;
 	}
 
 	@Override
@@ -93,7 +127,7 @@ public class ColorTopicMessage extends GamaMessage {
 
 	@Override
 	public ColorTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new ColorTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getColor(),
+		return new ColorTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getRed(), getGreen(), getBlue(), 
 				getContents(scope));
 	}
 
