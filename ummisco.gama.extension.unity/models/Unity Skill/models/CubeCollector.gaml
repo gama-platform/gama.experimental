@@ -1,12 +1,7 @@
 /***
 * Name: CubeCollector
 * Author: youcef sklab
-* Description: This model is a game that shows how to make a Gama agent manage a Unity scene by a mean of MQTT protocol. 
-* It's consists of an agent which controls a ball in the scene by repeatedly sending a message to indicate the new position (randomly)
-*  to move towards.  At the beginning, the agent subscribes to the notification system and indicates for how many collected cubes 
-* it wishes to be notified from unity engine. During the first simulation cycles, for each new position sent, an obstacle (object) 
-* is created on the scene (at most 5 obstacles). So, the agent moves the ball by specifying its new positions and tries to collect 
-* the cubes. After having received a notification that the total collected cubes have reached the needed threshold, the simulation stops. 
+
 * Tags: Tag1, Tag2, TagN
 ***/
 model CubeCollector
@@ -81,7 +76,7 @@ species GamaAgent skills: [unity] {
 		// Reset the Ball to the center scene center (not a move)
 		map<string, string> pos <- map<string, string>(["x"::0, "y"::0, "z"::0]);
 		//do setUnityPosition objectName: "TestObject" position: pos;
-		do setUnityPosition objectName: "Player" position: pos;
+		do setUnityPosition objectName: "Player" position: {0,0,0};
 		isCenter <- false;
 		write "Comme back to center! x=" + 0 + " y=" + 0 + " z=" + 0;
 	}

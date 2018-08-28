@@ -156,19 +156,12 @@ species GamaAgent skills: [unity]
 	
 	
 	
-	
-	
-	
-	
-	
-	
 	reflex monoFreeTopic when: cycle mod 9 = 1
 	{
 		//Call the method setSpeed of the game object Player, with the parameter: s, and the value: speed
-		int speed<- 50;
-		//map<string,string> att <- map<string, string>(["s"::speed]);
-		//do callUnityMonoAction objectName: playerName actionName:"setSpeed"  attribute:string(speed);  
-	//	write "message mono free topic sent!";
+		do callUnityMonoAction objectName: playerName actionName:"setSpeed"  attribute:string(50);  
+		do callUnityMonoAction objectName: playerName actionName:"setSpeed"  attribute:50; 
+		// write "message mono free topic sent!";
 	}
 	
 	reflex multipleFreeTopic when: cycle < 3
@@ -179,9 +172,6 @@ species GamaAgent skills: [unity]
 	 	//write "message speed sent!";
 	 	
 	}
-	
-	
-	
 	
 	
 	
