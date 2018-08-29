@@ -84,9 +84,8 @@ species GamaAgent skills: [unity] {
 	reflex moveToNewPosition when: isNewPosition 
 	{
 		// Move the ball to the new position (not a position reset). The movement speed is specified too.
-		map<string, string> pos <- map<string, string>(["x"::x, "y"::y, "z"::z]);
 		//do unityMove objectName: "TestObject" position: pos speed:speed;
-		do unityMove objectName: "Player" position: pos speed: speed;
+		do unityMove objectName: "Player" position: {x,y,z} speed: speed;
 		isNewPosition <- false;
 		write "Move to new position!  x=" + x + " y=" + y + " z=" + z;
 
@@ -94,7 +93,7 @@ species GamaAgent skills: [unity] {
 		if (obstacleCounter < 4 and cycle > 10) {
 			obstacleCounter <- obstacleCounter + 1;
 			map<string, string> posi <- map<string, string>(["x"::x, "y"::1, "z"::z]);
-			do newUnityObject objectName: "Test_" + obstacleCounter type: (formList[formIndex]) color: (colorlist[colorIndex]) position: posi;
+			do newUnityObject objectName: "Test_" + obstacleCounter type: (formList[formIndex]) color: rgb(rnd(0,255),rgb(0,255),rgb(0,255)) position: {x,1,z};
 			write " Create New Object";
 		}
 	}
@@ -104,7 +103,7 @@ species GamaAgent skills: [unity] {
 		isNewColor <- false;
 		string colorEl <- colorlist[colorIndex];
 		//Change the Ball's color to red
-		do setUnityColor objectName: "Player" color: colorEl;
+		do setUnityColor objectName: "Player" color: rgb(rnd(0,255),rgb(0,255),rgb(0,255));
 		write "message color topic sent!";
 	}
 

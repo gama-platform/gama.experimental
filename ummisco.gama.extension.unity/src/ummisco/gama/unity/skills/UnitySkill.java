@@ -606,7 +606,15 @@ public class UnitySkill extends Skill {
 							name = "speed", 
 							type = IType.INT, 
 							optional = true, 
-							doc = @doc("speed")),}, 
+							doc = @doc("speed")),
+					@arg ( 
+							name = "smoothMove", 
+							type = IType.BOOL, 
+							optional = true, 
+							doc = @doc("If true, the move will be towards the target position, but with adding force (according to the specified speed). "
+									+ "So, the object may not stop at the destination position."
+									+ " If false, the object will stop moving when the target position is reached.")),
+					}, 
 			doc = @doc ( 
 						value = "Set the position of a unity game object", 
 						returns = "void", 
@@ -616,20 +624,16 @@ public class UnitySkill extends Skill {
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
-		
+		final boolean smoothMove = scope.hasArg("smoothMove") ? (boolean) scope.getArg("smoothMove", IType.BOOL) : false;
 		final int speed = scope.hasArg("speed") ? (int) scope.getArg("speed", IType.INT) : IUnitySkill.DAFAULT_SPEED;
 		final GamaPoint position = scope.hasArg("position") ? (GamaPoint) scope.getArg("position", IType.POINT) : null;
 		
-		ArrayList<ItemAttributes> items = new ArrayList<ItemAttributes>();
-		ItemAttributes x = new ItemAttributes("x", position.x);
-		ItemAttributes y = new ItemAttributes("y", position.y);
-		ItemAttributes z = new ItemAttributes("z", position.z);
-		items.add(x);items.add(y);items.add(z);
-		
-		MoveTopicMessage topicMessage = new MoveTopicMessage(scope, sender, receiver, objectName, items, speed);
-		
+		MoveTopicMessage topicMessage = new MoveTopicMessage(scope, sender, receiver, objectName, position, speed, smoothMove);
 
 		final String stringMessage = getXStream(scope).toXML(topicMessage);
+		
+		DEBUG.LOG("Message -> "+stringMessage);
+		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MOVE);
 
 		try {

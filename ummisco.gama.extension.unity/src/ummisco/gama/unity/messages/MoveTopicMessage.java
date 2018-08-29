@@ -36,33 +36,40 @@ import msi.gaml.types.Types;
 		@variable(name = MoveTopicMessage.POSITION, type = IType.MAP, doc = {
 				@doc("Returns the attribtes list of the message") }),
 		@variable(name = MoveTopicMessage.SPEED, type = IType.INT, doc = {
-				@doc("Returns the object mouvment speed") }),})
+				@doc("Returns the object mouvment speed") }),
+		@variable(name = MoveTopicMessage.SMOOTH_MOVE, type = IType.BOOL, doc = {
+				@doc("Return if the object moving is free or stric. whether the object will be moved with force (so, it may not stop at the target position) or not.") }),
+		})
 public class MoveTopicMessage extends GamaMessage {
 
 	public final static String OBJECT_NAME = "objectName";
 	public final static String POSITION = "position";
 	public final static String SPEED = "speed";
+	public final static String SMOOTH_MOVE = "smoothMove";
 
 	protected Object objectName;
 	protected Object position;
 	protected Object speed;
-
-	public MoveTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object position, final Object speed,
-			final Object content) throws GamaRuntimeException {
+	protected Object smoothMove;
+	
+	public MoveTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object position, final Object speed, 
+			final Object smoothMove, final Object content) throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
 		setPosition(position);
 		setSpeed(speed);
+		setSmoothMove(smoothMove);
 	}
 
 	public MoveTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, 
-			final Object position, final Object speed) throws GamaRuntimeException {
+			final Object position, final Object speed, final Object smoothMove) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
 		setObjectName(objectName);
 		setPosition(position);
 		setSpeed(speed);
+		setSmoothMove(smoothMove);
 	}
 
 	@getter(MoveTopicMessage.OBJECT_NAME)
@@ -95,6 +102,19 @@ public class MoveTopicMessage extends GamaMessage {
 	public void setSpeed(final Object speed) {
 		this.speed = speed;
 	}
+	
+	
+	@getter(MoveTopicMessage.SMOOTH_MOVE)
+	public Object getSmoothMove() {
+		return smoothMove;
+	}
+
+	@setter(MoveTopicMessage.SMOOTH_MOVE)
+	public void setSmoothMove(final Object smoothMove) {
+		this.smoothMove = smoothMove;
+	}
+	
+	
 
 	@Override
 	public String serialize(final boolean includingBuiltIn) {
@@ -109,7 +129,7 @@ public class MoveTopicMessage extends GamaMessage {
 
 	@Override
 	public MoveTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new MoveTopicMessage(scope, getSender(), getReceivers(), getObjectName(), (Map<?, ?>) getPosition(), getSpeed(),
+		return new MoveTopicMessage(scope, getSender(), getReceivers(), getObjectName(), (Map<?, ?>) getPosition(), getSpeed(), getSmoothMove(),
 				getContents(scope));
 	}
 

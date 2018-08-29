@@ -87,9 +87,8 @@ species GamaAgent skills: [unity] {
 	}
 
 	reflex setSpeedTopic when: cycle = 1 {
-	//Change the value of the field speed on the game object Player
-		int speed <- 35;
-		map<string, string> attributesList <- map<string, string>(["speed"::speed]);
+		//Change the value of the field speed on the game object Player
+		map<string, string> attributesList <- map<string, string>(["speed"::35]);
 		do setUnityFields objectName: "Player" attributes: attributesList;
 		//write "Set value sent ";
 	}
@@ -109,8 +108,8 @@ species GamaAgent skills: [unity] {
 
 	reflex resetPositionToCenter when: isCenter {
 	// Move the specified object to the introduced position
-		map<string, string> pos <- map<string, string>(["x"::0, "y"::0, "z"::0]);
-		do setUnityPosition objectName: "Player" position: pos;
+		
+		do setUnityPosition objectName: "Player" position: {0,0,0};
 		//do  unityMove objectName: "Player" position:pos; 
 		isCenter <- false;
 		write "Comme back to center! x=" + 0 + " y=" + 0 + " z=" + 0;
@@ -123,17 +122,16 @@ species GamaAgent skills: [unity] {
 		do setUnityFields objectName: "Player" attributes: speedValue;
 		
 		// Move the specified object to the introduced position
-		map<string, string> pos <- map<string, string>(["x"::x, "y"::y, "z"::z]);
-		do unityMove objectName: "Player" position: pos speed:speed+((cycle mod 9) * cycle);
+
+		do unityMove objectName: "Player" position: {x,y,z} speed:speed+((cycle mod 9) * cycle);
 		isNewPosition <- false;
 		write "Move to new position!  x=" + x + " y=" + y + " z=" + z;
 		
 		// Create new GameObject:
 		if(obstacleCounter < 4 and cycle > 10){
-				obstacleCounter <- obstacleCounter + 1;
-				map<string, string> posi <- map<string, string>(["x"::x, "y"::y, "z"::z]);
-				do  newUnityObject objectName: "Test_"+obstacleCounter type:(formList[formIndex]) color:(colorlist[colorIndex]) position:posi; 
-				write " Create New Object";
+			obstacleCounter <- obstacleCounter + 1;
+			do  newUnityObject objectName: "Test_"+obstacleCounter type:(formList[formIndex]) color:rgb(rnd(0,255),rgb(0,255),rgb(0,255)) position:{x,y,z}; 
+			write " Create New Object";
 		}
 	}
 
@@ -141,7 +139,7 @@ species GamaAgent skills: [unity] {
 		isNewColor <- false;
 		string colorEl <- colorlist[colorIndex];
 		//Change the color value, to red, of the game object Player.
-		do setUnityColor objectName: "Player" color: colorEl;
+		do setUnityColor objectName: "Player" color: rgb(rnd(0,255),rgb(0,255),rgb(0,255));
 		write "message color topic sent!";
 	}
 

@@ -145,7 +145,7 @@ species GamaAgent skills: [unity] {
 		
 				
 		// Move the ball to the new position (not a position reset). The movement speed is specified too.
-		do unityMove objectName: playerName position: {x,y,z} speed: speed;
+		do unityMove objectName: playerName position: {x,y,z} speed: speed freeMove: true;
 		isNewPosition <- false;
 		
 		// Create new GameObject:
