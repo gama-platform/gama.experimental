@@ -12,14 +12,22 @@ import org.eclipse.paho.client.mqttv3.MqttTopic;
 
 
 import com.thoughtworks.xstream.XStream;
+
+import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
+import msi.gama.metamodel.shape.ILocation;
+import msi.gama.metamodel.topology.ITopology;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
+import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.operator;
+import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.skill;
+import msi.gama.precompiler.GamlAnnotations.variable;
+import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.precompiler.IConcept;
 import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.IScope;
@@ -59,9 +67,36 @@ import ummisco.gama.unity.mqtt.Utils;
  *
  */
 
-@doc ("The unity skill is intended to define the minimal set of behaviors required for agents that are able to communicate with the unity engine in order to visualize GAMA simulations in different terminals")
+@doc ("The unity skill is intended to define the minimal set of behaviors required for agents that are able "
+		+ "to communicate with the unity engine in order to visualize GAMA simulations in different terminals")
+
+@vars ({ @variable (
+		name = IKeyword.LOCATION,
+		type = IType.POINT,
+		depends_on = IKeyword.SHAPE,
+		doc = @doc ("Represents the current position of the agent")),
+	@variable (name = UnitySkill.UNITY_ROTATION,
+		type = IType.POINT,
+		depends_on = IKeyword.SHAPE,
+		doc = @doc ("Represents the current rotation of the agent")),
+	@variable (name = UnitySkill.UNITY_SCALE,
+		type = IType.POINT,
+		depends_on = IKeyword.SHAPE,
+		init = "{0,0,0}",
+		doc = @doc ("Represents the current scale of the agent")),
+		@variable (
+				name = IKeyword.SPEED,
+				type = IType.FLOAT,
+				init = "1.0",
+				doc = @doc ("Represents the speed of the agent (in meter/second)")),
+	})
 @skill(name = UnitySkill.SKILL_NAME, concept = { IConcept.NETWORK, IConcept.COMMUNICATION, IConcept.SKILL })
 public class UnitySkill extends Skill {
+	
+	public static String allContent = "";
+	static {
+		DEBUG.OFF();	
+	}
 
 	public static final String BROKER_URL = "tcp://localhost:1883";
 	//public static final String BROKER_URL = "tcp://iot.eclipse.org:1883";
@@ -69,6 +104,10 @@ public class UnitySkill extends Skill {
 	
 	
 	public static final String SKILL_NAME = "unity";
+	public static final String UNITY_SPEED = "speed";
+	public static final String UNITY_ROTATION = "rotation";
+	public static final String UNITY_SCALE = "scale";
+	
 	//public static final String BROKER_URL = "tcp://195.221.248.15:1935";
 	//public static final String DEFAULT_PASSWORD = "gama_demo";
 	//public static final String DEFAULT_USER = "gama_demo";
@@ -104,8 +143,8 @@ public class UnitySkill extends Skill {
 		try {
 			client = new MqttClient(BROKER_URL, clientId);
 			options.setCleanSession(true);
-	//		options.setPassword(DEFAULT_PASSWORD.toCharArray());
-	//		options.setUserName(DEFAULT_USER);
+		//	options.setPassword(DEFAULT_PASSWORD.toCharArray());
+		//	options.setUserName(DEFAULT_USER);
 			
 			
 			
@@ -189,14 +228,19 @@ public class UnitySkill extends Skill {
 
 		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, objectName, "Not set", objectName, items, topic, "content");
 	
+	
 		 
 		final String stringMessage = getXStream(scope).toXML(messageUnity);
+		
+		allContent += "\n"+stringMessage;
+	
+		
 		final MqttTopic unityTopic = client.getTopic(topic);
 		try {
 			MqttMessage message = new MqttMessage();
 			message.setPayload(stringMessage.getBytes());
 			unityTopic.publish(message);
-			DEBUG.LOG("New message sent to Unity. Topic: " + unityTopic.getName() + "   Message: " + stringMessage);
+			
 			return true;
 		} catch (MqttPersistenceException e) {
 			e.printStackTrace();
@@ -235,6 +279,9 @@ public class UnitySkill extends Skill {
 		GetTopicMessage topicMessage = new GetTopicMessage(scope, sender, receiver, objectName, attribute);
 		
 		final String stringMessage = getXStream(scope).toXML(topicMessage);
+		
+		allContent += "\n"+stringMessage;
+		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_GET);
 
 		try {
@@ -270,7 +317,7 @@ public class UnitySkill extends Skill {
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
-		Map<String, String> attributes = (Map<String, String>) scope.getArg("attributes", IType.MAP);
+		Map<String, Object> attributes = (Map<String, Object>) scope.getArg("attributes", IType.MAP);
 
 		ArrayList<ItemAttributes> items = new ArrayList();
 		for (Map.Entry<?, ?> entry : attributes.entrySet()) {
@@ -282,7 +329,7 @@ public class UnitySkill extends Skill {
 				
 		final String stringMessage = getXStream(scope).toXML(setMessage);
 		
-		//DEBUG.LOG("-------> Le message: "+stringMessage);
+		allContent += "\n"+stringMessage;
 		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_SET);
 		try {
@@ -381,8 +428,7 @@ public class UnitySkill extends Skill {
 	
 		final String stringMessage = getXStream(scope).toXML(topicMessage);
 		
-		DEBUG.LOG("Property Message ------------------------------------------------_> ");
-		DEBUG.LOG(stringMessage);
+		allContent += "\n"+stringMessage;
 		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_PROPERTY);
 		try {
@@ -431,8 +477,7 @@ public class UnitySkill extends Skill {
 	
 		final String stringMessage = getXStream(scope).toXML(topicMessage);
 		
-		DEBUG.LOG("-> Message ------------------------------------------------> ");
-		DEBUG.LOG(stringMessage);
+		allContent += "\n"+stringMessage;
 		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MONO_FREE);
 		try {
@@ -485,6 +530,9 @@ public class UnitySkill extends Skill {
 				actionName, items);
 	
 		final String stringMessage = getXStream(scope).toXML(topicMessage);
+		
+		allContent += "\n"+stringMessage;
+		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MULTIPLE_FREE);
 		try {
 			MqttMessage message = new MqttMessage();
@@ -526,9 +574,8 @@ public class UnitySkill extends Skill {
 		ColorTopicMessage topicMessage = new ColorTopicMessage(scope, sender, receiver, objectName, color.getRed(), color.getGreen(), color.getBlue());
 
 		final String stringMessage = getXStream(scope).toXML(topicMessage);
-		
-		DEBUG.LOG("COLOR MESSAGE    --  >: ");
-		DEBUG.LOG(stringMessage);
+	
+		allContent += "\n"+stringMessage;
 		
 		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_COLOR);
@@ -576,6 +623,9 @@ public class UnitySkill extends Skill {
 		
 
 		final String stringMessage = getXStream(scope).toXML(topicMessage);
+		
+		allContent += "\n"+stringMessage;
+		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_POSITION);
 
 		try {
@@ -624,15 +674,15 @@ public class UnitySkill extends Skill {
 		String sender = (String) scope.getAgent().getName();
 		String receiver = (String) scope.getArg("objectName", IType.STRING);
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
-		final boolean smoothMove = scope.hasArg("smoothMove") ? (boolean) scope.getArg("smoothMove", IType.BOOL) : false;
-		final int speed = scope.hasArg("speed") ? (int) scope.getArg("speed", IType.INT) : IUnitySkill.DAFAULT_SPEED;
+		final boolean smoothMove = scope.hasArg("smoothMove") ? (boolean) scope.getArg("smoothMove", IType.BOOL) : true;
+		final double speed = scope.hasArg("speed") ? (double) scope.getArg("speed", IType.FLOAT) : IUnitySkill.DAFAULT_SPEED;
 		final GamaPoint position = scope.hasArg("position") ? (GamaPoint) scope.getArg("position", IType.POINT) : null;
 		
 		MoveTopicMessage topicMessage = new MoveTopicMessage(scope, sender, receiver, objectName, position, speed, smoothMove);
 
 		final String stringMessage = getXStream(scope).toXML(topicMessage);
 		
-		DEBUG.LOG("Message -> "+stringMessage);
+		allContent += "\n"+stringMessage;
 		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MOVE);
 
@@ -693,8 +743,9 @@ public class UnitySkill extends Skill {
 				position);
 
 		final String stringMessage = getXStream(scope).toXML(topicMessage);
-		
-		DEBUG.LOG("The Message is : "+stringMessage);
+
+		allContent += "\n"+stringMessage;
+		DEBUG.LOG("The new message is : "+stringMessage);
 		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_CREATE_OBJECT);
 
@@ -730,6 +781,9 @@ public class UnitySkill extends Skill {
 			DestroyTopicMessage topicMessage = new DestroyTopicMessage(scope, sender, receiver, objectName);
 
 			final String stringMessage = getXStream(scope).toXML(topicMessage);
+		
+			allContent += "\n"+stringMessage;
+			
 			final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_DESTROY_OBJECT);
 
 			try {
@@ -737,7 +791,7 @@ public class UnitySkill extends Skill {
 				message.setPayload(stringMessage.getBytes());
 				unityTopic.publish(message);
 				
-				DEBUG.LOG("Message Destroy sent: "+stringMessage);
+				
 			} catch (MqttPersistenceException e) {
 				e.printStackTrace();
 			} catch (MqttException e) {
@@ -762,7 +816,7 @@ public class UnitySkill extends Skill {
 							name = "fieldType", 
 							type = IType.STRING, 
 							optional = false, 
-							doc = @doc("fieldType: a field or a property in the game object")),
+							doc = @doc("fieldType: whether it is a field or a property in the game object")),
 					@arg ( 
 							name = "fieldName", 
 							type = IType.STRING, 
@@ -798,6 +852,9 @@ public class UnitySkill extends Skill {
 
 
 		final String stringMessage = getXStream(scope).toXML(topicMessage);
+		
+		allContent += "\n"+stringMessage;
+		
 		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_NOTIFICATION);
 
 		try {
@@ -929,7 +986,20 @@ public class UnitySkill extends Skill {
 		return false;
 	}
 	
+
+	@action ( 
+			name = "getAllActionsMessage", 
+			doc = @doc(value = ".", 
+			returns = "", 
+			examples = { @example("") }))
+	public synchronized String getAllActionsMessage(final IScope scope) {
+		String text = allContent;
+		allContent = "";
+		return text;
+	}
 	
+	
+
 	public static XStream getXStream(final IScope scope) {
 		
 		final ConverterScope cScope = new ConverterScope(scope);
@@ -937,5 +1007,136 @@ public class UnitySkill extends Skill {
 		
 		return xstream;
 	}
+	
+	
+	
+	
+	
+	
+	@getter (IKeyword.SPEED)
+	public double getSpeed(final IAgent agent) {
+		if (agent == null) { return 0.0; }
+		return (Double) agent.getAttribute(IKeyword.SPEED);
+	}
 
+	
+	@setter (IKeyword.SPEED)
+	public void setSpeed(final IAgent agent, final double s) {
+		if (agent == null) { return; }		
+		agent.setAttribute(IKeyword.SPEED, s);
+		
+		if(client!=null) {
+			ArrayList<ItemAttributes> items = new ArrayList<ItemAttributes>();
+			ItemAttributes it = new ItemAttributes(UnitySkill.UNITY_SPEED, s);
+			items.add(it);
+				
+			SetTopicMessage setMessage = new SetTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), items);
+		
+			final String stringMessage = getXStream(agent.getScope()).toXML(setMessage);
+			allContent += "\n"+stringMessage;
+			DEBUG.LOG("The new message is : "+stringMessage);
+			try {
+				final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_SET);
+				MqttMessage message = new MqttMessage();
+				message.setPayload(stringMessage.getBytes());
+				unityTopic.publish(message);
+			} catch (MqttPersistenceException e) {
+				e.printStackTrace();
+			} catch (MqttException e) {
+				e.printStackTrace();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}	
+	}
+	
+	
+	
+	@setter (IKeyword.LOCATION)
+	public void setLocation(final IAgent agent, final ILocation p) {
+		if (agent == null) { return; }
+		agent.setLocation(p);
+		
+		if(client!=null) {
+			GamaPoint loc = new GamaPoint(p.getX(), p.getY(), p.getZ());
+			PositionTopicMessage topicMessage = new PositionTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), loc);
+			final String stringMessage = getXStream(agent.getScope()).toXML(topicMessage);
+			allContent += "\n"+stringMessage;
+			DEBUG.LOG("The new message is : "+stringMessage);
+			try {
+				final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_POSITION);
+				MqttMessage message = new MqttMessage();
+				message.setPayload(stringMessage.getBytes());
+				unityTopic.publish(message);
+			} catch (MqttPersistenceException e) {
+				e.printStackTrace();
+			} catch (MqttException e) {
+				e.printStackTrace();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	
+	@setter (UnitySkill.UNITY_ROTATION)
+	public void setRotation(final IAgent agent, final GamaPoint p) {
+		if (agent == null) { return; }
+	//	agent.setRotation(p);
+		if(client!=null && p!=null) {
+			GamaPoint loc = new GamaPoint(p.getX(), p.getY(), p.getZ());
+			PropertyTopicMessage topicMessage = new PropertyTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), "localEulerAngles", loc);
+			final String stringMessage = getXStream(agent.getScope()).toXML(topicMessage);
+			allContent += "\n"+stringMessage;
+			DEBUG.LOG("The new message is : "+stringMessage);
+			try {
+				final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_PROPERTY);
+				MqttMessage message = new MqttMessage();
+				message.setPayload(stringMessage.getBytes());
+				unityTopic.publish(message);
+			} catch (MqttPersistenceException e) {
+				e.printStackTrace();
+			} catch (MqttException e) {
+				e.printStackTrace();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@setter (UnitySkill.UNITY_SCALE)
+	public void setScal(final IAgent agent, final ILocation p) {
+		if (agent == null) { return; }
+	//	agent.setScale(p);
+	
+		if(client!=null && p!=null ) {
+			GamaPoint loc = new GamaPoint(p.getX(), p.getY(), p.getZ());
+			PropertyTopicMessage topicMessage = new PropertyTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), "localScale", loc);
+			final String stringMessage = getXStream(agent.getScope()).toXML(topicMessage);
+			allContent += "\n"+stringMessage;
+			DEBUG.LOG("The new message is : "+stringMessage);
+			try {
+				final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_PROPERTY);
+				MqttMessage message = new MqttMessage();
+				message.setPayload(stringMessage.getBytes());
+				unityTopic.publish(message);
+			} catch (MqttPersistenceException e) {
+				e.printStackTrace();
+			} catch (MqttException e) {
+				e.printStackTrace();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
+	
+
+	
+	
+	
+	
+	
+	
 }

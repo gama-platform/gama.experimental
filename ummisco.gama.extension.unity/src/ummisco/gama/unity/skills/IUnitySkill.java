@@ -44,5 +44,5 @@ public interface IUnitySkill {
 	public static final String TOPIC_GAMA = "Gama";
 
 	
-	public static final int DAFAULT_SPEED = 1;
+	public static final double DAFAULT_SPEED = 1.0;
 }

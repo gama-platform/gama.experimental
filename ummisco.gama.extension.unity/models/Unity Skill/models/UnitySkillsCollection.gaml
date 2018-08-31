@@ -35,7 +35,7 @@ global skills: [network] {
 			do subscribe_To_Topic topic: "Gama";
 			do subscribe_To_Topic topic: "replay";
 			do subscribe_To_Topic topic: "notification";
-			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player" fieldType: "field" fieldName: "count" fieldValue: "5" fieldOperator: "==";
+			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player0" fieldType: "field" fieldName: "count" fieldValue: "5" fieldOperator: "==";
 		}
 
 	}
@@ -89,19 +89,19 @@ species GamaAgent skills: [unity] {
 	reflex setSpeedTopic when: cycle = 1 {
 		//Change the value of the field speed on the game object Player
 		map<string, string> attributesList <- map<string, string>(["speed"::35]);
-		do setUnityFields objectName: "Player" attributes: attributesList;
+		do setUnityFields objectName: "Player0" attributes: attributesList;
 		//write "Set value sent ";
 	}
 
 	reflex subscribeToNotification when: cycle = 1 {
 	//To be notifyied when totalBox is greater or equal to 5; 
-	//do unityNotificationSubscribe notificationId:"Notification_01" objectName: "Player" fieldType:"field" fieldName:"count" fieldValue:"4" fieldOperator:"==";
+	//do unityNotificationSubscribe notificationId:"Notification_01" objectName: "Player0" fieldType:"field" fieldName:"count" fieldValue:"4" fieldOperator:"==";
 	}
 
 	reflex moveBackToCenter when: isCenter {
 	// Move the specified object to the introduced position
 		map<string, string> pos <- map<string, string>(["x"::0, "y"::0, "z"::0]);
-		//do  unityMove objectName: "Player" position:pos; 
+		//do  unityMove objectName: "Player0" position:pos; 
 		//write "Comme back to center! x="+0+ " y="+0+" z="+0;
 		//isCenter <- false;
 	}
@@ -109,8 +109,8 @@ species GamaAgent skills: [unity] {
 	reflex resetPositionToCenter when: isCenter {
 	// Move the specified object to the introduced position
 		
-		do setUnityPosition objectName: "Player" position: {0,0,0};
-		//do  unityMove objectName: "Player" position:pos; 
+		do setUnityPosition objectName: "Player0" position: {0,0,0};
+		//do  unityMove objectName: "Player0" position:pos; 
 		isCenter <- false;
 		write "Comme back to center! x=" + 0 + " y=" + 0 + " z=" + 0;
 	}
@@ -119,11 +119,11 @@ species GamaAgent skills: [unity] {
 	{	
 		// set new Speed for the player object:
 		map<string, string> speedValue <- map<string, string>(["speed"::speed+((cycle mod 9)* 10)]);
-		do setUnityFields objectName: "Player" attributes: speedValue;
+		do setUnityFields objectName: "Player0" attributes: speedValue;
 		
 		// Move the specified object to the introduced position
 
-		do unityMove objectName: "Player" position: {x,y,z} speed:speed+((cycle mod 9) * cycle);
+		do unityMove objectName: "Player0" position: {x,y,z} speed:speed+((cycle mod 9) * cycle);
 		isNewPosition <- false;
 		write "Move to new position!  x=" + x + " y=" + y + " z=" + z;
 		
@@ -139,7 +139,7 @@ species GamaAgent skills: [unity] {
 		isNewColor <- false;
 		string colorEl <- colorlist[colorIndex];
 		//Change the color value, to red, of the game object Player.
-		do setUnityColor objectName: "Player" color: rgb(rnd(0,255),rgb(0,255),rgb(0,255));
+		do setUnityColor objectName: "Player0" color: rgb(rnd(0,255),rgb(0,255),rgb(0,255));
 		write "message color topic sent!";
 	}
 
@@ -149,7 +149,7 @@ species GamaAgent skills: [unity] {
 
 	reflex endGame when: isNotifiyed
 	{
-		do destroyUnityObject objectName: "Player";
+		do destroyUnityObject objectName: "Player0";
 		write "---------------------------------------------- The end";
 		do die;
 	}

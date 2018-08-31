@@ -35,7 +35,7 @@ import msi.gaml.types.Types;
 		@doc("Returns the concerned unity game object name") }),
 		@variable(name = MoveTopicMessage.POSITION, type = IType.MAP, doc = {
 				@doc("Returns the attribtes list of the message") }),
-		@variable(name = MoveTopicMessage.SPEED, type = IType.INT, doc = {
+		@variable(name = MoveTopicMessage.SPEED, type = IType.FLOAT, doc = {
 				@doc("Returns the object mouvment speed") }),
 		@variable(name = MoveTopicMessage.SMOOTH_MOVE, type = IType.BOOL, doc = {
 				@doc("Return if the object moving is free or stric. whether the object will be moved with force (so, it may not stop at the target position) or not.") }),
