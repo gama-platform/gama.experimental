@@ -33,7 +33,7 @@ global skills: [network] {
 			write "connected";
 			
 			// subscribe to get notifiyed by the object: Player, when its field: count of type: field,  is eaqual (operator ==) to 4 
-			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player" fieldType: "field" fieldName: "count" fieldValue: "4" fieldOperator: "==";
+			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player0" fieldType: "field" fieldName: "count" fieldValue: "4" fieldOperator: "==";
 			
 			// subscribe to the topic: notification, in order to receive notifications 
 			do subscribe_To_Topic topic: "notification";
@@ -76,7 +76,7 @@ species GamaAgent skills: [unity] {
 		// Reset the Ball to the center scene center (not a move)
 		map<string, string> pos <- map<string, string>(["x"::0, "y"::0, "z"::0]);
 		//do setUnityPosition objectName: "TestObject" position: pos;
-		do setUnityPosition objectName: "Player" position: {0,0,0};
+		do setUnityPosition objectName: "Player0" position: {0,0,0};
 		isCenter <- false;
 		write "Comme back to center! x=" + 0 + " y=" + 0 + " z=" + 0;
 	}
@@ -85,7 +85,7 @@ species GamaAgent skills: [unity] {
 	{
 		// Move the ball to the new position (not a position reset). The movement speed is specified too.
 		//do unityMove objectName: "TestObject" position: pos speed:speed;
-		do unityMove objectName: "Player" position: {x,y,z} speed: speed;
+		do unityMove objectName: "Player0" position: {x,y,z} speed: speed;
 		isNewPosition <- false;
 		write "Move to new position!  x=" + x + " y=" + y + " z=" + z;
 
@@ -103,7 +103,7 @@ species GamaAgent skills: [unity] {
 		isNewColor <- false;
 		string colorEl <- colorlist[colorIndex];
 		//Change the Ball's color to red
-		do setUnityColor objectName: "Player" color: rgb(rnd(0,255),rgb(0,255),rgb(0,255));
+		do setUnityColor objectName: "Player0" color: rgb(rnd(0,255),rgb(0,255),rgb(0,255));
 		write "message color topic sent!";
 	}
 
@@ -115,7 +115,7 @@ species GamaAgent skills: [unity] {
 
 
 	reflex endGame when: isNotifiyed {
-		do destroyUnityObject objectName: "Player";
+		do destroyUnityObject objectName: "Player0";
 		write "Game Over  --------------- The end";
 		do die;
 	}
