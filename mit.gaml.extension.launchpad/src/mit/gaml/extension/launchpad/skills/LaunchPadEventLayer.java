@@ -14,12 +14,16 @@ import java.io.IOException;
 import msi.gama.common.interfaces.IDisplaySurface;
 import msi.gama.common.interfaces.IEventLayerDelegate;
 import msi.gama.common.interfaces.IGraphics;
+import msi.gama.common.interfaces.ILayer;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.outputs.layers.AbstractLayer;
 import msi.gama.outputs.layers.EventLayerStatement;
+import msi.gama.outputs.layers.ILayerData;
 import msi.gama.outputs.layers.ILayerStatement;
+import msi.gama.outputs.layers.LayerData;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gaml.descriptions.StatementDescription;
 import msi.gaml.statements.IExecutable;
 import net.thecodersbreakfast.lp4j.api.BackBufferOperation;
 import net.thecodersbreakfast.lp4j.api.Button;
@@ -35,18 +39,71 @@ import net.thecodersbreakfast.lp4j.midi.MidiLaunchpad;
  * Written by Arnaud Grignard & Huynh Quang Nghi (CC2017)
  */
 
-public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDelegate {
+public class LaunchPadEventLayer implements ILayer, IEventLayerDelegate {
 
-	MyLPListener myListener;
-	IScope executionScope;
+	MyLPListener myListener=null;
+	IScope executionScope=null;
+	
+	public LaunchPadEventLayer() { 
+		definition=null;
+	}
+
+	protected ILayerStatement definition;
+	private String name;
+	boolean hasBeenDrawnOnce=false;
+	private ILayerData data=null;
 
 	public LaunchPadEventLayer(final ILayerStatement layer) {
-		super(layer);
+		definition = layer;
+		if (definition != null) {
+			setName(definition.getName());
+		}
+		data = createData();
 	}
 
 	@Override
-	public void disableOn(final IDisplaySurface surface) {
-		super.disableOn(surface);
+	public ILayerStatement getDefinition() {
+		return definition;
+	}
+
+	@Override
+	public ILayerData getData() {
+		return data;
+	}
+
+	protected ILayerData createData() {
+		return new LayerData(definition);
+	}
+
+	@Override
+	public void forceRedrawingOnce() {
+		hasBeenDrawnOnce = false;
+	}
+
+	@Override
+	public void draw(final IScope scope, final IGraphics g) throws GamaRuntimeException {
+		if (!g.is2D() && !getData().isDynamic() && hasBeenDrawnOnce) { return; }
+		if (g.isNotReadyToUpdate() && hasBeenDrawnOnce) { return; }
+		getData().compute(scope, g);
+		g.setOpacity(getData().getTransparency());
+		g.beginDrawingLayer(this); 
+		g.endDrawingLayer(this);
+		hasBeenDrawnOnce = true;
+	}
+ 
+
+	@Override
+	public final String getName() {
+		return name;
+	}
+
+	@Override
+	public final void setName(final String name) {
+		this.name = name;
+	} 
+
+	@Override
+	public void disableOn(final IDisplaySurface surface) { 
 	}
 
 	public static boolean launch = false;
@@ -54,8 +111,7 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 	public static LaunchpadClient client;
 
 	@Override
-	public void firstLaunchOn(final IDisplaySurface surface) {
-		super.firstLaunchOn(surface);
+	public void firstLaunchOn(final IDisplaySurface surface) { 
 		launch = true;
 		try {
 			System.out.println("LaunchPad launched");
@@ -71,8 +127,7 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 	}
 
 	@Override
-	public void dispose() {
-		super.dispose();
+	public void dispose() { 
 		try {
 			client.reset();
 			launchpad.close();
@@ -133,14 +188,7 @@ public class LaunchPadEventLayer extends AbstractLayer implements IEventLayerDel
 			pressedButton = button;
 		}
 	}
-
-	@Override
-	protected void privateDraw(final IScope scope, final IGraphics g) throws GamaRuntimeException {}
-
-	@Override
-	public void draw(final IScope scope, final IGraphics g) throws GamaRuntimeException {
-		getData().compute(scope, g);
-	}
+  
 
 	@Override
 	public boolean acceptSource(final IScope scope, final Object source) {
