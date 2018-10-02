@@ -14,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.MqttTopic;
 import com.thoughtworks.xstream.XStream;
 
 import msi.gama.common.interfaces.IKeyword;
+import msi.gama.extensions.messaging.GamaMessage;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.ILocation;
@@ -190,52 +191,35 @@ public class UnitySkill extends Skill {
 	@action ( 
 				name = "send_unity_message", 
 				args = { @arg ( 
-								name = "sender", 
-								type = IType.STRING, 
-								optional = false, 
-								doc = @doc("The sender")),
-						@arg ( 
 								name = "objectName", 
 								type = IType.STRING,
 								optional = false, 
 								doc = @doc("The game object name")),
 						@arg ( 
-								name = "attributes",
-								type = IType.MAP, 
+								name = "content", 
+								type = IType.NONE, 
 								optional = false, 
-								doc = @doc( "The attribute list and their values")),
-						@arg ( 
-								name = "topic", 
-								type = IType.STRING, 
-								optional = false, 
-								doc = @doc("The topic")) }, 
+								doc = @doc("The emessage content")) }, 
 				doc = @doc ( 
 							value = "The generic form of a message to send to Unity engine. ", 
 							returns = "true if it is in the base.", 
 							examples = { @example("") }))
 	public static Boolean sendUnityMqttMessage(final IScope scope) 
 	{
-		String sender = (String) scope.getArg("sender", IType.STRING);
+		String sender = (String) scope.getAgent().getName();
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
-		Map<String, String> attribute = (Map<String, String>) scope.getArg("attributs", IType.MAP);
-		String topic = (String) scope.getArg("topic", IType.STRING);
-
-		ArrayList<ItemAttributes> items = new ArrayList();
-		for (Map.Entry<?, ?> entry : attribute.entrySet()) {
-			ItemAttributes it = new ItemAttributes(entry.getKey(), entry.getValue());
-			items.add(it);
-		}
-
-		GamaUnityMessage messageUnity = new GamaUnityMessage(scope, sender, objectName, "Not set", objectName, items, topic, "content");
+		Object content = (Object) scope.getArg("content", IType.NONE);
+		
+		GamaMessage messageUnity = new GamaMessage(scope, sender, objectName, content);
 	
-	
-		 
 		final String stringMessage = getXStream(scope).toXML(messageUnity);
 		
 		allContent += "\n"+stringMessage;
-	
 		
-		final MqttTopic unityTopic = client.getTopic(topic);
+		DEBUG.LOG("The message is: ");
+		DEBUG.LOG(stringMessage);
+		
+		final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_MAIN);
 		try {
 			MqttMessage message = new MqttMessage();
 			message.setPayload(stringMessage.getBytes());
@@ -1012,6 +996,7 @@ public class UnitySkill extends Skill {
 	
 	
 	
+	/*
 	
 	@getter (IKeyword.SPEED)
 	public double getSpeed(final IAgent agent) {
@@ -1050,7 +1035,9 @@ public class UnitySkill extends Skill {
 		}	
 	}
 	
+	*/
 	
+	/*
 	
 	@setter (IKeyword.LOCATION)
 	public void setLocation(final IAgent agent, final ILocation p) {
@@ -1076,8 +1063,10 @@ public class UnitySkill extends Skill {
 				e.printStackTrace();
 			}
 		}
+	
 	}
 
+	
 	
 	@setter (UnitySkill.UNITY_ROTATION)
 	public void setRotation(final IAgent agent, final GamaPoint p) {
@@ -1103,6 +1092,8 @@ public class UnitySkill extends Skill {
 			}
 		}
 	}
+	
+	
 	
 	@setter (UnitySkill.UNITY_SCALE)
 	public void setScal(final IAgent agent, final ILocation p) {
@@ -1130,7 +1121,7 @@ public class UnitySkill extends Skill {
 		}
 	}
 
-
+*/
 	
 
 	
