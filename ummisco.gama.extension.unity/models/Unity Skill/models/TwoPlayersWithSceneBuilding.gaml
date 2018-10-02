@@ -101,9 +101,9 @@ species Player skills: [unity] {
 	bool isNewPosition <- false;					// if true, move the ball to a new position
 	bool isNewColor <- false; 						// if true, set a new color for the ball
 	int counter <- 0;
-	int x <- 0;
-	int y <- 0;
-	int z <- 0;
+	int newX <- 0;
+	int newY <- 0;
+	int newZ <- 0;
 	
 	int formIndex <- 0;
 	
@@ -115,9 +115,11 @@ species Player skills: [unity] {
 	int totalCount <-  15;
 	int updateCycle <- (self.name = "GamaAgent0" ? 4 : 6) ;
 	int updateCenter <- (self.name = "GamaAgent0" ? 6 : 9) ;
+	
 	init{
 		shape <- sphere(4);
 		//name <- playerName;
+	 	
 		do connectMqttClient(); 
 		
 		// subscribe (to unity engine) to get notifiyed by the object: Player, when its field: count of type: field,  is eaqual (operator ==) to 4 
@@ -126,6 +128,8 @@ species Player skills: [unity] {
 		// subscribe to the topic: notification, (Mqtt server) in order to receive notifications 
 		do subscribe_To_Topic topic: "notification";
 		name <- playerName;
+		
+	
 	}
 
 	aspect base {
@@ -137,10 +141,10 @@ species Player skills: [unity] {
 		isNewPosition <- true; 
 		isNewColor <- true;
 		isCenter <- false;
-		x <- rnd(-8, 8);
-		z <- rnd(-8, 8);
+		newX <- rnd(-8, 8);
+		newZ <- rnd(-8, 8);
 		formIndex <- rnd(0, 3);
-		speed <- rnd(10.0, 150.0);
+		speed <- rnd(150.0);
 	}
 	
 	reflex updateCenter when: cycle mod updateCenter = 0
@@ -153,11 +157,14 @@ species Player skills: [unity] {
 
 	reflex resetPositionToCenter when: isCenter 
 	{
-		int newX <- rnd(0,2);
-		int newZ <- rnd(0,2);
+		int nX <- rnd(0,2);
+		int nZ <- rnd(0,2);
 		
 		// Reset the Ball to the center scene center (not a move)
-		do setUnityPosition objectName: playerName position: {newX,0,newZ};
+		do setUnityPosition objectName: playerName position: {nX,0,nZ};
+		
+		//location <-{newX,0.5,newZ};
+		
 		isCenter <- false;
 	}
 
@@ -169,14 +176,14 @@ species Player skills: [unity] {
 		
 				
 		// Move the ball to the new position (not a position reset). The movement speed is specified too.
-		do unityMove objectName: playerName position: {x,y,z} speed: speed smoothMove: false;
+		do unityMove objectName: playerName position: {newX,newY,newZ} speed: speed smoothMove: false;
 		isNewPosition <- false;
-		
+		//location <-{x,y,z};
 		// Create new GameObject:
 		if (obstacleCounter < 4 and cycle > 10) {
 			obstacleCounter <- obstacleCounter + 1;
-			rgb colorRgb <- rgb(rnd(0,255),rgb(0,255),rgb(0,255));
-			do newUnityObject objectName: "Test_" + obstacleCounter type: (formList[formIndex]) color: colorRgb position: {x,1,z};
+			rgb colorRgb <- rnd_color(255);
+			do newUnityObject objectName: "Test_" + obstacleCounter type: (formList[formIndex]) color: colorRgb position: {newX,1,newZ};
 			write " Create New Object";
 		}
 	}
@@ -185,7 +192,7 @@ species Player skills: [unity] {
 	{
 		isNewColor <- false;
 		//Change the Ball's color to red
-		rgb colorR <- rgb(rnd(0,255),rgb(0,255),rgb(0,255));
+		rgb colorR <- rnd_color (255);
 		do setUnityColor objectName: playerName color: colorR;
 		write "message color topic sent! --> "+colorR;
 	}
@@ -219,11 +226,9 @@ species cubeAgent skills: [unity]
 	{
 
 		string objectName <- "";
-	 	int x <- rnd(-11,11);
-	 	int z <- rnd(-11,11);
-	 	int red <- rnd(0,255);
-	 	int green <- rnd(0,255);
-	 	int blue <- rnd(0,255);
+	 	int agX <- rnd(-11,11);
+	 	int agZ <- rnd(-11,11);
+	 	rgb colorEl <- rnd_color(255);
 	 	
 	 	bool instanceCreated <- false;
 	 	
@@ -231,9 +236,11 @@ species cubeAgent skills: [unity]
 		do connectMqttClient(); 
 		
 		objectName <- self.name;
-		do newUnityObject objectName: objectName type:"Cube" color:rgb(red,green,blue) position: {x,0.5,z};	
+		
+		
+		do newUnityObject objectName: objectName type:"Cube" color:colorEl position: {agX,1,agZ};	
 		do setUnityProperty objectName: objectName propertyName:"tag" propertyValue:"Pick Up";
-		location <-{x,0.5,z};
+		//location <-{x,1,z};
        	do setUnityProperty objectName: objectName propertyName:"isTrigger" propertyValue:true;		// setUnityProperty
        	
        	scale <- {1,1,1};
@@ -241,16 +248,18 @@ species cubeAgent skills: [unity]
        	speed <- 12.0;
 		
 		do setUnityFields objectName: objectName attributes: map<string, string>(["isRotate"::true]);
+		
+		instanceCreated <- true;
 		
 	}
 	
 	reflex createInstance when: !instanceCreated{
 		
 		instanceCreated <- true;
-		
-		do newUnityObject objectName: objectName type:"Cube" color:rgb(red,green,blue) position: {x,0.5,z};	
+	/* 	
+		do newUnityObject objectName: objectName type:"Cube" color:colorEl position: {x,1,z};	
 		do setUnityProperty objectName: objectName propertyName:"tag" propertyValue:"Pick Up";
-		location <-{x,0.5,z};
+		location <-{x,1,z};
        	do setUnityProperty objectName: objectName propertyName:"isTrigger" propertyValue:true;		// setUnityProperty
        	
        	scale <- {1,1,1};
@@ -258,6 +267,7 @@ species cubeAgent skills: [unity]
        	speed <- 12.0;
 		
 		do setUnityFields objectName: objectName attributes: map<string, string>(["isRotate"::true]);
+	*/
 	}
 	
 	
