@@ -1,6 +1,16 @@
 package markdownSyntactic;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -51,7 +61,8 @@ public class GenerateMDHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
 
-
+		String model="";
+		String exp="";
 		if (selection != null & selection instanceof IStructuredSelection) {
 
 			IStructuredSelection strucSelection = (IStructuredSelection) selection;
@@ -68,8 +79,8 @@ public class GenerateMDHandler extends AbstractHandler {
 					final Object[] result = dialog.getResult();
 					if (result.length == 1) {
 						final IResource res = (IResource) result[0];
+						model=res.getFullPath().toString();
 						System.out.println(res.getFullPath().toString());
-
 						final IGamaFileMetaData data = GAMA.getGui().getMetaDataProvider().getMetaData(res, false, true);
 						if (data != null && data instanceof GamlFileInfo) {
 							LabelProvider ss = new LabelProvider();
@@ -79,6 +90,7 @@ public class GenerateMDHandler extends AbstractHandler {
 							int rres = l.open();
 							if (rres == Window.OK) {
 								Object[] objs = l.getResult();
+								exp=objs[0].toString();
 								System.out.println(objs[0]);
 							} 
 						}
@@ -95,7 +107,7 @@ public class GenerateMDHandler extends AbstractHandler {
 					directorySelector
 							.setFilterPath(file_to_convert.getProject().getResource().getLocation().toOSString());
 					String selectedDirectoryName = directorySelector.open();
-					myJob = new JobDocumentationProject(((WrappedProject) o).getResource(), selectedDirectoryName);
+					myJob = new JobDocumentationProject(((WrappedProject) o).getResource(), selectedDirectoryName,model,exp);
 					myJob.schedule();
 				}
 				// else
