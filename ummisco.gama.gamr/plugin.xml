@@ -47,5 +47,11 @@
             name="Generate Markdown Documentation from GAML">
       </command>
    </extension>
+   <extension
+         point="gama.event_layer">
+      <implementation
+            class="markdownSyntactic.Launcher">
+      </implementation>
+   </extension>
 
 </plugin>
