@@ -18,6 +18,7 @@ public class SubscribeCallback implements MqttCallback {
 	public ArrayList<MqttMessage> mailBox = new ArrayList<MqttMessage>();
 	public ArrayList<MqttMessage> replayMailBox = new ArrayList<MqttMessage>();
 	public ArrayList<MqttMessage> notificationMailBox = new ArrayList<MqttMessage>();
+	public ArrayList<MqttMessage> createdMailBox = new ArrayList<MqttMessage>();
 
 	// @Override
 	public void connectionLost(Throwable cause) {
@@ -37,7 +38,10 @@ public class SubscribeCallback implements MqttCallback {
 		} else if (topic.equals(IUnitySkill.TOPIC_NOTIFICATION_RECEIVED)) {
 			notificationMailBox.add(message);
 			DEBUG.LOG("A notification has been recevied");
-		} else {
+		} else if (topic.equals(IUnitySkill.TOPIC_CREATED_AGENT)) {
+			createdMailBox.add(message);
+			DEBUG.LOG("A created agent message has been recevied");
+		}else {
 			mailBox.add(message);
 			DEBUG.LOG("Unknown message has been recevied");
 		}
