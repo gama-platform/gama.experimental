@@ -38,12 +38,13 @@ import msi.gama.util.GamaMap;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.dev.utils.DEBUG;
-
+import ummisco.gama.mqtt.external.connector.MQTTConnector;
 import ummisco.gama.serializer.factory.StreamConverter;
 import ummisco.gama.serializer.gamaType.converters.ConverterScope;
 import ummisco.gama.unity.data.type.rgbColor;
 import ummisco.gama.unity.messages.ColorTopicMessage;
 import ummisco.gama.unity.messages.CreateTopicMessage;
+import ummisco.gama.unity.messages.CreatedAgentMessage;
 import ummisco.gama.unity.messages.DestroyTopicMessage;
 import ummisco.gama.unity.messages.GamaUnityMessage;
 import ummisco.gama.unity.messages.GetTopicMessage;
@@ -118,6 +119,7 @@ public class UnitySkill extends Skill {
 	public static MqttClient client = null;
 	public static SubscribeCallback subscribeCallback = new SubscribeCallback();
 	
+	public static MQTTConnector connector;
 	
 
 	
@@ -913,7 +915,6 @@ public class UnitySkill extends Skill {
 	}
 
 	//TODO: Youcef-> Review this action with better description and genericity support. Action should return a pair "key"::value
-	
 	@action ( 
 			name = "get_unity_replay", 
 			doc = @doc(value = "Get the next received mqtt message.", 
@@ -970,6 +971,38 @@ public class UnitySkill extends Skill {
 		return false;
 	}
 	
+	
+	
+	
+
+	//TODO: Youcef-> Review this action with better description and genericity support
+	@action ( 
+			name = "newCreatedAgent", 
+			doc = @doc(value = "Check if there is a new created agent and return it's position and name", 
+			returns = "Check if there is a new created agent and return it's position and name", 
+			examples = { @example("") }))
+	public synchronized CreatedAgentMessage newCreatedAgent(final IScope scope) {
+		
+		DEBUG.LOG("subscribeCallback.createdMailBox.size()  is:  " + subscribeCallback.createdMailBox.size());
+		
+		if (subscribeCallback.createdMailBox.size() > 0) {
+
+			MqttMessage msg = subscribeCallback.createdMailBox.get(0); 
+			String message = msg.toString();
+			DEBUG.LOG("The received Message is : " + message);
+			final ConverterScope cScope = new ConverterScope(scope);
+			final XStream xstream = StreamConverter.loadAndBuild(cScope);
+			final CreatedAgentMessage notifMsg = (CreatedAgentMessage) xstream.fromXML(message);
+			subscribeCallback.createdMailBox.remove(0);
+			return notifMsg;
+
+		} else {
+			return null;
+		}
+	}
+	
+	
+
 
 	@action ( 
 			name = "getAllActionsMessage", 
