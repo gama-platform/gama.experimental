@@ -71,8 +71,8 @@ public class WebcamOperators {
 	public static void initEnv(final IScope scope) {
 		env = System.getProperty("java.library.path");
 		if(!env.contains("opencv_java2413")) {			
-//			String opencv_path = "D:\\GitHub\\experimental\\cict.gaml.extensions.VR\\lib\\x64";//\\opencv_java2413.dll
-			String opencv_path = "E:\\Downloads\\Programs\\ocv\\opencv\\build\\java\\x86";//\\opencv_java2413.dll
+			String opencv_path = "C:\\git\\gama.experimental\\cict.gaml.extensions.VR\\lib\\x64";//\\opencv_java2413.dll
+//			String opencv_path = "E:\\Downloads\\Programs\\ocv\\opencv\\build\\java\\x86";//\\opencv_java2413.dll
 			if(System.getProperty("os.name").startsWith("Windows")) {				
 				System.setProperty("java.library.path", opencv_path+ ";" + env);
 			}else {
@@ -108,6 +108,7 @@ public class WebcamOperators {
 //			wcam.setViewSize(size);
 			initEnv(scope);
 	        webSource = new VideoCapture(); 
+	        webSource.open(0);
 			scope.getSimulation().getExperiment().setAttribute("webcam",webSource);
 		}
 //		wcam=(Webcam) scope.getSimulation().getExperiment().getAttribute("webcam");
@@ -132,15 +133,10 @@ public class WebcamOperators {
         mem = new MatOfByte();
         faceDetections = new MatOfRect();
         webSource.retrieve(frame);
-        String path="E:\\haarcascade_frontalface_alt.xml";//WebcamOperators.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1);
+//        String path="D:\\haarcascade_frontalface_alt.xml";//
+        String path=WebcamOperators.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1);
         faceDetector = new CascadeClassifier(path);
         faceDetector.detectMultiScale(frame, faceDetections);
-        for (Rect rect : faceDetections.toArray()) {
-           // System.out.println("ttt");
-            Core.rectangle(frame, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height),
-                    new Scalar(0, 255,0));
-            System.out.println(rect.x +" "+ rect.width+" "+rect.y +" "+ rect.height);
-        }
         
 
         Highgui.imencode(".bmp", frame, mem);
@@ -148,6 +144,13 @@ public class WebcamOperators {
 		try {
 			im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
 			BufferedImage buff = (BufferedImage) im;
+			for (Rect rect : faceDetections.toArray()) {
+				// System.out.println("ttt");
+				Core.rectangle(frame, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height),
+						new Scalar(0, 255,0));
+				System.out.println(rect.x +" "+ rect.width+" "+rect.y +" "+ rect.height);
+				buff.getGraphics().drawRect(rect.x , rect.y, rect.width,rect.height);
+			}
 			GamaImageFile gif=new GamaImageFile(scope, varName, matrixValueFromImage(scope, buff, null));
 			return  gif;
 		} catch (IOException e) {
