@@ -34,6 +34,7 @@ public interface IUnitySkill {
 	public final static String TOPIC_NOTIFICATION = "subscribeToNotification";
 	
 	public final static String TOPIC_NOTIFICATION_RECEIVED = "notification";
+	public final static String TOPIC_CREATED_AGENT = "created";
 	
 	
 	// scene manipulation topics
