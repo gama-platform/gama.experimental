@@ -1,8 +1,10 @@
 package ummisco.gama.unity.skills;
 
 import java.util.ArrayList;
-
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -10,22 +12,17 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
-
 import com.thoughtworks.xstream.XStream;
 
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.extensions.messaging.GamaMessage;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.ILocation;
-import msi.gama.metamodel.topology.ITopology;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
@@ -35,18 +32,15 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaMap;
-import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.dev.utils.DEBUG;
-import ummisco.gama.mqtt.external.connector.MQTTConnector;
+import ummisco.gama.network.skills.NetworkSkill;
 import ummisco.gama.serializer.factory.StreamConverter;
 import ummisco.gama.serializer.gamaType.converters.ConverterScope;
 import ummisco.gama.unity.data.type.rgbColor;
 import ummisco.gama.unity.messages.ColorTopicMessage;
 import ummisco.gama.unity.messages.CreateTopicMessage;
-import ummisco.gama.unity.messages.CreatedAgentMessage;
 import ummisco.gama.unity.messages.DestroyTopicMessage;
-import ummisco.gama.unity.messages.GamaUnityMessage;
 import ummisco.gama.unity.messages.GetTopicMessage;
 import ummisco.gama.unity.messages.ItemAttributes;
 import ummisco.gama.unity.messages.MonoActionTopicMessage;
@@ -58,6 +52,7 @@ import ummisco.gama.unity.messages.PositionTopicMessage;
 import ummisco.gama.unity.messages.PropertyTopicMessage;
 import ummisco.gama.unity.messages.ReplayMessage;
 import ummisco.gama.unity.messages.SetTopicMessage;
+import ummisco.gama.unity.messages.littosimMessage;
 import ummisco.gama.unity.mqtt.SubscribeCallback;
 import ummisco.gama.unity.mqtt.Utils;
 
@@ -93,15 +88,18 @@ import ummisco.gama.unity.mqtt.Utils;
 				doc = @doc ("Represents the speed of the agent (in meter/second)")),
 	})
 @skill(name = UnitySkill.SKILL_NAME, concept = { IConcept.NETWORK, IConcept.COMMUNICATION, IConcept.SKILL })
-public class UnitySkill extends Skill {
+public class UnitySkill extends NetworkSkill {
 	
 	public static String allContent = "";
 	static {
 		DEBUG.OFF();	
 	}
 
-	public static final String BROKER_URL = "tcp://localhost:1883";
-	//public static final String BROKER_URL = "tcp://iot.eclipse.org:1883";
+	//public static final String BROKER_URL = "tcp://localhost:1883";
+	public static final String BROKER_URL = "tcp://195.221.248.15:1935";
+	public static String DEFAULT_USER = "gama_demo";
+	public static String DEFAULT_PASSWORD = "gama_demo";
+
 	
 	
 	
@@ -110,18 +108,16 @@ public class UnitySkill extends Skill {
 	public static final String UNITY_ROTATION = "rotation";
 	public static final String UNITY_SCALE = "scale";
 	
-	//public static final String BROKER_URL = "tcp://195.221.248.15:1935";
-	//public static final String DEFAULT_PASSWORD = "gama_demo";
-	//public static final String DEFAULT_USER = "gama_demo";
+
 	
 	public static final MqttConnectOptions options = new MqttConnectOptions();
 
 	public static MqttClient client = null;
 	public static SubscribeCallback subscribeCallback = new SubscribeCallback();
 	
-	public static MQTTConnector connector;
+	public static MQTTConnectorUnity connector; 
 	
-
+	
 	
 	
 	// @Override
@@ -137,37 +133,18 @@ public class UnitySkill extends Skill {
 						returns = "The client generated identifier.", 
 						examples = { @example("") }))
 	public static String connectMqttClient(final IScope scope) {
+		connector = new MQTTConnectorUnity(scope);
+		
 		String clientId = Utils.getMacAddress() + "-" + scope.getAgent().getName() + "-pub";
-		
-		
+				
 		DEBUG.LOG("The agent Name is  "+scope.getAgent().getName());
 		
-		
+			
 		try {
 			client = new MqttClient(BROKER_URL, clientId);
+			options.setUserName(DEFAULT_USER);
+			options.setPassword(DEFAULT_PASSWORD.toCharArray());
 			options.setCleanSession(true);
-		//	options.setPassword(DEFAULT_PASSWORD.toCharArray());
-		//	options.setUserName(DEFAULT_USER);
-			
-			
-			
-		//	final MqttConnectOptions connOpts = new MqttConnectOptions();
-		//	connOpts.setCleanSession(true);
-			//subscribeCallback = new SubscribeCallback();
-			//client.setCallback(subscribeCallback);
-			//connOpts.setCleanSession(true);
-			//connOpts.setKeepAliveInterval(30);
-			//client.connect(connOpts);
-			
-			
-			
-			
-		//	
-		//	public static String DEFAULT_LOCAL_NAME = "gama-" + Calendar.getInstance().getTimeInMillis() + "@";
-		//	
-			
-			
-		//	options.setWill(client.getTopic("home/LWT"), "I'm gone :(".getBytes(), 0, false);
 			client.connect(options);
 			DEBUG.LOG("Client : " + clientId + " connected with success!");
 		} catch (MqttException e) {
@@ -189,7 +166,6 @@ public class UnitySkill extends Skill {
 	}
 	
 	
-	//TODO: Youcef-> Review this action to remove some attributes, make it more generic and fix data structure issues
 	@action ( 
 				name = "send_unity_message", 
 				args = { @arg ( 
@@ -236,8 +212,8 @@ public class UnitySkill extends Skill {
 		
 		return false;
 	}
-
 	
+
 	//TODO: Youcef-> Review this action with better description and genericity support
 	@action(
 			name = "getUnityField", 
@@ -913,7 +889,47 @@ public class UnitySkill extends Skill {
 	public synchronized String getUnityMessage(final IScope scope) {
 		return subscribeCallback.getNextMessage();
 	}
+	
+	
+	
+	//TODO 
+		@action ( 
+				name = "clearTopic",
+				args = {@arg ( 
+							name = "topic", 
+							type = IType.STRING, 
+							optional = false, 
+							doc = @doc("Topic Name")) }, 
+				doc = @doc(value = "Clear the topic messages", 
+				returns = "nothing.", 
+				examples = { @example("") }))
+		public synchronized void clearTopic(final IScope scope) {
+			final String topic = (String) scope.getArg("topic", IType.STRING);
+		/*	
+			 final MqttTopic unityTopic = client.getTopic(topic);
+				try {
+					MqttMessage message = new MqttMessage(new byte[0]);
+					message.setRetained(true);
+					unityTopic.publish(message);
+					//client.publish(topic, new byte[0],0,true);
+				} catch (MqttPersistenceException e) {
+					e.printStackTrace();
+				} catch (MqttException e) {
+					e.printStackTrace();
+				}
+			*/	
+			try {
+				DEBUG.LOG("-------------------------------------------------------------------------------> Topic to clear is "+topic);
+				subscribeCallback.clearTopicMessages(topic);
+				} catch (Exception e1) { e1.printStackTrace(); }
+					 
+		}
 
+		
+		
+		
+		
+		
 	//TODO: Youcef-> Review this action with better description and genericity support. Action should return a pair "key"::value
 	@action ( 
 			name = "get_unity_replay", 
@@ -973,33 +989,62 @@ public class UnitySkill extends Skill {
 	
 	
 	
-	
 
 	//TODO: Youcef-> Review this action with better description and genericity support
 	@action ( 
-			name = "newCreatedAgent", 
+			name = "getLittosimMessage", 
 			doc = @doc(value = "Check if there is a new created agent and return it's position and name", 
 			returns = "Check if there is a new created agent and return it's position and name", 
 			examples = { @example("") }))
-	public synchronized CreatedAgentMessage newCreatedAgent(final IScope scope) {
+	public synchronized Map<String, String> getLittosimMessage(final IScope scope) {
+	
+		Map<String, String> messageReceived = null ; 
 		
-		DEBUG.LOG("subscribeCallback.createdMailBox.size()  is:  " + subscribeCallback.createdMailBox.size());
+		DEBUG.LOG("subscribeCallback.littosimMailBox.size()  is:  " + subscribeCallback.littosimMailBox.size());
 		
-		if (subscribeCallback.createdMailBox.size() > 0) {
+		if (subscribeCallback.littosimMailBox.size() > 0) {
 
-			MqttMessage msg = subscribeCallback.createdMailBox.get(0); 
+			MqttMessage msg = subscribeCallback.littosimMailBox.get(0); 
 			String message = msg.toString();
 			DEBUG.LOG("The received Message is : " + message);
 			final ConverterScope cScope = new ConverterScope(scope);
 			final XStream xstream = StreamConverter.loadAndBuild(cScope);
-			final CreatedAgentMessage notifMsg = (CreatedAgentMessage) xstream.fromXML(message);
-			subscribeCallback.createdMailBox.remove(0);
-			return notifMsg;
+			final littosimMessage notifMsg = (littosimMessage) xstream.fromXML(message);
+			subscribeCallback.littosimMailBox.remove(0);
+			
+			messageReceived = notifMsg.getMapMsg();
+			
+			return messageReceived;
 
 		} else {
 			return null;
 		}
 	}
+	
+	
+	//TODO: Youcef-> Review this action with better description and genericity support
+		@operator ( 
+				value = "hasMoreMessageOnTopic", 
+				doc = { @doc("Check if there are more messages on a specific topic") }, 
+				category = { IOperatorCategory.LOGIC })
+		public static synchronized boolean hasMoreMessageOnTopic(final IScope scope, String topic) {
+			
+			switch (topic) {
+				case IUnitySkill.TOPIC_REPLAY:
+					if(subscribeCallback.replayMailBox.size()>0) {return true;}
+					break;
+				case IUnitySkill.TOPIC_NOTIFICATION:
+					if(subscribeCallback.notificationMailBox.size()>0) {return true;}
+					break;
+				case IUnitySkill.TOPIC_LITTOSIM:
+					if(subscribeCallback.littosimMailBox.size()>0) {return true;}
+					break;
+				default :
+					if(subscribeCallback.mailBox.size()>0) {return true;}
+					break;
+			}
+			return false;
+		}
 	
 	
 
