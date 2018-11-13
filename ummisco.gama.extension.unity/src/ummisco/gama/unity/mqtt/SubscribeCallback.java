@@ -18,7 +18,7 @@ public class SubscribeCallback implements MqttCallback {
 	public ArrayList<MqttMessage> mailBox = new ArrayList<MqttMessage>();
 	public ArrayList<MqttMessage> replayMailBox = new ArrayList<MqttMessage>();
 	public ArrayList<MqttMessage> notificationMailBox = new ArrayList<MqttMessage>();
-	public ArrayList<MqttMessage> createdMailBox = new ArrayList<MqttMessage>();
+	public ArrayList<MqttMessage> littosimMailBox = new ArrayList<MqttMessage>();
 
 	// @Override
 	public void connectionLost(Throwable cause) {
@@ -32,15 +32,16 @@ public class SubscribeCallback implements MqttCallback {
 	// @Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
 		DEBUG.LOG("Message arrived. Topic: " + topic + "  Message: " + message.toString());
+		//if(!message.isRetained())
 		if (topic.equals(IUnitySkill.TOPIC_REPLAY)) {
 			replayMailBox.add(message);
 			DEBUG.LOG("A replay has been recevied");
 		} else if (topic.equals(IUnitySkill.TOPIC_NOTIFICATION_RECEIVED)) {
 			notificationMailBox.add(message);
 			DEBUG.LOG("A notification has been recevied");
-		} else if (topic.equals(IUnitySkill.TOPIC_CREATED_AGENT)) {
-			createdMailBox.add(message);
-			DEBUG.LOG("A created agent message has been recevied");
+		} else if (topic.equals(IUnitySkill.TOPIC_LITTOSIM)) {
+			littosimMailBox.add(message);
+			DEBUG.LOG("A littoSIM message has been recevied");
 		}else {
 			mailBox.add(message);
 			DEBUG.LOG("Unknown message has been recevied");
@@ -80,6 +81,25 @@ public class SubscribeCallback implements MqttCallback {
 		}
 	}
 
+	
+	public void clearAllMessages() {
+		 mailBox.clear();
+		 replayMailBox.clear();
+		 notificationMailBox.clear();
+		 littosimMailBox.clear();
+	}
+	
+	public void clearTopicMessages(String topic) throws Exception {
+		if (topic.equals(IUnitySkill.TOPIC_REPLAY)) {
+			replayMailBox.clear();
+		} else if (topic.equals(IUnitySkill.TOPIC_NOTIFICATION_RECEIVED)) {
+			notificationMailBox.clear();
+		} else if (topic.equals(IUnitySkill.TOPIC_LITTOSIM)) {
+			littosimMailBox.clear();
+		}else if (topic.equals(IUnitySkill.TOPIC_MAIN)) {
+			mailBox.clear();
+		}
+	}
 	// @Override
 
 	@Override
