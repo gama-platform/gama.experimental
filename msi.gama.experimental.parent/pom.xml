@@ -179,6 +179,7 @@
  <module>../femto.st.gama.hpc</module> 
  <module>../femto.st.gama.mpi</module> 
  <module>../genstar.gamaplugin</module> 
+ <module>../genstar.gamaplugin.feature</module> 
  <module>../idees.gama.features.weka</module> 
  <module>../idees.gama.weka</module> 
  <module>../miat.gama.extension.ifcfile</module> 
