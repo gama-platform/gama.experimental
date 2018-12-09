@@ -211,10 +211,16 @@ Export-Package:
  jogamp.opengl.windows.wgl,
  jogamp.opengl.windows.wgl.awt,
  jogamp.opengl.x11.glx,
+ ummisco.gama.modernOpenGL,
+ ummisco.gama.modernOpenGL.font.fontMeshCreator,
+ ummisco.gama.modernOpenGL.shader,
+ ummisco.gama.modernOpenGL.shader.postprocessing,
  ummisco.gama.opengl,
  ummisco.gama.opengl.camera,
  ummisco.gama.opengl.files,
- ummisco.gama.opengl.scene
+ ummisco.gama.opengl.scene,
+ ummisco.gama.opengl.utils,
+ ummisco.gama.opengl.vaoGenerator
 Bundle-ClassPath: .,
  jogamp-fat.jar
 Bundle-Vendor: UMMISCO
