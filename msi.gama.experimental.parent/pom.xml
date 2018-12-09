@@ -131,11 +131,6 @@
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
-			<artifactId>ummisco.gama.ui.experiment</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>msi.gama</groupId>
 			<artifactId>ummisco.gama.ui.shared</artifactId>
 			<version>1.7.0-SNAPSHOT</version>
 		</dependency>
