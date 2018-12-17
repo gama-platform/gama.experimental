@@ -51,6 +51,7 @@ import ummisco.gama.opengl.camera.FreeFlyCamera;
 import ummisco.gama.opengl.camera.ICamera;
 import ummisco.gama.opengl.scene.AbstractObject;
 import ummisco.gama.opengl.scene.ModelScene;
+import ummisco.gama.opengl.scene.ObjectDrawer;
 import ummisco.gama.opengl.scene.OpenGL;
 import ummisco.gama.opengl.scene.SceneBuffer;
 import ummisco.gama.opengl.utils.LightHelper;
@@ -388,6 +389,11 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	// END HELPERS
 
+	@SuppressWarnings ("rawtypes")
+	public ObjectDrawer getDrawerFor(final AbstractObject.DrawerType type) {
+		return null;
+	}
+
 	public double getCurrentZRotation() {
 		return data.getCurrentRotationAboutZ();
 	}
@@ -409,6 +415,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 		if (shape == null) { return null; }
 		if (sceneBuffer.getSceneToUpdate() == null) { return null; }
 		tryToHighlight(attributes);
+		sceneBuffer.getSceneToUpdate().addGeometry(shape, attributes);
 		return rect;
 	}
 
@@ -423,6 +430,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 	@Override
 	public Rectangle2D drawImage(final BufferedImage img, final FileDrawingAttributes attributes) {
 		if (sceneBuffer.getSceneToUpdate() == null) { return null; }
+		sceneBuffer.getSceneToUpdate().addImage(img, attributes);
 		tryToHighlight(attributes);
 		if (attributes.getBorder() != null) {
 			drawGridLine(new GamaPoint(img.getWidth(), img.getHeight()), attributes.getBorder());
@@ -450,6 +458,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 				final Geometry g = GamaGeometryType
 						.buildRectangle(cellWidth, cellHeight, new GamaPoint(stepX * cellWidth, stepY * cellHeight))
 						.getInnerGeometry();
+				sceneBuffer.getSceneToUpdate().addGeometry(g, attributes);
 			}
 		}
 	}
@@ -591,7 +600,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 			// get the value of the z scale if positive otherwise set it to 1.
 			double z_scale=1;
-//			if (layer.getDefinition().getExtent().getZ() > 0) {
+//			if (layer.getExtent().getZ() > 0) {
 //				z_scale = layer.getExtent().getZ();
 //			} else {
 //				z_scale = 1;
@@ -630,5 +639,14 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 	public abstract void beginPicking();
 
 	public abstract void endPicking();
- 
+
+//	@Override
+	public int getWidthForOverlay() {
+		return getViewWidth();
+	}
+
+//	@Override
+	public int getHeightForOverlay() {
+		return getViewHeight();
+	}
 }
