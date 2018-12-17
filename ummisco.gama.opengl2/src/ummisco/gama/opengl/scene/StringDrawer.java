@@ -14,7 +14,7 @@ import java.awt.Font;
 import com.jogamp.opengl.util.gl2.GLUT;
 
 import msi.gama.metamodel.shape.GamaPoint;
-import ummisco.gama.opengl.JOGLRenderer;
+import ummisco.gama.opengl.Abstract3DRenderer;
 
 /**
  *
@@ -27,7 +27,7 @@ import ummisco.gama.opengl.JOGLRenderer;
 
 public class StringDrawer extends ObjectDrawer<StringObject> {
 
-	public StringDrawer(final JOGLRenderer r) {
+	public StringDrawer(final Abstract3DRenderer r) {
 		super(r);
 	}
 

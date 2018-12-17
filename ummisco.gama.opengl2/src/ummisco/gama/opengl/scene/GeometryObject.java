@@ -19,7 +19,7 @@ import msi.gama.util.GamaColor;
 import msi.gama.util.file.GamaGeometryFile;
 import msi.gaml.statements.draw.DrawingAttributes;
 import msi.gaml.statements.draw.ShapeDrawingAttributes;
-import ummisco.gama.opengl.JOGLRenderer;
+import ummisco.gama.opengl.Abstract3DRenderer;
 
 public class GeometryObject extends AbstractObject {
 
@@ -45,7 +45,7 @@ public class GeometryObject extends AbstractObject {
 
 	// Package protected as it is only used by the static layers
 	GeometryObject(final IShape geometry, final GamaColor color, final IShape.Type type, final boolean empty) {
-		this(geometry, color, type, JOGLRenderer.getLineWidth());
+		this(geometry, color, type, Abstract3DRenderer.getLineWidth());
 		attributes.setEmpty(empty);
 		attributes.setHeight(geometry.getDepth());
 	}

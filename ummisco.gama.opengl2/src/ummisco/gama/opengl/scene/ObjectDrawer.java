@@ -9,13 +9,13 @@
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
 
-import ummisco.gama.opengl.JOGLRenderer;
+import ummisco.gama.opengl.Abstract3DRenderer;
 
 public abstract class ObjectDrawer<T extends AbstractObject> {
 
 	final OpenGL gl;
 
-	public ObjectDrawer(final JOGLRenderer r) {
+	public ObjectDrawer(final Abstract3DRenderer r) {
 		gl = r.getOpenGLHelper();
 	}
 
