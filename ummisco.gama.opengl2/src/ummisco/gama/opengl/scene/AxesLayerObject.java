@@ -22,7 +22,7 @@ import msi.gama.util.GamaFont;
 import msi.gaml.statements.draw.TextDrawingAttributes;
 import msi.gaml.types.GamaGeometryType;
 import ummisco.gama.opengl.Abstract3DRenderer;
-import ummisco.gama.opengl.JOGLRenderer;
+//import ummisco.gama.opengl.JOGLRenderer;
 
 public class AxesLayerObject extends StaticLayerObject.World {
 
@@ -61,7 +61,7 @@ public class AxesLayerObject extends StaticLayerObject.World {
 
 				// build axis
 				list.add(new GeometryObject(GamaGeometryType.buildLine(origin, p), COLORS[i], IShape.Type.LINESTRING,
-						2 * JOGLRenderer.getLineWidth()));
+						2 * Abstract3DRenderer.getLineWidth()));
 
 				// build labels
 				final GamaFont font = new GamaFont("Helvetica", 0, 18); // 0 for plain, 18 for text size.

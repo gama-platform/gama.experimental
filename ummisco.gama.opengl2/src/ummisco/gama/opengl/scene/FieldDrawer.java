@@ -23,7 +23,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import msi.gama.common.geometry.GeometryUtils;
 import msi.gama.common.geometry.ICoordinates;
 import msi.gama.metamodel.shape.GamaPoint;
-import ummisco.gama.opengl.JOGLRenderer;
+import ummisco.gama.opengl.Abstract3DRenderer;
 
 /**
  *
@@ -40,7 +40,7 @@ public class FieldDrawer extends ObjectDrawer<FieldObject> {
 	final ICoordinates fivePoints = GeometryUtils.GEOMETRY_FACTORY.getCoordinateSequenceFactory().create(5, 3);
 	final ICoordinates fourPoints = GeometryUtils.GEOMETRY_FACTORY.getCoordinateSequenceFactory().create(4, 3);
 
-	public FieldDrawer(final JOGLRenderer r) {
+	public FieldDrawer(final Abstract3DRenderer r) {
 		super(r);
 	}
 
