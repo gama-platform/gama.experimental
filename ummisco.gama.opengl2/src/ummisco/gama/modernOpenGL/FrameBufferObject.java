@@ -84,7 +84,7 @@ public class FrameBufferObject {
 		// generate name for frame buffer
 		gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, frameBufferArray[0]);
 		// create the framebuffer
-//		gl.glDrawBuffer(GL2.GL_COLOR_ATTACHMENT0);
+		gl.glDrawBuffer(GL2.GL_COLOR_ATTACHMENT0);
 		// indicate that we will always render to color attachment 0
 		return frameBufferArray[0];
 	}

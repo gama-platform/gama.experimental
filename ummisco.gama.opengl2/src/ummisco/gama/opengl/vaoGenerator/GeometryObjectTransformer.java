@@ -20,7 +20,6 @@ import msi.gama.common.geometry.Scaling3D;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
 import ummisco.gama.modernOpenGL.DrawingEntity;
-import ummisco.gama.opengl.scene.GeometryObject;
 import ummisco.gama.opengl.utils.Utils;
 
 /*
@@ -34,83 +33,83 @@ class GeometryObjectTransformer extends AbstractTransformer {
 	}
 
 	@SuppressWarnings ({ "unchecked", "rawtypes" })
-	public GeometryObjectTransformer(final GeometryObject geomObj, final int[] textureIds,
-			final boolean isLightInteraction, /* final String[] texturePaths, */ final boolean isOverlay,
-			final boolean isTriangulation, final double layerAlpha) {
-		// for GeometryObject
-		genericInit(geomObj, isOverlay, isTriangulation, layerAlpha);
-
-		this.colors = geomObj.getColors();
-		if (colors == null || colors.length < 3)
-			colors = null;
-		else
-			colors = Arrays.copyOfRange(colors, 2, colors.length);
-		this.isLightInteraction = isLightInteraction && !is1DShape() && !isWireframe;
-
-		this.textureIDs = textureIds;
-		// this.texturePaths = texturePaths;
-		this.type = geomObj.getType();
-
-		coordsWithDoublons = geomObj.getGeometry().getCoordinates();
-
-		this.size = getObjSize(geomObj);
-		cancelTransformation();
-
-		// the last coordinate is the same as the first one, no need for this
-		this.coordinates = Arrays.copyOf(coordsWithDoublons, coordsWithDoublons.length - 1);
-
-		if (!ShapeCache.isLoaded(getHashCode())) {
-
-			if (is1DShape()) {
-				// special case for 1D shape : no repetition of vertex
-				coordinates = coordsWithDoublons;
-				build1DShape();
-			} else if (isPolyplan()) {
-				// special case for plan/polyplan : no repetition of vertex
-				coordinates = coordsWithDoublons;
-				buildPolyplan();
-			} else if (isPyramid()) {
-				buildBottomFace();
-				buildPyramidSummit();
-				buildLateralFaces();
-			} else if (isSphere()) {
-				buildSphere();
-			} else {
-				// case of standard geometry : a standard geometry is a geometry
-				// which can be build with
-				// a bottom face and a top face, linked with some lateral faces.
-				// In case the standard
-				// geometry is a 2D shape, we only build the top face.
-				if (depth > 0) {
-					// 3D shape
-					buildBottomFace();
-					buildTopFace();
-					buildLateralFaces();
-				} else {
-					// 2D shape
-					buildTopFace();
-				}
-			}
-
-			if (!is1DShape()) {
-				initBorders();
-				if (!isWireframe)
-					applySmoothShading();
-				if (!isWireframe)
-					computeNormals();
-				computeUVMapping();
-				if (!isWireframe)
-					triangulate();
-				correctBorders();
-			}
-
-			ShapeCache.preloadShape(getHashCode(), new GeometryObjectTransformer(this));
-
-		} else {
-			loadManyFacedShape(ShapeCache.loadShape(getHashCode()));
-		}
-		applyTransformation();
-	}
+//	public GeometryObjectTransformer(final GeometryObject geomObj, final int[] textureIds,
+//			final boolean isLightInteraction, /* final String[] texturePaths, */ final boolean isOverlay,
+//			final boolean isTriangulation, final double layerAlpha) {
+//		// for GeometryObject
+//		genericInit(geomObj, isOverlay, isTriangulation, layerAlpha);
+//
+//		this.colors = geomObj.getColors();
+//		if (colors == null || colors.length < 3)
+//			colors = null;
+//		else
+//			colors = Arrays.copyOfRange(colors, 2, colors.length);
+//		this.isLightInteraction = isLightInteraction && !is1DShape() && !isWireframe;
+//
+//		this.textureIDs = textureIds;
+//		// this.texturePaths = texturePaths;
+//		this.type = geomObj.getType();
+//
+//		coordsWithDoublons = geomObj.getGeometry().getCoordinates();
+//
+//		this.size = getObjSize(geomObj);
+//		cancelTransformation();
+//
+//		// the last coordinate is the same as the first one, no need for this
+//		this.coordinates = Arrays.copyOf(coordsWithDoublons, coordsWithDoublons.length - 1);
+//
+//		if (!ShapeCache.isLoaded(getHashCode())) {
+//
+//			if (is1DShape()) {
+//				// special case for 1D shape : no repetition of vertex
+//				coordinates = coordsWithDoublons;
+//				build1DShape();
+//			} else if (isPolyplan()) {
+//				// special case for plan/polyplan : no repetition of vertex
+//				coordinates = coordsWithDoublons;
+//				buildPolyplan();
+//			} else if (isPyramid()) {
+//				buildBottomFace();
+//				buildPyramidSummit();
+//				buildLateralFaces();
+//			} else if (isSphere()) {
+//				buildSphere();
+//			} else {
+//				// case of standard geometry : a standard geometry is a geometry
+//				// which can be build with
+//				// a bottom face and a top face, linked with some lateral faces.
+//				// In case the standard
+//				// geometry is a 2D shape, we only build the top face.
+//				if (depth > 0) {
+//					// 3D shape
+//					buildBottomFace();
+//					buildTopFace();
+//					buildLateralFaces();
+//				} else {
+//					// 2D shape
+//					buildTopFace();
+//				}
+//			}
+//
+//			if (!is1DShape()) {
+//				initBorders();
+//				if (!isWireframe)
+//					applySmoothShading();
+//				if (!isWireframe)
+//					computeNormals();
+//				computeUVMapping();
+//				if (!isWireframe)
+//					triangulate();
+//				correctBorders();
+//			}
+//
+//			ShapeCache.preloadShape(getHashCode(), new GeometryObjectTransformer(this));
+//
+//		} else {
+//			loadManyFacedShape(ShapeCache.loadShape(getHashCode()));
+//		}
+//		applyTransformation();
+//	}
 
 	@Override
 	protected void correctBorders() {
@@ -183,35 +182,35 @@ class GeometryObjectTransformer extends AbstractTransformer {
 		}
 	}
 
-	protected GamaPoint getObjSize(final GeometryObject geomObj) {
-		float minX = Float.MAX_VALUE;
-		float maxX = -Float.MAX_VALUE;
-		float minY = Float.MAX_VALUE;
-		float maxY = -Float.MAX_VALUE;
-		final Coordinate[] coordinates = geomObj.getGeometry().getCoordinates();
-		for (int i = 0; i < coordinates.length; i++) {
-			if (coordinates[i].x < minX)
-				minX = (float) coordinates[i].x;
-			if (coordinates[i].x > maxX)
-				maxX = (float) coordinates[i].x;
-			if (coordinates[i].y < minY)
-				minY = (float) coordinates[i].y;
-			if (coordinates[i].y > maxY)
-				maxY = (float) coordinates[i].y;
-		}
-		float XSize = (maxX - minX) / 2 == 0 ? 1 : (maxX - minX) / 2;
-		float YSize = (maxY - minY) / 2 == 0 ? 1 : (maxY - minY) / 2;
-		float ZSize = this.depth == 0 ? 1 : (float) this.depth;
-
-		final Scaling3D attrSize = MoreObjects.firstNonNull(geomObj.getDimensions(), Scaling3D.of(1));
-
-		if (isSphere()) {
-			final float realSize = Math.max(YSize, XSize);
-			XSize = YSize = ZSize = realSize;
-		}
-
-		return new GamaPoint(attrSize.getX() * XSize, attrSize.getY() * YSize, attrSize.getZ() * ZSize);
-	}
+//	protected GamaPoint getObjSize(final GeometryObject geomObj) {
+//		float minX = Float.MAX_VALUE;
+//		float maxX = -Float.MAX_VALUE;
+//		float minY = Float.MAX_VALUE;
+//		float maxY = -Float.MAX_VALUE;
+//		final Coordinate[] coordinates = geomObj.getGeometry().getCoordinates();
+//		for (int i = 0; i < coordinates.length; i++) {
+//			if (coordinates[i].x < minX)
+//				minX = (float) coordinates[i].x;
+//			if (coordinates[i].x > maxX)
+//				maxX = (float) coordinates[i].x;
+//			if (coordinates[i].y < minY)
+//				minY = (float) coordinates[i].y;
+//			if (coordinates[i].y > maxY)
+//				maxY = (float) coordinates[i].y;
+//		}
+//		float XSize = (maxX - minX) / 2 == 0 ? 1 : (maxX - minX) / 2;
+//		float YSize = (maxY - minY) / 2 == 0 ? 1 : (maxY - minY) / 2;
+//		float ZSize = this.depth == 0 ? 1 : (float) this.depth;
+//
+//		final Scaling3D attrSize = MoreObjects.firstNonNull(geomObj.getDimensions(), Scaling3D.of(1));
+//
+//		if (isSphere()) {
+//			final float realSize = Math.max(YSize, XSize);
+//			XSize = YSize = ZSize = realSize;
+//		}
+//
+//		return new GamaPoint(attrSize.getX() * XSize, attrSize.getY() * YSize, attrSize.getZ() * ZSize);
+//	}
 
 	private void loadManyFacedShape(final GeometryObjectTransformer geomObj) {
 		faces = geomObj.faces;

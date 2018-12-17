@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.DoubleBuffer;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -33,11 +34,11 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2GL3;
 import com.jogamp.opengl.GLException;
-import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUtessellatorCallback;
@@ -68,8 +69,6 @@ import msi.gaml.operators.Maths;
 import msi.gaml.statements.draw.DrawingAttributes;
 import ummisco.gama.opengl.Abstract3DRenderer;
 import ummisco.gama.opengl.Abstract3DRenderer.PickingState;
-import ummisco.gama.opengl.GeometryCache;
-import ummisco.gama.opengl.GeometryCache.BuiltInGeometry; 
 import ummisco.gama.opengl.TextRenderersCache;
 
 /**
@@ -133,7 +132,7 @@ public class OpenGL {
 	protected final TextRenderersCache textRendererCache = new TextRenderersCache();
 
 	// Geometries
-	protected final GeometryCache geometryCache;
+//	protected final GeometryCache geometryCache;
 	protected boolean isWireframe;
 	final GLUtessellatorImpl tobj = (GLUtessellatorImpl) GLU.gluNewTess();
 	final VertexVisitor glTesselatorDrawer;
@@ -160,10 +159,7 @@ public class OpenGL {
 		worldX = renderer.getEnvWidth();
 		worldY = renderer.getEnvHeight();
 		pickingState = renderer.getPickingState();
-//		if (renderer instanceof JOGLRenderer)
-//			geometryCache = new GeometryCache((JOGLRenderer) renderer);
-//		else
-			geometryCache = null;
+//			geometryCache = null;
 		volatileTextures = CacheBuilder.newBuilder().build(new CacheLoader<BufferedImage, Texture>() {
 
 			@Override
@@ -202,8 +198,8 @@ public class OpenGL {
 
 	public void dispose() {
 		textRendererCache.dispose();
-		if (geometryCache != null)
-			geometryCache.dispose(gl);
+//		if (geometryCache != null)
+//			geometryCache.dispose(gl);
 		volatileTextures.invalidateAll();
 		staticTextures.asMap().forEach((s, t) -> {
 			t.destroy(gl);
@@ -711,8 +707,13 @@ public class OpenGL {
 	}
 
 	private static Texture buildTexture(final GL gl, final File file) {
-		final BufferedImage im = ImageUtils.getInstance().getImageFromFile(file, true, true);
-		return buildTexture(gl, im);
+		try {
+			final BufferedImage im = ImageUtils.getInstance().getImageFromFile(file, true, true);
+			return buildTexture(gl, im);
+		} catch (final GLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static Texture buildTexture(final OpenGL gl, final BufferedImage image) {
@@ -721,10 +722,8 @@ public class OpenGL {
 
 	public static Texture buildTexture(final GL gl, final BufferedImage image) {
 		try {
-			GLProfile glP=gl.getGLProfile();
-
-			BufferedImage bf=correctImage(image, !Abstract3DRenderer.isNonPowerOf2TexturesAvailable);
-			final TextureData data = AWTTextureIO.newTextureData(glP,bf, false);
+			final TextureData data = AWTTextureIO.newTextureData(gl.getGLProfile(),
+					correctImage(image, !Abstract3DRenderer.isNonPowerOf2TexturesAvailable), false);
 			final Texture texture = new Texture(gl, data);
 			data.flush();
 			return texture;
@@ -763,21 +762,14 @@ public class OpenGL {
 		return power;
 	}
 
-	// GEOMETRIES
-
-	public void cacheGeometry(final ResourceObject object) {
-		if (geometryCache != null)
-			geometryCache.saveGeometryToProcess(object);
-	}
-
 	public void processUnloadedGeometries() {
-		if (geometryCache != null)
-			geometryCache.processUnloadedGeometries(this);
+//		if (geometryCache != null)
+//			geometryCache.processUnloadedGeometries(this);
 	}
 
 	public Envelope3D getEnvelopeFor(final GamaGeometryFile file) {
-		if (geometryCache != null)
-			return geometryCache.getEnvelope(file);
+//		if (geometryCache != null)
+//			return geometryCache.getEnvelope(file);
 		return null;
 	}
 
@@ -956,104 +948,104 @@ public class OpenGL {
 	}
 
 	public void drawCachedGeometry(final GamaGeometryFile file, final Color border) {
-		if (geometryCache == null)
-			return;
+//		if (geometryCache == null)
+//			return;
 		if (file == null)
 			return;
-		final Integer index = geometryCache.get(this, file);
-		if (index != null)
-			drawList(index);
-		if (border != null && !isWireframe()) {
-			final Color old = swapCurrentColor(border);
-			getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
-			drawList(index);
-			setCurrentColor(old);
-			getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
-		}
+//		final Integer index = geometryCache.get(this, file);
+//		if (index != null)
+//			drawList(index);
+//		if (border != null && !isWireframe()) {
+//			final Color old = swapCurrentColor(border);
+//			getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
+//			drawList(index);
+//			setCurrentColor(old);
+//			getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
+//		}
 	}
 
 	public void drawCachedGeometry(final IShape.Type id, final Color border) {
-		if (geometryCache == null)
-			return;
+//		if (geometryCache == null)
+//			return;
 		if (id == null)
 			return;
-		final BuiltInGeometry object = geometryCache.get(this, id);
-		if (object != null) {
-			object.draw(this);
-			if (border != null && !isWireframe()) {
-				final Color old = swapCurrentColor(border);
-				getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
-				object.draw(this);
-				setCurrentColor(old);
-				getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
-			}
-		}
+//		final BuiltInGeometry object = geometryCache.get(this, id);
+//		if (object != null) {
+//			object.draw(this);
+//			if (border != null && !isWireframe()) {
+//				final Color old = swapCurrentColor(border);
+//				getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
+//				object.draw(this);
+//				setCurrentColor(old);
+//				getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
+//			}
+//		}
 	}
 
 	public void initializeShapeCache() {
 		final int slices = GamaPreferences.Displays.DISPLAY_SLICE_NUMBER.getValue();
 		final int stacks = slices;
 		textured = true;
-		geometryCache.put(SPHERE, BuiltInGeometry.assemble().faces(compileAsList(() -> {
-			drawSphere(1.0, slices, stacks);
-		})));
-		geometryCache.put(CYLINDER, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-			drawDisk(0d, 1d, slices, slices / 3);
-		})).top(compileAsList(() -> {
-			translateBy(0d, 0d, 1d);
-			drawDisk(0d, 1d, slices, slices / 3);
-			translateBy(0d, 0d, -1d);
-		})).faces(compileAsList(() -> {
-			drawCylinder(1.0d, 1.0d, 1.0d, slices, stacks);
-		})));
-		geometryCache.put(CONE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-			drawDisk(0d, 1d, slices, slices / 3);
-		})).faces(compileAsList(() -> {
-			drawCylinder(1.0, 0.0, 1.0, slices, stacks);
-		})));
-		final ICoordinates baseVertices = ICoordinates.ofLength(5);
-		final ICoordinates faceVertices = ICoordinates.ofLength(5);
-		baseVertices.setTo(-0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0, -0.5, -0.5, 0, -0.5, 0.5, 0);
-
-		geometryCache.put(CUBE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-			drawSimpleShape(baseVertices, 4, true, false, true, null);
-		})).top(compileAsList(() -> {
-			baseVertices.translateBy(0, 0, 1);
-			drawSimpleShape(baseVertices, 4, true, true, true, null);
-			baseVertices.translateBy(0, 0, -1);
-		})).faces(compileAsList(() -> {
-			baseVertices.visit((pj, pk) -> {
-				faceVertices.setTo(pk.x, pk.y, pk.z, pk.x, pk.y, pk.z + 1, pj.x, pj.y, pj.z + 1, pj.x, pj.y, pj.z, pk.x,
-						pk.y, pk.z);
-				drawSimpleShape(faceVertices, 4, true, true, true, null);
-			});
-		})));
-		geometryCache.put(POINT, BuiltInGeometry.assemble().faces(compileAsList(() -> {
-			drawSphere(1.0, 5, 5);
-		})));
-
-		geometryCache.put(IShape.Type.ROUNDED, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-			drawRoundedRectangle();
-		})));
-		geometryCache.put(SQUARE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-			drawSimpleShape(baseVertices, 4, true, true, true, null);
-		})));
-		geometryCache.put(CIRCLE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-			drawDisk(0.0, 1.0, slices, 1);
-		})));
-		final ICoordinates triangleVertices = ICoordinates.ofLength(4);
-		final ICoordinates vertices = ICoordinates.ofLength(5);
-		vertices.setTo(-0.5, -0.5, 0, -0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0, -0.5, -0.5, 0);
-		geometryCache.put(PYRAMID, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-			drawSimpleShape(vertices, 4, true, false, true, null);
-		})).faces(compileAsList(() -> {
-			final GamaPoint top = new GamaPoint(0, 0, 1);
-			vertices.visit((pj, pk) -> {
-				triangleVertices.setTo(pj.x, pj.y, pj.z, top.x, top.y, top.z, pk.x, pk.y, pk.z, pj.x, pj.y, pj.z);
-				drawSimpleShape(triangleVertices, 3, true, true, true, null);
-
-			});
-		})));
+//		geometryCache.put(SPHERE, BuiltInGeometry.assemble().faces(compileAsList(() -> {
+//			drawSphere(1.0, slices, stacks);
+//		})));
+//		geometryCache.put(CYLINDER, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+//			drawDisk(0d, 1d, slices, slices / 3);
+//		})).top(compileAsList(() -> {
+//			translateBy(0d, 0d, 1d);
+//			drawDisk(0d, 1d, slices, slices / 3);
+//			translateBy(0d, 0d, -1d);
+//		})).faces(compileAsList(() -> {
+//			drawCylinder(1.0d, 1.0d, 1.0d, slices, stacks);
+//		})));
+//		geometryCache.put(CONE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+//			drawDisk(0d, 1d, slices, slices / 3);
+//		})).faces(compileAsList(() -> {
+//			drawCylinder(1.0, 0.0, 1.0, slices, stacks);
+//		})));
+//		final ICoordinates baseVertices = ICoordinates.ofLength(5);
+//		final ICoordinates faceVertices = ICoordinates.ofLength(5);
+//		baseVertices.setTo(-0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0, -0.5, -0.5, 0, -0.5, 0.5, 0);
+//
+//		geometryCache.put(CUBE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+//			drawSimpleShape(baseVertices, 4, true, false, true, null);
+//		})).top(compileAsList(() -> {
+//			baseVertices.translateBy(0, 0, 1);
+//			drawSimpleShape(baseVertices, 4, true, true, true, null);
+//			baseVertices.translateBy(0, 0, -1);
+//		})).faces(compileAsList(() -> {
+//			baseVertices.visit((pj, pk) -> {
+//				faceVertices.setTo(pk.x, pk.y, pk.z, pk.x, pk.y, pk.z + 1, pj.x, pj.y, pj.z + 1, pj.x, pj.y, pj.z, pk.x,
+//						pk.y, pk.z);
+//				drawSimpleShape(faceVertices, 4, true, true, true, null);
+//			});
+//		})));
+//		geometryCache.put(POINT, BuiltInGeometry.assemble().faces(compileAsList(() -> {
+//			drawSphere(1.0, 5, 5);
+//		})));
+//
+//		geometryCache.put(IShape.Type.ROUNDED, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+//			drawRoundedRectangle();
+//		})));
+//		geometryCache.put(SQUARE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+//			drawSimpleShape(baseVertices, 4, true, true, true, null);
+//		})));
+//		geometryCache.put(CIRCLE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+//			drawDisk(0.0, 1.0, slices, 1);
+//		})));
+//		final ICoordinates triangleVertices = ICoordinates.ofLength(4);
+//		final ICoordinates vertices = ICoordinates.ofLength(5);
+//		vertices.setTo(-0.5, -0.5, 0, -0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0, -0.5, -0.5, 0);
+//		geometryCache.put(PYRAMID, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+//			drawSimpleShape(vertices, 4, true, false, true, null);
+//		})).faces(compileAsList(() -> {
+//			final GamaPoint top = new GamaPoint(0, 0, 1);
+//			vertices.visit((pj, pk) -> {
+//				triangleVertices.setTo(pj.x, pj.y, pj.z, top.x, top.y, top.z, pk.x, pk.y, pk.z, pj.x, pj.y, pj.z);
+//				drawSimpleShape(triangleVertices, 3, true, true, true, null);
+//
+//			});
+//		})));
 		textured = false;
 
 	}
@@ -1074,11 +1066,11 @@ public class OpenGL {
 			.010718, .04, .018716, .028577, .028577, .018716, .04, .010718, .052638, .004825, .066108, .001215, .08,
 			0 };
 
-//	static DoubleBuffer db = (DoubleBuffer) Buffers.newDirectDoubleBuffer(roundRect.length).put(roundRect).rewind();
+	static DoubleBuffer db = (DoubleBuffer) Buffers.newDirectDoubleBuffer(roundRect.length).put(roundRect).rewind();
 
 	public void drawRoundedRectangle() {
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-//		gl.glVertexPointer(2, GL2.GL_DOUBLE, 0, db);
+		gl.glVertexPointer(2, GL2.GL_DOUBLE, 0, db);
 		gl.glDrawArrays(GL2.GL_TRIANGLE_FAN, 0, 40);
 		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 	}

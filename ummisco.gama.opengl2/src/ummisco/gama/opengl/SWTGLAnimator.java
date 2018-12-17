@@ -210,7 +210,7 @@ public class SWTGLAnimator implements Runnable, GLAnimatorControl, GLAnimatorCon
 			if (drawable.isRealized()) {
 				drawable.display();
 			}
-		} catch (final Exception ex) {
+		} catch (final RuntimeException ex) {
 			System.out.println("Exception in OpenGL:" + ex.getMessage());
 		} finally {
 			this.animating = false;

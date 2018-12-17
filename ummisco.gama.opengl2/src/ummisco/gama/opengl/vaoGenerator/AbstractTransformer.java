@@ -97,7 +97,7 @@ abstract class AbstractTransformer {
 		else
 			this.color = null;
 		this.borderColor = object.getBorder();
-		this.isTriangulation = isTriangulation; 
+		this.isTriangulation = isTriangulation;
 		this.material = object.getMaterial();
 		if (this.material == null)
 			this.material = GamaMaterialType.DEFAULT_MATERIAL;
@@ -634,7 +634,6 @@ abstract class AbstractTransformer {
 						new Material(this.material.getDamper(), this.material.getReflectivity(), isLightInteraction));
 				// botTopEntity.setTexturePath(texturePaths[0]);
 				botTopEntity.setTextureID(textureIDs[0]);
-				botTopEntity.setBufferedImageTextureValue(bufferedImageValue);
 				botTopEntity.setUvMapping(botTopUVMapping);
 
 				// build the rest of the faces
