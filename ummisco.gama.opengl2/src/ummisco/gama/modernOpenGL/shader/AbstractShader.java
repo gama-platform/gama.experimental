@@ -29,9 +29,9 @@ public abstract class AbstractShader {
 	private final int vertexShaderID;
 	private final int fragmentShaderID;
 
-	private int location_transformationMatrix=2;
-	private int location_projectionMatrix=0;
-	private int location_viewMatrix = 1;
+	private int location_transformationMatrix;
+	private int location_projectionMatrix;
+	private int location_viewMatrix;
 	private int location_layerAlpha;
 
 	public static final int POSITION_ATTRIBUTE_IDX = 0;
@@ -87,16 +87,16 @@ public abstract class AbstractShader {
 		// Check compile status.
 		final int[] compiled = new int[1];
 		gl.glGetShaderiv(shaderID, GL2.GL_COMPILE_STATUS, compiled, 0);
-//		if (compiled[0] == 0) {
-//			final int[] logLength = new int[1];
-//			gl.glGetShaderiv(shaderID, GL2.GL_INFO_LOG_LENGTH, logLength, 0);
-//
-//			final byte[] log = new byte[logLength[0]];
-//			gl.glGetShaderInfoLog(shaderID, logLength[0], (int[]) null, 0, log, 0);
-//
-//			System.err.println("Error compiling the vertex shader: " + new String(log));
-//			System.exit(1);
-//		}
+		if (compiled[0] == 0) {
+			final int[] logLength = new int[1];
+			gl.glGetShaderiv(shaderID, GL2.GL_INFO_LOG_LENGTH, logLength, 0);
+
+			final byte[] log = new byte[logLength[0]];
+			gl.glGetShaderInfoLog(shaderID, logLength[0], (int[]) null, 0, log, 0);
+
+			System.err.println("Error compiling the vertex shader: " + new String(log));
+			System.exit(1);
+		}
 
 		return shaderID;
 	}

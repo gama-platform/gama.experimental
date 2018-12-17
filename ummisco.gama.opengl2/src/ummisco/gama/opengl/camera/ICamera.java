@@ -16,7 +16,6 @@ import java.util.Map;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackListener;
-//import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.MouseWheelListener;
 
 import msi.gama.common.geometry.Envelope3D;

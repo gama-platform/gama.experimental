@@ -66,7 +66,6 @@ public class FPSLayerObject extends LayerObject {
 	}
 
 	private void updateObjectList() {
-		if(objects==null) return;
 		objects.clear();
 		computeFrameRate();
 
@@ -80,8 +79,8 @@ public class FPSLayerObject extends LayerObject {
 				new ShapeDrawingAttributes(g, (IAgent) null, new GamaColor(255, 255, 255, 255), null); // white for the
 																										// color, null
 		// for the border color
-		final GeometryObject geomObj = new GeometryObject(g.getInnerGeometry(), drawingAttr);
-		newElem.add(geomObj);
+//		final GeometryObject geomObj = new GeometryObject(g.getInnerGeometry(), drawingAttr);
+//		newElem.add(geomObj);
 		// build label
 		final GamaFont font = new GamaFont("Helvetica", 0, 18); // 0 for plain,
 																// 18 for text

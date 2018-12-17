@@ -22,7 +22,6 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 
 import msi.gama.common.geometry.Scaling3D;
-import msi.gama.common.interfaces.IDisplaySurface;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.outputs.layers.OverlayLayer;
 import msi.gama.outputs.layers.charts.ChartOutput;
@@ -32,7 +31,6 @@ import msi.gama.util.file.GamaImageFile;
 import msi.gaml.statements.draw.FieldDrawingAttributes;
 import msi.gaml.statements.draw.FileDrawingAttributes;
 import ummisco.gama.modernOpenGL.ModernDrawer;
-import ummisco.gama.opengl.scene.GeometryDrawer;
 import ummisco.gama.opengl.utils.LightHelper;
 import ummisco.gama.opengl.vaoGenerator.DrawingEntityGenerator;
 import ummisco.gama.opengl.vaoGenerator.TransformationMatrix;
@@ -49,14 +47,13 @@ public class ModernRenderer extends Abstract3DRenderer {
 
 	private Matrix4f projectionMatrix;
 	private ModernDrawer drawer;
-	private GeometryDrawer geometryDrawer;
 	public boolean renderToTexture = true;
 	public boolean colorPicking = false;
 	private final IKeystoneState keystone = new KeystoneState();
 
 	public class KeystoneState implements IKeystoneState {
 		private boolean drawKeystoneHelper = false;
-		
+
 		protected float[][] coords;
 
 		@Override
@@ -197,8 +194,8 @@ public class ModernRenderer extends Abstract3DRenderer {
 		// and/or a modernRenderer.
 		drawingEntityGenerator = new DrawingEntityGenerator(this);
 		lightHelper = new LightHelper(this);
-		openGL.setGL2(gl);
 		gl = drawable.getGL().getGL2();
+		openGL.setGL2(gl);
 		// openGL.setGL2(gl);
 		final Color background = data.getBackgroundColor();
 		gl.glClearColor(background.getRed() / 255.0f, background.getGreen() / 255.0f, background.getBlue() / 255.0f,
@@ -217,12 +214,6 @@ public class ModernRenderer extends Abstract3DRenderer {
 		inited = true;
 	}
 
-
-	@Override
-	public void setDisplaySurface(final IDisplaySurface d) {
-		super.setDisplaySurface(d); 
-		geometryDrawer = new GeometryDrawer(this); 
-	}
 	@Override
 	public void display(final GLAutoDrawable drawable) {
 
@@ -241,13 +232,13 @@ public class ModernRenderer extends Abstract3DRenderer {
 		gl.glEnable(GL.GL_DEPTH_TEST); // enables depth testing
 		gl.glDepthFunc(GL.GL_LEQUAL); // the type of depth test to do
 
-//		updateCameraPosition();
-//		updatePerspective();
+		updateCameraPosition();
+		updatePerspective();
 
 		rotateModel();
 		drawScene();
-//		gl.glDisable(GL.GL_DEPTH_TEST); // disables depth testing
-//		drawer.renderToTexture();
+		gl.glDisable(GL.GL_DEPTH_TEST); // disables depth testing
+		drawer.renderToTexture();
 
 		if (!visible) {
 			// We make the canvas visible only after a first display has occured
@@ -334,11 +325,11 @@ public class ModernRenderer extends Abstract3DRenderer {
 		if (attributes.getSize() == null) {
 			attributes.setSize(Scaling3D.of(worldDimensions));
 		}
-		if (file instanceof GamaImageFile)
-			sceneBuffer.getSceneToUpdate().addImageFile((GamaImageFile) file, attributes);
-		else if (file instanceof GamaGeometryFile) {
-			sceneBuffer.getSceneToUpdate().addGeometryFile((GamaGeometryFile) file, attributes);
-		}
+//		if (file instanceof GamaImageFile)
+//			sceneBuffer.getSceneToUpdate().addImageFile((GamaImageFile) file, attributes);
+//		else if (file instanceof GamaGeometryFile) {
+//			sceneBuffer.getSceneToUpdate().addGeometryFile((GamaGeometryFile) file, attributes);
+//		}
 		return rect;
 	}
 
@@ -351,7 +342,7 @@ public class ModernRenderer extends Abstract3DRenderer {
 	@Override
 	public GamaPoint getRealWorldPointFromWindowPoint(final Point windowPoint) {
 		// TODO
-		return new GamaPoint(-800,60);
+		return null;
 	}
 
 	/**
@@ -389,10 +380,6 @@ public class ModernRenderer extends Abstract3DRenderer {
 	public Rectangle2D drawChart(ChartOutput chart) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public GeometryDrawer getGeometryDrawer() {
-		return geometryDrawer;
 	}
 
 }
