@@ -12,7 +12,7 @@
              class="ummisco.gama.opengl.OpenGLDisplayView2"
              icon="platform:/plugin/ummisco.gama.ui.shared/icons/view.display2.png"
              id="msi.gama.application.view.OpenGLDisplayView2"
-             name="3D"
+             name="3D2"
              restorable="false">
        </view>
     </extension>    

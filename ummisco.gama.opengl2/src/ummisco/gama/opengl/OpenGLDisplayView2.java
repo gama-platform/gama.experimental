@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 
+import msi.gama.common.interfaces.IGui;
 import ummisco.gama.ui.views.displays.SWTDisplayView;
 
 /**
@@ -25,7 +26,7 @@ import ummisco.gama.ui.views.displays.SWTDisplayView;
  */
 public class OpenGLDisplayView2 extends SWTDisplayView {
 
-	public static String ID = "msi.gama.application.view.OpenGLDisplayView2";
+	public static String ID = IGui.GL_LAYER_VIEW_ID;//"msi.gama.application.view.OpenGLDisplayView";
 
 	@Override
 	public SWTOpenGLDisplaySurface getDisplaySurface() {
