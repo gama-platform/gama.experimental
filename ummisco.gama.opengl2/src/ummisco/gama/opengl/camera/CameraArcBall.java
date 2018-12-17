@@ -365,7 +365,7 @@ public class CameraArcBall extends AbstractCamera {
 			return;
 		final double step = radius != 0d ? radius / 10d * GamaPreferences.Displays.OPENGL_ZOOM.getValue() : 0.1d;
 		radius = radius + (in ? -step : step);
-		getRenderer().data.setZoomLevel(zoomLevel(), true, false);
+		getRenderer().data.setZoomLevel(zoomLevel(), true, true);
 	}
 
 	@Override
@@ -375,7 +375,7 @@ public class CameraArcBall extends AbstractCamera {
 		radius = 1.5 * (width > height ? width : height);
 		// y is already negated
 		setTarget(env.centre());
-		getRenderer().data.setZoomLevel(zoomLevel(), true, false);
+		getRenderer().data.setZoomLevel(zoomLevel(), true, true);
 	}
 
 	@Override
@@ -389,7 +389,7 @@ public class CameraArcBall extends AbstractCamera {
 		}
 		// y is NOT negated in IShapes
 		setTarget(p.getCentroid().yNegated());
-		getRenderer().data.setZoomLevel(zoomLevel(), true, false);
+		getRenderer().data.setZoomLevel(zoomLevel(), true, true);
 	}
 
 	@Override

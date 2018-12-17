@@ -19,7 +19,8 @@ import ummisco.gama.modernOpenGL.DrawingEntity;
 import ummisco.gama.modernOpenGL.font.fontMeshCreator.FontTextureCache;
 import ummisco.gama.modernOpenGL.font.fontMeshCreator.TextMeshData;
 import ummisco.gama.opengl.Abstract3DRenderer;
-import ummisco.gama.opengl.scene.AbstractObject; 
+import ummisco.gama.opengl.scene.AbstractObject;
+import ummisco.gama.opengl.scene.GeometryObject;
 import ummisco.gama.opengl.scene.LayerObject;
 import ummisco.gama.opengl.scene.StringObject;
 
@@ -87,18 +88,17 @@ public class DrawingEntityGenerator {
 			textureIds[0] = textures[0].getTextureObject();
 			transformer = new StringObjectTransformer(strObj, textureIds, texturePaths, textMeshData, layer.isOverlay(),
 					renderer.data.isWireframe(), renderer.getOpenGLHelper().getCurrentObjectAlpha());
-		} 
-//		else if (object instanceof GeometryObject) {
-//			final GeometryObject geomObj = (GeometryObject) object;
-//			// final String[] texturePaths = geomObj.getTexturePaths(scope);
-//			// final int[] textureIDs = texturePaths == null ? null : new int[texturePaths.length];
-//			int[] ids = null;
-//			if (computeTextureIds) {
-//				ids = geomObj.getTexturesId(renderer.getOpenGLHelper());
-//			}
-//			transformer = new GeometryObjectTransformer(geomObj, ids, layer.isLightInteraction(), layer.isOverlay(),
-//					renderer.data.isWireframe(), renderer.getOpenGLHelper().getCurrentObjectAlpha());
-//		}
+		} else if (object instanceof GeometryObject) {
+			final GeometryObject geomObj = (GeometryObject) object;
+			// final String[] texturePaths = geomObj.getTexturePaths(scope);
+			// final int[] textureIDs = texturePaths == null ? null : new int[texturePaths.length];
+			int[] ids = null;
+			if (computeTextureIds) {
+				ids = geomObj.getTexturesId(renderer.getOpenGLHelper());
+			}
+			transformer = new GeometryObjectTransformer(geomObj, ids, layer.isLightInteraction(), layer.isOverlay(),
+					renderer.data.isWireframe(), renderer.getOpenGLHelper().getCurrentObjectAlpha());
+		}
 		if (transformer != null)
 			result = transformer.getDrawingEntities();
 		return result;

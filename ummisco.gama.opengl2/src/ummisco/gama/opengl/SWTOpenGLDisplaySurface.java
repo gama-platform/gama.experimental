@@ -243,7 +243,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 		// return;
 		renderer.camera.initialize();
 		output.getData().resetZRotation();
-		output.getData().setZoomLevel(LayeredDisplayData.INITIAL_ZOOM, true, false);
+		output.getData().setZoomLevel(LayeredDisplayData.INITIAL_ZOOM, true, true);
 		zoomFit = true;
 
 	}
@@ -473,7 +473,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	@Override
 	public double getZoomLevel() {
 		if (output.getData().getZoomLevel() == null) {
-			output.getData().setZoomLevel(computeInitialZoomLevel(), true, false);
+			output.getData().setZoomLevel(computeInitialZoomLevel(), true, true);
 		}
 		return output.getData().getZoomLevel();
 	}

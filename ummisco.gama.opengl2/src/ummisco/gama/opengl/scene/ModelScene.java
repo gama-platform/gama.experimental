@@ -62,7 +62,14 @@ public class ModelScene {
 	}
 
 	protected void initWorld() {
+		if (renderer.data.isDrawEnv()) {
+			layers.put(FRAME_KEY, new FrameLayerObject(renderer));
+			layers.put(AXES_KEY, new AxesLayerObject(renderer));
+		}
 		if (renderer.useShader()) {
+			layers.put(ROTATION_HELPER_KEY, new RotationHelperLayerObject(renderer));
+			layers.put(KEYSTONE_HELPER_KEY, new KeystoneHelperLayerObject(renderer));
+			layers.put(LIGHTS_KEY, new LightsLayerObject(renderer));
 			if (renderer.data.isShowfps())
 				layers.put(FPS_KEY, new FPSLayerObject(renderer));
 		}
@@ -139,6 +146,25 @@ public class ModelScene {
 		return configure(currentLayer.addString(string, attributes));
 	}
 
+	public GeometryObject addImageFile(final GamaImageFile file, final FileDrawingAttributes attributes) {
+		if (cannotAdd()) { return null; }
+		return configure(currentLayer.addImage(file, attributes));
+	}
+
+	public ResourceObject addGeometryFile(final GamaGeometryFile file, final FileDrawingAttributes attributes) {
+		if (cannotAdd()) { return null; }
+		return configure(currentLayer.addFile(file, attributes));
+	}
+
+	public GeometryObject addImage(final BufferedImage img, final DrawingAttributes attributes) {
+		if (cannotAdd()) { return null; }
+		return configure(currentLayer.addImage(img, attributes));
+	}
+
+	public GeometryObject addGeometry(final Geometry geometry, final ShapeDrawingAttributes attributes) {
+		if (cannotAdd()) { return null; }
+		return configure(currentLayer.addGeometry(geometry, attributes));
+	}
 
 	public FieldObject addField(final double[] fieldValues, final FieldDrawingAttributes attributes) {
 		if (cannotAdd()) { return null; }
@@ -217,21 +243,21 @@ public class ModelScene {
 	}
 
 	public void startDrawRotationHelper(final GamaPoint pivotPoint, final double size) {
-//		final AxesLayerObject worldLayer = (AxesLayerObject) layers.get(AXES_KEY);
-//		if (worldLayer != null) {
-//			worldLayer.setOffset(pivotPoint.yNegated());
-//			final double ratio = size / renderer.getMaxEnvDim();
-//			worldLayer.setScale(new GamaPoint(ratio, ratio, ratio));
-//
-//		}
+		final AxesLayerObject worldLayer = (AxesLayerObject) layers.get(AXES_KEY);
+		if (worldLayer != null) {
+			worldLayer.setOffset(pivotPoint.yNegated());
+			final double ratio = size / renderer.getMaxEnvDim();
+			worldLayer.setScale(new GamaPoint(ratio, ratio, ratio));
+
+		}
 	}
 
 	public void stopDrawRotationHelper() {
-//		final AxesLayerObject worldLayer = (AxesLayerObject) layers.get(AXES_KEY);
-//		if (worldLayer != null) {
-//			worldLayer.setOffset(null);
-//			worldLayer.setScale(null);
-//		}
+		final AxesLayerObject worldLayer = (AxesLayerObject) layers.get(AXES_KEY);
+		if (worldLayer != null) {
+			worldLayer.setOffset(null);
+			worldLayer.setScale(null);
+		}
 
 	}
 

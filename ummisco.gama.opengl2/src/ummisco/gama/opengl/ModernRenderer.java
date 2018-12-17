@@ -325,11 +325,11 @@ public class ModernRenderer extends Abstract3DRenderer {
 		if (attributes.getSize() == null) {
 			attributes.setSize(Scaling3D.of(worldDimensions));
 		}
-//		if (file instanceof GamaImageFile)
-//			sceneBuffer.getSceneToUpdate().addImageFile((GamaImageFile) file, attributes);
-//		else if (file instanceof GamaGeometryFile) {
-//			sceneBuffer.getSceneToUpdate().addGeometryFile((GamaGeometryFile) file, attributes);
-//		}
+		if (file instanceof GamaImageFile)
+			sceneBuffer.getSceneToUpdate().addImageFile((GamaImageFile) file, attributes);
+		else if (file instanceof GamaGeometryFile) {
+			sceneBuffer.getSceneToUpdate().addGeometryFile((GamaGeometryFile) file, attributes);
+		}
 		return rect;
 	}
 

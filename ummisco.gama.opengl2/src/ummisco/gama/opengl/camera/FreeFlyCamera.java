@@ -141,7 +141,7 @@ public class FreeFlyCamera extends AbstractCamera {
 		final GamaPoint vector = forward.times(speed * 800 + step);
 		setPosition(getPosition().plus(in ? vector : vector.negated()));
 		setTarget(forward.plus(getPosition()));
-		getRenderer().data.setZoomLevel(zoomLevel(), true, false);
+		getRenderer().data.setZoomLevel(zoomLevel(), true, true);
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class FreeFlyCamera extends AbstractCamera {
 		final int height = (int) env.getHeight();
 		final double maxDim = width > height ? width : height;
 		setPosition(env.centre().x, env.centre().y, maxDim * 1.5);
-		getRenderer().data.setZoomLevel(zoomLevel(), true, false);
+		getRenderer().data.setZoomLevel(zoomLevel(), true, true);
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class FreeFlyCamera extends AbstractCamera {
 		final double extent = shape.getEnvelope().maxExtent();
 		setPosition(centerX, -centerY, extent * 2 + centerZ + getRenderer().getMaxEnvDim() / 100);
 		setTarget(centerX, -centerY, -(extent * 2));
-		getRenderer().data.setZoomLevel(zoomLevel(), true, false);
+		getRenderer().data.setZoomLevel(zoomLevel(), true, true);
 	}
 
 	@Override

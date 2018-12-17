@@ -17,7 +17,6 @@ import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaFont;
-import msi.gaml.operators.IUnits;
 import msi.gaml.statements.draw.ShapeDrawingAttributes;
 import msi.gaml.statements.draw.TextDrawingAttributes;
 import msi.gaml.types.GamaGeometryType;
@@ -79,14 +78,14 @@ public class FPSLayerObject extends LayerObject {
 				new ShapeDrawingAttributes(g, (IAgent) null, new GamaColor(255, 255, 255, 255), null); // white for the
 																										// color, null
 		// for the border color
-//		final GeometryObject geomObj = new GeometryObject(g.getInnerGeometry(), drawingAttr);
-//		newElem.add(geomObj);
+		final GeometryObject geomObj = new GeometryObject(g.getInnerGeometry(), drawingAttr);
+		newElem.add(geomObj);
 		// build label
 		final GamaFont font = new GamaFont("Helvetica", 0, 18); // 0 for plain,
 																// 18 for text
 																// size.
 		final TextDrawingAttributes textDrawingAttr = new TextDrawingAttributes(Scaling3D.of(0.0015), null,
-				new GamaPoint(0.005, -0.03, 0), IUnits.bottom_left, new GamaColor(0, 0, 0, 1), font, true);
+				new GamaPoint(0.005, -0.03, 0), offset, new GamaColor(0, 0, 0, 1), font, true);
 		final StringObject strObj = new StringObject("fps : " + fps, textDrawingAttr);
 		newElem.add(strObj);
 
