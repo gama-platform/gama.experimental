@@ -26,7 +26,7 @@ import ummisco.gama.ui.views.displays.SWTDisplayView;
  */
 public class OpenGLDisplayView2 extends SWTDisplayView {
 
-	public static String ID = IGui.GL_LAYER_VIEW_ID;//"msi.gama.application.view.OpenGLDisplayView";
+	public static String ID = IGui.GL_LAYER_VIEW_ID2;//"msi.gama.application.view.OpenGLDisplayView";
 
 	@Override
 	public SWTOpenGLDisplaySurface getDisplaySurface() {
