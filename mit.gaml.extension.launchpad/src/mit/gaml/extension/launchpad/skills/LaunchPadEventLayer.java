@@ -10,6 +10,7 @@
 package mit.gaml.extension.launchpad.skills;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import msi.gama.common.interfaces.IDisplaySurface;
 import msi.gama.common.interfaces.IEventLayerDelegate;
@@ -43,6 +44,17 @@ public class LaunchPadEventLayer implements ILayer, IEventLayerDelegate {
 
 	MyLPListener myListener=null;
 	IScope executionScope=null;
+	public static HashMap<String, Color> colorMap = new HashMap<String, Color>() {{
+	    put("black",Color.BLACK);
+	    put("red",Color.RED);
+	    put("darkred",Color.DARKRED);
+	    put("green",Color.GREEN);
+	    put("darkgreen",Color.DARKGREEN);
+	    put("orange",Color.ORANGE);
+	    put("brown",Color.BROWN);
+	    put("yellow",Color.YELLOW);
+	    put("lightyellow",Color.LIGHTYELLOW);
+	}};
 	
 	public LaunchPadEventLayer() { 
 		definition=null;
@@ -60,47 +72,6 @@ public class LaunchPadEventLayer implements ILayer, IEventLayerDelegate {
 		}
 		data = createData();
 	}
-
-	@Override
-	public ILayerStatement getDefinition() {
-		return definition;
-	}
-
-	@Override
-	public ILayerData getData() {
-		return data;
-	}
-
-	protected ILayerData createData() {
-		return new LayerData(definition);
-	}
-
-	@Override
-	public void forceRedrawingOnce() {
-		hasBeenDrawnOnce = false;
-	}
-
-	@Override
-	public void draw(final IScope scope, final IGraphics g) throws GamaRuntimeException {
-		if (!g.is2D() && !getData().isDynamic() && hasBeenDrawnOnce) { return; }
-		if (g.isNotReadyToUpdate() && hasBeenDrawnOnce) { return; }
-		getData().compute(scope, g);
-		g.setOpacity(getData().getTransparency(scope));
-		g.beginDrawingLayer(this); 
-		g.endDrawingLayer(this);
-		hasBeenDrawnOnce = true;
-	}
- 
-
-	@Override
-	public final String getName() {
-		return name;
-	}
-
-	@Override
-	public final void setName(final String name) {
-		this.name = name;
-	} 
 
 	@Override
 	public void disableOn(final IDisplaySurface surface) { 
@@ -147,53 +118,97 @@ public class LaunchPadEventLayer implements ILayer, IEventLayerDelegate {
 				: executionScope.getExperiment();
 		final String actionName = ((EventLayerStatement) definition).getFacet("action").toString();
 		final IExecutable executer = agent == null ? null : agent.getSpecies().getAction(actionName);
-		if (executer == null) { return; }
+		if (executer == null) {
+			return;
+		}
 		executionScope.execute(executer, agent, null);
 		// GAMA.getExperiment().refreshAllOutputs();
 	}
 
 	public static Pad pressedPad;
 	public static Button pressedButton;
+    public class MyLPListener extends LaunchpadListenerAdapter {
 
-	public class MyLPListener extends LaunchpadListenerAdapter {
+        private final LaunchpadClient client;
 
-		private final LaunchpadClient client;
+        public MyLPListener(LaunchpadClient client) {
+            this.client = client;
+        }
 
-		public MyLPListener(final LaunchpadClient client) {
-			this.client = client;
-		}
+        @Override
+        public void onPadPressed(Pad pad, long timestamp) {
+            client.setPadLight(pad, Color.YELLOW, BackBufferOperation.NONE);
+            pressedPad=pad;
+        }
 
-		@Override
-		public void onPadPressed(final Pad pad, final long timestamp) {
-			client.setPadLight(pad, Color.YELLOW, BackBufferOperation.NONE);
-			pressedPad = pad;
-		}
+        @Override
+        public void onPadReleased(Pad pad, long timestamp) {
+            client.setPadLight(pad, Color.BLACK, BackBufferOperation.NONE);
+            pressedPad=pad;
+            executeEvent();
+        }
+        
+        @Override
+        public void onButtonPressed(Button button, long timestamp) {
+            client.setButtonLight(button, Color.YELLOW, BackBufferOperation.NONE);
+            pressedButton=button;
+        }
+        @Override
+        public void onButtonReleased(Button button, long timestamp) {
+            client.setButtonLight(button, Color.BLACK, BackBufferOperation.NONE);
+            pressedButton=button;
+        }
+    }
 
-		@Override
-		public void onPadReleased(final Pad pad, final long timestamp) {
-			client.setPadLight(pad, Color.BLACK, BackBufferOperation.NONE);
-			pressedPad = pad;
-			executeEvent();
-		}
-
-		@Override
-		public void onButtonPressed(final Button button, final long timestamp) {
-			client.setButtonLight(button, Color.YELLOW, BackBufferOperation.NONE);
-			pressedButton = button;
-		}
-
-		@Override
-		public void onButtonReleased(final Button button, final long timestamp) {
-			client.setButtonLight(button, Color.BLACK, BackBufferOperation.NONE);
-			pressedButton = button;
-		}
+	
+	
+	@Override
+	public ILayerStatement getDefinition() {
+		return definition;
 	}
-  
+
+	@Override
+	public ILayerData getData() {
+		return data;
+	}
+
+	protected ILayerData createData() {
+		return new LayerData(definition);
+	}
+
+	@Override
+	public void forceRedrawingOnce() {
+		hasBeenDrawnOnce = false;
+	}
+
+	@Override
+	public void draw(final IScope scope, final IGraphics g) throws GamaRuntimeException {
+		if (!g.is2D() && !getData().isDynamic() && hasBeenDrawnOnce) { return; }
+		if (g.isNotReadyToUpdate() && hasBeenDrawnOnce) { return; }
+		getData().compute(scope, g);
+		g.setOpacity(getData().getTransparency(scope));
+		g.beginDrawingLayer(this); 
+		g.endDrawingLayer(this);
+		hasBeenDrawnOnce = true;
+	}
+ 
+
+	@Override
+	public final String getName() {
+		return name;
+	}
+
+	@Override
+	public final void setName(final String name) {
+		this.name = name;
+	} 
 
 	@Override
 	public boolean acceptSource(final IScope scope, final Object source) {
 		// TODO Auto-generated method stub
-		if (source.equals("launchpad")) { return true; }
+		if(source.equals("launchpad")) {
+			return true;
+		}
 		return false;
 	}
 
