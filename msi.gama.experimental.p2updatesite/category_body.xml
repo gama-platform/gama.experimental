@@ -2,6 +2,7 @@
  
  <feature  url="features/cict.feature.netcdf_1.0.0.qualifier.jar" id="cict.feature.netcdf" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/cict.feature.VR_1.0.0.qualifier.jar" id="cict.feature.VR" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
+ <feature  url="features/escape.gaml.feature.pedestrian_1.0.0.qualifier.jar" id="escape.gaml.feature.pedestrian" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/femto.st.gama.feature.mpi_1.0.0.qualifier.jar" id="femto.st.gama.feature.mpi" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/idees.gama.features.weka_1.7.0.qualifier.jar" id="idees.gama.features.weka" version="1.7.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/miat.gama.feature.ifcfile_1.0.0.qualifier.jar" id="miat.gama.feature.ifcfile" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
