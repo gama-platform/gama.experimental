@@ -4,6 +4,8 @@
  <module>../cict.feature.VR</module> 
  <module>../cict.gaml.extensions.netcdf</module> 
  <module>../cict.gaml.extensions.VR</module> 
+ <module>../escape.gaml.feature.pedestrian</module> 
+ <module>../escape.gaml.pedestrian</module> 
  <module>../femto.st.gama.feature.mpi</module> 
  <module>../femto.st.gama.hpc</module> 
  <module>../femto.st.gama.mpi</module> 
