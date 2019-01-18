@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Pedestrian
-Bundle-SymbolicName: escape.gaml.additions;singleton:=true
+Bundle-SymbolicName: escape.gaml.pedestrian;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: escape.gaml.additions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
