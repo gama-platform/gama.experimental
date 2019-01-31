@@ -1,3 +1,4 @@
+#version 330
 #if __VERSION__ >= 130
 	#define varying in
 	out vec4 mgl_FragColor;
@@ -15,6 +16,6 @@ uniform   sampler2D textureSampler;
 
 void main (void)
 {
-	vec4 inputColor = texture2D(textureSampler,vec2(pass_textureCoords.x/pass_textureCoords.w,-pass_textureCoords.y/pass_textureCoords.w));
+	vec4 inputColor = texture(textureSampler,vec2(pass_textureCoords.x/pass_textureCoords.w,-pass_textureCoords.y/pass_textureCoords.w));
 	gl_FragColor = inputColor;
 }

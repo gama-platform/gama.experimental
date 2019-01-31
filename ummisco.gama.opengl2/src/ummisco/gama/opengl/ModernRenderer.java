@@ -18,8 +18,9 @@ import javax.vecmath.Matrix4f;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLProfile;
 
 import msi.gama.common.geometry.Scaling3D;
 import msi.gama.metamodel.shape.GamaPoint;
@@ -194,9 +195,9 @@ public class ModernRenderer extends Abstract3DRenderer {
 		// and/or a modernRenderer.
 		drawingEntityGenerator = new DrawingEntityGenerator(this);
 		lightHelper = new LightHelper(this);
-		gl = drawable.getGL().getGL2();
-		openGL.setGL2(gl);
-		// openGL.setGL2(gl);
+		gl = drawable.getGL().getGL3();
+		openGL.setGL3(gl);
+		// openGL.setGL3(gl);
 		final Color background = data.getBackgroundColor();
 		gl.glClearColor(background.getRed() / 255.0f, background.getGreen() / 255.0f, background.getBlue() / 255.0f,
 				1.0f);
@@ -219,14 +220,14 @@ public class ModernRenderer extends Abstract3DRenderer {
 
 		currentScene = sceneBuffer.getSceneToRender();
 		if (currentScene == null) { return; }
-		gl = drawable.getGL().getGL2();
+		gl = drawable.getGL().getGL3();
 
 		drawer.prepareFrameBufferObject();
 
 		final Color background = data.getBackgroundColor();
 		gl.glClearColor(background.getRed() / 255.0f, background.getGreen() / 255.0f, background.getBlue() / 255.0f,
 				1.0f);
-		gl.glClear(GL2.GL_STENCIL_BUFFER_BIT | GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL3.GL_STENCIL_BUFFER_BIT | GL3.GL_COLOR_BUFFER_BIT | GL3.GL_DEPTH_BUFFER_BIT);
 
 		gl.glClearDepth(1.0f);
 		gl.glEnable(GL.GL_DEPTH_TEST); // enables depth testing

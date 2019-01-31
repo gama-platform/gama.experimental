@@ -3,6 +3,7 @@ package ummisco.gama.unity.skills;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -34,7 +35,12 @@ import msi.gama.util.GamaColor;
 import msi.gama.util.GamaMap;
 import msi.gaml.types.IType;
 import ummisco.gama.dev.utils.DEBUG;
+import ummisco.gama.network.common.IConnector;
+import ummisco.gama.network.mqqt.MQTTConnector;
+import ummisco.gama.network.skills.INetworkSkill;
 import ummisco.gama.network.skills.NetworkSkill;
+import ummisco.gama.network.tcp.TCPConnector;
+import ummisco.gama.network.udp.UDPConnector;
 import ummisco.gama.serializer.factory.StreamConverter;
 import ummisco.gama.serializer.gamaType.converters.ConverterScope;
 import ummisco.gama.unity.data.type.rgbColor;
@@ -91,12 +97,24 @@ import ummisco.gama.unity.mqtt.Utils;
 public class UnitySkill extends NetworkSkill {
 	
 	public static String allContent = "";
+	
+	final static String REGISTERED_AGENTS = "registred_agents";
+	final static String REGISTRED_SERVER = "registred_servers";
+	
 	static {
-		DEBUG.OFF();	
+		DEBUG.ON();	
+	}
+	
+	public UnitySkill() {
+		super();
 	}
 
 	//public static final String BROKER_URL = "tcp://localhost:1883";
 	public static final String BROKER_URL = "tcp://195.221.248.15:1935";
+	
+	public static final String SERVER_URL = "195.221.248.15";
+	public static final int SERVER_PORT = 1935;
+	
 	public static String DEFAULT_USER = "gama_demo";
 	public static String DEFAULT_PASSWORD = "gama_demo";
 
@@ -125,6 +143,126 @@ public class UnitySkill extends NetworkSkill {
 		final IAgent agent = scope.getAgent();
 		return " ";
 	}
+	
+	//-------------------- - - - - --------------------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------------------------------------------------
+	@SuppressWarnings ("unchecked")
+	@action (
+			name = INetworkSkill.CONNECT_TOPIC,
+			args = { @arg (
+						name = INetworkSkill.PROTOCOL,
+						type = IType.STRING,
+						doc = @doc ("protocol type (UDP, TCP, MQTT (by default)): the possible value ares '" + INetworkSkill.UDP_SERVER+"', '" + INetworkSkill.UDP_CLIENT + "', '"+
+																								INetworkSkill.TCP_SERVER+"', '" + INetworkSkill.TCP_CLIENT + "', otherwise the MQTT protocol is used.")),
+					@arg (
+							name = INetworkSkill.PORT,
+							type = IType.INT,
+							doc = @doc ("Port number")),
+					@arg (
+							name = INetworkSkill.WITHNAME,
+							type = IType.STRING,
+							optional = true,
+							doc = @doc ("name of the agent on the server")),
+					@arg (
+							name = INetworkSkill.LOGIN,
+							type = IType.STRING,
+							optional = true,
+							doc = @doc ("login for the connection to the server")),
+					@arg (
+							name = INetworkSkill.PASSWORD,
+							type = IType.STRING,
+							optional = true,
+							doc = @doc ("password associated to the login")),
+					@arg (
+							name = INetworkSkill.SERVER_URL,
+							type = IType.STRING,
+							optional = true,
+							doc = @doc ("server URL (localhost or a server URL)")) },
+			doc = @doc (
+					value = "Action used by a networking agent to connect to a server or as a server.",
+					examples = { @example (" do connect to:\"localhost\" protocol:\"udp_server\" port:9876 with_name:\"Server\"; "),
+								 @example (" do connect to:\"localhost\" protocol:\"udp_client\" port:9876 with_name:\"Client\";"),
+								 @example (" do connect  with_name:\"any_name\";") }))
+	@Override
+	public void connectToServer(final IScope scope) throws GamaRuntimeException {
+		
+		System.out.println("Ceci est le tes");
+		
+		if (!scope.getSimulation().getAttributes().keySet().contains(REGISTRED_SERVER)) {
+			this.startSkill(scope);
+		}
+		
+		final IAgent agt = scope.getAgent();
+		final String serverURL =  scope.hasArg(INetworkSkill.SERVER_URL) ?  (String) scope.getArg(INetworkSkill.SERVER_URL, IType.STRING) : SERVER_URL;
+		final String login = scope.hasArg(INetworkSkill.LOGIN) ? (String) scope.getArg(INetworkSkill.LOGIN, IType.STRING) : DEFAULT_USER; 
+		final String password = scope.hasArg(INetworkSkill.PASSWORD) ? (String) scope.getArg(INetworkSkill.PASSWORD, IType.STRING) : DEFAULT_PASSWORD;
+		final String networkName = (String) scope.getArg(INetworkSkill.WITHNAME, IType.STRING);
+		final String protocol = (String) scope.getArg(INetworkSkill.PROTOCOL, IType.STRING);
+		final Integer port = scope.hasArg(INetworkSkill.PORT) ? (Integer) scope.getArg(INetworkSkill.PORT, IType.INT) : SERVER_PORT;
+
+		DEBUG.OUT("--> paprametre  serverURL -> " + serverURL );
+		
+		//final Map<String, IConnector> myConnectors =  new HashMap<String, IConnector>();// this.getRegisteredServers(scope);
+		final Map<String, IConnector> myConnectors =  this.getRegisteredServers(scope);
+		IConnector connector = myConnectors.get(serverURL);
+		
+		DEBUG.OUT("--> create to MQTT Broker " + login + " " + password);
+		
+		if (connector == null) {
+			DEBUG.OUT("create to MQTT Broker " + login + " " + password);
+			connector = new MQTTConnector(scope);
+			if (serverURL != null) {
+				connector.configure(IConnector.SERVER_URL, serverURL);
+			}
+			if (login != null) {
+				connector.configure(IConnector.LOGIN, login);
+			}
+			if (password != null) {
+				connector.configure(IConnector.PASSWORD, password);
+			}
+			myConnectors.put(serverURL, connector);
+		}
+
+		if (agt.getAttribute(INetworkSkill.NET_AGENT_NAME) == null) {
+			agt.setAttribute(INetworkSkill.NET_AGENT_NAME, networkName);
+		}
+
+		List<String> serverList = (List<String>) agt.getAttribute(INetworkSkill.NET_AGENT_SERVER);
+		if (serverList == null) {
+			serverList = new ArrayList<>();
+			agt.setAttribute(INetworkSkill.NET_AGENT_SERVER, serverList);
+		}
+
+		connector.connect(agt);
+		serverList.add(serverURL);
+
+		// register connected agent to global groups;
+		for (final String grp : INetworkSkill.DEFAULT_GROUP) {
+			connector.joinAGroup(agt, grp);
+		}
+	}
+
+	
+	@action(name = "send", args = {
+			@arg(name = IKeyword.TO, type = IType.NONE, optional = true, doc = @doc("The agent, or server, to which this message will be sent to")),
+			@arg(name = GamaMessage.CONTENTS, type = IType.NONE, optional = false, doc = @doc("The contents of the message, an arbitrary object")) })
+	@Override
+	public GamaMessage primSendMessage(final IScope scope) throws GamaRuntimeException {
+		DEBUG.OUT("--> Message sent from UnitySkill");
+		final IAgent sender = scope.getAgent();
+		Object receiver = scope.getArg("to", IType.NONE);
+		if (receiver == null)
+			receiver = sender;
+		final Object contents = effectiveContents(scope, scope.getArg(GamaMessage.CONTENTS, IType.NONE));
+		if (contents == null) {
+			return null;
+		}
+		final GamaMessage message = createNewMessage(scope, sender, receiver, contents);
+		effectiveSend(scope, message, receiver);
+		return message;
+	}
+	// ----------------- - - - - - - ---------------------------------------------------------------------------------------------
+	//------------------------------- ------ - - - - --------------------------------- -------------------------------------------
 
 	@action ( 
 			name = "connectMqttClient", 

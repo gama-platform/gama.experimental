@@ -11,7 +11,7 @@ package ummisco.gama.modernOpenGL.shader.postprocessing;
 
 import javax.vecmath.Vector3f;
 
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 
 import ummisco.gama.modernOpenGL.shader.AbstractShader;
 
@@ -23,7 +23,7 @@ public abstract class AbstractPostprocessingShader extends AbstractShader {
 
 	private int textureIDStored = -1;
 
-	protected AbstractPostprocessingShader(final GL2 gl, final String vertexFile, final String fragmentFile) {
+	protected AbstractPostprocessingShader(final GL3 gl, final String vertexFile, final String fragmentFile) {
 		super(gl, vertexFile, fragmentFile);
 	}
 

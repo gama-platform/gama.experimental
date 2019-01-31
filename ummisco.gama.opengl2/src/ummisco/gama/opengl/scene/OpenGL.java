@@ -37,9 +37,11 @@ import com.google.common.cache.LoadingCache;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GL2GL3;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
+import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUtessellatorCallback;
 import com.jogamp.opengl.glu.GLUtessellatorCallbackAdapter;
@@ -102,7 +104,7 @@ public class OpenGL {
 	}
 
 	// The real openGL context
-	private GL2 gl;
+	private GL3 gl;
 	private final GLUT glut;
 	private int viewWidth, viewHeight;
 	private float layerScalingFactor = 1f;
@@ -213,12 +215,12 @@ public class OpenGL {
 
 	}
 
-	public GL2 getGL() {
+	public GL3 getGL() {
 		return gl;
 	}
 
-	public void setGL2(final GL2 gl2) {
-		this.gl = gl2;
+	public void setGL3(final GL3 gl3) {
+		this.gl = gl3;
 	}
 
 	public GLUT getGlut() {
@@ -300,26 +302,26 @@ public class OpenGL {
 	}
 
 	public void matrixMode(final int mode) {
-		gl.glMatrixMode(mode);
+		((GLMatrixFunc) gl).glMatrixMode(mode);
 	}
 
 	public void pushMatrix() {
-		gl.glPushMatrix();
+		((GLMatrixFunc) gl).glPushMatrix();
 	}
 
 	public void popMatrix() {
-		gl.glPopMatrix();
+		((GLMatrixFunc) gl).glPopMatrix();
 	}
 
 	public void resetMatrix(final int mode) {
 		matrixMode(mode);
-		gl.glLoadIdentity();
+		((GLMatrixFunc) gl).glLoadIdentity();
 	}
 
 	public void pushIdentity(final int mode) {
 		matrixMode(mode);
 		pushMatrix();
-		gl.glLoadIdentity();
+		((GLMatrixFunc) gl).glLoadIdentity();
 	}
 
 	public void pop(final int mode) {
@@ -328,15 +330,15 @@ public class OpenGL {
 	}
 
 	public void beginDrawing(final int style) {
-		gl.glBegin(style);
+		((GL2) gl).glBegin(style);
 	}
 
 	public void endDrawing() {
-		gl.glEnd();
+		((GL2) gl).glEnd();
 	}
 
 	public void translateBy(final double x, final double y, final double z) {
-		gl.glTranslated(x, y, z);
+		((GL2) gl).glTranslated(x, y, z);
 	}
 
 	public void translateBy(final double... ordinates) {
@@ -359,7 +361,7 @@ public class OpenGL {
 	}
 
 	public void rotateBy(final double angle, final double x, final double y, final double z) {
-		gl.glRotated(angle, x, y, z);
+		((GL2) gl).glRotated(angle, x, y, z);
 	}
 
 	public void rotateBy(final Rotation3D rotation) {
@@ -370,7 +372,7 @@ public class OpenGL {
 
 	public void scaleBy(final double x, final double y, final double z) {
 		currentScale.setLocation(x, y, z);
-		gl.glScaled(x, y, z);
+		((GL2) gl).glScaled(x, y, z);
 	}
 
 	public void scaleBy(final Scaling3D scaling) {
@@ -401,7 +403,7 @@ public class OpenGL {
 		if (solid) {
 			if (computeNormal)
 				setNormal(yNegatedVertices, clockwise);
-			final int style = number == 4 ? GL2.GL_QUADS : number == -1 ? GL2.GL_POLYGON : GL2.GL_TRIANGLES;
+			final int style = number == 4 ? GL3.GL_QUADS : number == -1 ? GL3.GL_TRIANGLE_FAN : GL3.GL_TRIANGLES;
 			drawVertices(style, yNegatedVertices, number, clockwise);
 		}
 		drawClosedLine(yNegatedVertices, border, -1);
@@ -462,23 +464,23 @@ public class OpenGL {
 		final double realZ = z * currentScale.z;
 		if (maxZ < realZ)
 			maxZ = realZ;
-		gl.glVertex3d(x, y, z + currentZTranslation);
+		((GL2) gl).glVertex3d(x, y, z + currentZTranslation);
 	}
 
 	private void outputTexCoord(final double u, final double v) {
-		gl.glTexCoord2d(u, v);
+		((GL2) gl).glTexCoord2d(u, v);
 	}
 
 	public void outputNormal(final double x, final double y, final double z) {
 		currentNormal.setLocation(x, y, z);
-		gl.glNormal3d(x, y, z);
+		((GL2) gl).glNormal3d(x, y, z);
 	}
 
 	public void drawVertex(final GamaPoint coords, final GamaPoint normal, final GamaPoint tex) {
 		if (normal != null)
 			outputNormal(normal.x, normal.y, normal.z);
 		if (tex != null)
-			gl.glTexCoord3d(tex.x, tex.y, tex.z);
+			((GL2) gl).glTexCoord3d(tex.x, tex.y, tex.z);
 		outputVertex(coords.x, coords.y, coords.z);
 	}
 
@@ -579,7 +581,7 @@ public class OpenGL {
 
 	public void setCurrentColor(final double red, final double green, final double blue, final double alpha) {
 		currentColor = new Color((float) red, (float) green, (float) blue, (float) alpha);
-		gl.glColor4d(red, green, blue, alpha);
+		((GL2) gl).glColor4d(red, green, blue, alpha);
 	}
 
 	public void setCurrentColor(final double value) {
@@ -798,7 +800,7 @@ public class OpenGL {
 	public void rasterText(final String s, final int font, final double x, final double y, final double z) {
 		if (!inRasterTextMode)
 			beginRasterTextMode();
-		gl.glRasterPos3d(x, y, z);
+		((GL2) gl).glRasterPos3d(x, y, z);
 		glut.glutBitmapString(font, s);
 		exitRasterTextMode();
 	}
@@ -818,7 +820,7 @@ public class OpenGL {
 		if (!inRasterTextMode)
 			beginRasterTextMode();
 		for (int i = 0; i < seq.length; i++) {
-			gl.glRasterPos3d(coords[i * 3], coords[i * 3 + 1], coords[i * 3 + 2] + currentZTranslation);
+			((GL2) gl).glRasterPos3d(coords[i * 3], coords[i * 3 + 1], coords[i * 3 + 2] + currentZTranslation);
 			glut.glutBitmapString(font, seq[i]);
 		}
 		exitRasterTextMode();
@@ -904,14 +906,14 @@ public class OpenGL {
 	// PICKING
 
 	public void runWithNames(final Runnable r) {
-		gl.glInitNames();
-		gl.glPushName(0);
+		((GL2) gl).glInitNames();
+		((GL2) gl).glPushName(0);
 		r.run();
-		gl.glPopName();
+		((GL2) gl).glPopName();
 	}
 
 	public void registerForSelection(final int index) {
-		gl.glLoadName(index);
+		((GL2) gl).glLoadName(index);
 	}
 
 	public void markIfSelected(final DrawingAttributes attributes) {
@@ -921,10 +923,10 @@ public class OpenGL {
 	// LISTS
 
 	public int compileAsList(final Runnable r) {
-		final int index = gl.glGenLists(1);
-		gl.glNewList(index, GL2.GL_COMPILE);
+		final int index = ((GL2) gl).glGenLists(1);
+		((GL2) gl).glNewList(index, GL2.GL_COMPILE);
 		r.run();
-		gl.glEndList();
+		((GL2) gl).glEndList();
 		return index;
 	}
 
@@ -950,11 +952,11 @@ public class OpenGL {
 
 	public void drawList(final int i) {
 		// applyTransformations();
-		gl.glCallList(i);
+		((GL2) gl).glCallList(i);
 	}
 
 	public void deleteList(final Integer index) {
-		gl.glDeleteLists(index, 1);
+		((GL2) gl).glDeleteLists(index, 1);
 	}
 
 	public void drawCachedGeometry(final GamaGeometryFile file, final Color border) {
@@ -1080,8 +1082,8 @@ public class OpenGL {
 
 	public void drawRoundedRectangle() {
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-		gl.glVertexPointer(2, GL2.GL_DOUBLE, 0, db);
-		gl.glDrawArrays(GL2.GL_TRIANGLE_FAN, 0, 40);
+		((GL2) gl).glVertexPointer(2, GL3.GL_DOUBLE, 0, db);
+		gl.glDrawArrays(GL3.GL_TRIANGLE_FAN, 0, 40);
 		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 	}
 

@@ -12,7 +12,7 @@ package ummisco.gama.modernOpenGL.shader;
 
 import javax.vecmath.Vector3f;
 
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 
 public class TextShaderProgram extends AbstractShader {
 	
@@ -25,7 +25,7 @@ public class TextShaderProgram extends AbstractShader {
 	
 	private int textureIDStored = -1;
 	
-	public TextShaderProgram(GL2 gl) {
+	public TextShaderProgram(GL3 gl) {
 		super(gl,VERTEX_FILE,FRAGMENT_FILE);
 	}
 	

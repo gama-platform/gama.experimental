@@ -205,8 +205,7 @@ public abstract class AbstractCamera implements ICamera {
 
 	@Override
 	public void animate() {
-		glu.gluLookAt(position.x, position.y, position.z, target.x, target.y, target.z, upVector.x, upVector.y,
-				upVector.z);
+		//glu.gluLookAt(position.x, position.y, position.z, target.x, target.y, target.z, upVector.x, upVector.y,upVector.z);
 	}
 
 	/*------------------ Events controls ---------------------*/

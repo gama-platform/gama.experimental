@@ -10,7 +10,7 @@
  **********************************************************************************************/
 package ummisco.gama.modernOpenGL.shader.postprocessing;
 
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 
 public class HorizontalBlurShader extends AbstractPostprocessingShader {
 
@@ -19,7 +19,7 @@ public class HorizontalBlurShader extends AbstractPostprocessingShader {
 	
 	private int location_targetWidth;
 	
-	public HorizontalBlurShader(GL2 gl) {
+	public HorizontalBlurShader(GL3 gl) {
 		super(gl,VERTEX_FILE,FRAGMENT_FILE);
 	}
 	

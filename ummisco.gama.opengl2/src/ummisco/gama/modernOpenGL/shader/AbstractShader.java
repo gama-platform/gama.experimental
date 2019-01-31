@@ -15,13 +15,14 @@ import java.nio.FloatBuffer;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
+
 
 import ummisco.gama.opengl.vaoGenerator.GeomMathUtils;
 
 public abstract class AbstractShader {
 
-	protected GL2 gl;
+	protected GL3 gl;
 
 	protected boolean isOverlay = false;
 
@@ -41,16 +42,16 @@ public abstract class AbstractShader {
 
 	private static FloatBuffer matrixBuffer = FloatBuffer.allocate(16);
 
-	protected AbstractShader(final GL2 gl, final String vertexFile, final String fragmentFile) {
-		this.gl = gl;
+	protected AbstractShader(final GL3 gl2, final String vertexFile, final String fragmentFile) {
+		this.gl = gl2;
 
 		final InputStream vertexInputStream =
 				this.getClass().getClassLoader().getResourceAsStream("/shader/" + vertexFile);
 		final InputStream fragmentInputStream =
 				this.getClass().getClassLoader().getResourceAsStream("/shader/" + fragmentFile);
 
-		vertexShaderID = loadShader(vertexInputStream, GL2.GL_VERTEX_SHADER);
-		fragmentShaderID = loadShader(fragmentInputStream, GL2.GL_FRAGMENT_SHADER);
+		vertexShaderID = loadShader(vertexInputStream, GL3.GL_VERTEX_SHADER);
+		fragmentShaderID = loadShader(fragmentInputStream, GL3.GL_FRAGMENT_SHADER);
 
 		// Each shaderProgram must have
 		// one vertex shader and one fragment shader.
@@ -61,7 +62,6 @@ public abstract class AbstractShader {
 		// Associate attribute ids with the attribute names inside
 		// the vertex shader.
 		bindAttributes();
-
 		this.gl.glLinkProgram(programID);
 		this.gl.glValidateProgram(programID);
 
@@ -81,15 +81,15 @@ public abstract class AbstractShader {
 		final int[] vlengths = new int[] { vlines[0].length() };
 		gl.glShaderSource(shaderID, vlines.length, vlines, vlengths, 0);
 		gl.glCompileShader(shaderID);
-		gl.glEnable(GL2.GL_BLEND);
-		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL3.GL_BLEND);
+		gl.glBlendFunc(GL3.GL_SRC_ALPHA, GL3.GL_ONE_MINUS_SRC_ALPHA);
 
 		// Check compile status.
 		final int[] compiled = new int[1];
-		gl.glGetShaderiv(shaderID, GL2.GL_COMPILE_STATUS, compiled, 0);
+		gl.glGetShaderiv(shaderID, GL3.GL_COMPILE_STATUS, compiled, 0);
 		if (compiled[0] == 0) {
 			final int[] logLength = new int[1];
-			gl.glGetShaderiv(shaderID, GL2.GL_INFO_LOG_LENGTH, logLength, 0);
+			gl.glGetShaderiv(shaderID, GL3.GL_INFO_LOG_LENGTH, logLength, 0);
 
 			final byte[] log = new byte[logLength[0]];
 			gl.glGetShaderInfoLog(shaderID, logLength[0], (int[]) null, 0, log, 0);

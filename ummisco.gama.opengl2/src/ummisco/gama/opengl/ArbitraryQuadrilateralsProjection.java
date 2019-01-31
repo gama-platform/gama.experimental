@@ -5,7 +5,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.mysql.jdbc.StringUtils;
 
 import msi.gama.metamodel.shape.GamaPoint;
@@ -22,9 +22,9 @@ public class ArbitraryQuadrilateralsProjection {
 	int attributePosition;
 	int attributeRegion;
 
-	public void draw(final GL2 gl, final GamaPoint... v) {
+	public void draw(final GL3 gl, final GamaPoint... v) {
 
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureId);
+		gl.glBindTexture(GL3.GL_TEXTURE_2D, textureId);
 
 		drawNonAffine((float) v[0].x, (float) v[0].y, (float) v[1].x, (float) v[1].y, (float) v[2].x, (float) v[2].y,
 				(float) v[3].x, (float) v[3].y);
@@ -32,20 +32,27 @@ public class ArbitraryQuadrilateralsProjection {
 		attributeBuffer.position(0);
 		attributeBuffer.put(attributesData);
 
+		// TODO reset to initial OpenGL
 		attributeBuffer.position(0);
-		gl.glVertexAttribPointer(attributePosition, 2, GL2.GL_FLOAT, false, 5 * 4, attributeBuffer);
+		//gl.glVertexAttribPointer(attributePosition, 2, GL3.GL_FLOAT, false, 5 * 4, attributeBuffer);
+		gl.glVertexAttribPointer(attributePosition, 2, GL3.GL_FLOAT, false, 5 * 4, 0);
+		
 		gl.glEnableVertexAttribArray(attributePosition);
 
 		attributeBuffer.position(2);
-		gl.glVertexAttribPointer(attributeRegion, 3, GL2.GL_FLOAT, false, 5 * 4, attributeBuffer);
+		//gl.glVertexAttribPointer(attributeRegion, 3, GL3.GL_FLOAT, false, 5 * 4, attributeBuffer);
+		gl.glVertexAttribPointer(attributeRegion, 3, GL3.GL_FLOAT, false, 5 * 4, 0);
+		
 		gl.glEnableVertexAttribArray(attributeRegion);
 
 		indicesBuffer.position(0);
-		gl.glDrawElements(GL2.GL_TRIANGLES, 6, GL2.GL_UNSIGNED_SHORT, indicesBuffer);
+		//gl.glDrawElements(GL3.GL_TRIANGLES, 6, GL3.GL_UNSIGNED_SHORT, indicesBuffer);
+		gl.glDrawElements(GL3.GL_TRIANGLES, 6, GL3.GL_UNSIGNED_SHORT, 0);
+		
 		// gl.glUseProgram(0);
 	}
 
-	public void create(final GL2 gl, final int textureId, final float viewWidth, final float viewHeight) {
+	public void create(final GL3 gl, final int textureId, final float viewWidth, final float viewHeight) {
 		// final String vertexShaderSource = "#if __VERSION__ >= 130\n" + " #define attribute in\n"
 		// + " #define varying out\n" + "#endif\n" + "attribute vec2 a_Position;" + "attribute vec3 a_Region;"
 		// + "varying vec3 v_Region;" + "uniform mat3 u_World;" + "void main()" + "{" + " v_Region = a_Region;"
@@ -154,18 +161,18 @@ public class ArbitraryQuadrilateralsProjection {
 		if (!rendered) { throw new RuntimeException("Shape must be concave and vertices must be clockwise."); }
 	}
 
-	private int loadProgram(final GL2 gl, final String vertexShaderSource, final String fragmentShaderSource) {
+	private int loadProgram(final GL3 gl, final String vertexShaderSource, final String fragmentShaderSource) {
 		final int id = gl.glCreateProgram();
 
-		final int vertexShaderId = loadShader(gl, GL2.GL_VERTEX_SHADER, vertexShaderSource);
-		final int fragmentShaderId = loadShader(gl, GL2.GL_FRAGMENT_SHADER, fragmentShaderSource);
+		final int vertexShaderId = loadShader(gl, GL3.GL_VERTEX_SHADER, vertexShaderSource);
+		final int fragmentShaderId = loadShader(gl, GL3.GL_FRAGMENT_SHADER, fragmentShaderSource);
 
 		gl.glAttachShader(id, vertexShaderId);
 		gl.glAttachShader(id, fragmentShaderId);
 		gl.glLinkProgram(id);
 		gl.glDeleteShader(vertexShaderId);
 		gl.glDeleteShader(fragmentShaderId);
-		gl.glGetProgramiv(id, GL2.GL_LINK_STATUS, status, 0);
+		gl.glGetProgramiv(id, GL3.GL_LINK_STATUS, status, 0);
 
 		if (status[0] == 0) {
 			final byte[] chars = new byte[1000];
@@ -179,11 +186,11 @@ public class ArbitraryQuadrilateralsProjection {
 		return id;
 	}
 
-	private int loadShader(final GL2 gl, final int type, final String source) {
+	private int loadShader(final GL3 gl, final int type, final String source) {
 		final int id = gl.glCreateShader(type);
 		gl.glShaderSource(id, 1, new String[] { source }, new int[] { source.length() }, 0);
 		gl.glCompileShader(id);
-		gl.glGetShaderiv(id, GL2.GL_COMPILE_STATUS, status, 0);
+		gl.glGetShaderiv(id, GL3.GL_COMPILE_STATUS, status, 0);
 
 		return id;
 	}

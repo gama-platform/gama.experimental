@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFilter;
 
@@ -130,7 +130,7 @@ public class GeometryCache {
 		geom.apply((GeometryFilter) (g) -> drawer.accept(g));
 	}
 
-	public void dispose(final GL2 gl) {
+	public void dispose(final GL3 gl) {
 		for (final Integer i : fileCache.values()) {
 			gl.glDeleteLists(i, 1);
 		}
