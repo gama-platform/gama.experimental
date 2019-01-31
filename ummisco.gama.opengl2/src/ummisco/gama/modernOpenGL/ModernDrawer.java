@@ -20,7 +20,7 @@ import javax.vecmath.Vector3f;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 
 import msi.gama.metamodel.shape.GamaPoint;
 import ummisco.gama.modernOpenGL.shader.AbstractShader;
@@ -52,7 +52,7 @@ public class ModernDrawer {
 	// (ex : in graphic layer, if we draw a circle and then a text, we want the
 	// text to be above the circle).
 	private final ModernRenderer renderer;
-	private final GL2 gl;
+	private final GL3 gl;
 
 	private final ArrayList<Integer> listOfVAOUsed = new ArrayList<>();
 	private final ArrayList<AbstractShader> shaderLoaded = new ArrayList<>();
@@ -70,7 +70,7 @@ public class ModernDrawer {
 	private static final int NORMAL_IDX = 3;
 	private static final int UVMAPPING_IDX = 4;
 
-	public ModernDrawer(final ModernRenderer renderer, final GL2 gl) {
+	public ModernDrawer(final ModernRenderer renderer, final GL3 gl) {
 		this.renderer = renderer;
 		this.gl = gl;
 	}
@@ -180,7 +180,7 @@ public class ModernDrawer {
 
 	public void prepareFrameBufferObject() {
 		// gl.glClearColor(0, 0, 0, 1.0f);
-		// gl.glClear(GL2.GL_STENCIL_BUFFER_BIT | GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		// gl.glClear(GL3.GL_STENCIL_BUFFER_BIT | GL3.GL_COLOR_BUFFER_BIT | GL3.GL_DEPTH_BUFFER_BIT);
 		if (fbo_scene == null) {
 			fbo_scene = new FrameBufferObject(gl, renderer.getDisplayWidth(), renderer.getDisplayHeight());
 		}
@@ -273,7 +273,7 @@ public class ModernDrawer {
 
 			// INDEX BUFFER
 			// Select the VBO, GPU memory data, to use for colors
-			gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER,
+			gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER,
 					layerStructureMap.get(currentLayer).vboHandles[typeOfDrawing[2] * 5 + IDX_BUFF_IDX]);
 			//////////////////////////////////
 
@@ -320,7 +320,7 @@ public class ModernDrawer {
 
 		// draw
 		final int[] drawingDefinition = new int[3];
-		drawingDefinition[0] = GL2.GL_TRIANGLES;
+		drawingDefinition[0] = GL3.GL_TRIANGLES;
 		drawingDefinition[1] = 6; // idx buffer is equal to 6 : post processing
 									// is rendered onto a quad.
 		drawVBO(drawingDefinition);
@@ -368,9 +368,9 @@ public class ModernDrawer {
 		final int[] intIdxBuffer = new int[] { 0, 1, 2, 0, 2, 3 };
 		final IntBuffer ibIdxBuff = Buffers.newDirectIntBuffer(intIdxBuffer);
 		// Select the VBO, GPU memory data, to use for colors
-		gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, fboHandles[IDX_BUFF_IDX]);
+		gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, fboHandles[IDX_BUFF_IDX]);
 		final int numBytes = intIdxBuffer.length * 4;
-		gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, numBytes, ibIdxBuff, GL2.GL_STATIC_DRAW);
+		gl.glBufferData(GL3.GL_ELEMENT_ARRAY_BUFFER, numBytes, ibIdxBuff, GL3.GL_STATIC_DRAW);
 		ibIdxBuff.rewind();
 	}
 
@@ -425,14 +425,14 @@ public class ModernDrawer {
 		final int[] intIdxBuffer = new int[] { 0, 1, 2, 0, 2, 3 };
 		final IntBuffer ibIdxBuff = Buffers.newDirectIntBuffer(intIdxBuffer);
 		// Select the VBO, GPU memory data, to use for colors
-		gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, fboHandles[IDX_BUFF_IDX]);
+		gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, fboHandles[IDX_BUFF_IDX]);
 		final int numBytes = intIdxBuffer.length * 4;
-		gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, numBytes, ibIdxBuff, GL2.GL_STATIC_DRAW);
+		gl.glBufferData(GL3.GL_ELEMENT_ARRAY_BUFFER, numBytes, ibIdxBuff, GL3.GL_STATIC_DRAW);
 		ibIdxBuff.rewind();
 	}
 
 	private void drawVBO(final int[] typeOfDrawing) {
-		gl.glDrawElements(typeOfDrawing[0], typeOfDrawing[1], GL2.GL_UNSIGNED_INT, 0);
+		gl.glDrawElements(typeOfDrawing[0], typeOfDrawing[1], GL3.GL_UNSIGNED_INT, 0);
 	}
 
 	private void updateTransformationMatrix(final AbstractShader shaderProgram) {
@@ -607,22 +607,22 @@ public class ModernDrawer {
 		}
 		final IntBuffer ibIdxBuff = Buffers.newDirectIntBuffer(intIdxBuffer);
 		// Select the VBO, GPU memory data, to use for colors
-		gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER,
+		gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER,
 				layerStructureMap.get(currentLayer).vboHandles[shaderNumber * 5 + IDX_BUFF_IDX]);
 		final int numBytes = intIdxBuffer.length * 4;
-		gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, numBytes, ibIdxBuff, GL2.GL_STATIC_DRAW);
+		gl.glBufferData(GL3.GL_ELEMENT_ARRAY_BUFFER, numBytes, ibIdxBuff, GL3.GL_STATIC_DRAW);
 		ibIdxBuff.rewind();
 
 		final int[] newElement = new int[3];
 		if (drawingType.equals(DrawingEntity.Type.POINT.toString())) {
 			// particular case : drawing just a point
-			newElement[0] = GL2.GL_POINTS;
+			newElement[0] = GL3.GL_POINTS;
 		} else if (drawingType.equals(DrawingEntity.Type.LINE.toString())) {
 			// draw border (lines)
-			newElement[0] = GL2.GL_LINES;
+			newElement[0] = GL3.GL_LINES;
 		} else {
 			// draw triangles
-			newElement[0] = GL2.GL_TRIANGLES;
+			newElement[0] = GL3.GL_TRIANGLES;
 		}
 		newElement[1] = intIdxBuffer.length;
 		newElement[2] = shaderNumber;
@@ -638,12 +638,12 @@ public class ModernDrawer {
 		for (final float[] data : listData) {
 			numBytes += data.length * 4;
 		}
-		gl.glBufferData(GL2.GL_ARRAY_BUFFER, numBytes, null, GL2.GL_STATIC_DRAW);
+		gl.glBufferData(GL3.GL_ARRAY_BUFFER, numBytes, null, GL3.GL_STATIC_DRAW);
 
 		int offset = 0;
 		for (final float[] data : listData) {
 			final FloatBuffer fbData = Buffers.newDirectFloatBuffer(data/* totalData,positionInBuffer */);
-			gl.glBufferSubData(GL2.GL_ARRAY_BUFFER, offset, data.length * 4, fbData);
+			gl.glBufferSubData(GL3.GL_ARRAY_BUFFER, offset, data.length * 4, fbData);
 			offset += data.length * 4;
 			fbData.rewind(); // It is OK to release CPU after transfer to GPU
 		}
@@ -673,13 +673,13 @@ public class ModernDrawer {
 		}
 		// Select the VBO, GPU memory data, to use for data
 		if (!isRenderingToTexture)
-			gl.glBindBuffer(GL2.GL_ARRAY_BUFFER,
+			gl.glBindBuffer(GL3.GL_ARRAY_BUFFER,
 					layerStructureMap.get(currentLayer).vboHandles[shaderNumber * 5 + bufferAttributeNumber]);
 		else
-			gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, fboHandles[bufferAttributeNumber]);
+			gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, fboHandles[bufferAttributeNumber]);
 
 		// Associate Vertex attribute with the last bound VBO
-		gl.glVertexAttribPointer(shaderAttributeNumber, coordinateSize, GL2.GL_FLOAT, false /* normalized? */,
+		gl.glVertexAttribPointer(shaderAttributeNumber, coordinateSize, GL3.GL_FLOAT, false /* normalized? */,
 				0 /* stride */, 0 /* The bound VBO data offset */);
 	}
 

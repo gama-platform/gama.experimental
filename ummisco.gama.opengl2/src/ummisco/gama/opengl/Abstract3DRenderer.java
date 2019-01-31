@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.FPSCounter;
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
@@ -133,7 +133,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 	// protected volatile boolean shouldRecomputeLayerBounds;
 
 	public boolean colorPicking = false;
-	protected GL2 gl;
+	protected GL3 gl;
 	protected OpenGL openGL;
 	protected GamaPoint worldDimensions;
 	protected Envelope3D ROIEnvelope = null;
@@ -165,7 +165,9 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 	public abstract IKeystoneState getKeystone();
 
 	public GLAutoDrawable createDrawable(final Composite parent) {
-		final GLProfile profile = GLProfile.getDefault();
+		//final GLProfile profile = GLProfile.getDefault();
+		final GLProfile profile = GLProfile.get(GLProfile.GL3);
+		
 		final GLCapabilities cap = new GLCapabilities(profile);
 		cap.setDepthBits(24);
 		// cap.setBackgroundOpaque(true);

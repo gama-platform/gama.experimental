@@ -6,8 +6,8 @@ import java.nio.IntBuffer;
 
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.util.gl3.GLUT;
 
 import msi.gama.common.geometry.ICoordinates;
 import msi.gama.common.geometry.Scaling3D;
@@ -25,7 +25,7 @@ public class KeystoneDrawer implements IKeystoneState {
 
 	private FrameBufferObject fboScene;
 	private final JOGLRenderer renderer;
-	private GL2 gl;
+	private GL3 gl;
 	private OpenGL openGL;
 	protected boolean drawKeystoneHelper = false;
 	protected int cornerSelected = -1, cornerHovered = -1;
@@ -94,7 +94,7 @@ public class KeystoneDrawer implements IKeystoneState {
 
 	public void beginRenderToTexture() {
 		gl.glClearColor(0, 0, 0, 1.0f);
-		gl.glClear(GL2.GL_STENCIL_BUFFER_BIT | GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL3.GL_STENCIL_BUFFER_BIT | GL3.GL_COLOR_BUFFER_BIT | GL3.GL_DEPTH_BUFFER_BIT);
 		if (fboScene == null) {
 			fboScene = new FrameBufferObject(gl, renderer.getDisplayWidth(), renderer.getDisplayHeight());
 		}
@@ -143,13 +143,13 @@ public class KeystoneDrawer implements IKeystoneState {
 			vertices.at(3).setLocation(1 - xOffsetIn01, yOffsetIn01, 0);
 		}
 
-		openGL.pushIdentity(GL2.GL_PROJECTION);
+		openGL.pushIdentity(GL3.GL_PROJECTION);
 		gl.glOrtho(0, 1, 0, 1, 1, -1);
 		openGL.disableLighting();
 
 		vertices.visit((id, x, y, z) -> {
 			// cornersInPixels[id].setToNull();
-			openGL.pushIdentity(GL2.GL_MODELVIEW);
+			openGL.pushIdentity(GL3.GL_MODELVIEW);
 			// Basic computations on text and color
 			final String text = floor4Digit(getCoords()[id].x) + "," + floor4Digit(getCoords()[id].y);
 			final int lengthOfTextInPixels = openGL.getGlut().glutBitmapLength(GLUT.BITMAP_HELVETICA_18, text);
@@ -177,11 +177,11 @@ public class KeystoneDrawer implements IKeystoneState {
 					: 1 - labelHeightIn01 + 12 * pixelHeightIn01 - (worldCorners ? yOffsetIn01 : 0);
 			openGL.getGL().glRasterPos2d(xPosIn01, yPosIn01);
 			openGL.getGlut().glutBitmapString(GLUT.BITMAP_HELVETICA_18, text);
-			openGL.pop(GL2.GL_MODELVIEW);
+			openGL.pop(GL3.GL_MODELVIEW);
 		}, 4, true);
-		openGL.pop(GL2.GL_MODELVIEW);
+		openGL.pop(GL3.GL_MODELVIEW);
 		openGL.enableLighting();
-		openGL.pop(GL2.GL_PROJECTION);
+		openGL.pop(GL3.GL_PROJECTION);
 
 	}
 
@@ -196,7 +196,7 @@ public class KeystoneDrawer implements IKeystoneState {
 		if (drawKeystoneHelper) {
 			drawKeystoneMarks();
 		}
-		// gl.glDisable(GL2.GL_DEPTH_TEST); // disables depth testing
+		// gl.glDisable(GL3.GL_DEPTH_TEST); // disables depth testing
 		final AbstractPostprocessingShader shader = getShader();
 		// unbind the last fbo
 		fboScene.unbindCurrentFrameBuffer();
@@ -206,7 +206,7 @@ public class KeystoneDrawer implements IKeystoneState {
 		// build the surface
 		createScreenSurface();
 		// draw
-		gl.glDrawElements(GL2.GL_TRIANGLES, 6, GL2.GL_UNSIGNED_INT, 0);
+		gl.glDrawElements(GL3.GL_TRIANGLES, 6, GL3.GL_UNSIGNED_INT, 0);
 		shader.stop();
 	}
 
@@ -273,23 +273,23 @@ public class KeystoneDrawer implements IKeystoneState {
 		gl.glBindTexture(GL.GL_TEXTURE_2D, fboScene.getFBOTexture());
 
 		// Select the VBO, GPU memory data, to use for colors
-		gl.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, indexBufferIndex);
-		gl.glBufferData(GL2.GL_ELEMENT_ARRAY_BUFFER, 24, ibIdxBuff, GL2.GL_STATIC_DRAW);
+		gl.glBindBuffer(GL3.GL_ELEMENT_ARRAY_BUFFER, indexBufferIndex);
+		gl.glBufferData(GL3.GL_ELEMENT_ARRAY_BUFFER, 24, ibIdxBuff, GL3.GL_STATIC_DRAW);
 		ibIdxBuff.rewind();
 	}
 
 	private void storeAttributes(final int shaderAttributeType, final int bufferIndex, final int size,
 			final float[] data) {
 		// Select the VBO, GPU memory data, to use for data
-		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, bufferIndex);
+		gl.glBindBuffer(GL3.GL_ARRAY_BUFFER, bufferIndex);
 		// Associate Vertex attribute with the last bound VBO
-		gl.glVertexAttribPointer(shaderAttributeType, size, GL2.GL_FLOAT, false, 0, 0 /* offset */);
+		gl.glVertexAttribPointer(shaderAttributeType, size, GL3.GL_FLOAT, false, 0, 0 /* offset */);
 		// compute the total size of the buffer :
 		final int numBytes = data.length * 4;
-		gl.glBufferData(GL2.GL_ARRAY_BUFFER, numBytes, null, GL2.GL_STATIC_DRAW);
+		gl.glBufferData(GL3.GL_ARRAY_BUFFER, numBytes, null, GL3.GL_STATIC_DRAW);
 
 		final FloatBuffer fbData = Buffers.newDirectFloatBuffer(data);
-		gl.glBufferSubData(GL2.GL_ARRAY_BUFFER, 0, numBytes, fbData);
+		gl.glBufferSubData(GL3.GL_ARRAY_BUFFER, 0, numBytes, fbData);
 		gl.glEnableVertexAttribArray(shaderAttributeType);
 	}
 

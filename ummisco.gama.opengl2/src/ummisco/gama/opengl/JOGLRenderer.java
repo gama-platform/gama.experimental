@@ -16,12 +16,12 @@ import java.io.File;
 import java.nio.BufferOverflowException;
 
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GL2ES1;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.gl3.GLUT;
 
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.interfaces.IDisplaySurface;
@@ -80,8 +80,8 @@ public class JOGLRenderer extends Abstract3DRenderer {
 	public void init(final GLAutoDrawable drawable) {
 		WorkbenchHelper.run(() -> getCanvas().setVisible(visible));
 		lightHelper = new LightHelper(this);
-		gl = drawable.getGL().getGL2();
-		openGL.setGL2(gl);
+		gl = drawable.getGL().getGL3();
+		openGL.setGL3(gl);
 		keystone.setGLHelper(openGL);
 		final Color bg = data.getBackgroundColor();
 		gl.glClearColor(bg.getRed() / 255.0f, bg.getGreen() / 255.0f, bg.getBlue() / 255.0f, 1.0f);
@@ -121,17 +121,17 @@ public class JOGLRenderer extends Abstract3DRenderer {
 		// Blending & alpha control
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_MODULATE);
-		gl.glEnable(GL2.GL_ALPHA_TEST);
-		gl.glAlphaFunc(GL2.GL_GREATER, 0.01f);
+		gl.glTexEnvi(GL3.GL_TEXTURE_ENV, GL3.GL_TEXTURE_ENV_MODE, GL3.GL_MODULATE);
+		gl.glEnable(GL3.GL_ALPHA_TEST);
+		gl.glAlphaFunc(GL3.GL_GREATER, 0.01f);
 		// Disabling line smoothing to only rely on FSAA
 		// gl.glDisable(GL.GL_LINE_SMOOTH);
 		// Enabling forced normalization of normal vectors (important)
-		gl.glEnable(GL2.GL_NORMALIZE);
+		gl.glEnable(GL3.GL_NORMALIZE);
 		// Enabling multi-sampling (necessary ?)
 		// if (USE_MULTI_SAMPLE) {
-		gl.glEnable(GL2.GL_MULTISAMPLE);
-		gl.glHint(GL2.GL_MULTISAMPLE_FILTER_HINT_NV, GL2.GL_NICEST);
+		gl.glEnable(GL3.GL_MULTISAMPLE);
+		gl.glHint(GL3.GL_MULTISAMPLE_FILTER_HINT_NV, GL3.GL_NICEST);
 		// }
 		openGL.initializeShapeCache();
 		setUpKeystoneCoordinates();
@@ -143,8 +143,8 @@ public class JOGLRenderer extends Abstract3DRenderer {
 	@Override
 	public void display(final GLAutoDrawable drawable) {
 		// Re-set the GL context in case it has changed
-		gl = drawable.getGL().getGL2();
-		openGL.setGL2(gl);
+		gl = drawable.getGL().getGL3();
+		openGL.setGL3(gl);
 		//
 		openGL.setAntiAlias(data.isAntialias());
 		openGL.setWireframe(data.isWireframe());
@@ -159,12 +159,12 @@ public class JOGLRenderer extends Abstract3DRenderer {
 		if (keystone.isKeystoneInAction())
 			keystone.beginRenderToTexture();
 		openGL.beginScene(data.getBackgroundColor());
-		openGL.resetMatrix(GL2.GL_PROJECTION);
+		openGL.resetMatrix(GL3.GL_PROJECTION);
 
 		updateCameraPosition();
 		updatePerspective();
 
-		openGL.resetMatrix(GL2.GL_MODELVIEW);
+		openGL.resetMatrix(GL3.GL_MODELVIEW);
 
 		if (data.isLightOn()) {
 			openGL.pushMatrix();
@@ -216,16 +216,16 @@ public class JOGLRenderer extends Abstract3DRenderer {
 			final int height) {
 		if (width <= 0 || height <= 0) { return; }
 		// System.out.println("Reshaping to " + width + "x" + height);
-		gl = drawable.getContext().getGL().getGL2();
+		gl = drawable.getContext().getGL().getGL3();
 		gl.glViewport(0, 0, width, height);
 		openGL.setViewWidth(width);
 		openGL.setViewHeight(height);
-		openGL.resetMatrix(GL2.GL_MODELVIEW);
-		openGL.resetMatrix(GL2.GL_PROJECTION);
+		openGL.resetMatrix(GL3.GL_MODELVIEW);
+		openGL.resetMatrix(GL3.GL_PROJECTION);
 		updatePerspective();
 		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
-		gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, mvmatrix, 0);
-		gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projmatrix, 0);
+		gl.glGetDoublev(GL3.GL_MODELVIEW_MATRIX, mvmatrix, 0);
+		gl.glGetDoublev(GL3.GL_PROJECTION_MATRIX, projmatrix, 0);
 		keystone.reshape(width, height);
 		// shouldRecomputeLayerBounds = true;
 	}
@@ -281,14 +281,14 @@ public class JOGLRenderer extends Abstract3DRenderer {
 		final int viewport[] = new int[4];
 		gl.glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
 		// 3. Prepare openGL for rendering in select mode
-		gl.glRenderMode(GL2.GL_SELECT);
+		gl.glRenderMode(GL3.GL_SELECT);
 		/*
 		 * The application must redefine the viewing volume so that it renders only a small area around the place where
 		 * the mouse was clicked. In order to do that it is necessary to set the matrix mode to GL_PROJECTION.
 		 * Afterwards, the application should push the current matrix to save the normal rendering mode settings. Next
 		 * initialise the matrix
 		 */
-		openGL.matrixMode(GL2.GL_PROJECTION);
+		openGL.matrixMode(GL3.GL_PROJECTION);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		/*
@@ -299,7 +299,7 @@ public class JOGLRenderer extends Abstract3DRenderer {
 		glu.gluPickMatrix(camera.getMousePosition().x, viewport[3] - camera.getMousePosition().y, 4, 4, viewport, 0);
 		// FIXME Why do we have to call updatePerspective() here ?
 		updatePerspective();
-		openGL.matrixMode(GL2.GL_MODELVIEW);
+		openGL.matrixMode(GL3.GL_MODELVIEW);
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////
@@ -313,11 +313,11 @@ public class JOGLRenderer extends Abstract3DRenderer {
 		int selectedIndex = PickingState.NONE;
 		// 5. When you back to Render mode gl.glRenderMode() methods return
 		// number of hits
-		final int howManyObjects = gl.glRenderMode(GL2.GL_RENDER);
+		final int howManyObjects = gl.glRenderMode(GL3.GL_RENDER);
 		// 6. Restore to normal settings
-		openGL.matrixMode(GL2.GL_PROJECTION);
+		openGL.matrixMode(GL3.GL_PROJECTION);
 		openGL.popMatrix();
-		openGL.matrixMode(GL2.GL_MODELVIEW);
+		openGL.matrixMode(GL3.GL_MODELVIEW);
 		// 7. Seach the select buffer to find the nearest object
 		// code below derive which objects is nearest from monitor
 		//

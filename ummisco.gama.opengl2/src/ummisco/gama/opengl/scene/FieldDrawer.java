@@ -17,7 +17,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.primitives.Doubles;
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.gl2.GLUT;
 
 import msi.gama.common.geometry.GeometryUtils;
@@ -207,7 +207,7 @@ public class FieldDrawer extends ObjectDrawer<FieldObject> {
 	public void drawTexturedCell(final double w, final double h, final int i, final int j,
 			final ICoordinates vertices) {
 		final double[] texCoords = { w * i, h * j, w * (i + 1), h * j, w * (i + 1), h * (j + 1), w * i, h * (j + 1) };
-		gl.drawVertices(GL2.GL_QUADS, vertices, 4, true, texCoords);
+		gl.drawVertices(GL3.GL_QUADS, vertices, 4, true, texCoords);
 	}
 
 	protected void drawFromImage(final FieldObject demObj) {
@@ -245,7 +245,9 @@ public class FieldDrawer extends ObjectDrawer<FieldObject> {
 				texCoords[i + 3] = texCoords[i + 1] - tt;
 
 			}
-			gl.drawVertices(GL2.GL_QUAD_STRIP, coords.setTo(vertices), -1, true, texCoords);
+			// TODO reset to initial OpenGL
+			//gl.drawVertices(GL3.GL_QUAD_STRIP, coords.setTo(vertices), -1, true, texCoords);
+			gl.drawVertices(GL3.GL_QUADS, coords.setTo(vertices), -1, true, texCoords);
 		}
 		gl.popMatrix();
 

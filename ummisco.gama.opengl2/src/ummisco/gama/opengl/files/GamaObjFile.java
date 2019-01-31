@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.texture.Texture;
 
 import msi.gama.common.geometry.Envelope3D;
@@ -345,7 +345,7 @@ public class GamaObjFile extends Gama3DGeometryFile {
 					gl.deleteTexture(texture);
 					texture = null;
 				}
-				// gl.getGL().glEnable(GL2.GL_COLOR_MATERIAL);
+				// gl.getGL().glEnable(GL3.GL_COLOR_MATERIAL);
 				gl.setCurrentColor(materials.getKd(nextmatname)[0], materials.getKd(nextmatname)[1],
 						materials.getKd(nextmatname)[2], materials.getd(nextmatname));
 
@@ -368,8 +368,8 @@ public class GamaObjFile extends Gama3DGeometryFile {
 						// was not possible when displaying the file
 						texture = gl.getTexture(f, false, true);
 						gl.setCurrentTextures(texture.getTextureObject(), texture.getTextureObject());
-						texture.setTexParameteri(gl.getGL(), GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
-						texture.setTexParameteri(gl.getGL(), GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
+						texture.setTexParameteri(gl.getGL(), GL3.GL_TEXTURE_WRAP_S, GL3.GL_REPEAT);
+						texture.setTexParameteri(gl.getGL(), GL3.GL_TEXTURE_WRAP_T, GL3.GL_REPEAT);
 					}
 
 				}
@@ -386,8 +386,9 @@ public class GamaObjFile extends Gama3DGeometryFile {
 			final int[] texs = facesTexs.get(i);
 
 			//// Quad Begin Header ////
-			final int polytype =
-					tempfaces.length == 3 ? GL.GL_TRIANGLES : tempfaces.length == 4 ? GL2.GL_QUADS : GL2.GL_POLYGON;
+			// TODO reset to initial OpenGL
+			//final int polytype = tempfaces.length == 3 ? GL.GL_TRIANGLES : tempfaces.length == 4 ? GL3.GL_QUADS : GL3.GL_POLYGON;
+			final int polytype = tempfaces.length == 3 ? GL.GL_TRIANGLES : tempfaces.length == 4 ? GL3.GL_QUADS : GL3.GL_TRIANGLE_FAN;
 			gl.beginDrawing(polytype);
 			////////////////////////////
 

@@ -11,7 +11,7 @@ package ummisco.gama.opengl.vaoGenerator;
 
 import java.awt.Font;
 
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.texture.Texture;
 
 import msi.gama.runtime.IScope;
@@ -40,7 +40,7 @@ public class DrawingEntityGenerator {
 	}
 
 	public DrawingEntity[] generateDrawingEntities(final IScope scope, final AbstractObject object,
-			final LayerObject layer, final GL2 gl) {
+			final LayerObject layer, final GL3 gl) {
 		return generateDrawingEntities(scope, object, true, layer, gl);
 	}
 
@@ -64,7 +64,7 @@ public class DrawingEntityGenerator {
 	}
 
 	public DrawingEntity[] generateDrawingEntities(final IScope scope, final AbstractObject object,
-			final boolean computeTextureIds, final LayerObject layer, final GL2 gl) {
+			final boolean computeTextureIds, final LayerObject layer, final GL3 gl) {
 		// if this function is called to create a simpleScene, we don't compute
 		// the texture IDs (the only thing that interest us in this case is the
 		// texture Path)

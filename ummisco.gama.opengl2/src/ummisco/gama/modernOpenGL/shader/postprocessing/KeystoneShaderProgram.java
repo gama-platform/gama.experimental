@@ -9,22 +9,22 @@
  **********************************************************************************************/
 package ummisco.gama.modernOpenGL.shader.postprocessing;
 
-import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 
 public class KeystoneShaderProgram extends AbstractPostprocessingShader {
 
 	private static String VERTEX_FILE = "keystoneVertexShader";
 	private static String FRAGMENT_FILE = "keystoneFragmentShader";
 
-	public KeystoneShaderProgram(final GL2 gl) {
+	public KeystoneShaderProgram(final GL3 gl) {
 		super(gl, VERTEX_FILE, FRAGMENT_FILE);
 	}
 
-	public KeystoneShaderProgram(final GL2 gl, final String vertexFile) {
+	public KeystoneShaderProgram(final GL3 gl, final String vertexFile) {
 		super(gl, vertexFile, FRAGMENT_FILE);
 	}
 
-	public KeystoneShaderProgram(final GL2 gl, final String vertexFile, final String fragmentFile) {
+	public KeystoneShaderProgram(final GL3 gl, final String vertexFile, final String fragmentFile) {
 		super(gl, vertexFile, fragmentFile);
 	}
 

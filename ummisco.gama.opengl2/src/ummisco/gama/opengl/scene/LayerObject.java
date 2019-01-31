@@ -15,6 +15,8 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES1;
+import com.jogamp.opengl.GL3;
 import com.vividsolutions.jts.geom.Geometry;
 
 import msi.gama.common.geometry.Scaling3D;
@@ -102,13 +104,13 @@ public class LayerObject {
 		}
 	}
 
-	private void drawWithShader(final GL2 gl) {
+	private void drawWithShader(final GL3 gl) {
 		final ModernRenderer renderer = (ModernRenderer) this.renderer;
 
 		if (isOverlay()) {
-			gl.glDisable(GL2.GL_DEPTH_TEST);
+			gl.glDisable(GL3.GL_DEPTH_TEST);
 		} else {
-			gl.glEnable(GL2.GL_DEPTH_TEST);
+			gl.glEnable(GL3.GL_DEPTH_TEST);
 		}
 
 		if (!sceneIsInitialized || constantRedrawnLayer) {
@@ -147,7 +149,7 @@ public class LayerObject {
 		final GamaPoint scale = getScale();
 
 		if (overlay) {
-			gl.getGL().glDisable(GL2.GL_DEPTH_TEST);
+			gl.getGL().glDisable(GL3.GL_DEPTH_TEST);
 			// Addition to fix #2228 and #2222
 			gl.suspendZTranslation();
 			//
@@ -160,9 +162,13 @@ public class LayerObject {
 
 			gl.pushIdentity(GL2.GL_PROJECTION);
 			if (viewRatio >= 1.0) {
-				gl.getGL().glOrtho(0, maxDim * viewRatio, -maxDim, 0, -1, 1);
+				// TODO reset to initial OpenGL
+				//gl.getGL().glOrtho(0, maxDim * viewRatio, -maxDim, 0, -1, 1);
+				((GL2ES1) gl.getGL()).glOrtho(0, maxDim * viewRatio, -maxDim, 0, -1, 1);
 			} else {
-				gl.getGL().glOrtho(0, maxDim, -maxDim / viewRatio, 0, -1, 1);
+				// TODO reset to initial OpenGL
+				//gl.getGL().glOrtho(0, maxDim, -maxDim / viewRatio, 0, -1, 1);
+				((GL2ES1) gl.getGL()).glOrtho(0, maxDim, -maxDim / viewRatio, 0, -1, 1);
 			}
 
 			gl.pushIdentity(GL2.GL_MODELVIEW);
