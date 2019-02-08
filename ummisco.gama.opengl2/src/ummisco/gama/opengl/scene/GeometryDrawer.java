@@ -18,7 +18,7 @@ import static msi.gama.common.geometry.GeometryUtils.getYNegatedCoordinates;
 
 import java.awt.Color;
 
-import com.jogamp.opengl.util.gl2.GLUT;
+//import com.jogamp.opengl.util.gl2.GLUT;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -200,6 +200,8 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 	 */
 	public void drawGeometry(final Geometry geom, final boolean solid, final Color border, final double height,
 			final IShape.Type type) {
+		
+		System.out.println("-----> Cube drawer");
 		switch (type) {
 			case SPHERE:
 				drawSphere(geom, solid, height, border);
@@ -345,6 +347,7 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 	}
 
 	private void drawSphere(final Geometry p, final boolean solid, final double height, final Color border) {
+		
 		_vertices.setToYNegated(getContourCoordinates(p));
 		_vertices.getNormal(true, 1, _normal);
 		_vertices.getCenter(_center);
@@ -447,15 +450,22 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 			_vertices.getCenter(_center);
 			gl.translateBy(_center);
 			gl.rotateBy(90, 1.0, 0.0, 0.0);
-			final GLUT glut = gl.getGlut();
+			// TODO reset to initial OpenGL
+			//final GLUT glut = gl.getGlut();
 			if (solid) {
-				glut.glutSolidTeapot(height);
+				// TODO reset to initial OpenGL
+				//glut().glutSolidTeapot(height);
+				gl.getGlut().glutSolidTeapot(height);
 				if (border != null) {
 					gl.setCurrentColor(border);
-					glut.glutWireTeapot(height);
+					// TODO reset to initial OpenGL
+					//glut().glutWireTeapot(height);
+					gl.getGlut().glutWireTeapot(height);
 				}
 			} else
-				glut.glutWireTeapot(height);
+				// TODO reset to initial OpenGL
+				//glut().glutWireTeapot(height);
+				gl.getGlut().glutWireTeapot(height);
 		} finally {
 			gl.popMatrix();
 		}

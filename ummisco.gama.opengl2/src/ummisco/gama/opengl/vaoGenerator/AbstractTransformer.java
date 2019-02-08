@@ -36,13 +36,14 @@ import ummisco.gama.opengl.utils.Utils;
  * This class is the intermediary class for the transformation from a GeometryObject to a (or some) DrawingElement(s).
  */
 
-abstract class AbstractTransformer {
+ abstract class AbstractTransformer {
 
 	private static float SMOOTH_SHADING_ANGLE = 40f; // in degree
 	protected static int BUILT_IN_SHAPE_RESOLUTION = 32; // for sphere / cone / cylinder
 	private static GamaColor TRIANGULATE_COLOR = new GamaColor(1.0, 1.0, 0.0, 1.0);
 	private static GamaColor DEFAULT_COLOR = GamaPreferences.Displays.CORE_COLOR.getValue();
 
+	protected static int elementNumber = 0;
 	protected boolean geometryCorrupted = false;
 
 	protected boolean isOverlay = false;
@@ -84,6 +85,7 @@ abstract class AbstractTransformer {
 
 	protected void genericInit(final AbstractObject object, final boolean isOverlay, final boolean isTriangulation,
 			final double layerAlpha) {
+		this.elementNumber++;
 		this.isOverlay = isOverlay;
 		this.faces = new ArrayList<int[]>();
 		this.coords = new float[0];
@@ -117,18 +119,20 @@ abstract class AbstractTransformer {
 		if (type.toString().equals("SPHERE") || type.toString().equals("PYRAMID") || type.toString().equals("CONE")
 				|| type.toString().equals("CUBE") || type.toString().equals("CYLINDER")
 				|| type.toString().equals("RECTANGLE")) {
-			result = type.toString() + (isWireframe ? "_wireframe" : "") + depth;
+			result = type.toString() + (isWireframe ? "_wireframe" : "") + depth + elementNumber;
+			System.out.println("       - - - - - - -> "+ type.toString() + "    and depth is "+depth);
 		}
-		// else {
-		// String coordsInString = "";
-		// for (final Coordinate c : coordsWithDoublons) {
-		// coordsInString += c.x;
-		// coordsInString += c.y;
-		// coordsInString += c.z;
-		// }
-		// result = type.toString() + coordsInString;
-		// }
+		 else {
+		 String coordsInString = "";
+		 for (final Coordinate c : coordsWithDoublons) {
+		 coordsInString += c.x;
+		 coordsInString += c.y;
+		 coordsInString += c.z;
+		 }
+		 result = type.toString() + coordsInString;
+		 }
 		return result;
+		
 	}
 
 	protected void cancelTransformation() {
@@ -143,8 +147,9 @@ abstract class AbstractTransformer {
 	}
 
 	protected void loadManyFacedShape(final AbstractTransformer shape) {
+		
 		faces = shape.faces;
-		coords = shape.coords;
+		coords = shape.coords; 
 		uvMapping = shape.uvMapping;
 		normals = shape.normals;
 		coordsForBorder = shape.coordsForBorder;
@@ -487,9 +492,10 @@ abstract class AbstractTransformer {
 		normals = result;
 	}
 
-	public abstract ArrayList<DrawingEntity> getDrawingEntityList();
+	public abstract   ArrayList<DrawingEntity> getDrawingEntityList() ;
 
 	public DrawingEntity[] getDrawingEntities() {
+		
 		final ArrayList<DrawingEntity> drawingEntityList = getDrawingEntityList();
 		final DrawingEntity[] result = new DrawingEntity[drawingEntityList.size()];
 		for (int i = 0; i < result.length; i++) {
@@ -498,6 +504,8 @@ abstract class AbstractTransformer {
 			drawingEntity.enableOverlay(isOverlay);
 			result[i] = drawingEntity;
 		}
+		
+		
 
 		return result;
 	}

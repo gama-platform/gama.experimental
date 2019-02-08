@@ -18,7 +18,7 @@ import com.google.common.base.Objects;
 import com.google.common.primitives.Doubles;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
-import com.jogamp.opengl.util.gl2.GLUT;
+//import com.jogamp.opengl.util.gl2.GLUT;
 
 import msi.gama.common.geometry.GeometryUtils;
 import msi.gama.common.geometry.ICoordinates;
@@ -89,7 +89,9 @@ public class FieldDrawer extends ObjectDrawer<FieldObject> {
 				coords[c + 2] = gridValue * altFactor + 1;
 			}
 		}
-		gl.rasterText(strings, GLUT.BITMAP_TIMES_ROMAN_10, coords);
+		// TODO reset to initial OpenGL
+		//gl.rasterText(strings, GLUT.BITMAP_TIMES_ROMAN_10, coords);
+		gl.rasterText(strings, gl.getGlut().BITMAP_TIMES_ROMAN_10, coords);
 
 	}
 
