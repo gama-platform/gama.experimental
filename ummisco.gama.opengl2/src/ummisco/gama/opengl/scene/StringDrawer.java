@@ -13,6 +13,8 @@ import java.awt.Font;
 
 import com.jogamp.opengl.util.gl2.GLUT;
 
+
+
 import msi.gama.metamodel.shape.GamaPoint;
 import ummisco.gama.opengl.Abstract3DRenderer;
 

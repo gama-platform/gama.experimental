@@ -266,7 +266,6 @@ public class ModernRenderer extends Abstract3DRenderer {
 		final double fov = data.getCameralens();
 
 		projectionMatrix = TransformationMatrix.createProjectionMatrix(data.isOrtho(), height, width, maxDim, fov);
-
 		camera.animate();
 	}
 

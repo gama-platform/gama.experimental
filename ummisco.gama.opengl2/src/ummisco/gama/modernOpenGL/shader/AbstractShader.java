@@ -42,8 +42,8 @@ public abstract class AbstractShader {
 
 	private static FloatBuffer matrixBuffer = FloatBuffer.allocate(16);
 
-	protected AbstractShader(final GL3 gl2, final String vertexFile, final String fragmentFile) {
-		this.gl = gl2;
+	protected AbstractShader(final GL3 gl3, final String vertexFile, final String fragmentFile) {
+		this.gl = gl3;
 
 		final InputStream vertexInputStream =
 				this.getClass().getClassLoader().getResourceAsStream("/shader/" + vertexFile);

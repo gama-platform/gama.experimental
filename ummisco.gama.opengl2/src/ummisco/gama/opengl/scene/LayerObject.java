@@ -159,12 +159,13 @@ public class LayerObject {
 			final double worldHeight = gl.getWorldHeight();
 			final double worldWidth = gl.getWorldWidth();
 			final double maxDim = worldHeight > worldWidth ? worldHeight : worldWidth;
-
+	
 			gl.pushIdentity(GL2.GL_PROJECTION);
 			if (viewRatio >= 1.0) {
 				// TODO reset to initial OpenGL
 				//gl.getGL().glOrtho(0, maxDim * viewRatio, -maxDim, 0, -1, 1);
 				((GL2ES1) gl.getGL()).glOrtho(0, maxDim * viewRatio, -maxDim, 0, -1, 1);
+			
 			} else {
 				// TODO reset to initial OpenGL
 				//gl.getGL().glOrtho(0, maxDim, -maxDim / viewRatio, 0, -1, 1);

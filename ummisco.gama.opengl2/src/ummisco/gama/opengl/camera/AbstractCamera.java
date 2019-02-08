@@ -16,6 +16,7 @@ import org.eclipse.swt.events.MouseEvent;
 
 import com.jogamp.opengl.GLRunnable;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.math.FloatUtil;
 
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.metamodel.shape.GamaPoint;
@@ -205,7 +206,29 @@ public abstract class AbstractCamera implements ICamera {
 
 	@Override
 	public void animate() {
+		/*
+		System.out.println("Position x "+position.x);
+		System.out.println("Position y "+position.y);
+		System.out.println("Position z "+position.z);
+		System.out.println("target x "+target.x);
+		System.out.println("target y "+target.y);
+		System.out.println("target z "+target.z);
+		System.out.println("upVector x "+upVector.x);
+		System.out.println("upVector y "+upVector.y);
+		System.out.println("upVector z "+upVector.z);
+		*/
 		//glu.gluLookAt(position.x, position.y, position.z, target.x, target.y, target.z, upVector.x, upVector.y,upVector.z);
+		
+		
+		
+		final float[] lPosition = new float[]{(float) position.x, (float) position.y, (float) position.z};
+		final float[] lLookAt = new float[]{(float) target.x, (float) target.y, (float) target.z};
+		final float[] lUp = new float[]{(float) upVector.x, (float) upVector.y, (float) upVector.z};
+		
+		FloatUtil.makeLookAt(new float[16], 0, lPosition, 0, lLookAt, 0, lUp, 0, new float[16]);
+		
+		//FloatUtil.makeLookAt(position.x, position.y, position.z, target.x, target.y, target.z, upVector.x, upVector.y,upVector.z);
+		//FloatUtil.makeLookAt(m, m_offset, eye, eye_offset, center, center_offset, up, up_offset, mat4Tmp)
 	}
 
 	/*------------------ Events controls ---------------------*/

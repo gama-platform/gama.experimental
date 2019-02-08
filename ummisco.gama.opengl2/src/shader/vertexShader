@@ -39,7 +39,10 @@ void main(void)
 	varying_Color = attribute_Color;
 	mat4 modelView = viewMatrix * transformationMatrix;
 		
-	gl_Position = projectionMatrix * modelView * vec4(attribute_Position,1.0);
+	//gl_Position = projectionMatrix * modelView * vec4(attribute_Position,1.0);
+	
+	gl_Position = projectionMatrix * modelView * vec4(attribute_Position.x, attribute_Position.y, attribute_Position.z, 1.0);
+	
 	
 	varying_useNormals = useNormals;
 	pass_textureCoords = attribute_TextureCoords;

@@ -14,6 +14,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
@@ -77,6 +78,7 @@ public class ModernDrawer {
 
 	public void prepareMapForLayer(final LayerObject layer) {
 		// init map
+
 		mapEntities = new HashMap<>();
 		mapEntities.put(DrawingEntity.Type.LINE.toString(), null);
 		mapEntities.put(DrawingEntity.Type.FACE.toString(), null);
@@ -192,7 +194,7 @@ public class ModernDrawer {
 	}
 
 	public void redraw() {
-
+		
 		if (numberOfShaderInTheCurrentLayer == 0) { return; // if nothing is to draw for this layer, do nothing.
 		}
 		final int[] vboHandles = new int[numberOfShaderInTheCurrentLayer * 5];
@@ -200,12 +202,15 @@ public class ModernDrawer {
 		ModernLayerStructure layerStructure = new ModernLayerStructure();
 		layerStructure.vboHandles = vboHandles;
 		layerStructureMap.put(currentLayer, layerStructure);
-
+		
 		for (final String key : entityTypeOrder) {
+			
 			final ArrayList<ArrayList<DrawingEntity>> listOfListOfEntities = mapEntities.get(key);
+			
 			if (listOfListOfEntities != null) {
-
 				for (final ArrayList<DrawingEntity> listOfEntities : listOfListOfEntities) {
+					
+					
 					// all those entities are using the same shader
 					final AbstractShader shaderProgram = listOfEntities.get(0).getShader();
 					shaderLoaded.add(shaderProgram);
@@ -227,6 +232,21 @@ public class ModernDrawer {
 
 					shaderProgram.stop();
 					currentShaderNumber++;
+					/*
+					System.out.print("\n");
+					int j = 0;
+					for (DrawingEntity e : listOfEntities) {
+						j++;
+						System.out.print(" 		---> Element nbr: "+ j +" type is : "+e.type.toString() + "       - it's virtices size is : "+e.getVertices().length + "    they are: ");
+						for(int i =0; i< e.getVertices().length; i++ ) {
+							System.out.print("	, (float) " + e.getVertices()[i]);
+						}
+						System.out.print("\n");
+					}
+				*/
+					
+					
+					
 				}
 			}
 		}
@@ -234,7 +254,7 @@ public class ModernDrawer {
 		layerStructure = layerStructureMap.get(currentLayer);
 		layerStructure.shaderList = (ArrayList<AbstractShader>) shaderLoaded.clone();
 		layerStructureMap.put(currentLayer, layerStructure);
-
+		
 		shaderLoaded.clear();
 		mapEntities.clear();
 

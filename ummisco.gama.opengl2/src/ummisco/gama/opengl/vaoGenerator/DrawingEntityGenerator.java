@@ -101,6 +101,7 @@ public class DrawingEntityGenerator {
 		}
 		if (transformer != null)
 			result = transformer.getDrawingEntities();
+		
 		return result;
 	}
 

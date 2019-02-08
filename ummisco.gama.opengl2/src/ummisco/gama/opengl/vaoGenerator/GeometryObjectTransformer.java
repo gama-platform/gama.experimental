@@ -38,6 +38,7 @@ class GeometryObjectTransformer extends AbstractTransformer {
 			final boolean isLightInteraction, /* final String[] texturePaths, */ final boolean isOverlay,
 			final boolean isTriangulation, final double layerAlpha) {
 		// for GeometryObject
+		
 		genericInit(geomObj, isOverlay, isTriangulation, layerAlpha);
 
 		this.colors = geomObj.getColors();
@@ -58,9 +59,9 @@ class GeometryObjectTransformer extends AbstractTransformer {
 
 		// the last coordinate is the same as the first one, no need for this
 		this.coordinates = Arrays.copyOf(coordsWithDoublons, coordsWithDoublons.length - 1);
-
+		System.out.println(" -----  >>  getHashCode() is "+ getHashCode());
 		if (!ShapeCache.isLoaded(getHashCode())) {
-
+		//if(1==1) {
 			if (is1DShape()) {
 				// special case for 1D shape : no repetition of vertex
 				coordinates = coordsWithDoublons;
@@ -546,8 +547,7 @@ class GeometryObjectTransformer extends AbstractTransformer {
 				result = getStandardDrawingEntities();
 			}
 		}
-
-		return result;
+ 		return result;
 	}
 
 }
