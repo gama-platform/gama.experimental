@@ -80,6 +80,7 @@ public class MarkdownModelDocumentor {
 	 */
 	Map<String, String> experimentsLink = new HashMap<String,String>();
 	
+	
 	/**
 	 * Visitor of the species to build the index
 	 */
@@ -173,13 +174,13 @@ public class MarkdownModelDocumentor {
 			for(String aSpecies : model.speciesLink.keySet())
 			{
 				String linkToSpecies = model.speciesLink.get(aSpecies);
-				linkToSpecies=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+File.separator, ""))+".md#"+linkToSpecies;
+				linkToSpecies=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER, ""))+".md#"+linkToSpecies;
 				this.speciesLink.put(aSpecies, linkToSpecies);
 			}
 			for(String anExperiment : model.experimentsLink.keySet())
 			{
 				String linkToExperiment = model.experimentsLink.get(anExperiment);
-				linkToExperiment=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+File.separator,""))+".md#"+linkToExperiment;
+				linkToExperiment=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER,""))+".md#"+linkToExperiment;
 				this.speciesLink.put(anExperiment, linkToExperiment);
 			}
 			
