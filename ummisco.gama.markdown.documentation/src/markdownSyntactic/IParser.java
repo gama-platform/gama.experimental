@@ -1,5 +1,7 @@
 package markdownSyntactic;
 
+import java.io.File;
+
 public class IParser {
 	public static String CATEGORY_IMPORTS = "Imports";
 	public static String CATEGORY_USES = "Uses";
@@ -59,4 +61,5 @@ public class IParser {
 	public static String MARKDOWN_TEXT_WHEN = " when ";
 	public static String MARKDOWN_LABEL_WORLD = "Species World";
 	public static String PROJECT_DEFAULT_FOLDER = "Documentation";
+	public static String SPLITTER = File.separator.replace("\\","\\\\");
 }
