@@ -71,7 +71,6 @@ public abstract class JobDocumentation extends WorkspaceJob {
 	public JobDocumentation(String directory) {
 		super(IParser.JOB_NAME);
 		this.directory=directory;
-		
 		//The index is defined at the base of the directory file
 		this.indexPath=directory+File.separator+IParser.MARKDOWN_LABEL_INDEX+".md";
 	}
@@ -214,13 +213,14 @@ public abstract class JobDocumentation extends WorkspaceJob {
 				for(String aSpecies : model.speciesLink.keySet())
 				{
 					String linkToSpecies = model.speciesLink.get(aSpecies);
-					linkToSpecies=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+File.separator, "").replaceFirst(".."+File.separator, ""))+".md#"+linkToSpecies;
+					linkToSpecies=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToSpecies;
+					System.out.println("LINK TO SPECIES :"+linkToSpecies);
 					this.speciesLink.put(aSpecies, linkToSpecies);
 				}
 				for(String anExperiment : model.experimentsLink.keySet())
 				{
 					String linkToExperiment = model.experimentsLink.get(anExperiment);
-					linkToExperiment=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+File.separator,"").replaceFirst(".."+File.separator, ""))+".md#"+linkToExperiment;
+					linkToExperiment=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER,"").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToExperiment;
 					this.experimentsLink.put(anExperiment, linkToExperiment);
 				}
 				
@@ -240,13 +240,13 @@ public abstract class JobDocumentation extends WorkspaceJob {
 			for(String aSpecies : model.speciesLink.keySet())
 			{
 				String linkToSpecies = model.speciesLink.get(aSpecies);
-				linkToSpecies=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+File.separator, "").replaceFirst(".."+File.separator, ""))+".md#"+linkToSpecies;
+				linkToSpecies=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToSpecies;
 				this.speciesLink.put(aSpecies, linkToSpecies);
 			}
 			for(String anExperiment : model.experimentsLink.keySet())
 			{
 				String linkToExperiment = model.experimentsLink.get(anExperiment);
-				linkToExperiment=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+File.separator,"").replaceFirst(".."+File.separator, ""))+".md#"+linkToExperiment;
+				linkToExperiment=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER,"").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToExperiment;
 				this.experimentsLink.put(anExperiment, linkToExperiment);
 			}
 		}

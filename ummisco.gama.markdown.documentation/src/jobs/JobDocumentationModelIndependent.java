@@ -76,13 +76,13 @@ public class JobDocumentationModelIndependent extends JobDocumentation {
 			for(String aSpecies : model.speciesLink.keySet())
 			{
 				String linkToSpecies = model.speciesLink.get(aSpecies);
-				linkToSpecies=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst(".."+IParser.SPLITTER, ""))+".md#"+linkToSpecies;
+				linkToSpecies=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToSpecies;
 				this.speciesLink.put(aSpecies, linkToSpecies);
 			}
 			for(String anExperiment : model.experimentsLink.keySet())
 			{
 				String linkToExperiment = model.experimentsLink.get(anExperiment);
-				linkToExperiment=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER,"").replaceFirst(".."+IParser.SPLITTER, ""))+".md#"+linkToExperiment;
+				linkToExperiment=FilenameUtils.removeExtension(relativisedPath.toString().replaceFirst(".."+IParser.SPLITTER,"").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToExperiment;
 				this.experimentsLink.put(anExperiment, linkToExperiment);
 			}
 		}
@@ -110,17 +110,17 @@ public class JobDocumentationModelIndependent extends JobDocumentation {
 				for(String aSpecies : lightModelImported.speciesLink.keySet())
 				{
 					String linkToSpecies = model.speciesLink.get(aSpecies);
-					linkToSpecies=FilenameUtils.removeExtension(relativisedLightModelPath.toString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst(".."+IParser.SPLITTER, ""))+".md#"+linkToSpecies;
+					linkToSpecies=FilenameUtils.removeExtension(relativisedLightModelPath.toString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToSpecies;
 					this.speciesLink.put(aSpecies, linkToSpecies);
 				}
 				for(String anExperiment : lightModelImported.experimentsLink.keySet())
 				{
 					String linkToExperiment = model.experimentsLink.get(anExperiment);
-					linkToExperiment=FilenameUtils.removeExtension(relativisedLightModelPath.toString().replaceFirst(".."+IParser.SPLITTER,"").replaceFirst(".."+IParser.SPLITTER, ""))+".md#"+linkToExperiment;
+					linkToExperiment=FilenameUtils.removeExtension(relativisedLightModelPath.toString().replaceFirst(".."+IParser.SPLITTER,"").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""))+".md#"+linkToExperiment;
 					this.experimentsLink.put(anExperiment, linkToExperiment);
 				}
 			}
-			String pathResourceModelToProject = FilenameUtils.removeExtension(relativisedPath.toOSString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst(".."+IParser.SPLITTER, ""));
+			String pathResourceModelToProject = FilenameUtils.removeExtension(relativisedPath.toOSString().replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../","").replaceFirst(".."+IParser.SPLITTER, "").replaceFirst("../",""));
 			(new File(directory+File.separator+pathResourceModelToProject+".md")).getParentFile().mkdirs();
 			
 			//Generate the documentation of the imported models
