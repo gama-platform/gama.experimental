@@ -6,6 +6,7 @@
  
  <feature  url="features/cict.feature.netcdf_1.0.0.qualifier.jar" id="cict.feature.netcdf" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/cict.feature.VR_1.0.0.qualifier.jar" id="cict.feature.VR" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
+ <feature  url="features/escape.gaml.feature.pedestrian_1.0.0.qualifier.jar" id="escape.gaml.feature.pedestrian" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/femto.st.gama.feature.mpi_1.0.0.qualifier.jar" id="femto.st.gama.feature.mpi" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/idees.gama.features.weka_1.7.0.qualifier.jar" id="idees.gama.features.weka" version="1.7.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/miat.gama.feature.ifcfile_1.0.0.qualifier.jar" id="miat.gama.feature.ifcfile" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
@@ -14,6 +15,7 @@
  <feature  url="features/ummisco.gama.feature.camisole_1.0.0.qualifier.jar" id="ummisco.gama.feature.camisole" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/ummisco.gama.feature.gamr_1.0.0.qualifier.jar" id="ummisco.gama.feature.gamr" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/ummisco.gama.feature.markdown.documentation_1.0.0.qualifier.jar" id="ummisco.gama.feature.markdown.documentation" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
+ <feature  url="features/ummisco.gama.feature.opengl2_1.0.0.qualifier.jar" id="ummisco.gama.feature.opengl2" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/ummisco.gama.feature.unity_1.0.0.qualifier.jar" id="ummisco.gama.feature.unity" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
  <feature  url="features/ummisco.gaml.feature.rjava_1.0.0.qualifier.jar" id="ummisco.gaml.feature.rjava" version="1.0.0.qualifier"> <category name="gama.optional"/>   </feature>
     <category-def name="gama.ui" label="UI components of GAMA"/>
