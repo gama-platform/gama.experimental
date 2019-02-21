@@ -38,6 +38,11 @@ package ummisco.gama.apsf.spaces;
 
 
 
+
+
+import java.util.ArrayList;
+import java.util.List;
+
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
 import ummisco.gama.apsf.exception.APSFException;
@@ -67,6 +72,8 @@ public abstract class Particle  {
 	protected int pI,pJ,pK; // coord dans le cannevas
 	
 	protected IAgent agent;
+	
+	protected List<IAgent> associatedProcesses;
 
 	private Agglomerate parent;
 	
@@ -76,18 +83,28 @@ public abstract class Particle  {
 		return this.agent;
 	}
 
+	public List<IAgent> getAssociatedProcesses()
+	{
+		return this.associatedProcesses;
+	}
+	
 	public void setAgent(IAgent ag) {
 		this.agent = ag;
 	}
 	
+	public void addProcesses(IAgent agt) {
+		this.associatedProcesses.add(agt);
+	}
 	
 	/**
 	 * 
 	 */
 	public Particle() {
+		super();
 		porosityHaveBeenModified=true;
 		porosity=0;
 		whoGenerate=DEFAULT_WHO_GENERATE;
+		this.associatedProcesses = new ArrayList<IAgent>();
 	}
 	
 	public void reduceMatters()
@@ -128,7 +145,7 @@ public void addMatters(Particle p)
 		porosityHaveBeenModified=true;
 	}
 		public Particle(Particle p) {
-		super();
+		this();
 		porosityHaveBeenModified=true;
 		this.level=p.level;
 		this.size=p.size;
