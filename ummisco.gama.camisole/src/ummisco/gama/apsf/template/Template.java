@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -40,6 +41,7 @@ import ummisco.gama.apsf.spaces.OrganicMatter;
 import ummisco.gama.apsf.spaces.Particle;
 import ummisco.gama.apsf.spaces.SoilLocation;
 import ummisco.gama.apsf.spaces.WhiteParticle;
+import ummisco.gama.camisole.skills.IAPSFProcessSkill;
 import ummisco.gama.camisole.skills.IApsfParticleSkill;
 import ummisco.gama.camisole.skills.IApsfSkill;
 
@@ -65,7 +67,7 @@ public abstract class Template  {
 	public static final int DEFAULT_SIZE=20;
 	private String templateName;
 	private Map<String, Particle> samplers = new HashMap<String, Particle>();
-	private Map<String, Map<Integer,GamlSpecies>> processes = new HashMap<String, Map<Integer,GamlSpecies>>();
+	private Map<String, Map<Integer,List<GamlSpecies>>> processes = new HashMap<String, Map<Integer,List<GamlSpecies>>>();
 	
 	
 	private double count=0;//jr
@@ -123,36 +125,66 @@ public abstract class Template  {
 	public void addProcess(GamlSpecies species,String particleType, int scale)
 	{
 		
-		Map<Integer,GamlSpecies> data = this.processes.get(particleType);
+		Map<Integer,List<GamlSpecies>> data = this.processes.get(particleType);
 		if(data == null)
 		{
-			data = new HashMap<Integer,GamlSpecies>();
+			data = new HashMap<Integer,List<GamlSpecies>>();
 			this.processes.put(particleType, data);
 		}
 		Integer k = new Integer(scale);
-		if(data.containsKey(k))
-			data.remove(k);
-		data.put(k, species);
+		System.out.println("keys "+ data.containsKey(k));
+		
+		if(!data.containsKey(k))
+		{
+			data.put(k,new ArrayList<GamlSpecies>());
+		}
+			//data.remove(k);
+		List<GamlSpecies> tmp = data.get(k);
+		tmp.add(species);
+		System.out.println("add "+ species.getName()+" " +tmp.size());
+		
+		
 	}
 	
 	public IAgent createProcessesForParticle(IScope scope, Particle p)
 	{
-		Map<Integer,GamlSpecies> data = this.processes.get(p.getTemplateName());
+		Map<Integer,List<GamlSpecies>> data = this.processes.get(p.getTemplateName());
+		
+		
 		GamlSpecies processName = null;
-		if(data != null)
-			processName = data.get(new Integer(p.getLocation().getScale()));
-		if(processName == null)
-			processName = (GamlSpecies)(p.getWorld().getDefaultSpecies());
+
+		//if(processName == null)
+		processName = (GamlSpecies)(p.getWorld().getDefaultSpecies());
 		if(processName == null)
 			return null;
 		Map<String,Object> values = new HashMap<String,Object>();
-		values.put(IApsfParticleSkill.FOLLOWED_PARTICLE, p);
+		values.put(IAPSFProcessSkill.FOLLOWED_PARTICLE_INT, p);
 		
 		ArrayList<Map<String,Object>> list = new ArrayList<>();
 		list.add(values);
 		IList<IAgent> magt=  processName.getPopulation(scope).createAgents(scope, 1, list, false, true);
 		IAgent agt = magt.get(0);
 		p.setAgent(agt);
+		
+		if(data != null)
+		{
+			for(GamlSpecies spe :data.get(new Integer(p.getLocation().getScale())) )
+			{
+				processName = spe;
+				System.out.println("modification "+ processName.getName());
+				values = new HashMap<String,Object>();
+				values.put(IAPSFProcessSkill.FOLLOWED_PARTICLE_INT, p);
+				
+				list = new ArrayList<>();
+				list.add(values);
+				magt=  processName.getPopulation(scope).createAgents(scope, 1, list, false, true);
+				p.addProcesses(magt.get(0));
+			}
+			
+			
+			//agt = magt.get(0);
+		}
+		
 		return agt;
 	}
 	

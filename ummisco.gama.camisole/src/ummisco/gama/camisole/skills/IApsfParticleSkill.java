@@ -3,7 +3,7 @@ package ummisco.gama.camisole.skills;
 public interface IApsfParticleSkill {
 	public final static String SKILL_NAME = "apsf_particle";
 	
-	public final static String FOLLOWED_PARTICLE = "followed_particle";
+	public final static String FOLLOWED_PARTICLE_INT = "int_followed_particle";
 	public final static String I = "i";
 	public final static String J = "j";
 	public final static String K = "k";

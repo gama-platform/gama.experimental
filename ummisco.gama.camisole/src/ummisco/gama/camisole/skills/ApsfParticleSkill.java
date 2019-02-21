@@ -28,7 +28,7 @@ import ummisco.gama.apsf.spaces.SoilLocation;
 
 
 @vars({ 
-	@variable(name = IApsfParticleSkill.FOLLOWED_PARTICLE, type = IType.NONE, doc = @doc("followed particle in the soil")),
+	@variable(name = IApsfParticleSkill.FOLLOWED_PARTICLE_INT, type = IType.NONE, doc = @doc("followed particle in the soil")),
 	@variable(name = IKeyword.LOCATION, type = IType.POINT, doc = @doc("location")),
 	@variable(name = IApsfParticleSkill.MY_NEIGHBORS, type =IType.LIST, doc = @doc("neighbors of cell")),
 	@variable(name = IApsfParticleSkill.MY_NEIGHBORS_LOCAL, type =IType.LIST, doc = @doc("local neighbors of cell")),
@@ -47,7 +47,7 @@ public class ApsfParticleSkill extends Skill {
 	
 	private boolean isBuiltinAttribute(IAgent agt, String name)
 	{
-		String data [ ] = {IApsfParticleSkill.FOLLOWED_PARTICLE,
+		String data [ ] = {IApsfParticleSkill.FOLLOWED_PARTICLE_INT,
 				IKeyword.LOCATION,
 				IApsfParticleSkill.MY_NEIGHBORS,
 				IApsfParticleSkill.MY_NEIGHBORS_LOCAL,
@@ -65,7 +65,7 @@ public class ApsfParticleSkill extends Skill {
 	
 	private Particle getParticle(IAgent agt)
 	{
-		Particle p =(Particle) agt.getAttribute(IApsfParticleSkill.FOLLOWED_PARTICLE);
+		Particle p =(Particle) agt.getAttribute(IApsfParticleSkill.FOLLOWED_PARTICLE_INT);
 		return p;
 	}
 	
