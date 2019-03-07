@@ -19,11 +19,14 @@ import msi.gama.common.interfaces.IKeyword;
 import msi.gama.extensions.messaging.GamaMessage;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
+import msi.gama.metamodel.shape.ILocation;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
+import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.operator;
+import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
@@ -74,26 +77,33 @@ import ummisco.gama.unity.mqtt.Utils;
 		+ "to communicate with the unity engine in order to visualize GAMA simulations in different terminals")
 
 @vars ({ @variable (
-		name = IKeyword.LOCATION,
+		name = IUnitySkill.UNITY_LOCATION,
 		type = IType.POINT,
-		depends_on = IKeyword.SHAPE,
-		doc = @doc ("Represents the current position of the agent")),
-	@variable (name = UnitySkill.UNITY_ROTATION,
+		doc = @doc ("Agent's location at unity scene")),
+	@variable (name = IUnitySkill.UNITY_ROTATION,
 		type = IType.POINT,
-		depends_on = IKeyword.SHAPE,
-		doc = @doc ("Represents the current rotation of the agent")),
-	@variable (name = UnitySkill.UNITY_SCALE,
+		doc = @doc ("Agent rotation at unity scene")),
+	@variable (name = IUnitySkill.UNITY_SCALE,
 		type = IType.POINT,
-		depends_on = IKeyword.SHAPE,
 		init = "{0,0,0}",
-		doc = @doc ("Represents the current scale of the agent")),
-		@variable (
-				name = IKeyword.SPEED,
-				type = IType.FLOAT,
-				init = "1.0",
-				doc = @doc ("Represents the speed of the agent (in meter/second)")),
+		doc = @doc ("Agent's scale at unity scenet")),
+	@variable (
+		name = IUnitySkill.UNITY_SPEED,
+		type = IType.FLOAT,
+		init = "1.0",
+		doc = @doc ("Agent's speed at unity scene (in meter/second)")),
+	@variable (
+			name = IUnitySkill.UNITY_CREATED,
+			type = IType.BOOL,
+			init = IKeyword.FALSE,
+			doc = @doc ("true if the agent is created into unity scene")),
+	@variable (
+			name = IUnitySkill.UNITY_ROTATE,
+			type = IType.BOOL,
+			init = IKeyword.FALSE,
+			doc = @doc ("true if agent's rotation is enabled")),
 	})
-@skill(name = UnitySkill.SKILL_NAME, concept = { IConcept.NETWORK, IConcept.COMMUNICATION, IConcept.SKILL })
+@skill(name = IUnitySkill.SKILL_NAME, concept = {IConcept.NETWORK, IConcept.COMMUNICATION, IConcept.SKILL })
 public class UnitySkill extends NetworkSkill {
 	
 	public static String allContent = "";
@@ -117,15 +127,6 @@ public class UnitySkill extends NetworkSkill {
 	
 	public static String DEFAULT_USER = "gama_demo";
 	public static String DEFAULT_PASSWORD = "gama_demo";
-
-	
-	
-	
-	public static final String SKILL_NAME = "unity";
-	public static final String UNITY_SPEED = "speed";
-	public static final String UNITY_ROTATION = "rotation";
-	public static final String UNITY_SCALE = "scale";
-	
 
 	
 	public static final MqttConnectOptions options = new MqttConnectOptions();
@@ -1212,138 +1213,209 @@ public class UnitySkill extends NetworkSkill {
 	
 	
 	
-	/*
 	
-	@getter (IKeyword.SPEED)
+	
+	@getter (IUnitySkill.UNITY_SPEED)
 	public double getSpeed(final IAgent agent) {
 		if (agent == null) { return 0.0; }
-		return (Double) agent.getAttribute(IKeyword.SPEED);
+		return (Double) agent.getAttribute(IUnitySkill.UNITY_SPEED);
 	}
 
 	
-	@setter (IKeyword.SPEED)
+	@setter (IUnitySkill.UNITY_SPEED)
 	public void setSpeed(final IAgent agent, final double s) {
 		if (agent == null) { return; }		
-		agent.setAttribute(IKeyword.SPEED, s);
 		
-		if(client!=null) {
-			ArrayList<ItemAttributes> items = new ArrayList<ItemAttributes>();
-			ItemAttributes it = new ItemAttributes(UnitySkill.UNITY_SPEED, s);
-			items.add(it);
-				
-			SetTopicMessage setMessage = new SetTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), items);
-		
-			final String stringMessage = getXStream(agent.getScope()).toXML(setMessage);
-			allContent += "\n"+stringMessage;
-			DEBUG.LOG("The new message is : "+stringMessage);
-			try {
-				final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_SET);
-				MqttMessage message = new MqttMessage();
-				message.setPayload(stringMessage.getBytes());
-				unityTopic.publish(message);
-			} catch (MqttPersistenceException e) {
-				e.printStackTrace();
-			} catch (MqttException e) {
-				e.printStackTrace();
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-		}	
-	}
-	
-	*/
-	
-	/*
-	
-	@setter (IKeyword.LOCATION)
-	public void setLocation(final IAgent agent, final ILocation p) {
-		if (agent == null) { return; }
-		agent.setLocation(p);
-		
-		if(client!=null) {
-			GamaPoint loc = new GamaPoint(p.getX(), p.getY(), p.getZ());
-			PositionTopicMessage topicMessage = new PositionTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), loc);
-			final String stringMessage = getXStream(agent.getScope()).toXML(topicMessage);
-			allContent += "\n"+stringMessage;
-			DEBUG.LOG("The new message is : "+stringMessage);
-			try {
-				final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_POSITION);
-				MqttMessage message = new MqttMessage();
-				message.setPayload(stringMessage.getBytes());
-				unityTopic.publish(message);
-			} catch (MqttPersistenceException e) {
-				e.printStackTrace();
-			} catch (MqttException e) {
-				e.printStackTrace();
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	
-	}
-
-	
-	
-	@setter (UnitySkill.UNITY_ROTATION)
-	public void setRotation(final IAgent agent, final GamaPoint p) {
-		if (agent == null) { return; }
-	//	agent.setRotation(p);
-		if(client!=null && p!=null) {
-			GamaPoint loc = new GamaPoint(p.getX(), p.getY(), p.getZ());
-			PropertyTopicMessage topicMessage = new PropertyTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), "localEulerAngles", loc);
-			final String stringMessage = getXStream(agent.getScope()).toXML(topicMessage);
-			allContent += "\n"+stringMessage;
-			DEBUG.LOG("The new message is : "+stringMessage);
-			try {
-				final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_PROPERTY);
-				MqttMessage message = new MqttMessage();
-				message.setPayload(stringMessage.getBytes());
-				unityTopic.publish(message);
-			} catch (MqttPersistenceException e) {
-				e.printStackTrace();
-			} catch (MqttException e) {
-				e.printStackTrace();
-			}catch (Exception e) {
-				e.printStackTrace();
+		agent.setAttribute(IUnitySkill.UNITY_SPEED, s);
+		if(isAgentCreatedInUnity(agent)){
+			if(client!=null) {
+				ArrayList<ItemAttributes> items = new ArrayList<ItemAttributes>();
+				ItemAttributes it = new ItemAttributes(IUnitySkill.UNITY_SPEED, s);
+				items.add(it);
+					
+				SetTopicMessage setMessage = new SetTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), items);
+			
+				final String stringMessage = getXStream(agent.getScope()).toXML(setMessage);
+				allContent += "\n"+stringMessage;
+				DEBUG.LOG("The new message is : "+stringMessage);
+				try {
+					final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_SET);
+					MqttMessage message = new MqttMessage();
+					message.setPayload(stringMessage.getBytes());
+					unityTopic.publish(message);
+				} catch (MqttPersistenceException e) {
+					e.printStackTrace();
+				} catch (MqttException e) {
+					e.printStackTrace();
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 	
 	
+	public boolean isAgentCreatedInUnity(final IAgent agent) {
+		if(agent.getAttribute(IUnitySkill.UNITY_CREATED) == null)  return false;
+		if( (boolean) agent.getAttribute(IUnitySkill.UNITY_CREATED) ) return true;
+		return false;
+	}
 	
-	@setter (UnitySkill.UNITY_SCALE)
-	public void setScal(final IAgent agent, final ILocation p) {
+	
+	@setter (IUnitySkill.UNITY_LOCATION)
+	public void setUnityLocation(final IAgent agent, ILocation p) {
 		if (agent == null) { return; }
-	//	agent.setScale(p);
+		
+		agent.setAttribute(IUnitySkill.UNITY_LOCATION, p);
+		
+		if(isAgentCreatedInUnity(agent)){
+			if(p == null) p = agent.getLocation();
+			if(client!=null) {
+				GamaPoint loc = new GamaPoint(p.getX(), p.getY(), p.getZ());
+				PositionTopicMessage topicMessage = new PositionTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), loc);
+				final String stringMessage = getXStream(agent.getScope()).toXML(topicMessage);
+				allContent += "\n"+stringMessage;
+				DEBUG.LOG("The new message is : "+stringMessage);
+				try {
+					final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_POSITION);
+					MqttMessage message = new MqttMessage();
+					message.setPayload(stringMessage.getBytes());
+					unityTopic.publish(message);
+				} catch (MqttPersistenceException e) {
+					e.printStackTrace();
+				} catch (MqttException e) {
+					e.printStackTrace();
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}		
+
+	}
 	
-		if(client!=null && p!=null ) {
-			GamaPoint loc = new GamaPoint(p.getX(), p.getY(), p.getZ());
-			PropertyTopicMessage topicMessage = new PropertyTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), "localScale", loc);
-			final String stringMessage = getXStream(agent.getScope()).toXML(topicMessage);
-			allContent += "\n"+stringMessage;
-			DEBUG.LOG("The new message is : "+stringMessage);
-			try {
-				final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_PROPERTY);
-				MqttMessage message = new MqttMessage();
-				message.setPayload(stringMessage.getBytes());
-				unityTopic.publish(message);
-			} catch (MqttPersistenceException e) {
-				e.printStackTrace();
-			} catch (MqttException e) {
-				e.printStackTrace();
-			}catch (Exception e) {
-				e.printStackTrace();
+	
+	@getter (IUnitySkill.UNITY_LOCATION)
+	public GamaPoint getUnityLocation(final IAgent agent) {
+		if (agent == null) { return new GamaPoint(0,0,0); }
+		return (GamaPoint) agent.getAttribute(IUnitySkill.UNITY_LOCATION);
+	}
+
+	@setter (IUnitySkill.UNITY_CREATED)
+	public void setUnityCreated(final IAgent agent, final boolean isCreated) {
+		agent.setAttribute(IUnitySkill.UNITY_CREATED, isCreated);
+	}
+	
+	
+
+
+	
+	
+	@setter (IUnitySkill.UNITY_ROTATION)
+	public void setUnityRotation(final IAgent agent, final GamaPoint p) {
+		if (agent == null) { return; }
+		agent.setAttribute(IUnitySkill.UNITY_ROTATION, p);
+		if(isAgentCreatedInUnity(agent)){
+			if(client!=null && p!=null) {
+				GamaPoint loc = new GamaPoint(p.getX(), p.getY(), p.getZ());
+				PropertyTopicMessage topicMessage = new PropertyTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), "localEulerAngles", loc);
+				final String stringMessage = getXStream(agent.getScope()).toXML(topicMessage);
+				allContent += "\n"+stringMessage;
+				DEBUG.LOG("The new message is : "+stringMessage);
+				try {
+					final MqttTopic unityTopic = client.getTopic(IUnitySkill.TOPIC_PROPERTY);
+					MqttMessage message = new MqttMessage();
+					message.setPayload(stringMessage.getBytes());
+					unityTopic.publish(message);
+				} catch (MqttPersistenceException e) {
+					e.printStackTrace();
+				} catch (MqttException e) {
+					e.printStackTrace();
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
-
-*/
 	
-
+	@getter (IUnitySkill.UNITY_ROTATION)
+	public GamaPoint getUnityRotation(final IAgent agent) {
+		if (agent == null) { return new GamaPoint(0,0,0); }
+		return (GamaPoint) agent.getAttribute(IUnitySkill.UNITY_ROTATION);
+	}
+	
+	@getter (IUnitySkill.UNITY_ROTATE)
+	public boolean getUnityRotate(final IAgent agent) {
+		if (agent == null) { return false;}
+		return (boolean) agent.getAttribute(IUnitySkill.UNITY_ROTATE);
+	}
+	
+	
+	@setter (IUnitySkill.UNITY_ROTATE)
+	public void setUnityRotate(final IAgent agent, final boolean isRotate) {
+		if (agent == null) { return; }
+		agent.setAttribute(IUnitySkill.UNITY_ROTATE, isRotate);
+		if(isAgentCreatedInUnity(agent)){
+			if(client!=null){
+			
+				ArrayList<ItemAttributes> items = new ArrayList<ItemAttributes>();
+				ItemAttributes it = new ItemAttributes(IUnitySkill.UNITY_ROTATE, isRotate);
+				items.add(it);
+					
+				SetTopicMessage setMessage = new SetTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), items);
+			
+				publishUnityMessage(agent, client, IUnitySkill.TOPIC_SET, setMessage);
+			}
+		}
+	}
 	
 	
 	
 	
 	
+	@setter (IUnitySkill.UNITY_SCALE)
+	public void setScale(final IAgent agent, final ILocation p) {
+		if (agent == null) { return; }
+		agent.setAttribute(IUnitySkill.UNITY_SCALE, p);
+			if(isAgentCreatedInUnity(agent)){
+			if(client!=null && p!=null ) {
+				GamaPoint loc = new GamaPoint(p.getX(), p.getY(), p.getZ());
+				PropertyTopicMessage topicMessage = new PropertyTopicMessage(agent.getScope(), agent.getName(), agent.getName(), agent.getName(), "localScale", loc);
+				publishUnityMessage(agent, client, IUnitySkill.TOPIC_PROPERTY, topicMessage);
+			}
+		}
+	}
+	
+	
+	@getter (IUnitySkill.UNITY_SCALE)
+	public GamaPoint getUnityScale(final IAgent agent) {
+		if (agent == null) { return new GamaPoint(0,0,0); }
+		return (GamaPoint) agent.getAttribute(IUnitySkill.UNITY_SCALE);
+	}
+	
+	
+	
+	
+	
+	
+	
+	public void publishUnityMessage(final IAgent agent, MqttClient client, String topic, Object message) {
+		String messageString = getTopicStringMessage(agent, message);
+		try {
+			final MqttTopic unityTopic = client.getTopic(topic);
+			MqttMessage mqttMessage = new MqttMessage();
+			mqttMessage.setPayload(messageString.getBytes());
+			unityTopic.publish(mqttMessage);
+		} catch (MqttPersistenceException e) { 
+			e.printStackTrace();
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getTopicStringMessage(final IAgent agent, Object message) {
+		return getXStream(agent.getScope()).toXML(message);
+	}
 	
 }
