@@ -2,6 +2,7 @@ package ummisco.gama.camisole.skills;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import msi.gama.common.interfaces.IKeyword;
@@ -42,6 +43,8 @@ import ummisco.gama.camisole.SoilFactory;
 
 public class ApsfSkill extends Skill {
 	
+
+
 	private Apsf getAPSFSoil(IAgent agent)
 	{
 		Apsf inMM = (Apsf) agent.getAttribute(IApsfSkill.APSF_SOIL);
@@ -210,36 +213,42 @@ public class ApsfSkill extends Skill {
 		int scale = ((Integer) scope.getArg(IApsfSkill.AT_SCALE, IType.INT)).intValue();
 		GamlSpecies processName  = (GamlSpecies) scope.getArg(IApsfSkill.PROCESS_NAME, IType.SPECIES);
 		String particleName = (String) scope.getArg(IApsfSkill.PARTICLE_NAME, IType.STRING);
+		
+		List<Object[]> processes = (List<Object[]>) agent.getAttribute(IApsfSkill.COUPLED_MODEL);
+		if(processes == null)
+		{
+			processes = new ArrayList<Object[]>();
+			agent.setAttribute(IApsfSkill.COUPLED_MODEL, processes);
+		}
+		
+		
 		Apsf soil = this.getAPSFSoil(agent);
 		ArrayList<Template> templateNames = soil.getAPSF().getTemplate().getAllSubTemplate();
 		if(!this.containsTemplate(templateNames, templateName))
 			return; 
 		Template tt = soil.getTemplateWithName(templateName);
 		tt.addProcess(processName, userToApsf(particleName), scale);
+		Object[] ttmp = {processName,tt,particleName,new Integer(scale) };
+		processes.add(ttmp);
+
+	}
+	@action(name = "apply_processes")
+	public void initializeProcesses(IScope scope)
+	{
+		final IAgent agent  = scope.getAgent();
+		Apsf soil = this.getAPSFSoil(agent);
+		
 		Map<Template, Agglomerate> ss = getDeveloppedTemplate(agent);
-		Agglomerate a = ss.get(tt);
-		if(!ss.containsKey(tt)) {
-			Particle ppx = soil.getOneParticleWithCharacteristics(scope, tt, scale, userToApsf(particleName),true);
+		List<Object[]> processes = (List<Object[]>) agent.getAttribute(IApsfSkill.COUPLED_MODEL);
+		for(Object[] ttmp:processes)
+		{
+			Agglomerate a = ss.get(ttmp[1]);
+			Particle ppx = soil.getOneParticleWithCharacteristics(scope,(Template) ttmp[1], ((Integer)ttmp[3]).intValue(), userToApsf((String)ttmp[2]),true);
 			a = ppx.getParent();
-			ss.put(tt, a);
+			ss.put((Template) ttmp[1], a);
 			a.deploySubParticles(scope);
+	
 		}
-		
-//		SoilLocation ll = new SoilLocation(0,0,0,1,soil);
-//		System.out.println(soil.getParticleAtLocation(scope, ll).getTemplateName());
-//		SoilLocation lll = new SoilLocation(9,9,9,1,soil);
-//		System.out.println(soil.getParticleAtLocation(scope, lll).getTemplateName());
-		
-//		Map<String,Object> values = new HashMap<String,Object>();
-//		values.put(IApsfParticleSkill.FOLLOWED_PARTICLE, p);
-//		
-//		ArrayList<Map<String,Object>> list = new ArrayList<>();
-//		list.add(values);
-//		IList<IAgent> magt=  processName.getPopulation(scope).createAgents(scope, 1, list, false, true);
-//		IAgent agt = magt.get(0);
-//		//processName.getPopulation(scope).;
-//		System.out.println("particle ppp "+ p);
-//		agt.setAttribute(IApsfParticleSkill.FOLLOWED_PARTICLE, p);
 	}
 	
 	private boolean containsTemplate(ArrayList<Template> templateNames, String name)
