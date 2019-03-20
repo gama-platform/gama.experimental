@@ -20,10 +20,7 @@ package ummisco.gama.apsf.spaces;
 
 import javax.vecmath.*;
 
-import msi.gama.metamodel.shape.ILocation;
 
-//import microbes.domain.MVDirection;
-//import microbes.environment.MicrobesEnvironment;
 
 
 public class SoilLocation {
