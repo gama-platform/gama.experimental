@@ -3,33 +3,31 @@ package ummisco.gama.unity.messages;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
-@XStreamAlias("ummisco.gama.unity.messages.ReplayMessage")
+import ummisco.gama.unity.skills.IUnitySkill;
+
+@XStreamAlias(IUnitySkill.CLASS_REPLAY_MESSAGE)
 public class ReplayMessage {
 
-	@XStreamImplicit(itemFieldName = "unread")
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_UNREAD)
 	public boolean unread;
 
-	@XStreamImplicit(itemFieldName = "sender")
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_SENDER)
 	public String sender;
 
-	@XStreamImplicit(itemFieldName = "receivers")
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_RECEIVERS)
 	public String receivers;
 
-	@XStreamImplicit(itemFieldName = "contents")
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_CONTENTS)
 	public String contents;
 
-	
-	@XStreamImplicit(itemFieldName = "fieldName")
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_FIELD_NAME)
 	public String fieldName;
-	
-	@XStreamImplicit(itemFieldName = "fieldValue")
+
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_FIELD_VALUE)
 	public String fieldValue;
-	
-	@XStreamImplicit(itemFieldName = "emissionTimeStamp")
+
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_EMISSION_TIMESTAMP)
 	public String emissionTimeStamp;
-
-
-	// public String docRoot = "ummisco.gama.unity.messages.NotificationMessage";
 
 	public ReplayMessage() {
 

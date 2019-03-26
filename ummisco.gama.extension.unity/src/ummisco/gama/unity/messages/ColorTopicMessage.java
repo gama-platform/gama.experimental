@@ -24,6 +24,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  * The Class SetTopicMessage.
@@ -33,18 +34,15 @@ import msi.gaml.types.Types;
 
 @vars({ @variable(name = ColorTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
 		@doc("Returns the concerned unity game object name") }),
-		@variable(name = ColorTopicMessage.RED, type = IType.INT, doc = {
-				@doc("Returns the red component") }), 
-		@variable(name = ColorTopicMessage.GREEN, type = IType.INT, doc = {
-				@doc("Returns the green component") }), 
-		@variable(name = ColorTopicMessage.BLUE, type = IType.INT, doc = {
-				@doc("Returns the blue component") }), })
+		@variable(name = ColorTopicMessage.RED, type = IType.INT, doc = { @doc("Returns the red component") }),
+		@variable(name = ColorTopicMessage.GREEN, type = IType.INT, doc = { @doc("Returns the green component") }),
+		@variable(name = ColorTopicMessage.BLUE, type = IType.INT, doc = { @doc("Returns the blue component") }), })
 public class ColorTopicMessage extends GamaMessage {
 
-	public final static String OBJECT_NAME = "objectName";
-	public final static String RED = "red";
-	public final static String GREEN = "green";
-	public final static String BLUE = "blue";
+	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;
+	public final static String RED = IUnitySkill.MSG_RED;
+	public final static String GREEN = IUnitySkill.MSG_GREEN;
+	public final static String BLUE = IUnitySkill.MSG_BLUE;
 
 	protected Object objectName;
 	protected Object red;
@@ -80,7 +78,6 @@ public class ColorTopicMessage extends GamaMessage {
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
-	
 
 	@getter(ColorTopicMessage.RED)
 	public Object getRed() {
@@ -91,8 +88,7 @@ public class ColorTopicMessage extends GamaMessage {
 	public void setRed(final Object red) {
 		this.red = red;
 	}
-	
-	
+
 	@getter(ColorTopicMessage.GREEN)
 	public Object getGreen() {
 		return green;
@@ -102,8 +98,7 @@ public class ColorTopicMessage extends GamaMessage {
 	public void setGreen(final Object green) {
 		this.green = green;
 	}
-	
-	
+
 	@getter(ColorTopicMessage.BLUE)
 	public Object getBlue() {
 		return blue;
@@ -111,7 +106,7 @@ public class ColorTopicMessage extends GamaMessage {
 
 	@setter(ColorTopicMessage.BLUE)
 	public void setBlue(final Object blue) {
-		this.blue  = blue;
+		this.blue = blue;
 	}
 
 	@Override
@@ -127,8 +122,8 @@ public class ColorTopicMessage extends GamaMessage {
 
 	@Override
 	public ColorTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new ColorTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getRed(), getGreen(), getBlue(), 
-				getContents(scope));
+		return new ColorTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getRed(), getGreen(),
+				getBlue(), getContents(scope));
 	}
 
 	/**

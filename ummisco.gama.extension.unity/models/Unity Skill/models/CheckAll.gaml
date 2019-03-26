@@ -22,17 +22,12 @@ species CheckingAgent skills: [unity]{
 	
 	init{
 		 do connectMqttClient();
+		 do subscribe_To_Topic topic:"littosim";
+		 do subscribe_To_Topic topic:"replay";
+		 do subscribe_To_Topic topic:"notification";
 		 write "connected";
-	}
-	
-	reflex contactUnity when: cycle = 1
-	{
-		
-		do subscribe_To_Topic topic:"Gama";
-		do subscribe_To_Topic topic:"replay";
-		do subscribe_To_Topic topic:"notification";
-		
-		//TODO: Add support for notification frequency.
+		 
+		 //TODO: Add support for notification frequency.
 		do unityNotificationSubscribe notificationId: "Notification_01" objectName: playerName fieldType: "field" fieldName: "count" fieldValue:10 fieldOperator: "==";
 	
 		do getUnityField objectName: playerName attribute:"speed"; 											    // getUnityField
@@ -73,6 +68,12 @@ species CheckingAgent skills: [unity]{
 		write "messge sent";
 	}
 	
+	
+	reflex contactUnity when: cycle = 1
+	{
+		
+	}
+	
 	reflex destroyObject when: cycle = 8{
 		
 		string fieldValue <- get_unity_replay(); 																// get_unity_replay
@@ -89,14 +90,18 @@ species CheckingAgent skills: [unity]{
 		string msg<- getAllActionsMessage();
 		write msg; 															
 	}
+	
+	aspect base {
+		draw cube(3) color:#green;
+	}
 }
 
 
 experiment CheckAll type:gui {
 /** Insert here the definition of the input and output of the model */
 	output {
-		display Dp1 type:opengl{
-			species CheckingAgent;
+		display Dp1 type:opengl2{
+			species CheckingAgent aspect: base;
 		}		
 	}
 }
