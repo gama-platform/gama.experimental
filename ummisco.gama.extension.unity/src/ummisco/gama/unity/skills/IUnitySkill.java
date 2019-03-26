@@ -50,5 +50,56 @@ public interface IUnitySkill {
 	public static final String UNITY_SPEED = "unity_speed";
 	public static final String UNITY_CREATED = "unity_created";
 
+	// Messages fields.
+	public static final String MSG_UNREAD = "unread";
+	public static final String MSG_SENDER = "sender";
+	public static final String MSG_RECEIVERS = "receivers";
+	public static final String MSG_CONTENTS = "contents";
+	public static final String MSG_FIELD_TYPE = "fieldType";
+	public static final String MSG_FIELD_NAME = "fieldName";
+	public static final String MSG_FIELD_VALUE = "fieldValue";
+	public static final String MSG_FIELD_OPERATOR = "fieldOperator";
+	public static final String MSG_EMISSION_TIMESTAMP = "emissionTimeStamp";
+	public static final String MSG_RECEPTION_TIMESTAMP = "receptionTimeStamp";
+
+	public static final String MSG_OBJECT_NAME = "objectName";
+	public static final String MSG_ATTRIBUTES = "attributes";
+	public static final String MSG_ATTRIBUTE = "attribute";
+	public static final String MSG_PROPERTY_NAME = "propertyName";
+	public static final String MSG_VALUE_TYPE = "valueType";
+	public static final String MSG_VALUE = "value";
+	public static final String MSG_POSITION = "position";
+	public static final String MSG_COLOR = "color";
+	public static final String MSG_METHODE_NAME = "methodeName";
+	
+	public static final String MSG_NOTIFICATION_ID = "notificationId";
+	public static final String MSG_SPEED = "speed";
+	public static final String MSG_SMOOTH_MOVE = "smoothMove";
+	public static final String MSG_X = "x";
+	public static final String MSG_Y = "y";
+	public static final String MSG_Z = "z";
+	
+	public static final String MSG_RED = "red";
+	public static final String MSG_GREEN = "green";
+	public static final String MSG_BLUE = "blue";
+	
+	public static final String MSG_UNITY_ACTION = "unityAction";
+	public static final String MSG_UNITY_OBJECT = "unityObject";
+	public static final String MSG_UNITY_ATTRIBUTE = "unityAttribute";
+	public static final String MSG_UNITY_TOPIC = "unityTopic";
+	//public static final String MSG_SMOOTH_MOVE = "smoothMove";
+	//public static final String MSG_SMOOTH_MOVE = "smoothMove";
+	//public static final String MSG_SMOOTH_MOVE = "smoothMove";
+	
+	
+	// Littosim fields
+	public static final String MSG_TYPE = "type";
+	public static final String MSG_NAME = "name";
+
+	// Classes names
+	public static final String CLASS_REPLAY_MESSAGE = "ummisco.gama.unity.messages.ReplayMessage";
+	public static final String CLASS_NOTIFICATION_MESSAGE = "ummisco.gama.unity.messages.NotificationMessage";
+
+
 	public static final double DAFAULT_SPEED = 1.0;
 }

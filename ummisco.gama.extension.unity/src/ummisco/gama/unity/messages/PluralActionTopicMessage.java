@@ -24,6 +24,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  * The Class PluralActionTopicMessage.
@@ -34,21 +35,22 @@ import msi.gaml.types.Types;
 @vars({ @variable(name = PluralActionTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
 		@doc("Returns the concerned unity game object name") }),
 		@variable(name = PluralActionTopicMessage.METHOD_NAME, type = IType.STRING, doc = {
-			@doc("Returns the unity game object method name") }),
+				@doc("Returns the unity game object method name") }),
 		@variable(name = PluralActionTopicMessage.ATTRIBUTES_LIST, type = IType.MAP, doc = {
 				@doc("Returns the attribtes list of the message") }), })
 public class PluralActionTopicMessage extends GamaMessage {
 
-	public final static String OBJECT_NAME = "objectName";
-	public final static String METHOD_NAME = "methodName";
-	public final static String ATTRIBUTES_LIST = "attributes";
+	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;
+	public final static String METHOD_NAME = IUnitySkill.MSG_METHODE_NAME;
+	public final static String ATTRIBUTES_LIST = IUnitySkill.MSG_ATTRIBUTES;
 
 	protected Object objectName;
 	protected Object methodName;
 	protected Object attributes;
 
-	public PluralActionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object methodName,
-			final Object attributes, final Object content) throws GamaRuntimeException {
+	public PluralActionTopicMessage(final IScope scope, final Object sender, final Object receivers,
+			final Object objectName, final Object methodName, final Object attributes, final Object content)
+			throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
@@ -56,8 +58,8 @@ public class PluralActionTopicMessage extends GamaMessage {
 		setAttributesList(attributes);
 	}
 
-	public PluralActionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object methodName,
-			final Object attributes) throws GamaRuntimeException {
+	public PluralActionTopicMessage(final IScope scope, final Object sender, final Object receivers,
+			final Object objectName, final Object methodName, final Object attributes) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
 		setObjectName(objectName);
@@ -74,7 +76,7 @@ public class PluralActionTopicMessage extends GamaMessage {
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
-	
+
 	@getter(PluralActionTopicMessage.METHOD_NAME)
 	public Object getMethodName() {
 		return methodName;
@@ -108,8 +110,8 @@ public class PluralActionTopicMessage extends GamaMessage {
 
 	@Override
 	public PluralActionTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new PluralActionTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getMethodName(), (Map<?, ?>) getAttributesList(),
-				getContents(scope));
+		return new PluralActionTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getMethodName(),
+				(Map<?, ?>) getAttributesList(), getContents(scope));
 	}
 
 	/**

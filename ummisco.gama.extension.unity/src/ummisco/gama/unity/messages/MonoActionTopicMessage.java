@@ -24,6 +24,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  * The Class MonoActionTopicMessage.
@@ -34,21 +35,22 @@ import msi.gaml.types.Types;
 @vars({ @variable(name = MonoActionTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
 		@doc("Returns the concerned unity game object name") }),
 		@variable(name = MonoActionTopicMessage.METHOD_NAME, type = IType.STRING, doc = {
-			@doc("Returns the unity game object method name") }),
+				@doc("Returns the unity game object method name") }),
 		@variable(name = MonoActionTopicMessage.ATTRIBUTE, type = IType.MAP, doc = {
 				@doc("Returns the attribte of the message") }), })
 public class MonoActionTopicMessage extends GamaMessage {
 
-	public final static String OBJECT_NAME = "objectName";
-	public final static String METHOD_NAME = "methodName";
-	public final static String ATTRIBUTE = "attribute";
+	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;
+	public final static String METHOD_NAME = IUnitySkill.MSG_METHODE_NAME;
+	public final static String ATTRIBUTE = IUnitySkill.MSG_ATTRIBUTE;
 
 	protected Object objectName;
 	protected Object methodName;
 	protected Object attribute;
 
-	public MonoActionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object methodName,
-			final Object attribute, final Object content) throws GamaRuntimeException {
+	public MonoActionTopicMessage(final IScope scope, final Object sender, final Object receivers,
+			final Object objectName, final Object methodName, final Object attribute, final Object content)
+			throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
@@ -56,8 +58,8 @@ public class MonoActionTopicMessage extends GamaMessage {
 		setAttribute(attribute);
 	}
 
-	public MonoActionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object methodName,
-			final Object attribute) throws GamaRuntimeException {
+	public MonoActionTopicMessage(final IScope scope, final Object sender, final Object receivers,
+			final Object objectName, final Object methodName, final Object attribute) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
 		setObjectName(objectName);
@@ -74,7 +76,7 @@ public class MonoActionTopicMessage extends GamaMessage {
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
-	
+
 	@getter(MonoActionTopicMessage.METHOD_NAME)
 	public Object getMethodName() {
 		return methodName;
@@ -108,8 +110,8 @@ public class MonoActionTopicMessage extends GamaMessage {
 
 	@Override
 	public MonoActionTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new MonoActionTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getMethodName(), getAttribute(),
-				getContents(scope));
+		return new MonoActionTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getMethodName(),
+				getAttribute(), getContents(scope));
 	}
 
 	/**

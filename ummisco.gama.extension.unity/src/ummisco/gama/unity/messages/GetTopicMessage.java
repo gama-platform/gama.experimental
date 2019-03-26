@@ -24,6 +24,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  * The Class GetTopicMessage.
@@ -37,8 +38,8 @@ import msi.gaml.types.Types;
 				@doc("Returns the attribte of the message") }), })
 public class GetTopicMessage extends GamaMessage {
 
-	public final static String OBJECT_NAME = "objectName";
-	public final static String ATTRIBUTE = "attribute";
+	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;
+	public final static String ATTRIBUTE = IUnitySkill.MSG_ATTRIBUTE;
 
 	protected Object objectName;
 	protected Object attribute;
@@ -68,7 +69,6 @@ public class GetTopicMessage extends GamaMessage {
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
-	
 
 	@getter(GetTopicMessage.ATTRIBUTE)
 	public Object getAttribute() {

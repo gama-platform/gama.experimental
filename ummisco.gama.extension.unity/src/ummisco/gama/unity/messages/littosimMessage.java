@@ -9,55 +9,56 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 @XStreamAlias("ummisco.gama.unity.messages.littosimMessage")
 public class littosimMessage {
 
-	@XStreamImplicit(itemFieldName = "unread")
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_UNREAD)
 	public boolean unread;
 
-	@XStreamImplicit(itemFieldName = "sender")
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_SENDER)
 	public String sender;
 
-	@XStreamImplicit(itemFieldName = "receivers")
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_RECEIVERS)
 	public String receivers;
-	
-	//@XStreamImplicit(itemFieldName = "contents")
-	//public Object contents;
-	
-	@XStreamImplicit(itemFieldName = "type")
+
+	// @XStreamImplicit(itemFieldName = IUnitySkill.CONTENTS)
+	// public Object contents;
+
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_TYPE)
 	public int type;
-	
-	@XStreamImplicit(itemFieldName = "name")
+
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_NAME)
 	public String name;
-	
-	@XStreamImplicit(itemFieldName = "x")
+
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_X)
 	public double x;
-	
-	@XStreamImplicit(itemFieldName = "y")
+
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_Y)
 	public double y;
-	
-	@XStreamImplicit(itemFieldName = "z")
+
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_Z)
 	public double z;
 
-	@XStreamImplicit(itemFieldName = "emissionTimeStamp")
+	@XStreamImplicit(itemFieldName = IUnitySkill.MSG_EMISSION_TIMESTAMP)
 	public String emissionTimeStamp;
 
 	public littosimMessage() {
 
 	}
-	
-	public Map<String, String> getMapMsg(){
+
+	public Map<String, String> getMapMsg() {
 		GamaMap<String, String> msg = GamaMapFactory.create(Types.STRING, Types.LIST);
-		msg.put("unread", "false");
-		msg.put("sender", sender);
-		msg.put("receivers", receivers);
-		msg.put("type", Integer.toString(type));
-		msg.put("name", name);
-		msg.put("x", Double.toString(x));
-		msg.put("y", Double.toString(y));
-		msg.put("z", Double.toString(z));
-		msg.put("emissionTimeStamp", emissionTimeStamp);
+		msg.put(IUnitySkill.MSG_UNREAD, "false");
+		msg.put(IUnitySkill.MSG_SENDER, sender);
+		msg.put(IUnitySkill.MSG_RECEIVERS, receivers);
+		msg.put(IUnitySkill.MSG_TYPE, Integer.toString(type));
+		msg.put(IUnitySkill.MSG_NAME, name);
+		msg.put(IUnitySkill.MSG_X, Double.toString(x));
+		msg.put(IUnitySkill.MSG_Y, Double.toString(y));
+		msg.put(IUnitySkill.MSG_Z, Double.toString(z));
+		msg.put(IUnitySkill.MSG_EMISSION_TIMESTAMP, emissionTimeStamp);
 		return msg;
 	}
 
