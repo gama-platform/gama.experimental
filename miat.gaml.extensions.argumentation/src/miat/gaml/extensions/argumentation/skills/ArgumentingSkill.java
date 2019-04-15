@@ -84,16 +84,16 @@ public class ArgumentingSkill extends Skill{
 	}
 	
 	@action (
-			name = "prefered_extension",
+			name = "preferred_extension",
 				args = {@arg (
 							name = "graph",
 							type = IType.GRAPH,
 							optional = true,
 							doc = @doc ("the graph to evaluate"))},
 			doc = @doc (
-					value = "evaluate the prefered extension of an argument graph",
-					returns = "a list of list of arguments representing the prefered extension",
-					examples = { @example ("list<list<argument>> results <- prefered_extension(a_graph);") }))
+					value = "evaluate the preferred extension of an argument graph",
+					returns = "a list of list of arguments representing the preferred extension",
+					examples = { @example ("list<list<argument>> results <- preferred_extension(a_graph);") }))
 	public IList<IList> primComputePreferedExtension(final IScope scope) throws GamaRuntimeException {
 		IList<IList<GamaArgument>> preferedExt = GamaListFactory.create();
 		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
