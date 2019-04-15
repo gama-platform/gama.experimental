@@ -209,6 +209,49 @@ public class ArgumentingSkill extends Skill{
 	}
 	
 	@action (
+			name = "add_argument",
+			
+			args = {@arg (
+					name = "argument",
+					type = GamaArgumentType.id,
+					optional = false,
+					doc = @doc ("the argument to add")),
+					@arg (
+					name = "graph",
+					type = IType.GRAPH,
+					optional = false,
+					doc = @doc ("the global argumentation graph with all the arguments and attacks"))
+					},
+			doc = @doc (
+					value = "add and arguments and all the attacks to the agent argumentation graph",
+					examples = { @example ("do add_argument(new_agrument, reference_graph);") }))
+	public boolean primAddArguments(final IScope scope) throws GamaRuntimeException {
+		IGraph graph = getArgGraph(scope.getAgent());
+		final IGraph refGraph = scope.hasArg("graph")? (IGraph)scope.getArg("graph", IType.GRAPH) : null;
+		final GamaArgument arg = scope.hasArg("argument")? (GamaArgument)scope.getArg("argument", GamaArgumentType.id) : null;
+		if ((graph != null) && (arg != null) && !(graph.getVertices().contains(arg))) {
+			graph.addVertex(arg);
+			if (refGraph != null) {
+				Set edges = refGraph.outgoingEdgesOf(arg);
+				for (Object e : edges) {
+					Object t = refGraph.getEdgeTarget(e);
+					if (graph.getVertices().contains(t)) 
+						graph.addEdge(arg, t);
+				}
+				edges = refGraph.incomingEdgesOf(arg);
+				for (Object e : edges) {
+					Object s = refGraph.getEdgeSource(e);
+					if (graph.getVertices().contains(s)) 
+						graph.addEdge(s,arg);
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	
+	@action (
 			name = "make_decision",
 			doc = @doc (
 					value = "make decision concerning the option proposed by the argumentation graph",
