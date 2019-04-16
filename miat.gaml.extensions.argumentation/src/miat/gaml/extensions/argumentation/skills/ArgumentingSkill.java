@@ -1,5 +1,11 @@
 package miat.gaml.extensions.argumentation.skills;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,6 +36,8 @@ import msi.gaml.statements.Arguments;
 import msi.gaml.statements.IStatement;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import net.sf.jargsemsat.jargsemsat.alg.Misc;
+import net.sf.jargsemsat.jargsemsat.datastructures.DungAF;
 
 @skill(name = "argumenting")
 @vars({
@@ -39,6 +47,12 @@ import msi.gaml.types.Types;
 public class ArgumentingSkill extends Skill{
 	static final String ARGUMENTATION_GRAPH = "argumentation_graph";
 	static final String CRIT_IMPORTANCE = "crit_importance";
+
+	public static int BLANK = 0;
+	public static int IN = 1;
+	public static int OUT = 2;
+	public static int MUST_OUT = 3;
+	public static int UNDEC = 4;
 	
 	@getter(ARGUMENTATION_GRAPH)
 	public IGraph getArgGraph(final IAgent agent) {
@@ -78,42 +92,122 @@ public class ArgumentingSkill extends Skill{
 		IAgent ag = scope.getAgent();
 		Map<String,Double> agVal = getCritImp(ag);
 		for (String c : a.getCriteria().keySet()) {
-			val += a.getCriteria().get(c) * agVal.get(c);
+				val += a.getCriteria().get(c) * agVal.get(c);
 		}
 		return val;
 	}
 	
+
+	private DungAF toDungAF(IGraph graph) {
+		List<String> args = new ArrayList<>();
+		for (Object v : graph.getVertices() ) {
+			args.add(((GamaArgument) v).getId());
+		}
+		List<String[]> attacks = new ArrayList<>();
+		for (Object e : graph.getEdges()) {
+			String[] pair = new String[2];
+			pair[0] =((GamaArgument)graph.getEdgeSource(e)).getId();
+			pair[1] =((GamaArgument)graph.getEdgeTarget(e)).getId();
+			attacks.add(pair);
+		}
+		return new DungAF(args,attacks);
+	}
+	
+	private Map<String,GamaArgument>  argumentPerName(IGraph graph) {
+		Map<String,GamaArgument> argName = new Hashtable<>();
+		for (Object v : graph.getVertices() ) {
+			argName.put(((GamaArgument) v).getId(), (GamaArgument) v);
+		}
+		return argName;
+	}
+	
+	private IList<IList> toGAMAList(IGraph graph, HashSet<HashSet<String>> extension) {
+		Map<String,GamaArgument> argName = argumentPerName(graph);
+		IList<IList> result = GamaListFactory.create();
+		for (HashSet<String> ext : extension) {
+			IList ags = GamaListFactory.create();
+			for (String a : ext) {
+				ags.add(argName.get(a));
+			}
+			result.add(ags);
+		}
+		return result;
+	}
+	
 	@action (
-			name = "preferred_extension",
+			name = "preferred_extensions",
 				args = {@arg (
 							name = "graph",
 							type = IType.GRAPH,
 							optional = true,
 							doc = @doc ("the graph to evaluate"))},
 			doc = @doc (
-					value = "evaluate the preferred extension of an argument graph",
-					returns = "a list of list of arguments representing the preferred extension",
-					examples = { @example ("list<list<argument>> results <- preferred_extension(a_graph);") }))
+					value = "evaluate the preferred extensions of an argument graph",
+					returns = "a list of list of arguments representing the preferred extensions",
+					examples = { @example ("list<list<argument>> results <- preferred_extensions(a_graph);") }))
 	public IList<IList> primComputePreferedExtension(final IScope scope) throws GamaRuntimeException {
-		IList<IList<GamaArgument>> preferedExt = GamaListFactory.create();
 		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
 		if (graph == null)graph = getArgGraph(scope.getAgent());
-		GamaGraph dualGraph = new GamaGraph<>(scope, true, Types.get(GamaArgumentType.id), Types.NO_TYPE);
-		for (Object v1 : graph.getVertices()) {
-			for (Object v2 : graph.getVertices()) {
-				if (v1 != v2) {
-					dualGraph.addEdge(v1, v2);	
-				}
-			}
-		}
-		for (Object e : graph.getEdges()) {
-			dualGraph.removeEdge(e);
-		}
-		return Graphs.getMaximalCliques(scope, dualGraph);
+		DungAF dungAF = toDungAF(graph);
+		return toGAMAList(graph, dungAF.getPreferredExts());
 	}
 	
 	@action (
-			name = "extension",
+			name = "complete_extensions",
+				args = {@arg (
+							name = "graph",
+							type = IType.GRAPH,
+							optional = true,
+							doc = @doc ("the graph to evaluate"))},
+			doc = @doc (
+					value = "evaluate the complete extensions of an argument graph",
+					returns = "a list of list of arguments representing the complete extensions",
+					examples = { @example ("list<list<argument>> results <-complete_extensions(a_graph);") }))
+	public IList<IList> primComputeCompletedExtension(final IScope scope) throws GamaRuntimeException {
+		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
+		if (graph == null)graph = getArgGraph(scope.getAgent());
+		DungAF dungAF = toDungAF(graph);
+		return toGAMAList(graph, dungAF.getCompleteExts());
+	}
+	
+	@action (
+			name = "stable_extensions",
+				args = {@arg (
+							name = "graph",
+							type = IType.GRAPH,
+							optional = true,
+							doc = @doc ("the graph to evaluate"))},
+			doc = @doc (
+					value = "evaluate the stable extensions of an argument graph",
+					returns = "a list of list of arguments representing the stable extensions",
+					examples = { @example ("list<list<argument>> results <-stable_extensions(a_graph);") }))
+	public IList<IList> primComputeStableExtension(final IScope scope) throws GamaRuntimeException {
+		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
+		if (graph == null)graph = getArgGraph(scope.getAgent());
+		DungAF dungAF = toDungAF(graph);
+		return toGAMAList(graph, dungAF.getStableExts());
+	}
+	
+	@action (
+			name = "semi_stable_extensions",
+				args = {@arg (
+							name = "graph",
+							type = IType.GRAPH,
+							optional = true,
+							doc = @doc ("the graph to evaluate"))},
+			doc = @doc (
+					value = "evaluate the semi stable extensions of an argument graph",
+					returns = "a list of list of arguments representing the semi stable extensions",
+					examples = { @example ("list<list<argument>> results <-semi_stable_extensions(a_graph);") }))
+	public IList<IList> primComputeSemiStableExtension(final IScope scope) throws GamaRuntimeException {
+		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
+		if (graph == null)graph = getArgGraph(scope.getAgent());
+		DungAF dungAF = toDungAF(graph);
+		return toGAMAList(graph, dungAF.getSemiStableExts());
+	}
+	
+	@action (
+			name = "extensions",
 					args = {@arg (
 							name = "graph",
 							type = IType.GRAPH,
@@ -121,9 +215,9 @@ public class ArgumentingSkill extends Skill{
 							doc = @doc ("the graph to evaluate"))},
 			
 					doc = @doc (
-							value = "evaluate the extension of an argument graph",
-							returns = "a list of list of arguments representing the extension",
-							examples = { @example ("list<list<argument>> results <- extension();") }))
+							value = "evaluate the extensions of an argument graph",
+							returns = "a list of list of arguments representing the extensions",
+							examples = { @example ("list<list<argument>> results <- extensions();") }))
 	public IList<IList> primComputeExtension(final IScope scope) throws GamaRuntimeException {
 		return primComputePreferedExtension(scope);
 	}
@@ -266,8 +360,7 @@ public class ArgumentingSkill extends Skill{
 		final IStatement simplifyGraph = context.getAction("simplify_graph");
 		IGraph simplifiedGraph = (IGraph) simplifyGraph.executeOn(scope);
 		
-
-		final IStatement.WithArgs extensionComputation = context.getAction("extension");
+		final IStatement.WithArgs extensionComputation = context.getAction("extensions");
 		final Arguments args = new Arguments();
 		args.put("graph", ConstantExpressionDescription.create(simplifiedGraph));
 		extensionComputation.setRuntimeArgs(scope, args);
@@ -278,11 +371,13 @@ public class ArgumentingSkill extends Skill{
 		Double valmax = 0.0;
 		for (IList ext : extensions) {
 			args2.put("arguments", ConstantExpressionDescription.create(ext));
+			
 			valExtension.setRuntimeArgs(scope, args2);
 			Double val = (Double) valExtension.executeOn(scope);
 			if (Math.abs(val) > Math.abs(valmax))
 				valmax = val;
 		}
+		
 		return valmax;
 	}
 	
