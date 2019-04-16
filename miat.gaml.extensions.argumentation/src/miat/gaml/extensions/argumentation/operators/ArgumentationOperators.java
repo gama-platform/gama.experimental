@@ -32,37 +32,7 @@ import msi.gaml.types.Types;
 
 public class ArgumentationOperators {
 
-/*graph load_argumentation_graph(file<string> arg_file) {
-		
-		graph arg_graph <- directed(graph([]));
-		loop l over:arg_file.contents{
-			string line <- string(l);
-			if (line contains "arg(") {
-				string n <- line replace ("arg(","") replace (").", "");
-				if (n in argument_per_name.keys) {arg_graph <- arg_graph add_node(argument_per_name[n]);}
-				else {
-					write "bug : " + n;
-				}
-			} else if (line contains "att(") {
-				list<string> str <- line split_with ",";
-				if (length(str) = 2) {
-					string a1 <- str[0] replace ("att(","");
-					string a2 <- str[1] replace (").","");
- 					argument arg1 <-  argument_per_name[a1];
-					argument arg2 <-  argument_per_name[a2];
-					if (arg1 != nil and arg2 != nil) {
-						arg_graph <- arg_graph add_edge(arg1::arg2);
-					} else {
-						write "bug: " + a1 + "->" + a2 ;
-					}
-					
-					
-				}
-			}
-		}
-		return arg_graph;
-	}
-	*/
+	
 	@operator (
 			value = { "load_graph" },
 			category = { "argumentation" },
@@ -109,9 +79,13 @@ public class ArgumentationOperators {
 				GamaMap<String, Double> criteria = GamaMapFactory.create();
 				for (int j = 2; j < mat.getCols(scope); j++) {
 					String val = mat.get(scope, j,i) ;
-					if ((val != null ) && (val.contains("::"))) {
-						String[] p = val.split("::");
-						criteria.put(p[0], Double.valueOf(p[1]));
+					if ((val != null )) {
+						if (val.contains("::")) {
+							String[] p = val.split("::");
+							criteria.put(p[0], Double.valueOf(p[1]));
+						} else {
+							criteria.put(val, 1.0);
+						}
 					}
 				}
 				GamaArgument arg = new GamaArgument(n, option, conclusion, "", "", criteria, null, "");

@@ -26,8 +26,6 @@ public class GamaArgument  implements IValue{
 	private IAgent actor = null;
 	private String sourceType = "";
 	
-	
-	
 	public GamaArgument(String id, String option, String conclusion, String statement, String rationale,
 			GamaMap<String, Double> criteria, IAgent actor, String sourceType) {
 		super();
@@ -101,6 +99,13 @@ public class GamaArgument  implements IValue{
 		return new GamaArgument(id, option, conclusion, statement, rationale, criteria.copy(scope), actor, sourceType);
 	}
 
+	@Override
+	public String toString() {
+		return id ;
+	}
+
+	
+	
 
 	
 	
