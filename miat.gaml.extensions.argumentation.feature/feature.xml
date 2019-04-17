@@ -16,6 +16,10 @@
       [Enter License Description here.]
    </license>
 
+   <url>
+      <update label="GAMA 1.7.x Experimental Plugins Update Site" url="http://updates.gama-platform.org/experimental"/>
+   </url>
+
    <plugin
          id="miat.gaml.extensions.argumentation"
          download-size="0"
