@@ -228,7 +228,6 @@ public class ArgumentingSkill extends Skill{
 					value = "update the weight of the argumentation graph",
 					examples = { @example ("do update_graph;") }))
 	public void primUpdateArgumentationGraph(final IScope scope) throws GamaRuntimeException {
-		IList<IList<GamaArgument>> preferedExt = GamaListFactory.create();
 		IGraph graph = getArgGraph(scope.getAgent());
 		final ISpecies context = scope.getAgent().getSpecies();
 		final IStatement.WithArgs evalArgAct = context.getAction("evaluate_argument");
@@ -251,8 +250,8 @@ public class ArgumentingSkill extends Skill{
 					value = "simplify the argumentation graph",
 					examples = { @example ("do simplify_graph;") }))
 	public IGraph primSimplifyArgumentationGraph(final IScope scope) throws GamaRuntimeException {
-		IList<IList<GamaArgument>> preferedExt = GamaListFactory.create();
 		IGraph graph = (IGraph) getArgGraph(scope.getAgent()).copy(scope);
+		
 		IList edges = (IList) graph.getEdges().copy(scope);
 		for (Object e1 : edges) {
 			if (graph.containsEdge(e1)) {
@@ -269,6 +268,7 @@ public class ArgumentingSkill extends Skill{
 				}
 			}
 		}
+		
 		return graph;
 	}
 	

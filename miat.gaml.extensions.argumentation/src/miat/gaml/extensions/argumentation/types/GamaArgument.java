@@ -81,7 +81,7 @@ public class GamaArgument  implements IValue{
 
 	@Override
 	public String serialize(boolean includingBuiltIn) {
-		return "("+ id + "," +(actor != null ? actor : "") + ":" + statement + " -> " + rationale + " - " + criteria; 
+		return id;
 	}
 
 	@Override
