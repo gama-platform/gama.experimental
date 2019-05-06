@@ -1,4 +1,4 @@
-package markdownSyntactic;
+package gamrGenerator;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -21,6 +21,7 @@ import org.eclipse.core.internal.resources.Resource;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -47,7 +48,7 @@ import ummisco.gama.ui.navigator.contents.WrappedResource;
  * 
  * @author damienphilippon Date : 19 Dec 2017 Class used go handle the command
  */
-public class GenerateMDHandler extends AbstractHandler {
+public class GenerateGamrHandler extends AbstractHandler {
 	/**
 	 * The job that will be executed
 	 */
@@ -108,7 +109,9 @@ public class GenerateMDHandler extends AbstractHandler {
 							.setFilterPath(file_to_convert.getProject().getResource().getLocation().toOSString());
 					String selectedDirectoryName = directorySelector.open();
 					myJob = new JobDocumentationProject(((WrappedProject) o).getResource(), selectedDirectoryName,model,exp);
-					myJob.schedule();
+					myJob.run(new NullProgressMonitor() );
+//					myJob.setUser(true);
+//					myJob.schedule();
 				}
 				// else
 				// {
