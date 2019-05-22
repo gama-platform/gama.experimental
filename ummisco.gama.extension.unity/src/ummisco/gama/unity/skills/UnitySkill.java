@@ -1,8 +1,6 @@
 package ummisco.gama.unity.skills;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,11 +12,15 @@ import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
 import com.thoughtworks.xstream.XStream;
+import com.vividsolutions.jts.geom.Polygon;
 
+import msi.gama.common.geometry.GamaGeometryFactory;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.extensions.messaging.GamaMessage;
 import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.agent.MinimalAgent;
 import msi.gama.metamodel.shape.GamaPoint;
+import msi.gama.metamodel.shape.GamaShape;
 import msi.gama.metamodel.shape.ILocation;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
@@ -35,15 +37,12 @@ import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
-import msi.gama.util.GamaMap;
 import msi.gaml.types.IType;
 import ummisco.gama.dev.utils.DEBUG;
 import ummisco.gama.network.common.IConnector;
-import ummisco.gama.network.mqqt.MQTTConnector;
+import ummisco.gama.network.mqtt.MQTTConnector;
 import ummisco.gama.network.skills.INetworkSkill;
 import ummisco.gama.network.skills.NetworkSkill;
-import ummisco.gama.network.tcp.TCPConnector;
-import ummisco.gama.network.udp.UDPConnector;
 import ummisco.gama.serializer.factory.StreamConverter;
 import ummisco.gama.serializer.gamaType.converters.ConverterScope;
 import ummisco.gama.unity.data.type.rgbColor;
@@ -81,14 +80,16 @@ import ummisco.gama.unity.mqtt.Utils;
 		@variable(name = IUnitySkill.UNITY_SCALE, type = IType.POINT, init = "{0,0,0}", doc = @doc("Agent's scale at unity scenet")),
 		@variable(name = IUnitySkill.UNITY_SPEED, type = IType.FLOAT, init = "1.0", doc = @doc("Agent's speed at unity scene (in meter/second)")),
 		@variable(name = IUnitySkill.UNITY_CREATED, type = IType.BOOL, init = IKeyword.FALSE, doc = @doc("true if the agent is created into unity scene")),
-		@variable(name = IUnitySkill.UNITY_ROTATE, type = IType.BOOL, init = IKeyword.FALSE, doc = @doc("true if agent's rotation is enabled")), })
+		@variable(name = IUnitySkill.UNITY_ROTATE, type = IType.BOOL, init = IKeyword.FALSE, doc = @doc("true if agent's rotation is enabled")), 
+		@variable(name = IUnitySkill.UNITY_ROTATE, type = IType.BOOL, init = IKeyword.FALSE, doc = @doc("true if agent's rotation is enabled")), 
+		})
 @skill(name = IUnitySkill.SKILL_NAME, concept = { IConcept.NETWORK, IConcept.COMMUNICATION, IConcept.SKILL })
 public class UnitySkill extends NetworkSkill {
 
 	public static String allContent = "";
-
 	final static String REGISTERED_AGENTS = "registred_agents";
 	final static String REGISTRED_SERVER = "registred_servers";
+	private UnitySerializer unitySerializer = new UnitySerializer();
 
 	static {
 		DEBUG.ON();
@@ -236,9 +237,10 @@ public class UnitySkill extends NetworkSkill {
 		DEBUG.LOG("The agent Name is  " + scope.getAgent().getName());
 
 		try {
+			options.setCleanSession(true);
 			client = new MqttClient(BROKER_URL, clientId);
-			options.setUserName(DEFAULT_USER);
-			options.setPassword(DEFAULT_PASSWORD.toCharArray());
+			//options.setUserName(DEFAULT_USER);
+			//options.setPassword(DEFAULT_PASSWORD.toCharArray());
 			options.setCleanSession(true);
 			client.connect(options);
 			DEBUG.LOG("Client : " + clientId + " connected with success!");
@@ -268,8 +270,29 @@ public class UnitySkill extends NetworkSkill {
 		String sender = (String) scope.getAgent().getName();
 		String objectName = (String) scope.getArg("objectName", IType.STRING);
 		Object content = (Object) scope.getArg("content", IType.NONE);
-
-		GamaMessage topicMessage = new GamaMessage(scope, sender, objectName, content);
+		
+		
+		MinimalAgent mAgent = (MinimalAgent) scope.getArg("content", IType.NONE);
+		//System.out.println("The minimal agent geometry is : "+mAgent.getGeometry());
+		
+		
+		GamaShape gs = (GamaShape) mAgent.getGeometry();
+		
+		System.out.println("The geometry to send is: "+gs.getGeometry());
+		
+		
+		
+		
+		
+		UnityAgent UAgent = new UnityAgent();
+		UAgent.getUnityAgent(mAgent);
+		
+		
+		
+		
+		//GamaMessage topicMessage = new GamaMessage(scope, sender, objectName, content);
+		
+		GamaMessage topicMessage = new GamaMessage(scope, sender, objectName, UAgent);
 
 		publishUnityMessage(scope, client, IUnitySkill.TOPIC_MAIN, topicMessage);
 
@@ -440,7 +463,7 @@ public class UnitySkill extends NetworkSkill {
 		publishUnityMessage(scope, client, IUnitySkill.TOPIC_MOVE, topicMessage);
 
 		DEBUG.LOG("New message sent to Unity. Topic: " + IUnitySkill.TOPIC_MOVE + "   Number: "
-				+ getTopicStringMessage(scope, topicMessage));
+				+ serializeMessage(scope, topicMessage));
 	}
 
 	// TODO: Youcef-> Review this action with better description and genericity
@@ -832,7 +855,10 @@ public class UnitySkill extends NetworkSkill {
 	}
 
 	public void publishUnityMessage(final IScope scope, MqttClient client, String topic, Object message) {
-		String messageString = getTopicStringMessage(scope, message);
+		String messageString = serializeMessage(scope, message);
+		//messageString.replace("class=", "xsi:type=");
+		System.out.println("The message with replace is : \n "+messageString);
+		//System.out.println("The shape to send is \n "+messageString);
 		try {
 			final MqttTopic unityTopic = client.getTopic(topic);
 			MqttMessage mqttMessage = new MqttMessage();
@@ -847,8 +873,11 @@ public class UnitySkill extends NetworkSkill {
 		}
 	}
 
-	public String getTopicStringMessage(final IScope scope, Object message) {
-		return getXStream(scope).toXML(message);
+	public String serializeMessage(final IScope scope, Object message) {
+		unitySerializer.SetSerializer(getXStream(scope));
+		return unitySerializer.agentShapeToXML(message);
+		//return unitySerializer.toXML(message);
+		//return getXStream(scope).toXML(message);
 	}
 
 }
