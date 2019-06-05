@@ -7,6 +7,7 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaList;
 import msi.gaml.types.GamaType;
 import msi.gaml.types.IType;
+import msi.gaml.types.Types;
 
 @type(name = ISoilLocationType.TYPE_NAME, id = SoilLocation.Id, kind = ISymbolKind.Variable.REGULAR, wraps = { SoilLocation.class })
 public class SoilLocationType extends GamaType<SoilLocation> {
@@ -25,7 +26,7 @@ public class SoilLocationType extends GamaType<SoilLocation> {
 		if(obj instanceof GamaList )
 		{
 			IType mtype = ((GamaList)obj).getGamlType();
-			if(mtype.getKeyType() == GamaType.INT )
+			if(mtype.getKeyType() == Types.INT )
 			{
 				GamaList<Integer> tt = (GamaList<Integer>) obj;
 				
