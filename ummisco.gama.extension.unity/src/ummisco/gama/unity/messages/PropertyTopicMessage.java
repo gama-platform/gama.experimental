@@ -12,6 +12,9 @@ package ummisco.gama.unity.messages;
 
 import java.util.Map;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.common.util.StringUtils;
 import msi.gama.extensions.messaging.GamaMessage;
@@ -24,6 +27,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  * The Class PositionTopicMessage.
@@ -33,40 +37,40 @@ import msi.gaml.types.Types;
 
 @vars({ @variable(name = PropertyTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
 		@doc("Returns the concerned unity game object name") }),
-		@variable(name = PropertyTopicMessage.PROPERTY, type = IType.STRING, doc = {
-				@doc("Returns the property name the message") }),
+		@variable(name = PropertyTopicMessage.PROPERTY_NAME, type = IType.STRING, doc = {
+		@doc("Returns the property name the message") }),
 		@variable(name = PropertyTopicMessage.VALUE, type = IType.NONE, doc = {
-				@doc("Returns the property value the message") })})
+		@doc("Returns the property value the message") }) })
 public class PropertyTopicMessage extends GamaMessage {
 
-	public final static String OBJECT_NAME = "objectName";
-	public final static String PROPERTY = "property";
-	public final static String VALUE_TYPE = "valueType";
-	public final static String VALUE = "value";
+	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;
+	public final static String PROPERTY_NAME = IUnitySkill.MSG_PROPERTY_NAME;
+	public final static String VALUE_TYPE = IUnitySkill.MSG_VALUE_TYPE;
+	public final static String VALUE = IUnitySkill.MSG_VALUE;
 
 	protected Object objectName;
-	protected Object property;
+	protected Object propertyName;
 	protected Object valueType;
 	protected Object value;
-	
 
-	public PropertyTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object property, final Object value,
-			final Object content) throws GamaRuntimeException {
+	public PropertyTopicMessage(final IScope scope, final Object sender, final Object receivers,
+			final Object objectName, final Object propertyName, final Object value, final Object content)
+			throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
-		setProperty(property);
+		setPropertyName(propertyName);
 		setValueType(value.getClass().getSimpleName());
 		setValue(value);
-		
+
 	}
 
-	public PropertyTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, 
-			final Object property, final Object value) throws GamaRuntimeException {
+	public PropertyTopicMessage(final IScope scope, final Object sender, final Object receivers,
+			final Object objectName, final Object propertyName, final Object value) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
 		setObjectName(objectName);
-		setProperty(property);
+		setPropertyName(propertyName);
 		setValueType(value.getClass().getSimpleName());
 		setValue(value);
 	}
@@ -80,18 +84,17 @@ public class PropertyTopicMessage extends GamaMessage {
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
-	
 
-	@getter(PropertyTopicMessage.PROPERTY)
-	public Object getProperty() {
-		return property;
+	@getter(PropertyTopicMessage.PROPERTY_NAME)
+	public Object getPropertyName() {
+		return propertyName;
 	}
 
-	@setter(PropertyTopicMessage.PROPERTY)
-	public void setProperty(final Object property) {
-		this.property = property;
+	@setter(PropertyTopicMessage.PROPERTY_NAME)
+	public void setPropertyName(final Object propertyName) {
+		this.propertyName = propertyName;
 	}
-	
+
 	@getter(PropertyTopicMessage.VALUE_TYPE)
 	public Object getValueType() {
 		return valueType;
@@ -101,8 +104,7 @@ public class PropertyTopicMessage extends GamaMessage {
 	public void setValueType(final Object valueType) {
 		this.valueType = valueType;
 	}
-	
-	
+
 	@getter(PropertyTopicMessage.VALUE)
 	public Object getValue() {
 		return value;
@@ -126,8 +128,8 @@ public class PropertyTopicMessage extends GamaMessage {
 
 	@Override
 	public PropertyTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new PropertyTopicMessage(scope, getSender(), getReceivers(), getObjectName(),  getProperty(), getValue(),
-				getContents(scope));
+		return new PropertyTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getPropertyName(),
+				getValue(), getContents(scope));
 	}
 
 	/**

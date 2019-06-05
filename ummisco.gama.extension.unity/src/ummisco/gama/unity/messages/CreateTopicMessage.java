@@ -24,6 +24,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  * The Class CreateTopicMessage.
@@ -38,13 +39,13 @@ import msi.gaml.types.Types;
 		@variable(name = CreateTopicMessage.COLOR, type = IType.COLOR, doc = {
 				@doc("Returns the color of the object to create") }),
 		@variable(name = CreateTopicMessage.POSITION, type = IType.POINT, doc = {
-				@doc("Returns the position of the object to create") }),})
+				@doc("Returns the position of the object to create") }), })
 public class CreateTopicMessage extends GamaMessage {
 
-	public final static String OBJECT_NAME = "objectName";
-	public final static String TYPE = "type";
-	public final static String COLOR = "color";
-	public final static String POSITION = "position";
+	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;
+	public final static String TYPE = IUnitySkill.MSG_TYPE;
+	public final static String COLOR = IUnitySkill.MSG_COLOR;
+	public final static String POSITION = IUnitySkill.MSG_POSITION;
 
 	protected Object objectName;
 	protected Object type;
@@ -52,7 +53,8 @@ public class CreateTopicMessage extends GamaMessage {
 	protected Object position;
 
 	public CreateTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName,
-			final Object type, final Object color, final Object position, final Object content) throws GamaRuntimeException {
+			final Object type, final Object color, final Object position, final Object content)
+			throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
@@ -61,7 +63,7 @@ public class CreateTopicMessage extends GamaMessage {
 		setPosition(position);
 	}
 
-	public CreateTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, 
+	public CreateTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName,
 			final Object type, final Object color, final Object position) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
@@ -80,7 +82,6 @@ public class CreateTopicMessage extends GamaMessage {
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
-	
 
 	@getter(CreateTopicMessage.TYPE)
 	public Object getType() {
@@ -91,7 +92,7 @@ public class CreateTopicMessage extends GamaMessage {
 	public void setType(final Object type) {
 		this.type = type;
 	}
-	
+
 	@getter(CreateTopicMessage.COLOR)
 	public Object getColor() {
 		return color;
@@ -101,7 +102,7 @@ public class CreateTopicMessage extends GamaMessage {
 	public void setColor(final Object color) {
 		this.color = color;
 	}
-	
+
 	@getter(CreateTopicMessage.POSITION)
 	public Object getPosition() {
 		return position;
@@ -125,8 +126,8 @@ public class CreateTopicMessage extends GamaMessage {
 
 	@Override
 	public CreateTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new CreateTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getType(), getColor(), getPosition(),
-				getContents(scope));
+		return new CreateTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getType(), getColor(),
+				getPosition(), getContents(scope));
 	}
 
 	/**

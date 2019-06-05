@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Argumentation
+Bundle-SymbolicName: miat.gaml.extensions.argumentation;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: miat.gaml.extensions.argumentation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: msi.gama.core;bundle-version="1.7.0",
+ msi.gama.ext;bundle-version="1.7.0"
+Export-Package: miat.gaml.extensions.argumentation.skills,
+ miat.gaml.extensions.argumentation.types
+Bundle-ClassPath: lib/jArgSemSAT.jar,
+ lib/org.sat4j.core-2.3.1.jar,
+ .

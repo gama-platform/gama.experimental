@@ -4,7 +4,7 @@ Bundle-Name: GAML Standalone executable creator
 Bundle-SymbolicName: ummisco.gama.gamr;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Main-Class: markdownSyntactic.GamaLauncher
+Main-Class: gamrGenerator.GamaLauncher
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.11.1",
  org.eclipse.ui;bundle-version="3.107.0",
  msi.gama.core,
@@ -24,5 +24,5 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.11.1",
 Import-Package: org.apache.commons.io,
  org.eclipse.compare,
  org.eclipse.ui.commands
-Export-Package: jobs,
- markdownSyntactic
+Export-Package: gamrGenerator,
+ jobs

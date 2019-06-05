@@ -24,6 +24,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  * The Class PositionTopicMessage.
@@ -37,22 +38,22 @@ import msi.gaml.types.Types;
 				@doc("Returns the attribtes list of the message") }), })
 public class PositionTopicMessage extends GamaMessage {
 
-	public final static String OBJECT_NAME = "objectName";
-	public final static String POSITION = "position";
+	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;
+	public final static String POSITION = IUnitySkill.MSG_POSITION;
 
 	protected Object objectName;
 	protected Object position;
 
-	public PositionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, final Object position,
-			final Object content) throws GamaRuntimeException {
+	public PositionTopicMessage(final IScope scope, final Object sender, final Object receivers,
+			final Object objectName, final Object position, final Object content) throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
 		setPosition(position);
 	}
 
-	public PositionTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, 
-			final Object position) throws GamaRuntimeException {
+	public PositionTopicMessage(final IScope scope, final Object sender, final Object receivers,
+			final Object objectName, final Object position) throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
 		setObjectName(objectName);
@@ -68,7 +69,6 @@ public class PositionTopicMessage extends GamaMessage {
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
-	
 
 	@getter(PositionTopicMessage.POSITION)
 	public Object getPosition() {

@@ -130,4 +130,10 @@ public class MQTTUnityConnector extends Connector{
 		
 	}
 
+	@Override
+	protected boolean isAlive(IAgent agent) throws GamaNetworkException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

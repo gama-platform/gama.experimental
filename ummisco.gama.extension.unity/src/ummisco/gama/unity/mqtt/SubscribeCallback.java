@@ -32,7 +32,7 @@ public class SubscribeCallback implements MqttCallback {
 	// @Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
 		DEBUG.LOG("Message arrived. Topic: " + topic + "  Message: " + message.toString());
-		//if(!message.isRetained())
+		// if(!message.isRetained())
 		if (topic.equals(IUnitySkill.TOPIC_REPLAY)) {
 			replayMailBox.add(message);
 			DEBUG.LOG("A replay has been recevied");
@@ -42,7 +42,7 @@ public class SubscribeCallback implements MqttCallback {
 		} else if (topic.equals(IUnitySkill.TOPIC_LITTOSIM)) {
 			littosimMailBox.add(message);
 			DEBUG.LOG("A littoSIM message has been recevied");
-		}else {
+		} else {
 			mailBox.add(message);
 			DEBUG.LOG("Unknown message has been recevied");
 		}
@@ -81,14 +81,13 @@ public class SubscribeCallback implements MqttCallback {
 		}
 	}
 
-	
 	public void clearAllMessages() {
-		 mailBox.clear();
-		 replayMailBox.clear();
-		 notificationMailBox.clear();
-		 littosimMailBox.clear();
+		mailBox.clear();
+		replayMailBox.clear();
+		notificationMailBox.clear();
+		littosimMailBox.clear();
 	}
-	
+
 	public void clearTopicMessages(String topic) throws Exception {
 		if (topic.equals(IUnitySkill.TOPIC_REPLAY)) {
 			replayMailBox.clear();
@@ -96,7 +95,7 @@ public class SubscribeCallback implements MqttCallback {
 			notificationMailBox.clear();
 		} else if (topic.equals(IUnitySkill.TOPIC_LITTOSIM)) {
 			littosimMailBox.clear();
-		}else if (topic.equals(IUnitySkill.TOPIC_MAIN)) {
+		} else if (topic.equals(IUnitySkill.TOPIC_MAIN)) {
 			mailBox.clear();
 		}
 	}
