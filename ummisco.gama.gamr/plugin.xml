@@ -14,9 +14,8 @@
                visible="true">
          </separator>
          <command
-               commandId="ummisco.gamadelio.generateMD"
-               icon="icons/menu.generateMD.png"
-               id="ummisco.gamadelio.menu.generateMD"
+               commandId="ummisco.gamadelio.generateGamr"
+               id="ummisco.gamadelio.menu.generateGamr"
                label="Generate GAMR"
                tooltip="Generate standalone executable of a Model">
                <visibleWhen
@@ -42,15 +41,15 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="markdownSyntactic.GenerateMDHandler"
-            id="ummisco.gamadelio.generateMD"
-            name="Generate Markdown Documentation from GAML">
+            defaultHandler="gamrGenerator.GenerateGamrHandler"
+            id="ummisco.gamadelio.generateGamr"
+            name="Generate GAMR">
       </command>
    </extension>
    <extension
          point="gama.event_layer">
       <implementation
-            class="markdownSyntactic.Launcher">
+            class="gamrGenerator.Launcher">
       </implementation>
    </extension>
 

@@ -21,6 +21,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  * The Class DestroyTopicMessage.
@@ -29,24 +30,23 @@ import msi.gaml.types.Types;
  */
 
 @vars({ @variable(name = DestroyTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
-		@doc("Returns the concerned unity game object name") }) 
-	})
+		@doc("Returns the concerned unity game object name") }) })
 public class DestroyTopicMessage extends GamaMessage {
 
-	public final static String OBJECT_NAME = "objectName";
+	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;
 
 	protected Object objectName;
-	
-	
-	public DestroyTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName, 
+
+	public DestroyTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName,
 			final Object content) throws GamaRuntimeException {
 		super(scope, sender, receivers, content);
 
 		setObjectName(objectName);
-		
+
 	}
 
-	public DestroyTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName ) throws GamaRuntimeException {
+	public DestroyTopicMessage(final IScope scope, final Object sender, final Object receivers, final Object objectName)
+			throws GamaRuntimeException {
 		super(scope, sender, receivers, "content not set");
 
 		setObjectName(objectName);
@@ -61,8 +61,7 @@ public class DestroyTopicMessage extends GamaMessage {
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
-	
-	
+
 	@Override
 	public String serialize(final boolean includingBuiltIn) {
 		return StringUtils.toGaml(contents, includingBuiltIn);

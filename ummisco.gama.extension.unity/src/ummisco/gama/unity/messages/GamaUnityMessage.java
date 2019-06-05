@@ -24,6 +24,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  * The Class GamaUnityMessage.
@@ -53,17 +54,17 @@ import msi.gaml.types.Types;
 				@doc("Returns the topic of this message (I.e. topic Speed to change a unity GameObject speed.)") }) })
 public class GamaUnityMessage extends GamaMessage {
 
-	public final static String CONTENTS = "contents";
-	public final static String UNREAD = "unread";
-	public final static String EMISSION_TIMESTAMP = "emission_timestamp";
-	public final static String RECEPTION_TIMESTAMP = "recention_timestamp";
-	public final static String SENDER = "sender";
-	public final static String RECEIVERS = "receivers";
+	public final static String CONTENTS = IUnitySkill.MSG_CONTENTS;
+	public final static String UNREAD = IUnitySkill.MSG_UNREAD;
+	public final static String EMISSION_TIMESTAMP = IUnitySkill.MSG_EMISSION_TIMESTAMP;
+	public final static String RECEPTION_TIMESTAMP = IUnitySkill.MSG_RECEPTION_TIMESTAMP;
+	public final static String SENDER = IUnitySkill.MSG_SENDER;
+	public final static String RECEIVERS = IUnitySkill.MSG_RECEIVERS;
 
-	public final static String ACTION = "unityAction";
-	public final static String OBJECT = "unityObject";
-	public final static String ATTRIBUTE = "unityAttribute";
-	public final static String TOPIC = "unityTopic";
+	public final static String ACTION = IUnitySkill.MSG_UNITY_ACTION;
+	public final static String OBJECT = IUnitySkill.MSG_UNITY_OBJECT;
+	public final static String ATTRIBUTE = IUnitySkill.MSG_UNITY_ATTRIBUTE;
+	public final static String TOPIC = IUnitySkill.MSG_UNITY_TOPIC;
 
 	protected Object unityAction;
 	protected Object unityObject;

@@ -1,4 +1,4 @@
-package markdownSyntactic;
+package gamrGenerator;
 
 import java.awt.FileDialog;
 import java.io.BufferedReader;

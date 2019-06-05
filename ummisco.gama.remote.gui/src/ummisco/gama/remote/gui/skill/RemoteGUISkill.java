@@ -16,6 +16,7 @@ import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
+import ummisco.gama.dev.utils.DEBUG;
 import ummisco.gama.network.skills.INetworkSkill;
 import ummisco.gama.remote.gui.connector.MQTTConnector;
 
@@ -47,6 +48,10 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 	ArrayList<SharedVariable> vars = new ArrayList<SharedVariable>();
 	MQTTConnector connection = null;
 
+	static {
+		DEBUG.OFF();
+	}	
+	
 	@action (
 			name = IRemoteGUISkill.CONFIGURE_TOPIC,
 			args = { @arg (
@@ -84,7 +89,6 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 		try {
 			connection = new MQTTConnector(serverURL, login, password);
 		} catch (final MqttException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -121,7 +125,6 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 					new SharedVariable(agt, varName, exposedName, connection, SharedVariable.EXPOSED_VARIABLE);
 			this.getShareVariables(scope).add(varS);
 		} catch (final MqttException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -150,13 +153,12 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 		final String pass = (String) agt.getAttribute(IRemoteGUISkill.PASSWORD);
 		final String varName = (String) scope.getArg(IRemoteGUISkill.STORE_NAME, IType.STRING);
 		final String exposedName = (String) scope.getArg(IRemoteGUISkill.EXPOSED_NAME, IType.STRING);
-		System.out.println("register");
+		DEBUG.OUT("register");
 		try {
 			final SharedVariable varS =
 					new SharedVariable(agt, varName, exposedName, connection, SharedVariable.LISTENED_VARIABLE);
 			this.getShareVariables(scope).add(varS);
 		} catch (final MqttException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -185,7 +187,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 	private void updateVariables(final IScope scope) {
 		final ArrayList<SharedVariable> agts = getShareVariables(scope);
 		for (final SharedVariable agt : agts) {
-			System.out.println("update d'un variable  " + agt.exposedName);
+			DEBUG.OUT("update d'un variable  " + agt.exposedName);
 
 			agt.update(scope);
 		}
@@ -193,7 +195,7 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 
 	private void registerSimulationEvent(final IScope scope) {
 		scope.getSimulation().postEndAction(scope1 -> {
-			System.out.println("fdsqfdsq");
+			DEBUG.OUT("Register Simulation");
 			updateVariables(scope1);
 			return null;
 		});
@@ -212,7 +214,6 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 		try {
 			connection.releaseConnection();
 		} catch (final MqttException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.initialize(scope);

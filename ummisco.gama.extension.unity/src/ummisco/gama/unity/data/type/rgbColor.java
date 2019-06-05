@@ -24,33 +24,29 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
+import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  * The Class rgbColor.
  *
-
+ * 
  */
 
-@vars({ @variable(name = rgbColor.RED, type = IType.INT, doc = {
-		@doc(" ") }),
+@vars({ @variable(name = rgbColor.RED, type = IType.INT, doc = { @doc(" ") }),
 		@variable(name = rgbColor.GREEN, type = IType.INT),
-		@variable(name = rgbColor.BLUE, type = IType.INT, doc = {
-				@doc(" ") })
-	})
+		@variable(name = rgbColor.BLUE, type = IType.INT, doc = { @doc(" ") }) })
 public class rgbColor {
 
-	public final static String RED = "red";
-	public final static String GREEN = "green";
-	public final static String BLUE = "blue";
-	
+	public final static String RED = IUnitySkill.MSG_RED;
+	public final static String GREEN = IUnitySkill.MSG_GREEN;
+	public final static String BLUE = IUnitySkill.MSG_BLUE;
+
 	protected Object red;
 	protected Object green;
 	protected Object blue;
 
+	public rgbColor(final Object red, final Object green, final Object blue) throws GamaRuntimeException {
 
-	public rgbColor(final Object red, final Object green, final Object blue)
-			throws GamaRuntimeException {
-		
 		setRed(red);
 		setGreen(green);
 		setBlue(blue);
