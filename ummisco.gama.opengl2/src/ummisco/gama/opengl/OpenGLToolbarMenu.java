@@ -73,7 +73,7 @@ public class OpenGLToolbarMenu {
 		// }
 		// });
 		final MenuItem split = new MenuItem(menu, SWT.CHECK);
-		split.setImage(GamaIcons.create(IGamaIcons.DISPLAY_TOOLBAR_SPLIT).image());
+		split.setImage(GamaIcons.create(IGamaIcons.DISPLAY_TOOLBAR_CSVEXPORT).image());
 		final boolean splitted = view.getDisplaySurface().getData().isLayerSplitted();
 		split.setSelection(splitted);
 		split.setText("Split layers");
@@ -91,7 +91,7 @@ public class OpenGLToolbarMenu {
 		final MenuItem triangle = new MenuItem(menu, SWT.CHECK);
 		triangle.setText("Wireframe");
 		triangle.setSelection(view.getDisplaySurface().getData().isWireframe());
-		triangle.setImage(GamaIcons.create(IGamaIcons.DISPLAY_TOOLBAR_TRIANGULATE).image());
+		triangle.setImage(GamaIcons.create(IGamaIcons.DISPLAY_TOOLBAR_PAUSE).image());
 		triangle.addSelectionListener(new SelectionAdapter() {
 
 			@Override

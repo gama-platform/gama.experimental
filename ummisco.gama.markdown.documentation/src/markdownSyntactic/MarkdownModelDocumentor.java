@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 
 import msi.gama.lang.gaml.indexer.GamlResourceIndexer;
-import msi.gama.util.GAML;
+import msi.gaml.compilation.GAML;
 import msi.gaml.compilation.ast.ISyntacticElement;
 import msi.gaml.compilation.ast.ISyntacticElement.SyntacticVisitor;
 import ummisco.gama.ui.navigator.contents.WrappedGamaFile;

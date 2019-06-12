@@ -8,7 +8,7 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 
 import msi.gama.lang.gaml.indexer.GamlResourceIndexer;
-import msi.gama.util.GAML;
+import msi.gaml.compilation.GAML;
 import msi.gaml.compilation.ast.ISyntacticElement;
 import msi.gaml.compilation.ast.ISyntacticElement.SyntacticVisitor;
 import msi.gaml.descriptions.IExpressionDescription;
