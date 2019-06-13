@@ -102,4 +102,8 @@ public interface IUnitySkill {
 
 
 	public static final double DAFAULT_SPEED = 1.0;
+	
+	
+	// Unity managers
+	public static final String UNITY_SCENE_MANAGER = "GamaManager";
 }

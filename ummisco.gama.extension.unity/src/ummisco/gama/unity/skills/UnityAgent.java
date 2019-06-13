@@ -23,6 +23,8 @@ public class UnityAgent {
 		public String species;
 		public Object geometryType;
 		public Object vertices;
+		public GamaPoint location;
+		
 
 		public Object color;
 		public Object height;
@@ -37,11 +39,15 @@ public class UnityAgent {
 			this.species = miniAgent.getSpecies().getName();
 			this.geometryType = miniAgent.getGeometricalType();
 			this.vertices = getPointsList(miniAgent.getGeometry().getPoints());
+			this.location = (GamaPoint) miniAgent.getLocation();
+			
 			
 			 
 			GamaShape gs = (GamaShape) miniAgent.getGeometry();
 			GamaPairList pairs = gs.getAttributes().getPairs();
-						
+			
+			System.out.println("Agent name is : "+this.agentName);
+			
 			for(Object e :pairs) {
 				GamaPair gp = (GamaPair) e;
 				
@@ -59,9 +65,9 @@ public class UnityAgent {
 				
 					
 				//GamaColor color = gp.getKey().
-				//System.out.println("Object type is : "+e.getClass());
-				//System.out.println("Object key is : "+gp.getKey());
-				//System.out.println("Object value is : "+gp.getValue());
+				System.out.println("Object type is : "+e.getClass());
+				System.out.println("Object key is : "+gp.getKey());
+				System.out.println("Object value is : "+gp.getValue());
 				
 			
 			}

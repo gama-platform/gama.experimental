@@ -263,33 +263,28 @@ public class UnitySkill extends NetworkSkill {
 	}
 
 	@action(name = "send_unity_message", args = {
-			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
+			@arg(name = "scene_manager", type = IType.STRING, optional = true, doc = @doc("The game object name")),
 			@arg(name = "content", type = IType.NONE, optional = false, doc = @doc("The emessage content")) }, doc = @doc(value = "The generic form of a message to send to Unity engine. ", returns = "true if it is in the base.", examples = {
 					@example("") }))
 	public Boolean sendUnityMqttMessage(final IScope scope) {
 		String sender = (String) scope.getAgent().getName();
-		String objectName = (String) scope.getArg("objectName", IType.STRING);
+		String objectName = ((Object) scope.getArg("scene_manager", IType.NONE) != null) ? (String) scope.getArg("scene_manager", IType.NONE) :  IUnitySkill.UNITY_SCENE_MANAGER;
 		Object content = (Object) scope.getArg("content", IType.NONE);
 		
 		
 		MinimalAgent mAgent = (MinimalAgent) scope.getArg("content", IType.NONE);
-		//System.out.println("The minimal agent geometry is : "+mAgent.getGeometry());
+		
+				
+		System.out.println("The Envlope is "+ scope);
 		
 		
 		GamaShape gs = (GamaShape) mAgent.getGeometry();
 		
 		System.out.println("The geometry to send is: "+gs.getGeometry());
-		
-		
-		
-		
-		
+						
 		UnityAgent UAgent = new UnityAgent();
 		UAgent.getUnityAgent(mAgent);
-		
-		
-		
-		
+					
 		//GamaMessage topicMessage = new GamaMessage(scope, sender, objectName, content);
 		
 		GamaMessage topicMessage = new GamaMessage(scope, sender, objectName, UAgent);
