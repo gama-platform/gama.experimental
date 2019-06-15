@@ -1,5 +1,5 @@
 
-package gaml.operator;
+package gaml.operators;
 
 import com.mathworks.engine.MatlabEngine;
 
