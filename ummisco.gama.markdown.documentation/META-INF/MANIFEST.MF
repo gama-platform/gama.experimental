@@ -23,3 +23,4 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.11.1",
 Import-Package: org.apache.commons.io,
  org.eclipse.compare,
  org.eclipse.ui.commands
+Automatic-Module-Name: ummisco.gama.markdown.documentation

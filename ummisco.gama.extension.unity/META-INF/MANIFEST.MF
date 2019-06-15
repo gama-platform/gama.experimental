@@ -10,3 +10,4 @@ Require-Bundle: msi.gama.core;bundle-version="1.7.0",
  ummisco.gama.serialize
 Import-Package: org.eclipse.paho.client.mqttv3
 Export-Package: ummisco.gama.unity.messages
+Automatic-Module-Name: ummisco.gama.extension.unity
