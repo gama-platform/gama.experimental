@@ -7,3 +7,6 @@ Automatic-Module-Name: ummisco.gama.extensions.matlab
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: msi.gama.core;bundle-version="1.7.0",
  msi.gama.ext;bundle-version="1.7.0"
+Export-Package: gaml.operators;uses:="msi.gama.runtime"
+Bundle-ClassPath: libs/engine.jar,
+ .
