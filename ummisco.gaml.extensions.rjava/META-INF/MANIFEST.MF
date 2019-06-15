@@ -15,3 +15,4 @@ Bundle-ClassPath: .,
  lib/JRI.jar,
  lib/JRIEngine.jar,
  lib/REngine.jar
+Automatic-Module-Name: ummisco.gaml.extensions.rjava

@@ -10,3 +10,4 @@ Require-Bundle: msi.gama.ext;bundle-version="1.7.0",
 Bundle-ClassPath: lib/weka.jar,
  .,
  xstream-1.4.5.jar
+Automatic-Module-Name: simtools.gamanalyzer.fr

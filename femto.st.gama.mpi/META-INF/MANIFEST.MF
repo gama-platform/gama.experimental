@@ -12,3 +12,4 @@ Bundle-ClassPath: .,
  ext/mpi.jar
 Export-Package: femto_st.gama.mpi
 Import-Package: ummisco.gama.serializer.factory
+Automatic-Module-Name: femto.st.gama.mpi
