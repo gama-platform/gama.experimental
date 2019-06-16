@@ -10,4 +10,5 @@ Bundle-ClassPath: lib/weka.jar,
 Export-Package: idees.gama.operators
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: IDEES
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: idees.gama.weka

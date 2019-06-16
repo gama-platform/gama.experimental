@@ -1,16 +1,13 @@
 /*********************************************************************************************
  *
- * 'GamaMessage.java, in plugin msi.gama.core, is part of the source code of the
- * GAMA modeling and simulation platform.
+ * 'GamaMessage.java, in plugin msi.gama.core, is part of the source code of the GAMA modeling and simulation platform.
  * (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.unity.messages;
-
-import java.util.Map;
 
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.common.util.StringUtils;
@@ -32,26 +29,40 @@ import ummisco.gama.unity.skills.IUnitySkill;
  * @author youcef sklab
  */
 
-@vars({ @variable(name = GamaUnityMessage.SENDER, type = IType.NONE, doc = {
-		@doc("Returns the sender that has sent this message") }),
-		// @variable(name = GamaUnityMessage.CONTENTS, type = IType.NONE, doc = {
-		// @doc("Returns the contents of this message, as a list of arbitrary objects")
-		// }),
-		@variable(name = GamaUnityMessage.UNREAD, type = IType.BOOL, init = IKeyword.TRUE, doc = {
-				@doc("Returns whether this message is unread or not") }),
-		@variable(name = GamaUnityMessage.RECEPTION_TIMESTAMP, type = IType.INT, doc = {
-				@doc("Returns the reception time stamp of this message (I.e. at what cycle it has been received)") }),
-		@variable(name = GamaUnityMessage.EMISSION_TIMESTAMP, type = IType.INT, doc = {
-				@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
+@vars ({ @variable (
+		name = GamaUnityMessage.SENDER,
+		type = IType.NONE,
+		doc = { @doc ("Returns the sender that has sent this message") }),
+		@variable (
+				name = GamaUnityMessage.UNREAD,
+				type = IType.BOOL,
+				init = IKeyword.TRUE,
+				doc = { @doc ("Returns whether this message is unread or not") }),
+		@variable (
+				name = GamaUnityMessage.RECEPTION_TIMESTAMP,
+				type = IType.INT,
+				doc = { @doc ("Returns the reception time stamp of this message (I.e. at what cycle it has been received)") }),
+		@variable (
+				name = GamaUnityMessage.EMISSION_TIMESTAMP,
+				type = IType.INT,
+				doc = { @doc ("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
 
-		@variable(name = GamaUnityMessage.ACTION, type = IType.STRING, doc = {
-				@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
-		@variable(name = GamaUnityMessage.OBJECT, type = IType.STRING, doc = {
-				@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
-		@variable(name = GamaUnityMessage.ATTRIBUTE, type = IType.MAP, doc = {
-				@doc("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
-		@variable(name = GamaUnityMessage.TOPIC, type = IType.STRING, doc = {
-				@doc("Returns the topic of this message (I.e. topic Speed to change a unity GameObject speed.)") }) })
+		@variable (
+				name = GamaUnityMessage.ACTION,
+				type = IType.STRING,
+				doc = { @doc ("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
+		@variable (
+				name = GamaUnityMessage.OBJECT,
+				type = IType.STRING,
+				doc = { @doc ("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
+		@variable (
+				name = GamaUnityMessage.ATTRIBUTE,
+				type = IType.MAP,
+				doc = { @doc ("Returns the emission time stamp of this message (I.e. at what cycle it has been emitted)") }),
+		@variable (
+				name = GamaUnityMessage.TOPIC,
+				type = IType.STRING,
+				doc = { @doc ("Returns the topic of this message (I.e. topic Speed to change a unity GameObject speed.)") }) })
 public class GamaUnityMessage extends GamaMessage {
 
 	public final static String CONTENTS = IUnitySkill.MSG_CONTENTS;
@@ -81,43 +92,43 @@ public class GamaUnityMessage extends GamaMessage {
 		setUnityTopic(unityTopic);
 	}
 
-	@getter(GamaUnityMessage.ACTION)
+	@getter (GamaUnityMessage.ACTION)
 	public Object getUnityAction() {
 		return unityAction;
 	}
 
-	@setter(GamaUnityMessage.ACTION)
+	@setter (GamaUnityMessage.ACTION)
 	public void setUnityAction(final Object unityAction) {
 		this.unityAction = unityAction;
 	}
 
-	@getter(GamaUnityMessage.OBJECT)
+	@getter (GamaUnityMessage.OBJECT)
 	public Object getUnityObject() {
 		return unityObject;
 	}
 
-	@setter(GamaUnityMessage.OBJECT)
+	@setter (GamaUnityMessage.OBJECT)
 	public void setUnityObject(final Object unityObject) {
 		this.unityObject = unityObject;
 	}
 
-	@getter(GamaUnityMessage.ATTRIBUTE)
+	@getter (GamaUnityMessage.ATTRIBUTE)
 	public Object getUnityAttribute() {
 		return unityAttribute;
 	}
 
-	@setter(GamaUnityMessage.ATTRIBUTE)
+	@setter (GamaUnityMessage.ATTRIBUTE)
 	public void setUnityAttribute(final Object unityAttribute) {
 
 		this.unityAttribute = unityAttribute;
 	}
 
-	@getter(GamaUnityMessage.TOPIC)
+	@getter (GamaUnityMessage.TOPIC)
 	public Object getUnityTopic() {
 		return unityTopic;
 	}
 
-	@setter(GamaUnityMessage.TOPIC)
+	@setter (GamaUnityMessage.TOPIC)
 	public void setUnityTopic(final Object unityTopic) {
 		this.unityTopic = unityTopic;
 	}
@@ -136,12 +147,12 @@ public class GamaUnityMessage extends GamaMessage {
 	@Override
 	public GamaUnityMessage copy(final IScope scope) throws GamaRuntimeException {
 		return new GamaUnityMessage(scope, getSender(), getReceivers(), getUnityAction(), getUnityObject(),
-				(Map<?, ?>) getUnityAttribute(), getUnityTopic(), getContents(scope));
+				getUnityAttribute(), getUnityTopic(), getContents(scope));
 	}
 
 	/**
 	 * Method getType()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.ITyped#getType()
 	 */
 	@Override
@@ -149,6 +160,7 @@ public class GamaUnityMessage extends GamaMessage {
 		return Types.get(IType.MESSAGE);
 	}
 
+	@Override
 	public void hasBeenReceived(final IScope scope) {
 		// receptionTimeStamp = scope.getClock().getCycle();
 

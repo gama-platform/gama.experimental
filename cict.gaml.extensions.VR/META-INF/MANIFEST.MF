@@ -13,3 +13,4 @@ Bundle-ClassPath: .,
  lib/opencv-2413.jar
 Export-Package: cict.gaml.extensions.webcam
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: cict.gaml.extensions.VR

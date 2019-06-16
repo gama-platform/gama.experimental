@@ -150,3 +150,4 @@ Export-Package: com.fasterxml.jackson.annotation,
  org.vertx.java.platform.impl.cli,
  org.vertx.java.platform.impl.java,
  org.vertx.java.platform.impl.resolver
+Automatic-Module-Name: mit.gaml.extension.launchpad
