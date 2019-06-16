@@ -9,3 +9,4 @@ Require-Bundle: msi.gama.core;bundle-version="1.7.0",
 Bundle-ClassPath: .,
  lib/ssj-3.1.0.jar,
  lib/colt-1.2.0.jar
+Automatic-Module-Name: ummisco.gama.camisole

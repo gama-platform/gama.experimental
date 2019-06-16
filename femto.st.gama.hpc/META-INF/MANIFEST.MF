@@ -8,3 +8,4 @@ Require-Bundle: femto.st.gama.mpi;bundle-version="1.7.0",
  msi.gama.headless;bundle-version="1.7.0",
  msi.gama.core;bundle-version="1.7.0",
  msi.gama.ext;bundle-version="1.7.0"
+Automatic-Module-Name: femto.st.gama.hpc
