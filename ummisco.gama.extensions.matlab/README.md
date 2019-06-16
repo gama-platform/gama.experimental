@@ -1,5 +1,3 @@
-Note that this plugin is not at all working with GAMA :-)
-This is only an unfinished version...
 
 It works with:
 - MATLAB 2019a
@@ -10,3 +8,10 @@ in VM argument:
  
 -Djava.library.path=/Applications/MATLAB_R2019a.app/bin/maci64/
 
+
+TODO :
+- load a code file in matlab
+- call a function ?
+- manage the jar from Matlab (load at Runtime)
+- add the -Djava .... at runtime from Java
+- test with various data type
