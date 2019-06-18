@@ -124,17 +124,18 @@ public abstract class Template {
 			processName = p.getWorld().getDefaultSpecies();
 		}
 		if (processName == null) { return null; }
-		final Map<String, Object> values = new HashMap<>();
+		Map<String, Object> values = new HashMap<>();
 		values.put(IApsfParticleSkill.FOLLOWED_PARTICLE_INT, p);
 
-		final ArrayList<Map<String, Object>> list = new ArrayList<>();
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		list.add(values);
-		final IList<IAgent> magt = processName.getPopulation(scope).createAgents(scope, 1, list, false, true);
+		IList<IAgent> magt = processName.getPopulation(scope).createAgents(scope, 1, list, false, true);
 		final IAgent agt = magt.get(0);
 		p.setAgent(agt);
 
 		if (data != null) {
-			for (final GamlSpecies spe : data.get(new Integer(p.getLocation().getScale()))) {
+//			for (final GamlSpecies spe : data.get(new Integer(p.getLocation().getScale()))) {
+				final GamlSpecies spe = data.get(new Integer(p.getLocation().getScale()));
 				processName = spe;
 				System.out.println("modification " + processName.getName());
 				values = new HashMap<>();
@@ -144,7 +145,7 @@ public abstract class Template {
 				list.add(values);
 				magt = processName.getPopulation(scope).createAgents(scope, 1, list, false, true);
 				p.addProcesses(magt.get(0));
-			}
+//			}
 
 			// agt = magt.get(0);
 		}
