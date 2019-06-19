@@ -188,7 +188,6 @@
  <module>../miat.gaml.extensions.argumentation.feature</module> 
  <module>../mit.feature.launchpad</module> 
  <module>../mit.gaml.extension.launchpad</module> 
- <module>../msi.gama.experimental.p2updatesite</module> 
  <module>../simtools.gama.feature.gamanalyzer</module> 
  <module>../simtools.gamanalyzer.fr</module> 
  <module>../ummisco.gama.camisole</module> 
@@ -205,6 +204,9 @@
  <module>../ummisco.gama.remote.gui</module> 
  <module>../ummisco.gaml.extensions.rjava</module> 
  <module>../ummisco.gaml.feature.rjava</module> 
+ <!-- 
+ <module>../msi.gama.experimental.p2updatesite</module> 
+  -->
  </modules>
  
 	<properties>
