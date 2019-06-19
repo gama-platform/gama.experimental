@@ -23,4 +23,5 @@
   	<relativePath>../msi.gama.experimental.parent</relativePath>
   </parent>
 
+  <packaging>eclipse-plugin</packaging>
 </project>

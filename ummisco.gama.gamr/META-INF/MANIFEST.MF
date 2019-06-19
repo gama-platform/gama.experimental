@@ -5,20 +5,20 @@ Bundle-SymbolicName: ummisco.gama.gamr;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Main-Class: gamrGenerator.GamaLauncher
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.11.1",
- org.eclipse.ui;bundle-version="3.107.0",
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
  msi.gama.core,
  msi.gama.ext,
  ummisco.gama.ui.navigator,
  ummisco.gama.ui.shared,
- org.eclipse.ui.ide;bundle-version="3.11.0",
- org.eclipse.core.filesystem;bundle-version="1.5.0",
- org.eclipse.core.resources;bundle-version="3.10.1",
+ org.eclipse.ui.ide,
+ org.eclipse.core.filesystem,
+ org.eclipse.core.resources,
  msi.gama.application,
  org.apache.commons.lang;bundle-version="2.6.0",
- org.eclipse.ui.console;bundle-version="3.6.100",
+ org.eclipse.ui.console,
  org.eclipse.jface.text;bundle-version="3.10.0",
- org.eclipse.ui.forms;bundle-version="3.6.200",
+ org.eclipse.ui.forms,
  msi.gama.lang.gaml,
  ummisco.gama.ui.modeling
 Import-Package: org.apache.commons.io,
