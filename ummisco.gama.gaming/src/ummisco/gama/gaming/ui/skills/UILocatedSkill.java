@@ -45,7 +45,7 @@ public class UILocatedSkill extends Skill {
 			this.initialize(scope);
 		IAgent agt = scope.getAgent();
 		String outputName = (String) scope.getArg(IUILocatedSkill.UI_NAME, IType.STRING);
-		IOutput out = scope.getSimulation().getOutputManager().getOutputWithName(outputName);
+		IOutput out = scope.getSimulation().getOutputManager().getOutputWithOriginalName(outputName);
 		//output.get
 		if(!(out instanceof LayeredDisplayOutput))
 			return null;
@@ -108,7 +108,7 @@ public class UILocatedSkill extends Skill {
 		GamaPoint pt = (GamaPoint) agt.getAttribute(IUILocatedSkill.AGENT_LOCATION);
 		float ui_width = (float) agt.getAttribute(IUILocatedSkill.AGENT_LOCKED_WIDTH);
 		float ui_height = (float) agt.getAttribute(IUILocatedSkill.AGENT_LOCKED_HEIGHT);
-		IOutput out = scope.getSimulation().getOutputManager().getOutputWithName(outputName);
+		IOutput out = scope.getSimulation().getOutputManager().getOutputWithOriginalName(outputName);
 		
 		if(!(out instanceof LayeredDisplayOutput))
 			return;

@@ -22,6 +22,18 @@
 			<url>http://51.255.46.42/updates</url>
 		</repository>
 		<repository>
+			<id>orbit</id>
+			<name>orbit</name>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
+			<layout>p2</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
 			<id>portfolio-non-maven-dependencies</id>
 			<url>http://buchen.github.io/maven-repo</url>
 		</repository>
@@ -75,7 +87,11 @@
 			<name>sourceforge-repository</name>
 			<url>http://logicaldoc.sourceforge.net/maven/</url>
 		</repository>
-
+<!-- 
+	    <repository>
+	        <id>maven-eclipse-repo</id>
+	        <url>http://maven-eclipse.github.io/maven</url>
+	    </repository>
 		<repository>
 			<id>pentaho-releases</id>
 			<url>http://repository.pentaho.org/artifactory/repo/</url>
@@ -86,9 +102,15 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+ -->
 	</repositories>
 
 	<dependencies>
+		<dependency>
+		    <groupId>org.eclipse.swt.org.eclipse.swt.win32.win32.x86_64.4.3.swt</groupId>
+		    <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+		    <version>4.3</version>
+		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>ummisco.gama.annotations</artifactId>
@@ -188,7 +210,6 @@
  <module>../miat.gaml.extensions.argumentation.feature</module> 
  <module>../mit.feature.launchpad</module> 
  <module>../mit.gaml.extension.launchpad</module> 
- <module>../msi.gama.experimental.p2updatesite</module> 
  <module>../simtools.gama.feature.gamanalyzer</module> 
  <module>../simtools.gamanalyzer.fr</module> 
  <module>../ummisco.gama.camisole</module> 
@@ -205,6 +226,9 @@
  <module>../ummisco.gama.remote.gui</module> 
  <module>../ummisco.gaml.extensions.rjava</module> 
  <module>../ummisco.gaml.feature.rjava</module> 
+ <!-- 
+ <module>../msi.gama.experimental.p2updatesite</module> 
+  -->
  </modules>
  
 	<properties>
