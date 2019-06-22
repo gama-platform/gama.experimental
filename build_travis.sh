@@ -71,8 +71,8 @@ generate_p2updatesite_category(){
 
 generate_parent_pom
 generate_p2updatesite_category
-#git_push
+git_push
 
-#cd msi.gama.experimental.parent &&
-#mvn clean install -U &&
-#cd -
+cd msi.gama.experimental.parent &&
+mvn clean install -U &&
+cd -
