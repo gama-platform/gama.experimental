@@ -51,7 +51,7 @@ generate_p2updatesite_category(){
 				echo $version
 
                 cate=$cate' <feature  url="features/'$file'_'$version'.jar" id="'$file'" version="'$version'"> <category name="gama.optional"/> </feature>\n'                   
-                cate=${cate/\n} | sed -e "s/\r\n//g" 
+                cate=${cate/\n} | sed -e 's/\015$//g' 
 				echo $cate
 				echo 
                 
