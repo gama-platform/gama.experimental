@@ -50,7 +50,7 @@ generate_p2updatesite_category(){
                 version=${version/-SNAPSHOT/$q}
 
                 cate="$cate <feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"$'\n'                   
-                   
+                echo $cate
                 
             fi
         fi
@@ -67,8 +67,8 @@ generate_p2updatesite_category(){
 
 generate_parent_pom
 generate_p2updatesite_category
-git_push
+#git_push
 
-cd msi.gama.experimental.parent &&
-mvn clean install -U &&
-cd -
+#cd msi.gama.experimental.parent &&
+#mvn clean install -U &&
+#cd -
