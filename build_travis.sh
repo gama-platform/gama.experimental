@@ -51,6 +51,7 @@ generate_p2updatesite_category(){
 
                 cate="$cate <feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"$'\n'                   
                 echo $cate
+				echo 
                 
             fi
         fi
