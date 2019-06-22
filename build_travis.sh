@@ -48,8 +48,11 @@ generate_p2updatesite_category(){
 
                 q=$".qualifier"
                 version=${version/-SNAPSHOT/$q}
-
-                cate="$cate <feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"$'\n'        
+				temp="<feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"
+				temp=$(echo $temp|tr -d '\r')
+				temp=$(echo $temp|tr -d '\n')
+                cate="$cate $temp "$'\n'        
+				
                 echo $cate
 				echo 
                 
@@ -58,8 +61,6 @@ generate_p2updatesite_category(){
       fi; 
     done
 
-	cate=$(echo $cate|tr -d '\r')
-	cate=$(echo $cate|tr -d '\n')
     echo $cate
     
     if [[ "$current_cate" != "$cate" ]]; then
