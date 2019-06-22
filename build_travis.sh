@@ -50,7 +50,6 @@ generate_p2updatesite_category(){
                 version=${version/-SNAPSHOT/$q}
 
                 cate="$cate <feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"$'\n'        
-				cate=$(echo $cate|tr -d '\n')
                 echo $cate
 				echo 
                 
@@ -59,6 +58,8 @@ generate_p2updatesite_category(){
       fi; 
     done
 
+	cate=$(echo $cate|tr -d '\r')
+	cate=$(echo $cate|tr -d '\n')
     echo $cate
     
     if [[ "$current_cate" != "$cate" ]]; then
