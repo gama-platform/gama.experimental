@@ -186,8 +186,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-	</repositories>
-
+	</repositories> 
 <modules>
  <module>../cict.feature.netcdf</module> 
  <module>../cict.feature.VR</module> 
