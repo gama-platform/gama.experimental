@@ -49,7 +49,8 @@ generate_p2updatesite_category(){
                 q=$".qualifier"
                 version=${version/-SNAPSHOT/$q}
 
-                cate="$cate <feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"$'\n'                   
+                cate="$cate <feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"$'\n'        
+				cate=$(echo $cate|tr -d '\n')
                 echo $cate
 				echo 
                 
