@@ -46,8 +46,8 @@ generate_p2updatesite_category(){
                
                 version=$(sed '/<parent>/,/<\/parent>/d;/<version>/!d;s/ *<\/\?version> *//g' "$file/pom.xml")
 
-                q=$".qualifier"
-                version=${version/-SNAPSHOT/$q}
+                q=$""
+                version=${version/-SNAPSHOT/.qualifier} 
 				echo $version
 
                 cate=$cate' <feature  url="features/'$file'_'$version'.jar" id="'$file'" version="'$version'"> <category name="gama.optional"/> </feature>\n'                   
