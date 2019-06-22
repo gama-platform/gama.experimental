@@ -51,7 +51,7 @@ generate_p2updatesite_category(){
 				temp="<feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"
 				temp=$(echo $temp|tr -d '\r')
 				temp=$(echo $temp|tr -d '\n')
-                cate="$cate $temp "$'\n'        
+                cate="$cate $temp "$'\r'$'\n'        
 				
                 echo $cate
 				echo 
