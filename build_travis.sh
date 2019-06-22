@@ -48,8 +48,9 @@ generate_p2updatesite_category(){
 
                 q=$".qualifier"
                 version=${version/-SNAPSHOT/$q}
+				echo $version
 
-                cate="$cate <feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"$'\n'                   
+                cate=$cate' <feature  url="features/'$file'_'$version'.jar" id="'$file'" version="'$version'"> <category name="gama.optional"/> </feature>\n'                   
                 echo $cate
 				echo 
                 
@@ -62,15 +63,13 @@ generate_p2updatesite_category(){
     
     if [[ "$current_cate" != "$cate" ]]; then
         echo "$cate" > msi.gama.experimental.p2updatesite/category_body.xml
-		dos2unix msi.gama.experimental.p2updatesite/category_body.xml
         echo "$header $cate $footer " > msi.gama.experimental.p2updatesite/category.xml
-		dos2unix  msi.gama.experimental.p2updatesite/category.xml
     fi
 }
 
 generate_parent_pom
 generate_p2updatesite_category
-git_push
+#git_push
 
 #cd msi.gama.experimental.parent &&
 #mvn clean install -U &&
