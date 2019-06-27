@@ -18,6 +18,7 @@
  <feature url="features/ummisco.gama.feature.markdown.documentation_1.0.0.qualifier.jar" id="ummisco.gama.feature.markdown.documentation" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gama.feature.opengl2_1.0.0.qualifier.jar" id="ummisco.gama.feature.opengl2" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gama.feature.unity_1.0.0.qualifier.jar" id="ummisco.gama.feature.unity" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/ummisco.gaml.feature.mike_1.0.0.qualifier.jar" id="ummisco.gaml.feature.mike" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gaml.feature.rjava_1.0.0.qualifier.jar" id="ummisco.gaml.feature.rjava" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
     <category-def name="gama.ui" label="UI components of GAMA"/>
    <category-def name="gama.core" label="Core components of GAMA"/>
