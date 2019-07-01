@@ -48,7 +48,7 @@ public class LaunchPadEventLayer implements ILayer, IEventLayerDelegate {
 	MyLPListener myListener=null;
 	IScope executionScope=null;
 	public static final Set<String> EVENTS =
-			new HashSet<>(Arrays.asList("pad_down"));
+			new HashSet<>(Arrays.asList("pad_down")); 
 
 	public static HashMap<String, Color> colorMap = new HashMap<String, Color>() {{
 	    put("black",Color.BLACK);
