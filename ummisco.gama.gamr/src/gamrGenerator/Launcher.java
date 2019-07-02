@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -16,6 +19,8 @@ import msi.gama.runtime.IScope;
 
 public class Launcher implements IEventLayerDelegate {
 
+	public static final Set<String> EVENTS =
+			new HashSet<>(); 
 	@Override
 	public boolean acceptSource(IScope scope, Object source) {
 		if (source.equals("launcher"))
@@ -100,6 +105,12 @@ public class Launcher implements IEventLayerDelegate {
 		}
 		WorkspaceModelsManager.instance.openModelPassedAsArgument(dirPath+"/"+model+"#"+exp);
 		return false;
+	}
+
+	@Override
+	public Set<String> getEvents() {
+		// TODO Auto-generated method stub
+		return EVENTS;
 	}
 
 }
