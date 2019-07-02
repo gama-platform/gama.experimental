@@ -22,7 +22,7 @@ before_install:
   - rm ~/.m2/settings.xml
 script: 
   - jdk_switcher use oraclejdk8
-  - bash ./build_travis.sh
+  - bash ./build_travis.sh -U
 after_success: 
     - export SSHPASS=$USER_PWD 
     - bash ./publish.sh
