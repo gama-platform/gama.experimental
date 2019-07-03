@@ -146,7 +146,7 @@
 			<id>eclipse-2019-03</id>
 			<url>http://download.eclipse.org/releases/2019-03</url>
 			<layout>p2</layout>
-		</repository> 
+		</repository>
 		<repository>
 			<releases>
 				<enabled>true</enabled>
