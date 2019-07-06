@@ -1,4 +1,4 @@
-package gaml.files;
+package ummisco.matlab.gaml.files;
 
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
