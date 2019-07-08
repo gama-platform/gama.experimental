@@ -10,8 +10,5 @@ in VM argument:
 
 
 TODO :
-- replace by an species agent
-- set the path at end !
-- add the -Djava .... at runtime from Java
 - test with various data type
 - manage the jar from Matlab (load at Runtime)
