@@ -18,7 +18,11 @@ import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.skill; 
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
+import msi.gaml.architecture.reflex.ReflexArchitecture;
+import msi.gaml.compilation.GAML;
 import msi.gaml.skills.Skill;
+import msi.gaml.statements.ActionStatement;
+import msi.gaml.statements.IStatement;
 import msi.gaml.types.IType;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -101,6 +105,14 @@ public class UILocatedSkill extends Skill {
 		this.followedAgent.remove(agt);
 	}
 	
+	@action(name="refresh_me",args={},
+			doc = @doc(value = "", returns = "", examples = { @example("")}))
+	public void moveAgentUI(IScope scope)
+	{
+		IAgent agt = scope.getAgent();
+		this.moveAgentUI(agt);
+	}
+	
 	private void moveAgentUI(IAgent agt)
 	{
 		IScope scope = agt.getScope();
@@ -128,10 +140,11 @@ public class UILocatedSkill extends Skill {
 		ILocation loc = new GamaPoint(xx,yy);
 		agt.setAttribute(IUILocatedSkill.AGENT_UI_WIDTH, tui_width);
 		agt.setAttribute(IUILocatedSkill.AGENT_UI_HEIGHT, tui_height);
-		agt.getScope().execute(scope1 -> { 
+		agt.setLocation(loc);
+/*		agt.getScope().execute(scope1 -> { 
 			agt.setLocation(loc);
 			return null;
-		});
+		});*/
 	}
 
 	@action(name=IUILocatedSkill.UI_AGENT_LOCATION_MOVE,args={
@@ -184,7 +197,7 @@ public class UILocatedSkill extends Skill {
 		
 		scope.getSimulation().postEndAction(scope1 -> { 
 			removeDeadLockedAgent();
-			moveAllAgent();
+			//moveAllAgent();
 			return null;
 		});
 
