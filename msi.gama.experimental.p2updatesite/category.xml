@@ -17,14 +17,15 @@
  <feature url="features/ummisco.gama.feature.gaming_1.7.0.qualifier.jar" id="ummisco.gama.feature.gaming" version="1.7.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gama.feature.gamr_1.0.0.qualifier.jar" id="ummisco.gama.feature.gamr" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gama.feature.markdown.documentation_1.0.0.qualifier.jar" id="ummisco.gama.feature.markdown.documentation" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gama.feature.matlab_1.7.0.qualifier.jar" id="ummisco.gama.feature.matlab" version="1.7.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gama.feature.opengl2_1.0.0.qualifier.jar" id="ummisco.gama.feature.opengl2" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gama.feature.remote.gui_1.7.0.qualifier.jar" id="ummisco.gama.feature.remote.gui" version="1.7.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gama.feature.unity_1.0.0.qualifier.jar" id="ummisco.gama.feature.unity" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gaml.feature.mike_1.0.0.qualifier.jar" id="ummisco.gaml.feature.mike" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gaml.feature.rjava_1.0.0.qualifier.jar" id="ummisco.gaml.feature.rjava" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
-    <category-def name="gama.ui" label="UI components of GAMA"/>
+ 
+ <feature url="features/ummisco.gama.feature.matlab_1.7.0.qualifier.jar" id="ummisco.gama.feature.matlab" version="1.7.0.qualifier"> <category name="gama.optional.participative"/> </feature>     <category-def name="gama.ui" label="UI components of GAMA"/>
    <category-def name="gama.core" label="Core components of GAMA"/>
    <category-def name="gama.optional" label="Optional components of GAMA"/>
+   <category-def name="gama.optional.participative" label="Paticipative simulations"/>   
    <category-def name="gama.models" label="GAMA Models Library"/>
 </site> 

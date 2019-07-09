@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<doc>
+<constantsCategories/>
+<conceptList>
+<concept id="action"/>
+<concept id="agent_location"/>
+<concept id="agent_movement"/>
+<concept id="algorithm"/>
+<concept id="architecture"/>
+<concept id="arithmetic"/>
+<concept id="asc"/>
+<concept id="attribute"/>
+<concept id="autosave"/>
+<concept id="background"/>
+<concept id="batch"/>
+<concept id="bdi"/>
+<concept id="behavior"/>
+<concept id="camera"/>
+<concept id="cast"/>
+<concept id="chart"/>
+<concept id="clustering"/>
+<concept id="color"/>
+<concept id="comodel"/>
+<concept id="comparison"/>
+<concept id="communication"/>
+<concept id="condition"/>
+<concept id="constant"/>
+<concept id="container"/>
+<concept id="csv"/>
+<concept id="cycle"/>
+<concept id="date"/>
+<concept id="database"/>
+<concept id="dem"/>
+<concept id="dgs"/>
+<concept id="diffusion"/>
+<concept id="dimension"/>
+<concept id="display"/>
+<concept id="distribution"/>
+<concept id="dxf"/>
+<concept id="edge"/>
+<concept id="elevation"/>
+<concept id="enumeration"/>
+<concept id="equation"/>
+<concept id="experiment"/>
+<concept id="facet"/>
+<concept id="file"/>
+<concept id="filter"/>
+<concept id="fipa"/>
+<concept id="fsm"/>
+<concept id="geometry"/>
+<concept id="gis"/>
+<concept id="global"/>
+<concept id="graph"/>
+<concept id="graph_weight"/>
+<concept id="gml"/>
+<concept id="grid"/>
+<concept id="graphic"/>
+<concept id="graphic_unit"/>
+<concept id="gui"/>
+<concept id="halt"/>
+<concept id="headless"/>
+<concept id="hydrology"/>
+<concept id="image"/>
+<concept id="import"/>
+<concept id="inheritance"/>
+<concept id="init"/>
+<concept id="inspector"/>
+<concept id="layer"/>
+<concept id="length_unit"/>
+<concept id="light"/>
+<concept id="list"/>
+<concept id="load_file"/>
+<concept id="logical"/>
+<concept id="loop"/>
+<concept id="matrix"/>
+<concept id="math"/>
+<concept id="map"/>
+<concept id="mirror"/>
+<concept id="model"/>
+<concept id="monitor"/>
+<concept id="multi_level"/>
+<concept id="multi_criteria"/>
+<concept id="multi_simulation"/>
+<concept id="neighbors"/>
+<concept id="network"/>
+<concept id="nil"/>
+<concept id="node"/>
+<concept id="obj"/>
+<concept id="obstacle"/>
+<concept id="opengl"/>
+<concept id="operator"/>
+<concept id="optimization"/>
+<concept id="osm"/>
+<concept id="output"/>
+<concept id="overlay"/>
+<concept id="parameter"/>
+<concept id="pause"/>
+<concept id="permanent"/>
+<concept id="physics_engine"/>
+<concept id="point"/>
+<concept id="probability"/>
+<concept id="pseudo_variable"/>
+<concept id="r"/>
+<concept id="random"/>
+<concept id="random_operator"/>
+<concept id="raster"/>
+<concept id="regression"/>
+<concept id="reflex"/>
+<concept id="refresh"/>
+<concept id="save_file"/>
+<concept id="scheduler"/>
+<concept id="serialize"/>
+<concept id="shape"/>
+<concept id="shapefile"/>
+<concept id="shortest_path"/>
+<concept id="skill"/>
+<concept id="sound"/>
+<concept id="spatial_computation"/>
+<concept id="spatial_relation"/>
+<concept id="spatial_transformation"/>
+<concept id="species"/>
+<concept id="sport"/>
+<concept id="statistic"/>
+<concept id="string"/>
+<concept id="surface_unit"/>
+<concept id="svg"/>
+<concept id="system"/>
+<concept id="task_based"/>
+<concept id="ternary"/>
+<concept id="text"/>
+<concept id="texture"/>
+<concept id="test"/>
+<concept id="3d"/>
+<concept id="tif"/>
+<concept id="time"/>
+<concept id="time_unit"/>
+<concept id="topology"/>
+<concept id="torus"/>
+<concept id="transport"/>
+<concept id="txt"/>
+<concept id="type"/>
+<concept id="update"/>
+<concept id="volume_unit"/>
+<concept id="weight_unit"/>
+<concept id="write"/>
+<concept id="xml"/>
+<concept id="world"/>
+</conceptList>
+<constants/>
+<operatorsCategories>
+<category id="Iterator operators"/>
+</operatorsCategories>
+<operators/>
+<skills>
+<skill class="ummisco.gama.gaming.ui.skills.UITableSkill" extends="UI_location" id="UI_table" name="UI_table">
+<vars>
+<var constant="false" depends_on="" name="locked_location" type="point">
+<documentation>
+<result>locked location</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="locked_ui_width" type="float">
+<documentation>
+<result>locked width</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="locked_ui_height" type="float">
+<documentation>
+<result>locked height</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="ui_width" type="float">
+<documentation>
+<result>resized width</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="ui_height" type="float">
+<documentation>
+<result>resized height</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="number_of_lines" type="int">
+<documentation>
+<result>number of displayed lines</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="number_of_columns" type="int">
+<documentation>
+<result>number of columns</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="matrix_data" type="container">
+<documentation>
+<result>resized height</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="locked_display" type="string">
+<documentation>
+<result>map of location</result>
+</documentation>
+</var>
+</vars>
+<actions>
+<action HAS_TESTS="true" name="lock_agent_at" returnType="void">
+<args>
+<arg name="ui_location" optional="false" type="point">
+<documentation>
+<result>name of the display</result>
+</documentation>
+</arg>
+<arg name="display_name" optional="false" type="string">
+<documentation>
+<result>name of the display</result>
+</documentation>
+</arg>
+<arg name="number_of_lines" optional="false" type="int">
+<documentation>
+<result>number of displayed lines</result>
+</documentation>
+</arg>
+<arg name="number_of_columns" optional="false" type="int">
+<documentation>
+<result>number of columns</result>
+</documentation>
+</arg>
+<arg name="ui_height" optional="false" type="float">
+<documentation>
+<result>width of the object in %</result>
+</documentation>
+</arg>
+<arg name="ui_width" optional="false" type="float">
+<documentation>
+<result>height of the object in %</result>
+</documentation>
+</arg>
+</args>
+<documentation>
+<result/>
+<usagesExamples>
+<usage>
+<examples>
+<example code="" isExecutable="true" isTestOnly="false" test="true"/>
+</examples>
+</usage>
+</usagesExamples>
+</documentation>
+</action>
+<action HAS_TESTS="true" name="add_line" returnType="void">
+<args>
+<arg name="elements" optional="false" type="container">
+<documentation>
+<result>list of agent to display</result>
+</documentation>
+</arg>
+</args>
+<documentation>
+<result/>
+<usagesExamples>
+<usage>
+<examples>
+<example code="" isExecutable="true" isTestOnly="false" test="true"/>
+</examples>
+</usage>
+</usagesExamples>
+</documentation>
+</action>
+</actions>
+<concepts>
+<concept id="gui"/>
+<concept id="communication"/>
+<concept id="skill"/>
+</concepts>
+</skill>
+<skill class="ummisco.gama.gaming.ui.skills.UILocatedSkill" extends="" id="UI_location" name="UI_location">
+<vars>
+<var constant="false" depends_on="" name="locked_location" type="point">
+<documentation>
+<result>locked location</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="locked_ui_width" type="float">
+<documentation>
+<result>locked width</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="locked_ui_height" type="float">
+<documentation>
+<result>locked height</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="ui_width" type="float">
+<documentation>
+<result>resized width</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="ui_height" type="float">
+<documentation>
+<result>resized height</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="locked_display" type="string">
+<documentation>
+<result>map of location</result>
+</documentation>
+</var>
+</vars>
+<actions>
+<action HAS_TESTS="true" name="ui_location" returnType="point">
+<args>
+<arg name="display_name" optional="true" type="string">
+<documentation>
+<result>name of the display</result>
+</documentation>
+</arg>
+</args>
+<documentation>
+<result/>
+<usagesExamples>
+<usage>
+<examples>
+<example code="" isExecutable="true" isTestOnly="false" test="true"/>
+</examples>
+</usage>
+</usagesExamples>
+</documentation>
+</action>
+<action HAS_TESTS="true" name="lock_agent_at" returnType="void">
+<args>
+<arg name="ui_location" optional="false" type="point">
+<documentation>
+<result>location in the display</result>
+</documentation>
+</arg>
+<arg name="display_name" optional="false" type="string">
+<documentation>
+<result>name of the display</result>
+</documentation>
+</arg>
+<arg name="ui_height" optional="false" type="float">
+<documentation>
+<result>width of the object in %</result>
+</documentation>
+</arg>
+<arg name="ui_width" optional="false" type="float">
+<documentation>
+<result>height of the object in %</result>
+</documentation>
+</arg>
+</args>
+<documentation>
+<result/>
+<usagesExamples>
+<usage>
+<examples>
+<example code="" isExecutable="true" isTestOnly="false" test="true"/>
+</examples>
+</usage>
+</usagesExamples>
+</documentation>
+</action>
+<action HAS_TESTS="true" name="move_agent_at" returnType="void">
+<args>
+<arg name="ui_location" optional="false" type="point">
+<documentation>
+<result>location in the display</result>
+</documentation>
+</arg>
+</args>
+<documentation>
+<result/>
+<usagesExamples>
+<usage>
+<examples>
+<example code="" isExecutable="true" isTestOnly="false" test="true"/>
+</examples>
+</usage>
+</usagesExamples>
+</documentation>
+</action>
+</actions>
+<concepts>
+<concept id="gui"/>
+<concept id="communication"/>
+<concept id="skill"/>
+</concepts>
+</skill>
+<skill class="ummisco.gama.gaming.ui.skills.UITableCell" extends="UI_location" id="UI_table_cell" name="UI_table_cell">
+<vars>
+<var constant="false" depends_on="" name="locked_location" type="point">
+<documentation>
+<result>locked location</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="locked_ui_width" type="float">
+<documentation>
+<result>locked width</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="locked_ui_height" type="float">
+<documentation>
+<result>locked height</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="ui_width" type="float">
+<documentation>
+<result>resized width</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="ui_height" type="float">
+<documentation>
+<result>resized height</result>
+</documentation>
+</var>
+<var constant="false" depends_on="" name="locked_display" type="string">
+<documentation>
+<result>map of location</result>
+</documentation>
+</var>
+</vars>
+<actions/>
+<concepts>
+<concept id="gui"/>
+<concept id="communication"/>
+<concept id="skill"/>
+</concepts>
+</skill>
+</skills>
+<architectures/>
+<speciess/>
+<insideStatementKinds/>
+<insideStatementSymbols/>
+<statementsKinds/>
+<statements/>
+<files/>
+<types/>
+</doc>

@@ -63,7 +63,7 @@ public class LightHelper {
 			data.setLightActive(1, true);
 			// directional light
 			data.setLightType(1, "direction");
-			data.setLightDirection(1, new GamaPoint(0.5, 0.5, -1, 0));
+			data.setLightDirection(1, new GamaPoint(0.5, 0.5, -1));
 			if (renderer.useShader())
 				data.setDiffuseLightColor(1, new GamaColor(255, 255, 255, 255));
 			else
