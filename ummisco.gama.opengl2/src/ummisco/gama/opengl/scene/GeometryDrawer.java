@@ -230,7 +230,6 @@ public class GeometryDrawer extends ObjectDrawer<GeometryObject> {
 				break;
 			case POLYGON:
 			case SQUARE:
-			case ENVIRONMENT:
 			case POLYHEDRON:
 			case GRIDLINE:
 				if (geom instanceof Polygon)
