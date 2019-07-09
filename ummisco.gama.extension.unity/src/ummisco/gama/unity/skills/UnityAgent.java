@@ -42,9 +42,11 @@ public class UnityAgent {
 			this.location = (GamaPoint) miniAgent.getLocation();
 			
 			
-			 
-			GamaShape gs = (GamaShape) miniAgent.getGeometry();
-			GamaPairList pairs = gs.getAttributes().getPairs();
+			
+		//	GamaShape gs = (GamaShape) miniAgent.getGeometry();
+		//	GamaPairList pairs = gs.getAttributes().getPairs();
+
+			GamaPairList pairs = miniAgent.getOrCreateAttributes().getPairs();
 			
 			System.out.println("Agent name is : "+this.agentName);
 			
