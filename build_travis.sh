@@ -41,7 +41,7 @@ generate_p2updatesite_category(){
     cate=$'\n'$" "$'\n'
     for file in *; do 
       if [[ -d "$file" && ! -L "$file" ]]; then
-		isInFile=$(cat file.txt | grep -c ${file})
+		isInFile=$($user_cate | grep -c ${file})
          if [[ -f "$file/pom.xml" && ${file} != *"msi.gama.experimental.parent"* &&  $isInFile -eq 0  ]]; then
             
             if [[ ${file} == *"feature"* ]]; then	
