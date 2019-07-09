@@ -22,7 +22,7 @@ import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 
 import com.vividsolutions.jts.geom.Envelope;
-
+ 
 @vars({ @variable(name = IUILocatedSkill.AGENT_LOCATION, type = IType.POINT, doc = @doc("locked location")),
 	@variable(name = IUILocatedSkill.AGENT_LOCKED_WIDTH, type = IType.FLOAT, doc = @doc("locked width")),
 	@variable(name = IUILocatedSkill.AGENT_LOCKED_HEIGHT, type = IType.FLOAT, doc = @doc("locked height")),
