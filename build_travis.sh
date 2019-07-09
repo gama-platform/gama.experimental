@@ -34,13 +34,14 @@ generate_parent_pom(){
 }
 generate_p2updatesite_category(){
     header=$(<msi.gama.experimental.p2updatesite/category_header.xml)
+    user_cate=$(<msi.gama.experimental.p2updatesite/category_body_user.xml)
     current_cate=$(<msi.gama.experimental.p2updatesite/category_body.xml)
     footer=$(<msi.gama.experimental.p2updatesite/category_footer.xml)
 
     cate=$'\n'$" "$'\n'
     for file in *; do 
       if [[ -d "$file" && ! -L "$file" ]]; then
-         if [[ -f "$file/pom.xml" && ${file} != *"msi.gama.experimental.parent"* ]]; then
+         if [[ -f "$file/pom.xml" && ${file} != *"msi.gama.experimental.parent"* &&  ${file} !=  *"$user_cate"* ]]; then
             
             if [[ ${file} == *"feature"* ]]; then	
                
@@ -65,7 +66,7 @@ generate_p2updatesite_category(){
     
     if [[ "$current_cate" != "$cate" ]]; then
         echo "$cate" > msi.gama.experimental.p2updatesite/category_body.xml
-        echo "$header $cate $footer " > msi.gama.experimental.p2updatesite/category.xml
+        echo "$header $cate $user_cate $footer " > msi.gama.experimental.p2updatesite/category.xml
     fi
 }
 
