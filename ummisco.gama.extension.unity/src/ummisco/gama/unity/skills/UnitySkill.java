@@ -142,7 +142,7 @@ public class UnitySkill extends NetworkSkill {
 
 		System.out.println("Ceci est le tes");
 
-		if (!scope.getSimulation().getAttributes().keySet().contains(REGISTRED_SERVER)) {
+		if (!scope.getSimulation().hasAttribute(REGISTRED_SERVER)) {
 			this.startSkill(scope);
 		}
 

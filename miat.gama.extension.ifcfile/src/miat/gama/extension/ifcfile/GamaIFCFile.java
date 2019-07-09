@@ -491,7 +491,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 			}
 		}
 
-		shape.getAttributes().put("materials", materials);
+		shape.setAttribute("materials", materials);
 	}
 
 	public IShape createSlab(final IScope scope, final IfcSlab s) {

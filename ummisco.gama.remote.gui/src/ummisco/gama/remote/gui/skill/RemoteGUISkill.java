@@ -74,7 +74,8 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 					returns = "",
 					examples = { @example ("") }))
 	public void connectToServer(final IScope scope) {
-		if (!scope.getSimulation().getAttributes().keySet().contains(SHARED_VARIABLE_LIST))
+//		if (!scope.getSimulation().getAttributes().keySet().contains(SHARED_VARIABLE_LIST))
+		if (!scope.getSimulation().hasAttribute(SHARED_VARIABLE_LIST))			
 			this.startSkill(scope);
 
 		final IAgent agt = scope.getAgent();
