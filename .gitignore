@@ -27,3 +27,4 @@ release/*
 /*/gaml/
 /*/bin/
 msi.gama.ext/lib/
+/*/.apt_generated/
