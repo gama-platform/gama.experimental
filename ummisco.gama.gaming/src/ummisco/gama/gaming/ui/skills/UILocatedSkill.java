@@ -128,9 +128,10 @@ public class UILocatedSkill extends Skill {
 		ILocation loc = new GamaPoint(xx,yy);
 		agt.setAttribute(IUILocatedSkill.AGENT_UI_WIDTH, tui_width);
 		agt.setAttribute(IUILocatedSkill.AGENT_UI_HEIGHT, tui_height);
-		agt.setLocation(loc);
-
-		output.getSurface().updateDisplay(true);
+		agt.getScope().execute(scope1 -> { 
+			agt.setLocation(loc);
+			return null;
+		});
 	}
 
 	@action(name=IUILocatedSkill.UI_AGENT_LOCATION_MOVE,args={
@@ -179,6 +180,8 @@ public class UILocatedSkill extends Skill {
 	}
 	
 	private void registerSimulationEvent(final IScope scope) {
+//		scope.getSimulation().getOutputManager().getOutputs().values()
+		
 		scope.getSimulation().postEndAction(scope1 -> { 
 			removeDeadLockedAgent();
 			moveAllAgent();
