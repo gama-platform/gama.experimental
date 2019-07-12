@@ -5,12 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.population.IPopulation;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaList;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IList;
@@ -28,7 +25,6 @@ import ummisco.gama.apsf.spaces.Agglomerate;
 import ummisco.gama.apsf.spaces.Apsf;
 import ummisco.gama.apsf.spaces.IParticle;
 import ummisco.gama.apsf.spaces.Particle;
-import ummisco.gama.apsf.spaces.SoilLocation;
 import ummisco.gama.apsf.template.Template;
 import ummisco.gama.camisole.InputData;
 import ummisco.gama.camisole.SoilFactory;
@@ -162,9 +158,16 @@ public class ApsfSkill extends Skill {
 	//	agent.setAttribute(IApsfSkill.DEFAULT_SPECIES_VAR, defaultSpecies);
 	}
 	
-	@action(name = IApsfSkill.SOIL_TEMPLATE_LIST_COMMAND, args = {},doc = @doc(value = "", returns = "", examples = {
-			@example("") }))
-	public GamaList<String> getCreatedTemplate(IScope scope)
+	
+	
+	@action (
+			name = IApsfSkill.SOIL_TEMPLATE_LIST_COMMAND, args = {},
+			doc = @doc (
+					value = "",
+					returns = "",
+					examples = { @example ("") }))
+	
+	public IList<String> getCreatedTemplate(IScope scope)
 	{
 		final IAgent agent = scope.getAgent();
 		
