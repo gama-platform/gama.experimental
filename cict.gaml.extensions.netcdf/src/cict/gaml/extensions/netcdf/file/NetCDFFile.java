@@ -48,7 +48,7 @@ import ucar.nc2.Variable;
 		doc = @doc ("Represents multi-dimensional arrays encoded in NetCDF format"))
 public class NetCDFFile extends GamaFile<GamaMap<String, IList<?>>, IList<?>> {
 
-	final GamaMap<String, IList<?>> ncdata = GamaMapFactory.create(Types.STRING, Types.LIST);
+	final GamaMap<String, IList<?>> ncdata = (GamaMap<String,IList<?>>) GamaMapFactory.create(Types.STRING, Types.LIST);
 
 	public NetCDFFile(final IScope scope, final String pathName) throws GamaRuntimeException {
 		super(scope, pathName);

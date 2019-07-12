@@ -3,6 +3,7 @@ package femto_st.gama.mpi;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaList;
+import msi.gama.util.IList;
 import mpi.*;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
@@ -104,7 +105,7 @@ public class MPISkill extends Skill{
 			@arg(name = IMPISkill.SOURCE, type = IType.INT, doc = @doc("source sender")),
 			@arg(name = IMPISkill.RTAG, type = IType.INT, doc = @doc("rtag message tag"))
 	}, doc = @doc(value = "", returns = "", examples = { @example("") }))
-	public GamaList recv(IScope scope)
+	public IList recv(IScope scope)
 	{
 		int rcvSize = ((Integer) scope.getArg(IMPISkill.RCVSIZE, IType.INT)).intValue();
 		int source = ((Integer) scope.getArg(IMPISkill.SOURCE, IType.INT)).intValue();
