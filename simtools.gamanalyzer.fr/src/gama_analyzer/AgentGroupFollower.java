@@ -31,6 +31,7 @@ import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IList;
+import msi.gama.util.IMap;
 import msi.gama.util.matrix.GamaFloatMatrix;
 import msi.gama.util.matrix.GamaMatrix;
 import msi.gama.util.matrix.GamaObjectMatrix;
@@ -1885,7 +1886,7 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 	}
 
 	public void releaseslaves() {
-		final GamaMap<String, Object> message = GamaMapFactory.create(Types.STRING, Types.NO_TYPE);
+		final IMap<String, Object> message = GamaMapFactory.create(Types.STRING, Types.NO_TYPE);
 		message.put("type", "release");
 		message.put("follower", this.getName());
 		message.put("value", this.getScope().getClock().getCycle());
