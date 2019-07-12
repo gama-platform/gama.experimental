@@ -11,9 +11,9 @@ import msi.gama.metamodel.shape.ILocation;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaMap;
-import msi.gama.util.GamaMap.GamaPairList;
 import msi.gama.util.GamaPair;
 import msi.gama.util.IList;
+import msi.gama.util.IMap.IPairList;
 import msi.gama.util.TOrderedHashMap;
 import msi.gama.util.GamaColor.NamedGamaColor;
 
@@ -46,7 +46,7 @@ public class UnityAgent {
 		//	GamaShape gs = (GamaShape) miniAgent.getGeometry();
 		//	GamaPairList pairs = gs.getAttributes().getPairs();
 
-			GamaPairList pairs = miniAgent.getOrCreateAttributes().getPairs();
+			IPairList pairs = miniAgent.getOrCreateAttributes().getPairs();
 			
 			System.out.println("Agent name is : "+this.agentName);
 			
