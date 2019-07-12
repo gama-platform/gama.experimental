@@ -1,33 +1,21 @@
 package miat.gaml.extensions.argumentation.operators;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import miat.gaml.extensions.argumentation.types.GamaArgument;
 import miat.gaml.extensions.argumentation.types.GamaArgumentType;
-import msi.gama.common.interfaces.IKeyword;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.GamlAnnotations.usage;
 import msi.gama.runtime.IScope;
-import msi.gama.util.GamaList;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
-import msi.gama.util.GamaPair;
 import msi.gama.util.IList;
 import msi.gama.util.file.GamaFile;
 import msi.gama.util.graph.GamaGraph;
 import msi.gama.util.graph.IGraph;
-import msi.gama.util.matrix.GamaMatrix;
 import msi.gama.util.matrix.IMatrix;
-import msi.gaml.types.GamaPairType;
-import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
 public class ArgumentationOperators {
@@ -37,7 +25,7 @@ public class ArgumentationOperators {
 			value = { "load_graph" },
 			category = { "argumentation" },
 			concept = { "argumentation"})
-	public static IGraph<GamaArgument, Object> loadGraph(IScope scope, GamaFile f, GamaList<GamaArgument> arguments) {
+	public static IGraph<GamaArgument, Object> loadGraph(IScope scope, GamaFile f, IList<GamaArgument> arguments) {
 		GamaGraph<GamaArgument, Object> graph = new GamaGraph(scope, Types.get(GamaArgumentType.id), Types.PAIR);
 		Map<String, GamaArgument> argNames = arguments.stream().collect(Collectors.toMap(GamaArgument::getId,
                 Function.identity()));
@@ -76,7 +64,7 @@ public class ArgumentationOperators {
 			String n = mat.get(scope, 0, i);
 			if (n != null && !n.isEmpty()) {
 				String conclusion = mat.get(scope, 1,i); 
-				GamaMap<String, Double> criteria = GamaMapFactory.create();
+				GamaMap<String, Double> criteria = (GamaMap<String,Double>) GamaMapFactory.create(Types.STRING,Types.FLOAT);
 				for (int j = 2; j < mat.getCols(scope); j++) {
 					String val = mat.get(scope, j,i) ;
 					if ((val != null )) {

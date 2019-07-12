@@ -127,9 +127,9 @@ public class StorableData {
 
 	public void init(final IScope scope) {
 		isAgentCreated = false;
-		varmap = GamaMapFactory.create(Types.NO_TYPE, Types.NO_TYPE);
-		numvarmap = GamaMapFactory.create(Types.NO_TYPE, Types.NO_TYPE);
-		qualivarmap = GamaMapFactory.create(Types.NO_TYPE, Types.NO_TYPE);
+		varmap = (GamaMap<Integer,String>) GamaMapFactory.create(Types.INT, Types.STRING);
+		numvarmap = (GamaMap<Integer,String>) GamaMapFactory.create(Types.INT, Types.STRING);
+		qualivarmap = (GamaMap<Integer,String>) GamaMapFactory.create(Types.INT, Types.STRING);
 		metadatahistory = new GamaObjectMatrix(0, 0, msi.gaml.types.Types.NO_TYPE);
 		lastdetailedvarvalues = new GamaObjectMatrix(0, 0, msi.gaml.types.Types.NO_TYPE);
 		averagehistory = new GamaFloatMatrix(0, 0);

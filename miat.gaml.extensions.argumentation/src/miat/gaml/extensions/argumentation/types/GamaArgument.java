@@ -8,6 +8,7 @@ import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaMap;
+import msi.gama.util.IMap;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
@@ -22,12 +23,12 @@ public class GamaArgument  implements IValue{
 	private String conclusion = "";
 	private String statement = "";
 	private String rationale = "";
-	private GamaMap<String, Double> criteria = null;
+	private IMap<String, Double> criteria = null;
 	private IAgent actor = null;
 	private String sourceType = "";
 	
 	public GamaArgument(String id, String option, String conclusion, String statement, String rationale,
-			GamaMap<String, Double> criteria, IAgent actor, String sourceType) {
+			IMap<String, Double> criteria, IAgent actor, String sourceType) {
 		super();
 		this.id = id;
 		this.option = option;
@@ -65,7 +66,7 @@ public class GamaArgument  implements IValue{
 	}
 
 	@getter("criteria")
-	public GamaMap<String, Double> getCriteria() {
+	public IMap<String, Double> getCriteria() {
 		return criteria;
 	}
 
