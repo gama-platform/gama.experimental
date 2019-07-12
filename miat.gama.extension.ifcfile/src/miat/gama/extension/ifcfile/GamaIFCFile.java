@@ -60,7 +60,6 @@ import ifc2x3javatoolbox.ifc2x3tc1.IfcSpace;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcTypeObject;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcWall;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcWindow;
-import ifc2x3javatoolbox.ifc2x3tc1.IfcWindowStyle;
 import ifc4javatoolbox.ifcmodel.IfcModel;
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.geometry.GeometryUtils;
@@ -76,6 +75,7 @@ import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IList;
+import msi.gama.util.IMap;
 import msi.gama.util.file.GamaGeometryFile;
 import msi.gaml.operators.Spatial;
 import msi.gaml.types.GamaGeometryType;
@@ -314,7 +314,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 			depth = width / 10.0;
 		IShape box = Spatial.Creation.box(scope, width, depth, height);
 		box = Spatial.Transformations.translated_by(scope, box, new GamaPoint(width/2.0,0.0));
-		final IList<IShape> pts = GamaListFactory.create();
+		final IList<IShape> pts = GamaListFactory.create(Types.GEOMETRY);
 		pts.add(new GamaPoint(-depth / 2.0, 0));
 		pts.add(new GamaPoint(depth / 2.0, 0.0));
 		final IShape line = Spatial.Creation.line(scope, pts);
@@ -382,7 +382,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 		IShape box = Spatial.Creation.box(scope, width, depth, height);
 		
 		box.setAttribute(IKeyword.NAME, d.getName().getDecodedValue());
-		final IList<IShape> pts = GamaListFactory.create();
+		final IList<IShape> pts = GamaListFactory.create(Types.GEOMETRY);
 		pts.add(new GamaPoint(-width / 2.0, 0.0));
 		pts.add(new GamaPoint(width / 2.0, 0.0));
 		final IShape line = Spatial.Creation.line(scope, pts);
@@ -465,7 +465,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 	}
 	
 	private void getMaterial(IfcProduct p, IShape shape) {
-		GamaMap<String, Double> materials = GamaMapFactory.create();
+		GamaMap<String, Double> materials = (GamaMap<String,Double>) GamaMapFactory.create(Types.STRING,Types.FLOAT);
 		for (IfcRelAssociates ra : p.getHasAssociations_Inverse()) {
 			if (ra instanceof IfcRelAssociatesMaterial ) {
 				IfcRelAssociatesMaterial ram = (IfcRelAssociatesMaterial) ra;
@@ -748,7 +748,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 		Envelope3D env = GeometryUtils.computeEnvelopeFrom(scope, getBuffer());
 		if (didFillBuffer) {
 			final GamaPoint vect = new GamaPoint(-env.getMinX(), -env.getMinY(), -env.getMinZ());
-			final IList<IShape> newBuffer = GamaListFactory.create();
+			final IList<IShape> newBuffer = GamaListFactory.create(Types.GEOMETRY);
 			for (final IShape buff : getBuffer()) {
 				newBuffer.add(Spatial.Transformations.translated_by(scope, buff, vect));
 			}
