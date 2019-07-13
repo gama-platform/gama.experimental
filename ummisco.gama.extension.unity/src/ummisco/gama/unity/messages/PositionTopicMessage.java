@@ -1,18 +1,14 @@
 /*********************************************************************************************
  *
- * 'GamaMessage.java, in plugin msi.gama.core, is part of the source code of the
- * GAMA modeling and simulation platform.
+ * 'GamaMessage.java, in plugin msi.gama.core, is part of the source code of the GAMA modeling and simulation platform.
  * (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.unity.messages;
 
-import java.util.Map;
-
-import msi.gama.common.interfaces.IKeyword;
 import msi.gama.common.util.StringUtils;
 import msi.gama.extensions.messaging.GamaMessage;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -32,10 +28,14 @@ import ummisco.gama.unity.skills.IUnitySkill;
  * @author youcef sklab
  */
 
-@vars({ @variable(name = PositionTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
-		@doc("Returns the concerned unity game object name") }),
-		@variable(name = PositionTopicMessage.POSITION, type = IType.MAP, doc = {
-				@doc("Returns the attribtes list of the message") }), })
+@vars ({ @variable (
+		name = PositionTopicMessage.OBJECT_NAME,
+		type = IType.STRING,
+		doc = { @doc ("Returns the concerned unity game object name") }),
+		@variable (
+				name = PositionTopicMessage.POSITION,
+				type = IType.MAP,
+				doc = { @doc ("Returns the attribtes list of the message") }), })
 public class PositionTopicMessage extends GamaMessage {
 
 	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;
@@ -60,22 +60,22 @@ public class PositionTopicMessage extends GamaMessage {
 		setPosition(position);
 	}
 
-	@getter(PositionTopicMessage.OBJECT_NAME)
+	@getter (PositionTopicMessage.OBJECT_NAME)
 	public Object getObjectName() {
 		return objectName;
 	}
 
-	@setter(PositionTopicMessage.OBJECT_NAME)
+	@setter (PositionTopicMessage.OBJECT_NAME)
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
 
-	@getter(PositionTopicMessage.POSITION)
+	@getter (PositionTopicMessage.POSITION)
 	public Object getPosition() {
 		return position;
 	}
 
-	@setter(PositionTopicMessage.POSITION)
+	@setter (PositionTopicMessage.POSITION)
 	public void setPosition(final Object position) {
 		this.position = position;
 	}
@@ -93,13 +93,13 @@ public class PositionTopicMessage extends GamaMessage {
 
 	@Override
 	public PositionTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new PositionTopicMessage(scope, getSender(), getReceivers(), getObjectName(), (Map<?, ?>) getPosition(),
+		return new PositionTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getPosition(),
 				getContents(scope));
 	}
 
 	/**
 	 * Method getType()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.ITyped#getType()
 	 */
 	@Override
@@ -107,6 +107,7 @@ public class PositionTopicMessage extends GamaMessage {
 		return Types.get(IType.MESSAGE);
 	}
 
+	@Override
 	public void hasBeenReceived(final IScope scope) {
 		// receptionTimeStamp = scope.getClock().getCycle();
 

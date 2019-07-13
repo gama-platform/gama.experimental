@@ -28,7 +28,6 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaListFactory;
-import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IList;
 import msi.gama.util.IMap;
@@ -251,32 +250,32 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 	public ArrayList<?> my_big_list = new ArrayList<>();
 
 	@getter (VARMAP)
-	public GamaMap<?, ?> getVarMap(final IAgent agent) {
+	public IMap<?, ?> getVarMap(final IAgent agent) {
 		return ((AgentGroupFollower) agent).mydata.varmap;
 	}
 
 	@setter (VARMAP)
-	public void setVarMap(final IAgent agent, final GamaMap<Integer, String> latt) {
+	public void setVarMap(final IAgent agent, final IMap<Integer, String> latt) {
 		((AgentGroupFollower) agent).mydata.varmap = latt;
 	}
 
 	@getter (NUMVARMAP)
-	public GamaMap<?, String> getNumVarMap(final IAgent agent) {
+	public IMap<?, String> getNumVarMap(final IAgent agent) {
 		return ((AgentGroupFollower) agent).mydata.numvarmap;
 	}
 
 	@setter (NUMVARMAP)
-	public void setNumVarMap(final IAgent agent, final GamaMap<Integer, String> ls) {
+	public void setNumVarMap(final IAgent agent, final IMap<Integer, String> ls) {
 		((AgentGroupFollower) agent).mydata.numvarmap = ls;
 	}
 
 	@getter (QUALIVARMAP)
-	public GamaMap<?, ?> getQualiVarMap(final IAgent agent) {
+	public IMap<?, ?> getQualiVarMap(final IAgent agent) {
 		return ((AgentGroupFollower) agent).mydata.qualivarmap;
 	}
 
 	@setter (QUALIVARMAP)
-	public void setQualiVarMap(final IAgent agent, final GamaMap<Integer, String> t) {
+	public void setQualiVarMap(final IAgent agent, final IMap<Integer, String> t) {
 		((AgentGroupFollower) agent).mydata.qualivarmap = t;
 	}
 
@@ -588,7 +587,7 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 			}
 
 			for (int i = 0; i < mydata.varmap.length(scope); i++) {
-				mydata.varmap_reverse = (GamaMap<String, ?>) mydata.varmap.reverse(scope).copy(scope);
+				mydata.varmap_reverse = (IMap<String, ?>) mydata.varmap.reverse(scope).copy(scope);
 			}
 			System.out.println("varmap reverse " + mydata.varmap_reverse.toString());
 
@@ -1387,11 +1386,8 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 		System.out.println("STEP ICI: " + step);
 
 		Object objvaleur;
-		final List<?> sous_liste = new ArrayList<>();
 		List<?> at_var_manager = new ArrayList<>();
 		final List<ArrayList> my_very_big_list = new ArrayList<>();
-
-		final int numSim = 0;
 
 		if (my_matrix.equals("multi_minhistory")) {
 			for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
@@ -1655,9 +1651,9 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 			}
 
 			while (!this.emptyMessage()) {
-				final GamaMap<String, Object> message = this.fetchMessage();
+				final IMap<String, Object> message = this.fetchMessage();
 				final String source = (String) message.get("from");
-				final GamaMap<String, Object> content = (GamaMap<String, Object>) message.get("content");
+				final IMap<String, Object> content = (IMap<String, Object>) message.get("content");
 				if (content.get("follower").equals(this.getName())) {
 					if (!source.equals(getNetName())) {
 						if (!this.parallelsims.containsKey(source)) {
@@ -1833,8 +1829,8 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 				e.printStackTrace();
 			}
 			while (!this.emptyMessage()) {
-				final GamaMap<String, Object> message = this.fetchMessage();
-				final GamaMap<String, Object> content = (GamaMap<String, Object>) message.get("content");
+				final IMap<String, Object> message = this.fetchMessage();
+				final IMap<String, Object> content = (IMap<String, Object>) message.get("content");
 
 				if (content.get("type").equals("mastername")) {
 					if (content.get("follower").equals(this.getName())) {
@@ -1857,8 +1853,8 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 				e.printStackTrace();
 			}
 			if (!this.emptyMessage()) {
-				final GamaMap<String, Object> message = this.fetchMessage();
-				final GamaMap<String, Object> content = (GamaMap<String, Object>) message.get("content");
+				final IMap<String, Object> message = this.fetchMessage();
+				final IMap<String, Object> content = (IMap<String, Object>) message.get("content");
 
 				if (content.get("type").equals("release")) {
 					if (content.get("follower").equals(this.getName())) {
@@ -1896,7 +1892,7 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 		return this.getName() + this.getUniqueSimName(this.getScope()) + ismastervar;
 	}
 
-	HashMap<String, LinkedList<GamaMap<String, Object>>> messages;
+	HashMap<String, LinkedList<IMap<String, Object>>> messages;
 	XStream xstream;
 
 	public void connect(final String serverUrl, final String mytopic, final String name) {
@@ -1910,18 +1906,18 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 		 * agent.setAttribute("topicName", mytopic); agent.setAttribute("serverURL", serverUrl);
 		 * agent.setAttribute("netAgtName", name);
 		 *
-		 * if(!messages.containsKey(name)) { messages.put(name, new LinkedList<GamaMap<String,Object>>()); }
+		 * if(!messages.containsKey(name)) { messages.put(name, new LinkedList<IMap<String,Object>>()); }
 		 *
 		 * if(this.producer==null) { try { this.listenTopic(serverUrl, mytopic); this.connectToTopic(serverUrl,
 		 * mytopic); }catch(Exception e) { System.out.println(e); } } }
 		 *
-		 * // public void sendMessage(String to, String tmpName, GamaMap<String,Object> message) throws
-		 * GamaRuntimeException { // public void sendMessage(String to, String tmpName, GamaMap<String,String> message)
+		 * // public void sendMessage(String to, String tmpName, IMap<String,Object> message) throws
+		 * GamaRuntimeException { // public void sendMessage(String to, String tmpName, IMap<String,String> message)
 		 * throws GamaRuntimeException { public void sendMessage(String to, String tmpName, Map<String,Object> message)
 		 * throws GamaRuntimeException { try { final IAgent agent = this; // String to = (String) scope.getArg("to",
-		 * IType.STRING); // String tmpName =(String) agent.getAttribute("netAgtName"); // GamaMap<String, Object>
-		 * agentMap=(GamaMap<String, Object>) scope.getArg("message", IType.MAP); // GamaMap<String, Object>
-		 * agentMap=message; Map<String, Object> agentMap=message;
+		 * IType.STRING); // String tmpName =(String) agent.getAttribute("netAgtName"); // IMap<String, Object>
+		 * agentMap=(IMap<String, Object>) scope.getArg("message", IType.MAP); // IMap<String, Object> agentMap=message;
+		 * Map<String, Object> agentMap=message;
 		 *
 		 * MapMessage msg = session.createMapMessage();
 		 *
@@ -1935,22 +1931,22 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 		 *
 		 */ }
 
-	public GamaMap<String, Object> fetchMessage() {
+	public IMap<String, Object> fetchMessage() {
 		final IAgent agent = this;
 		final String tmpName = (String) agent.getAttribute("netAgtName");
-		final LinkedList<GamaMap<String, Object>> mList = this.messages.get(tmpName);
+		final LinkedList<IMap<String, Object>> mList = this.messages.get(tmpName);
 		if (mList.isEmpty()) { return null; }
-		final GamaMap<String, Object> mess = this.messages.get(tmpName).pollFirst();
+		final IMap<String, Object> mess = this.messages.get(tmpName).pollFirst();
 		return mess;
 	}
 
 	public boolean emptyMessage() {
 		final IAgent agent = this;
 		final String tmpName = (String) agent.getAttribute("netAgtName");
-		final LinkedList<GamaMap<String, Object>> mList = this.messages.get(tmpName);
+		final LinkedList<IMap<String, Object>> mList = this.messages.get(tmpName);
 		if (mList == null) { return true; }
 		/*
-		 * for (int i=this.messages.get(tmpName).size()-1; i>=0; i--) { GamaMap<String, Object>
+		 * for (int i=this.messages.get(tmpName).size()-1; i>=0; i--) { IMap<String, Object>
 		 * mess=this.messages.get(tmpName).get(i); if ((Long)mess.get("date")<firsttime)
 		 * this.messages.get(tmpName).remove(i); } return (this.messages.get(tmpName).isEmpty());
 		 */
@@ -2009,7 +2005,7 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 	 * }
 	 *
 	 * private void pushMessage(String netAgentName, String to, String from, MapMessage mapMsg ) throws JMSException {
-	 * LinkedList<GamaMap<String, Object>> myMsgBox = this.messages.get(netAgentName); Map<String, Object> content= new
+	 * LinkedList<IMap<String, Object>> myMsgBox = this.messages.get(netAgentName); Map<String, Object> content= new
 	 * HashMap<String, Object>();
 	 *
 	 * Enumeration<String> contentNames = mapMsg.getMapNames(); String key = null; while(contentNames.hasMoreElements())
@@ -2018,7 +2014,7 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 	 * Map<String, Object> agentMsg= new HashMap<String, Object>(); agentMsg.put("from", from); agentMsg.put("to", to);
 	 * agentMsg.put("date", mapMsg.getJMSTimestamp()); agentMsg.put("content",content); //
 	 * this.messages.get(netAgentName).addLast(agentMsg); // if (to.equals("all")) this.messages.get((String)
-	 * this.getAttribute("netAgtName")).addLast((GamaMap<String, Object>) agentMsg);
+	 * this.getAttribute("netAgtName")).addLast((IMap<String, Object>) agentMsg);
 	 *
 	 *
 	 * }

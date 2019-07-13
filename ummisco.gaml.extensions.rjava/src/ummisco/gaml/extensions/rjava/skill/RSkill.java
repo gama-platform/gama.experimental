@@ -41,7 +41,6 @@ import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
-import msi.gama.util.GamaList;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IList;
 import msi.gama.util.file.GamaImageFile;
@@ -120,7 +119,7 @@ public class RSkill extends Skill {
 
 	private final String[] args = new String[] { "--vanilla" };
 	private Rengine re = null;
-	private GamaList<?> loadedLib = null;
+	private IList<?> loadedLib = null;
 	private String env;
 
 	@action (
@@ -175,11 +174,11 @@ public class RSkill extends Skill {
 			re = new Rengine(args, false, new TextConsole());
 
 			if (loadedLib == null) {
-				loadedLib = (GamaList<?>) dataConvert_R2G(re.eval("search()"));
+				loadedLib = (IList<?>) dataConvert_R2G(re.eval("search()"));
 			}
 		} else {
 			scope.getSimulation().postDisposeAction(scope1 -> {
-				final GamaList<?> l = (GamaList<?>) dataConvert_R2G(re.eval("search()"));
+				final IList<?> l = (IList<?>) dataConvert_R2G(re.eval("search()"));
 				for (int i = 0; i < l.size(); i++) {
 					if (((String) l.get(i)).contains("package:") && loadedLib != null
 							&& !loadedLib.contains(l.get(i))) {
@@ -311,9 +310,9 @@ public class RSkill extends Skill {
 			res = "\"" + ((GamaShape) o).getLocation().x + "," + ((GamaShape) o).getLocation().y + "\"";
 		}
 
-		if (o instanceof GamaList) {
+		if (o instanceof IList) {
 			res = "c(";
-			for (final Object obj : (GamaList<?>) o) {
+			for (final Object obj : (IList<?>) o) {
 				res += "" + obj + ",";
 			}
 			if (((String) res).length() > 2) {
@@ -377,7 +376,7 @@ public class RSkill extends Skill {
 		if (x.getType() == REXP.XT_ARRAY_STR) {
 			final String[] s = x.asStringArray();
 
-			final GamaList<Object> a = (GamaList<Object>) GamaListFactory.create();
+			final IList<Object> a = GamaListFactory.create();
 			for (final String element : s) {
 				a.add(dataConvert_R2G(element));
 			}
@@ -387,7 +386,7 @@ public class RSkill extends Skill {
 		if (x.getType() == REXP.DOTSXP) {
 			final RList s = x.asList();
 
-			final GamaList<Object> a = (GamaList<Object>) GamaListFactory.create();
+			final IList<Object> a = GamaListFactory.create();
 			for (int i = 0; i < s.keys().length; i++) {
 				a.add(dataConvert_R2G(s.at(0)));
 			}
@@ -397,7 +396,7 @@ public class RSkill extends Skill {
 		if (x.getType() == REXP.XT_ARRAY_BOOL_INT) {
 			final int[] s = x.asIntArray();
 
-			final GamaList<Object> a = (GamaList<Object>) GamaListFactory.create();
+			final IList<Object> a = GamaListFactory.create();
 			for (final int element : s) {
 				a.add(element == 0 ? false : true);
 			}
@@ -406,7 +405,7 @@ public class RSkill extends Skill {
 		if (x.getType() == REXP.XT_ARRAY_DOUBLE) {
 			final double[] s = x.asDoubleArray();
 
-			final GamaList<Object> a = (GamaList<Object>) GamaListFactory.create();
+			final IList<Object> a = GamaListFactory.create();
 			for (final double element : s) {
 				a.add(element);
 			}
@@ -416,7 +415,7 @@ public class RSkill extends Skill {
 		if (x.getType() == REXP.XT_ARRAY_INT) {
 			final int[] s = x.asIntArray();
 
-			final GamaList<Object> a = (GamaList<Object>) GamaListFactory.create();
+			final IList<Object> a = GamaListFactory.create();
 			for (final int element : s) {
 				a.add(element);
 			}
@@ -426,7 +425,7 @@ public class RSkill extends Skill {
 		if (x.getType() == REXP.XT_STR) { return x.getContent(); }
 		if (x.getType() == REXP.XT_FACTOR) {
 			final RFactor f = x.asFactor();
-			final GamaList<Object> a = (GamaList<Object>) GamaListFactory.create();
+			final IList<Object> a = GamaListFactory.create();
 			for (int i = 0; i < f.size(); i++) {
 				a.add(dataConvert_R2G(f.at(i)));
 			}
@@ -434,7 +433,7 @@ public class RSkill extends Skill {
 		}
 		if (x.getType() == REXP.XT_VECTOR) {
 			final RVector f = x.asVector();
-			final GamaList<Object> a = (GamaList<Object>) GamaListFactory.create();
+			final IList<Object> a = GamaListFactory.create();
 			for (int i = 0; i < f.size(); i++) {
 				a.add(dataConvert_R2G(f.at(i)));
 			}

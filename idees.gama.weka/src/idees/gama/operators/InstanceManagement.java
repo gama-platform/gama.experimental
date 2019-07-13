@@ -6,9 +6,9 @@ import java.util.Map;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaMap;
 import msi.gama.util.IContainer;
 import msi.gama.util.IList;
+import msi.gama.util.IMap;
 import msi.gaml.operators.Cast;
 import msi.gaml.types.Types;
 import weka.core.Attribute;
@@ -20,16 +20,17 @@ public class InstanceManagement {
 
 	private static Attribute toAttribute(final String att, final Map<String, IList<String>> valsNominal) {
 		Attribute wa = null;
-		if (valsNominal == null || !valsNominal.containsKey(att))
+		if (valsNominal == null || !valsNominal.containsKey(att)) {
 			wa = new Attribute(att);
-		else {
+		} else {
 			final IList<String> vs = valsNominal.get(att);
 			if (vs == null || vs.isEmpty()) {
 				wa = new Attribute(att, (FastVector) null);
 			} else {
 				final FastVector fv = new FastVector();
-				for (final String v : vs)
+				for (final String v : vs) {
 					fv.addElement(v);
+				}
 				wa = new Attribute(att, fv);
 			}
 		}
@@ -68,8 +69,8 @@ public class InstanceManagement {
 				}
 			} else {
 				for (final Object v : data.iterable(scope)) {
-					if (v instanceof GamaMap) {
-						final GamaMap<String, ?> dataMap = (GamaMap<String, ?>) v;
+					if (v instanceof IMap) {
+						final IMap<String, ?> dataMap = (IMap<String, ?>) v;
 						dataset.add(createInstance(scope, dataMap, dataset, classA, valsNominal));
 					}
 				}
@@ -86,29 +87,31 @@ public class InstanceManagement {
 		while (attsEnum.hasMoreElements()) {
 			final Attribute att = attsEnum.nextElement();
 			Double var = null;
-			if (valsNominal == null || valsNominal.isEmpty())
+			if (valsNominal == null || valsNominal.isEmpty()) {
 				var = Cast.asFloat(scope, dataMap.get(att.name()));
-			else {
+			} else {
 				final IList<String> vs = valsNominal.get(att.name());
 				if (vs != null && !vs.isEmpty()) {
 					final String val = dataMap.get(att.name()).toString();
 					var = Double.valueOf(vs.indexOf(val));
-				} else
+				} else {
 					var = Cast.asFloat(scope, dataMap.get(att.name()));
+				}
 			}
 			instance.setValue(att, var);
 		}
 		if (classA != null) {
 			final IList<String> vs = valsNominal.get(classA.name());
 			Double var = null;
-			if (valsNominal.isEmpty())
+			if (valsNominal.isEmpty()) {
 				var = Cast.asFloat(scope, dataMap.get(classA.name()));
-			else {
+			} else {
 				if (vs != null && !vs.isEmpty()) {
 					final String val = dataMap.get(classA.name()).toString();
 					var = Double.valueOf(vs.indexOf(val));
-				} else
+				} else {
 					var = Cast.asFloat(scope, dataMap.get(classA.name()));
+				}
 			}
 			instance.setClassValue(var);
 		}
@@ -123,29 +126,31 @@ public class InstanceManagement {
 		while (attsEnum.hasMoreElements()) {
 			final Attribute att = attsEnum.nextElement();
 			Double var = null;
-			if (valsNominal == null || valsNominal.isEmpty())
+			if (valsNominal == null || valsNominal.isEmpty()) {
 				var = Cast.asFloat(scope, ag.getDirectVarValue(scope, att.name()));
-			else {
+			} else {
 				final IList<String> vs = valsNominal.get(att.name());
 				if (vs != null && !vs.isEmpty()) {
 					final String val = ag.getDirectVarValue(scope, att.name()).toString();
 					var = Double.valueOf(vs.indexOf(val));
-				} else
+				} else {
 					var = Cast.asFloat(scope, ag.getDirectVarValue(scope, att.name()));
+				}
 			}
 			instance.setValue(att, var);
 		}
 		if (classA != null) {
 			final IList<String> vs = valsNominal.get(classA.name());
 			Double var = null;
-			if (valsNominal.isEmpty())
+			if (valsNominal.isEmpty()) {
 				var = Cast.asFloat(scope, ag.getDirectVarValue(scope, classA.name()));
-			else {
+			} else {
 				if (vs != null && !vs.isEmpty()) {
 					final String val = ag.getDirectVarValue(scope, classA.name()).toString();
 					var = Double.valueOf(vs.indexOf(val));
-				} else
+				} else {
 					var = Cast.asFloat(scope, ag.getDirectVarValue(scope, classA.name()));
+				}
 			}
 			instance.setClassValue(var);
 		}

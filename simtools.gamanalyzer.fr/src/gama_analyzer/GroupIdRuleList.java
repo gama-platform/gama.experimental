@@ -8,7 +8,6 @@ import java.util.Map;
 import msi.gama.metamodel.agent.GamlAgent;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
-import msi.gama.util.GamaList;
 import msi.gama.util.IList;
 import msi.gaml.species.ISpecies;
 
@@ -21,7 +20,7 @@ public class GroupIdRuleList extends GroupIdRule {
 		return liste;
 	}
 
-	public void setListe(final GamaList<GamlAgent> liste) {
+	public void setListe(final IList<GamlAgent> liste) {
 		this.liste = liste;
 	}
 
@@ -33,12 +32,14 @@ public class GroupIdRuleList extends GroupIdRule {
 		this.nom = nom;
 	}
 
+	@SuppressWarnings ("unchecked")
 	@Override
 	public IList<IAgent> update(final IScope scope, IList<IAgent> liste) {
-		liste = (GamaList) scope.getGlobalVarValue(nom);
+		liste = (IList) scope.getGlobalVarValue(nom);
 		return liste;
 	}
 
+	@SuppressWarnings ("unchecked")
 	public IList<IAgent> updatea(final IScope scope, IList<IAgent> liste) {
 
 		liste = (IList<IAgent>) new ArrayList<IAgent>(); // FALSE
