@@ -3,7 +3,6 @@ package gama_analyzer;
 import java.awt.Color;
 
 import msi.gama.metamodel.agent.IAgent;
-import msi.gama.util.GamaList;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IList;
 import msi.gaml.types.Types;
@@ -16,10 +15,10 @@ public class MultiSimManager {
 		super();
 	}
 
-	public MultiSimManager(final GamaList<IAgent> agentGroupFollowerList, final GamaList<StorableData> storableDataList,
-			final GamaList<GroupIdRule> groupIdRuleList, final GamaList<Color> simColorList,
-			final GamaList<Double> at_cycle_manager, final GamaList<GamaList<Double>> at_var_manager,
-			final GamaList<Object> identifiants) {
+	public MultiSimManager(final IList<IAgent> agentGroupFollowerList, final IList<StorableData> storableDataList,
+			final IList<GroupIdRule> groupIdRuleList, final IList<Color> simColorList,
+			final IList<Double> at_cycle_manager, final IList<IList<Double>> at_var_manager,
+			final IList<Object> identifiants) {
 
 		super();
 		this.agentGroupFollowerList = agentGroupFollowerList;
@@ -39,7 +38,7 @@ public class MultiSimManager {
 		return agentGroupFollowerList;
 	}
 
-	public void setAgentGroupFollowerList(final GamaList<IAgent> agentGroupFollowerList) {
+	public void setAgentGroupFollowerList(final IList<IAgent> agentGroupFollowerList) {
 		this.agentGroupFollowerList = agentGroupFollowerList;
 	}
 
@@ -55,7 +54,7 @@ public class MultiSimManager {
 		return groupIdRuleList;
 	}
 
-	public void setGroupIdRuleList(final GamaList<GroupIdRule> groupIdRuleList) {
+	public void setGroupIdRuleList(final IList<GroupIdRule> groupIdRuleList) {
 		this.groupIdRuleList = groupIdRuleList;
 	}
 
@@ -63,7 +62,7 @@ public class MultiSimManager {
 		return idSimList;
 	}
 
-	public void setIdSimList(final GamaList<Object> idSimList) {
+	public void setIdSimList(final IList<Object> idSimList) {
 		this.idSimList = idSimList;
 	}
 
@@ -71,7 +70,7 @@ public class MultiSimManager {
 		return simColorList;
 	}
 
-	public void setSimColorList(final GamaList<Color> simColorList) {
+	public void setSimColorList(final IList<Color> simColorList) {
 		this.simColorList = simColorList;
 	}
 }

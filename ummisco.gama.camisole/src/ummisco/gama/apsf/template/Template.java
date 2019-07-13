@@ -51,8 +51,6 @@ public abstract class Template {
 	private final Map<String, Particle> samplers = new HashMap<>();
 	private final Map<String, Map<Integer, GamlSpecies>> processes = new HashMap<>();
 
-	private final double count = 0;// jr
-
 	private Particle[][][] template;
 	/** minerals cells density in the fractal */
 	protected double solid;
@@ -134,18 +132,18 @@ public abstract class Template {
 		p.setAgent(agt);
 
 		if (data != null) {
-//			for (final GamlSpecies spe : data.get(new Integer(p.getLocation().getScale()))) {
-				final GamlSpecies spe = data.get(new Integer(p.getLocation().getScale()));
-				processName = spe;
-				System.out.println("modification " + processName.getName());
-				values = new HashMap<>();
-				values.put(IAPSFProcessSkill.FOLLOWED_PARTICLE_INT, p);
+			// for (final GamlSpecies spe : data.get(new Integer(p.getLocation().getScale()))) {
+			final GamlSpecies spe = data.get(new Integer(p.getLocation().getScale()));
+			processName = spe;
+			System.out.println("modification " + processName.getName());
+			values = new HashMap<>();
+			values.put(IAPSFProcessSkill.FOLLOWED_PARTICLE_INT, p);
 
-				list = new ArrayList<>();
-				list.add(values);
-				magt = processName.getPopulation(scope).createAgents(scope, 1, list, false, true);
-				p.addProcesses(magt.get(0));
-//			}
+			list = new ArrayList<>();
+			list.add(values);
+			magt = processName.getPopulation(scope).createAgents(scope, 1, list, false, true);
+			p.addProcesses(magt.get(0));
+			// }
 
 			// agt = magt.get(0);
 		}
