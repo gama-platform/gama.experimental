@@ -8,40 +8,40 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Mike_Gama_Coupling {
+namespace hecras_Gama_Coupling {
     
     
     #region Component Designer generated code 
-    public partial class Mike_Data_ {
+    public partial class hecras_Data_ {
         
         public static global::java.lang.Class _class {
             get {
-                return global::Mike_Gama_Coupling.@__Mike_Data.staticClass;
+                return global::hecras_Gama_Coupling.@__hecras_Data.staticClass;
             }
         }
     }
     #endregion
     
     #region Component Designer generated code 
-    [global::net.sf.jni4net.attributes.JavaProxyAttribute(typeof(global::Mike_Gama_Coupling.hecras_Data), typeof(global::Mike_Gama_Coupling.hecras_Data_))]
-    [global::net.sf.jni4net.attributes.ClrWrapperAttribute(typeof(global::Mike_Gama_Coupling.hecras_Data), typeof(global::Mike_Gama_Coupling.hecras_Data_))]
-    internal sealed partial class @__Mike_Data : global::java.lang.Object {
+    [global::net.sf.jni4net.attributes.JavaProxyAttribute(typeof(global::hecras_Gama_Coupling.hecras_Data), typeof(global::hecras_Gama_Coupling.hecras_Data_))]
+    [global::net.sf.jni4net.attributes.ClrWrapperAttribute(typeof(global::hecras_Gama_Coupling.hecras_Data), typeof(global::hecras_Gama_Coupling.hecras_Data_))]
+    internal sealed partial class @__hecras_Data : global::java.lang.Object {
         
         internal new static global::java.lang.Class staticClass;
         
-        private @__Mike_Data(global::net.sf.jni4net.jni.JNIEnv @__env) : 
+        private @__hecras_Data(global::net.sf.jni4net.jni.JNIEnv @__env) : 
                 base(@__env) {
         }
         
         private static void InitJNI(global::net.sf.jni4net.jni.JNIEnv @__env, java.lang.Class @__class) {
-            global::Mike_Gama_Coupling.@__Mike_Data.staticClass = @__class;
+            global::hecras_Gama_Coupling.@__hecras_Data.staticClass = @__class;
         }
         
         private static global::System.Collections.Generic.List<global::net.sf.jni4net.jni.JNINativeMethod> @__Init(global::net.sf.jni4net.jni.JNIEnv @__env, global::java.lang.Class @__class) {
-            global::System.Type @__type = typeof(__Mike_Data);
+            global::System.Type @__type = typeof(__hecras_Data);
             global::System.Collections.Generic.List<global::net.sf.jni4net.jni.JNINativeMethod> methods = new global::System.Collections.Generic.List<global::net.sf.jni4net.jni.JNINativeMethod>();
             methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Dfs0File_Read_Data", "Dfs0File_Read_Data0", "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"));
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "__ctorMike_Data0", "__ctorMike_Data0", "(Lnet/sf/jni4net/inj/IClrProxy;)V"));
+            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "__ctorhecras_Data0", "__ctorhecras_Data0", "(Lnet/sf/jni4net/inj/IClrProxy;)V"));
             return methods;
         }
         
@@ -51,18 +51,18 @@ namespace Mike_Gama_Coupling {
             global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
             global::net.sf.jni4net.utils.JniHandle @__return = default(global::net.sf.jni4net.utils.JniHandle);
             try {
-            global::Mike_Gama_Coupling.hecras_Data @__real = global::net.sf.jni4net.utils.Convertor.StrongJp2C<global::Mike_Gama_Coupling.hecras_Data>(@__env, @__obj);
+            global::hecras_Gama_Coupling.hecras_Data @__real = global::net.sf.jni4net.utils.Convertor.StrongJp2C<global::hecras_Gama_Coupling.hecras_Data>(@__env, @__obj);
             @__return = global::net.sf.jni4net.utils.Convertor.StrongC2JString(@__env, @__real.Dfs0File_Read_Data(global::net.sf.jni4net.utils.Convertor.StrongJ2CString(@__env, filename), global::net.sf.jni4net.utils.Convertor.StrongJ2CString(@__env, gate_name)));
             }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
             return @__return;
         }
         
-        private static void @__ctorMike_Data0(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__class, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
+        private static void @__ctorhecras_Data0(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__class, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
             // ()V
             // ()V
             global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
             try {
-            global::Mike_Gama_Coupling.hecras_Data @__real = new global::Mike_Gama_Coupling.hecras_Data();
+            global::hecras_Gama_Coupling.hecras_Data @__real = new global::hecras_Gama_Coupling.hecras_Data();
             global::net.sf.jni4net.utils.Convertor.InitProxy(@__env, @__obj, @__real);
             }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
         }
@@ -70,7 +70,7 @@ namespace Mike_Gama_Coupling {
         new internal sealed class ContructionHelper : global::net.sf.jni4net.utils.IConstructionHelper {
             
             public global::net.sf.jni4net.jni.IJvmProxy CreateProxy(global::net.sf.jni4net.jni.JNIEnv @__env) {
-                return new global::Mike_Gama_Coupling.@__Mike_Data(@__env);
+                return new global::hecras_Gama_Coupling.@__hecras_Data(@__env);
             }
         }
     }

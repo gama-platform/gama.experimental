@@ -7,16 +7,16 @@
 
 model Testconnection
 
-global skills:[MikeSkill]{
+global skills:[hecrasSkill]{
 	
 	init{ 
-		do load_Mike();
+		do load_hecras();
 		write Dfs0File_Read_Data("C:\\git\\HydraulicTools\\RESULT2015.res11", "KIM_SON");
 		
 	}
 	
 }
-experiment mike type:gui{
+experiment hecras type:gui{
 	output{
 	}
 }
