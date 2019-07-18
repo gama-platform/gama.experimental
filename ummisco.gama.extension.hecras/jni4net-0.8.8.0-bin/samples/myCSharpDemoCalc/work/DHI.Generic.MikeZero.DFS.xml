@@ -1375,7 +1375,7 @@
             The data type tags the file as a special dfs file type.
             There exists no global system for maintaining these tag-variables. 
             The tag-variables should only be interpreted locally within one 
-            model-complex e.g. MIKE 21. The application programmer can tag 
+            model-complex e.g. hecras 21. The application programmer can tag 
             bathymetries, result files, input files freely. 
             </para>
             </summary>
@@ -1625,7 +1625,7 @@
             The data type tags the file as a special dfs file type.
             There exists no global system for maintaining these tag-variables. 
             The tag-variables should only be interpreted locally within one 
-            model-complex e.g. MIKE 21. The application programmer can tag 
+            model-complex e.g. hecras 21. The application programmer can tag 
             bathymetries, result files, input files freely. 
             </para>
             </summary>
@@ -2089,7 +2089,7 @@
             The data type tags the file as a special dfs file type.
             There exists no global system for maintaining these tag-variables. 
             The tag-variables should only be interpreted locally within one 
-            model-complex e.g. MIKE 21. The application programmer can tag 
+            model-complex e.g. hecras 21. The application programmer can tag 
             bathymetries, result files, input files freely. 
             </para>
             <para>
@@ -2219,7 +2219,7 @@
             The data type tags the file as a special dfs file type.
             There exists no global system for maintaining these tag-variables. 
             The tag-variables should only be interpreted locally within one 
-            model-complex e.g. MIKE 21. The application programmer can tag 
+            model-complex e.g. hecras 21. The application programmer can tag 
             bathymetries, result files, input files freely. 
             </para>
             <para>
@@ -2704,7 +2704,7 @@
             The data type tags the file as a special dfs file type.
             There exists no global system for maintaining these tag-variables. 
             The tag-variables should only be interpreted locally within one 
-            model-complex e.g. MIKE 21. The application programmer can tag 
+            model-complex e.g. hecras 21. The application programmer can tag 
             bathymetries, result files, input files freely. 
             </para>
             </summary>
@@ -4615,7 +4615,7 @@
             The data type tags the file as a special dfs file type.
             There exists no global system for maintaining these tag-variables. 
             The tag-variables should only be interpreted locally within one 
-            model-complex e.g. MIKE 21. The application programmer can tag 
+            model-complex e.g. hecras 21. The application programmer can tag 
             bathymetries, result files, input files freely. 
             </para>
             <para>
@@ -4756,7 +4756,7 @@
             The data type tags the file as a special dfs file type.
             There exists no global system for maintaining these tag-variables. 
             The tag-variables should only be interpreted locally within one 
-            model-complex e.g. MIKE 21. The application programmer can tag 
+            model-complex e.g. hecras 21. The application programmer can tag 
             bathymetries, result files, input files freely. 
             </para>
             <para>
@@ -9853,7 +9853,7 @@
             Factory class for opening different file types.
             </summary>
         </member>
-        <member name="M:DHI.Generic.hecrasZero.DFS.DfsFileFactory.DHI#Generic#MikeZero#DFS#IDfsFileFactory#MeshFileRead(System.String)">
+        <member name="M:DHI.Generic.hecrasZero.DFS.DfsFileFactory.DHI#Generic#hecrasZero#DFS#IDfsFileFactory#MeshFileRead(System.String)">
             <summary>
             Open and read a mesh file
             </summary>
@@ -11036,7 +11036,7 @@
         <member name="P:DHI.Generic.hecrasZero.DFS.DfsItemData.Time">
             <inheritdoc />
         </member>
-        <member name="P:DHI.Generic.hecrasZero.DFS.DfsItemData.DHI#Generic#MikeZero#DFS#IDfsItemData#Data">
+        <member name="P:DHI.Generic.hecrasZero.DFS.DfsItemData.DHI#Generic#hecrasZero#DFS#IDfsItemData#Data">
             <inheritdoc />
         </member>
         <member name="P:DHI.Generic.hecrasZero.DFS.DfsItemData.ArrayData">

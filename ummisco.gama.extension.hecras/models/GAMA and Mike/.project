@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>GAMA to mike</name>
-	<comment>mike plugin</comment>
+	<name>GAMA to hecras</name>
+	<comment>hecras plugin</comment>
 	<projects>
 	</projects>
 	<buildSpec>

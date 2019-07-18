@@ -2,5 +2,5 @@
 <jni4net-proxygen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://jni4net.sf.net/0.8.8.0/toolConfig.xsd">
   <TargetDirJvm>work\jvm</TargetDirJvm>
   <TargetDirClr>work\clr</TargetDirClr>
-  <AssemblyReference Assembly="work\Mike_Gama.dll" Generate="true" />
+  <AssemblyReference Assembly="work\hecras_Gama.dll" Generate="true" />
 </jni4net-proxygen>

@@ -267,9 +267,9 @@
             <remarks>
             Copied from pfs C Library documentation:
             <para>
-            The MIKE Zero Parameter File Standard (PFS) is intended for storage of a 
+            The hecras Zero Parameter File Standard (PFS) is intended for storage of a 
             wide range of data, which may be organized or unstructured. Many of those 
-            data which do not naturally match the MIKE Zero Data File Standard (DFS) 
+            data which do not naturally match the hecras Zero Data File Standard (DFS) 
             may be stored in a PFS file. Typical applications of PFS files are for 
             storing analysis definition parameters, or for saving internal state 
             parameters between two executions of an application.
@@ -313,7 +313,7 @@
             the details of which is initially of minor importance.
             
             The PFS has no user dialogs. The external interfaces are the application 
-            programming interface, and the actual PFS files. The MIKE Zero Message 
+            programming interface, and the actual PFS files. The hecras Zero Message 
             System is used for error reporting, unless silent version is called.
              
             The PFS programming interface is distributed in a Windows DLL and it may 

@@ -3,7 +3,7 @@ package ummisco.gaml.extensions.hecras.skill;
 import java.io.File;
 import java.io.IOException;
 
-import mike_gama_coupling.hecras_Data;
+import hecras_gama_coupling.hecras_Data;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -16,17 +16,17 @@ import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import net.sf.jni4net.Bridge;
 
-@skill(name = "MikeSkill", concept = { IConcept.STATISTIC, IConcept.SKILL })
-@doc("read mike data")
-public class MikeSkill extends Skill {
+@skill(name = "hecrasSkill", concept = { IConcept.STATISTIC, IConcept.SKILL })
+@doc("read hecras data")
+public class hecrasSkill extends Skill {
 	private String env;
 
 	public static void main(String arsg[]) throws IOException {
 		Bridge.setVerbose(true);
 		Bridge.init();
-		Bridge.LoadAndRegisterAssemblyFrom(new File("Mike_Gama.j4n.dll"));
+		Bridge.LoadAndRegisterAssemblyFrom(new File("hecras_Gama.j4n.dll"));
 
-		Mike_Data calc = new Mike_Data();
+		hecras_Data calc = new hecras_Data();
 		final String result = calc.Dfs0File_Read_Data("C:\\git\\HydraulicTools\\RESULT2015.res11", "KIM_SON");
 
 		System.out.printf("Answer to the Ultimate Question is : " + result);
@@ -44,7 +44,7 @@ public class MikeSkill extends Skill {
 					doc = @doc ("gate name"))}, doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
 					@example(" Dfs0File_Read_Data(\"C:\\\\git\\\\HydraulicTools\\\\RESULT2015.res11\", \"KIM_SON\")") }))
 	public Object primDfs0Read(final IScope scope) throws GamaRuntimeException {
-		Mike_Data calc = new Mike_Data();
+		hecras_Data calc = new hecras_Data();
 //		return calc.Dfs0File_Read_Data("C:\\git\\HydraulicTools\\RESULT2015.res11", "KIM_SON");
 		String a=scope.getStringArg("file");
 		String b=scope.getStringArg("gate");
@@ -53,10 +53,10 @@ public class MikeSkill extends Skill {
 
 	}
 
-	@action(name = "load_Mike", doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
+	@action(name = "load_hecras", doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
 			@example("startR") }))
 
-	public void load_Mike(final IScope scope) {
+	public void load_hecras(final IScope scope) {
 		initEnv(scope);
 		Bridge.setVerbose(true);
 		final String RPath = "C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work";
@@ -81,9 +81,9 @@ public class MikeSkill extends Skill {
 //        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\jni4net.n-0.8.8.0.dll"));
 //        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\MyCSharpDemoCalc.dll"));
 //        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\MyCSharpDemoCalc.j4n.dll"));
-		Bridge.LoadAndRegisterAssemblyFrom(new File(RPath+"\\Mike_Gama.j4n.dll"));
+		Bridge.LoadAndRegisterAssemblyFrom(new File(RPath+"\\hecras_Gama.j4n.dll"));
 
-//		return "Mike loaded";
+//		return "hecras loaded";
 	}
 
 	public void initEnv(final IScope scope) {
