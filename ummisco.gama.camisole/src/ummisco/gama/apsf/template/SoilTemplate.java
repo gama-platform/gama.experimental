@@ -19,9 +19,6 @@
 package ummisco.gama.apsf.template;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Vector;
-
 import ummisco.gama.apsf.spaces.Agglomerate;
 import ummisco.gama.apsf.spaces.OrganicMatter;
 import ummisco.gama.apsf.spaces.Particle;
@@ -29,8 +26,6 @@ import ummisco.gama.apsf.spaces.SandParticle;
 import ummisco.gama.apsf.spaces.SoilLocation;
 import ummisco.gama.apsf.spaces.WhiteParticle;
 import ummisco.gama.camisole.RandomGenerator;
-import umontreal.ssj.randvar.NormalGen;
-import umontreal.ssj.rng.GenF2w32;
 
 public class SoilTemplate extends Template {
 

@@ -63,6 +63,8 @@ public class Example {
 				case STOP:
 					stop.countDown();
 					break;
+				default:
+					break;
 			}
 		}
 	}

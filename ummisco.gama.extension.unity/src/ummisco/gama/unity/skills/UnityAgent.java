@@ -10,11 +10,9 @@ import msi.gama.metamodel.shape.GamaShape;
 import msi.gama.metamodel.shape.ILocation;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaColor;
-import msi.gama.util.GamaMap;
 import msi.gama.util.GamaPair;
 import msi.gama.util.IList;
 import msi.gama.util.IMap.IPairList;
-import msi.gama.util.TOrderedHashMap;
 import msi.gama.util.GamaColor.NamedGamaColor;
 
 public class UnityAgent {
