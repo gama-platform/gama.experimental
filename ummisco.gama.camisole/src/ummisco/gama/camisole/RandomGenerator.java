@@ -3,7 +3,6 @@ package ummisco.gama.camisole;
 import umontreal.ssj.randvar.NormalGen;
 import umontreal.ssj.randvarmulti.DirichletGen;
 import umontreal.ssj.rng.GenF2w32;
-import umontreal.ssj.rng.RandomStream;
 
 public abstract class RandomGenerator {
 	private static int [] SEED_APSF=null;
