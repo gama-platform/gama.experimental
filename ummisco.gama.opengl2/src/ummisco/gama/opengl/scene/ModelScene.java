@@ -16,7 +16,8 @@ import com.vividsolutions.jts.geom.Geometry;
 
 import msi.gama.common.interfaces.ILayer;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.util.TOrderedHashMap;
+import msi.gama.util.GamaMapFactory;
+import msi.gama.util.IMap;
 import msi.gama.util.file.GamaGeometryFile;
 import msi.gama.util.file.GamaImageFile;
 import msi.gaml.statements.draw.DrawingAttributes;
@@ -42,7 +43,7 @@ public class ModelScene {
 	public static final String KEYSTONE_HELPER_KEY = "__keystone__0";
 	public static final String LIGHTS_KEY = "__lights__0";
 	public static final String FPS_KEY = "z__fps__0";
-	protected final TOrderedHashMap<String, LayerObject> layers = new TOrderedHashMap<String, LayerObject>();
+	protected final IMap<String, LayerObject> layers = GamaMapFactory.create();
 	protected LayerObject currentLayer;
 	protected final Abstract3DRenderer renderer;
 	private volatile boolean rendered = false;
