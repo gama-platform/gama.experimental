@@ -14,5 +14,10 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="lib/j-interop.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/j-interopdeps.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcifs-1.2.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jna-5.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jna-platform-5.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
