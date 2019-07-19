@@ -10,5 +10,5 @@
 package ras506;
 
 @net.sf.jni4net.attributes.ClrInterface
-public interface __HECRASControlleri {
+public interface HECRASGeometry extends ras506._HECRASGeometry {
 }

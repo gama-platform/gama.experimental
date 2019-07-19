@@ -9,7 +9,6 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="jni4net-0.8.8.0-bin/samples/myCSharpDemoCalc/work"/>
 	<classpathentry kind="lib" path="jni4net-0.8.8.0-bin/samples/myCSharpDemoCalc/work/jni4net.j-0.8.8.0.jar"/>
-	<classpathentry kind="lib" path="jni4net-0.8.8.0-bin/samples/myCSharpDemoCalc/work/hecras_Gama.j4n.jar"/>
 	<classpathentry kind="src" path="gaml">
 		<attributes>
 			<attribute name="optional" value="true"/>
