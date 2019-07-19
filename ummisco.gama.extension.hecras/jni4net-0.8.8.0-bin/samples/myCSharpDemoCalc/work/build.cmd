@@ -8,13 +8,13 @@ javac -nowarn -d target\classes -sourcepath jvm -cp "e:\git\gama.experimental\um
 IF %ERRORLEVEL% NEQ 0 goto end
 
 
-echo hecras_Gama.j4n.jar 
-jar cvf hecras_Gama.j4n.jar  -C target\classes "ras506\_HECRASController.class"  -C target\classes "ras506\_HECRASController_.class"  -C target\classes "ras506\___HECRASController.class"  -C target\classes "ras506\__HECRASController_Event.class"  -C target\classes "ras506\__HECRASController_Event_.class"  -C target\classes "ras506\____HECRASController_Event.class"  -C target\classes "ras506\HECRASController.class"  -C target\classes "ras506\HECRASController_.class"  -C target\classes "ras506\__HECRASController.class"  -C target\classes "ras506\__HECRASController_.class"  -C target\classes "ras506\____HECRASController.class"  -C target\classes "hecras_gama_coupling\HecRas_Data.class"  > nul 
+echo HecRas_Gama.j4n.jar 
+jar cvf HecRas_Gama.j4n.jar  -C target\classes "ras506\_HECRASController.class"  -C target\classes "ras506\_HECRASController_.class"  -C target\classes "ras506\___HECRASController.class"  -C target\classes "ras506\__HECRASController_Event.class"  -C target\classes "ras506\__HECRASController_Event_.class"  -C target\classes "ras506\____HECRASController_Event.class"  -C target\classes "ras506\HECRASController.class"  -C target\classes "ras506\HECRASController_.class"  -C target\classes "ras506\__HECRASController.class"  -C target\classes "ras506\__HECRASController_.class"  -C target\classes "ras506\____HECRASController.class"  -C target\classes "hecras_gama_coupling\HecRas_Data.class"  > nul 
 IF %ERRORLEVEL% NEQ 0 goto end
 
 
-echo hecras_Gama.j4n.dll 
-csc /nologo /warn:0 /t:library /out:hecras_Gama.j4n.dll /recurse:clr\*.cs  /reference:"E:\git\gama.experimental\ummisco.gama.extension.hecras\jni4net-0.8.8.0-bin\samples\myCSharpDemoCalc\work\hecras_Gama.dll" /reference:"E:\git\gama.experimental\ummisco.gama.extension.hecras\jni4net-0.8.8.0-bin\lib\jni4net.n-0.8.8.0.dll"
+echo HecRas_Gama.j4n.dll 
+csc /nologo /warn:0 /t:library /out:HecRas_Gama.j4n.dll /recurse:clr\*.cs  /reference:"E:\git\gama.experimental\ummisco.gama.extension.hecras\jni4net-0.8.8.0-bin\samples\myCSharpDemoCalc\work\HecRas_Gama.dll" /reference:"E:\git\gama.experimental\ummisco.gama.extension.hecras\jni4net-0.8.8.0-bin\lib\jni4net.n-0.8.8.0.dll"
 IF %ERRORLEVEL% NEQ 0 goto end
 
 
