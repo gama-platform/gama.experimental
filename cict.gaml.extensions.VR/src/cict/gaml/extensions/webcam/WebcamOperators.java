@@ -1,6 +1,5 @@
 package cict.gaml.extensions.webcam;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -85,7 +84,7 @@ public class WebcamOperators {
 //				System.loadLibrary("jri");
 				
 			}catch(Exception ex) {
-				scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
+				scope.getGui().getConsole().informConsole(ex.getMessage(), null);
 				ex.printStackTrace();
 			}
 //			System.out.println(System.getProperty("java.library.path"));
