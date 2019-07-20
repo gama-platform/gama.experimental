@@ -103,7 +103,7 @@ public class MikeSkill extends Skill {
 			fieldSysPath.set(null, null);
 
 		} catch (final Exception ex) {
-			scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
 			ex.printStackTrace();
 		}
 		// System.out.println(System.getProperty("java.library.path"));
