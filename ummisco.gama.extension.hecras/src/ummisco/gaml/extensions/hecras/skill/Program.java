@@ -1,13 +1,5 @@
 package ummisco.gaml.extensions.hecras.skill;
 
-import java.lang.reflect.Field;
-
-import com.sun.jna.Library;
-import com.sun.jna.Memory;
-import com.sun.jna.Native;
-import com.sun.jna.Platform;
-import com.sun.jna.Pointer;
-
 /**
  * @author Pavel Savara (original)
  */
