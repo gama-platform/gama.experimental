@@ -58,7 +58,7 @@ public class RSkill extends Skill {
 		@Override
 		public void rWriteConsole(final Rengine re, final String text, final int oType) {
 			// System.out.print("xxxx"+text);
-			GAMA.getGui().getConsole(null).informConsole("R>" + text, null);
+			GAMA.getGui().getConsole().informConsole("R>" + text, null);
 		}
 
 		@Override
