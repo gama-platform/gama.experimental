@@ -115,7 +115,7 @@ public class OpenGL {
 	private final Cache<String, Texture> staticTextures =
 			CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.SECONDS).build();
 	final List<String> texturesToProcess = new CopyOnWriteArrayList<>();
-	private final Envelope3D textureEnvelope = new Envelope3D();
+	private final Envelope3D textureEnvelope = Envelope3D.create();
 	private final Rotation3D currentTextureRotation = Rotation3D.identity();
 	private boolean textured;
 	// private final int currentTexture = NO_TEXTURE;

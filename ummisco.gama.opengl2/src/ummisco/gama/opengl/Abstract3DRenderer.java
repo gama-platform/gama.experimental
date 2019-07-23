@@ -514,8 +514,8 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	public void defineROI(final Point start, final Point end) {
 		final GamaPoint startInWorld = getRealWorldPointFromWindowPoint(start);
-		final GamaPoint endInWorld = getRealWorldPointFromWindowPoint(end);
-		ROIEnvelope = new Envelope3D(startInWorld.x, endInWorld.x, startInWorld.y, endInWorld.y, 0, 1);
+		final GamaPoint endInWorld = getRealWorldPointFromWindowPoint(end);	 
+		ROIEnvelope = Envelope3D.of(start.x, end.x, start.y, end.y, 0, getMaxEnvDim() / 20d);
 	}
 
 	public void cancelROI() {
