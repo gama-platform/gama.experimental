@@ -376,7 +376,7 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 	//
 	// }
 	// Array a = v.read();
-	// ArrayList res = new ArrayList<>();
+	// ArrayList res = new ArrayList<> ();
 	// while (a.hasNext()) {
 	// res.add(a.next());
 	// }

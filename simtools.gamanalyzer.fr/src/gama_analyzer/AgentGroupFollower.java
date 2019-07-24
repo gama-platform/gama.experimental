@@ -544,6 +544,7 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 		mydata.metadatahistory.set(scope, 8, nrow, this.getGeometry());
 	}
 
+	@SuppressWarnings ("unchecked")
 	public void updatedata(final IScope scope) {
 
 		System.out.println("updatedata cycle : " + scope.getSimulation().getClock().getCycle());
@@ -587,7 +588,7 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 			}
 
 			for (int i = 0; i < mydata.varmap.length(scope); i++) {
-				mydata.varmap_reverse = (IMap<String, ?>) mydata.varmap.reverse(scope).copy(scope);
+				mydata.varmap_reverse = mydata.varmap.reverse(scope).copy(scope);
 			}
 			System.out.println("varmap reverse " + mydata.varmap_reverse.toString());
 
@@ -1554,7 +1555,7 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 			})
 	public List<?> distrib_legend(final IScope scope) throws GamaRuntimeException {
 
-		List<String> legende_suivante = new ArrayList<>();
+		// List<String> legende_suivante = new ArrayList<>();
 
 		// String my_matrix = (String) scope.getStringArg(WITH_MATRIX);
 		final String my_variable = scope.getStringArg(WITH_VAR);
@@ -1614,9 +1615,9 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 			}
 		}
 		// }
-		System.out.println("LEGENDE: les valeurs de la variable: " + my_variable
-				+ " sont réparties sur les intervalles suivants: " + legende);
-		legende_suivante = legende;
+		// System.out.println("LEGENDE: les valeurs de la variable: " + my_variable
+		// + " sont réparties sur les intervalles suivants: " + legende);
+		// legende_suivante = legende;
 
 		return legende;
 	}
