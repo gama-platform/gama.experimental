@@ -19,10 +19,6 @@ import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.objdetect.CascadeClassifier;
 
-import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamResolution;
-
-import msi.gama.common.preferences.GamaPreferences;
 import msi.gama.metamodel.shape.ILocation;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.operator;
@@ -34,13 +30,15 @@ import msi.gama.util.matrix.IMatrix;
 
 public class WebcamOperators {
 
-    static VideoCapture webSource = null;
-    static Mat frame;
-    static MatOfByte mem ;
-    static CascadeClassifier faceDetector;// = new CascadeClassifier(WebcamOperators.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1));
-    static MatOfRect faceDetections;
-    
-	private static IMatrix matrixValueFromImage(final IScope scope, final BufferedImage image, final ILocation preferredSize) {
+	static VideoCapture webSource = null;
+	static Mat frame;
+	static MatOfByte mem;
+	static CascadeClassifier faceDetector;// = new
+											// CascadeClassifier(WebcamOperators.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1));
+	static MatOfRect faceDetections;
+
+	private static IMatrix matrixValueFromImage(final IScope scope, final BufferedImage image,
+			final ILocation preferredSize) {
 		int xSize, ySize;
 		BufferedImage resultingImage = image;
 		if (preferredSize == null) {
@@ -69,96 +67,98 @@ public class WebcamOperators {
 
 	public static void initEnv(final IScope scope) {
 		env = System.getProperty("java.library.path");
-		if(!env.contains("opencv_java2413")) {			
-			String opencv_path = "C:\\git\\gama.experimental\\cict.gaml.extensions.VR\\lib\\x64";//\\opencv_java2413.dll
-//			String opencv_path = "E:\\Downloads\\Programs\\ocv\\opencv\\build\\java\\x86";//\\opencv_java2413.dll
-			if(System.getProperty("os.name").startsWith("Windows")) {				
-				System.setProperty("java.library.path", opencv_path+ ";" + env);
-			}else {
-				System.setProperty("java.library.path", opencv_path+ ":" + env);
+		if (!env.contains("opencv_java2413")) {
+			final String opencv_path = "C:\\git\\gama.experimental\\cict.gaml.extensions.VR\\lib\\x64";// \\opencv_java2413.dll
+			// String opencv_path = "E:\\Downloads\\Programs\\ocv\\opencv\\build\\java\\x86";//\\opencv_java2413.dll
+			if (System.getProperty("os.name").startsWith("Windows")) {
+				System.setProperty("java.library.path", opencv_path + ";" + env);
+			} else {
+				System.setProperty("java.library.path", opencv_path + ":" + env);
 			}
 			try {
-				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
-				fieldSysPath.setAccessible( true );
-				fieldSysPath.set( null, null );
-//				System.loadLibrary("jri");
-				
-			}catch(Exception ex) {
+				final java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
+				fieldSysPath.setAccessible(true);
+				fieldSysPath.set(null, null);
+				// System.loadLibrary("jri");
+
+			} catch (final Exception ex) {
 				scope.getGui().getConsole().informConsole(ex.getMessage(), null);
 				ex.printStackTrace();
 			}
-//			System.out.println(System.getProperty("java.library.path"));
+			// System.out.println(System.getProperty("java.library.path"));
 		}
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-//		if(System.getenv("R_HOME")==null) {
-//			return "missing R_HOME";
-//		}
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		// if(System.getenv("R_HOME")==null) {
+		// return "missing R_HOME";
+		// }
 	}
-	
-	@operator(value = "cam_shot", can_be_const = false, category = IOperatorCategory.LIST)
-	@doc(value = "get a photoshot from webcam")
+
+	@operator (
+			value = "cam_shot",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "get a photoshot from webcam")
 	public static GamaImageFile cam_shot(final IScope scope, final String varName) {
-//		Webcam wcam;
-		if(scope.getSimulation().getExperiment().getAttribute("webcam") == null) {
+		// Webcam wcam;
+		if (scope.getSimulation().getExperiment().getAttribute("webcam") == null) {
 
-//			Dimension size = WebcamResolution.QQVGA.getSize();//.QVGA.getSize();
-//
-//			wcam = Webcam.getDefault();
-//			wcam.setViewSize(size);
+			// Dimension size = WebcamResolution.QQVGA.getSize();//.QVGA.getSize();
+			//
+			// wcam = Webcam.getDefault();
+			// wcam.setViewSize(size);
 			initEnv(scope);
-	        webSource = new VideoCapture(); 
-	        webSource.open(0);
-			scope.getSimulation().getExperiment().setAttribute("webcam",webSource);
+			webSource = new VideoCapture();
+			webSource.open(0);
+			scope.getSimulation().getExperiment().setAttribute("webcam", webSource);
 		}
-//		wcam=(Webcam) scope.getSimulation().getExperiment().getAttribute("webcam");
+		// wcam=(Webcam) scope.getSimulation().getExperiment().getAttribute("webcam");
 		webSource = (VideoCapture) scope.getSimulation().getExperiment().getAttribute("webcam");
-//		if(!wcam.isOpen()) {
+		// if(!wcam.isOpen()) {
 
-        if (webSource.grab()) {
-
+		if (webSource.grab()) {
 
 			scope.getSimulation().postDisposeAction(scope1 -> {
-//				Webcam wc=(Webcam) scope.getSimulation().getExperiment().getAttribute("webcam");
-//				wc.close();
+				// Webcam wc=(Webcam) scope.getSimulation().getExperiment().getAttribute("webcam");
+				// wc.close();
 
-				
-				VideoCapture webSource=(VideoCapture) scope.getSimulation().getExperiment().getAttribute("webcam");
-		        webSource.release(); 
+				final VideoCapture webSource =
+						(VideoCapture) scope.getSimulation().getExperiment().getAttribute("webcam");
+				webSource.release();
 				return null;
 			});
-//			wcam.open();
+			// wcam.open();
 		}
-        frame = new Mat();
-        mem = new MatOfByte();
-        faceDetections = new MatOfRect();
-        webSource.retrieve(frame);
-//        String path="D:\\haarcascade_frontalface_alt.xml";//
-        String path=WebcamOperators.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1);
-        faceDetector = new CascadeClassifier(path);
-        faceDetector.detectMultiScale(frame, faceDetections);
-        
+		frame = new Mat();
+		mem = new MatOfByte();
+		faceDetections = new MatOfRect();
+		webSource.retrieve(frame);
+		// String path="D:\\haarcascade_frontalface_alt.xml";//
+		final String path = WebcamOperators.class.getResource("haarcascade_frontalface_alt.xml").getPath().substring(1);
+		faceDetector = new CascadeClassifier(path);
+		faceDetector.detectMultiScale(frame, faceDetections);
 
-        Highgui.imencode(".bmp", frame, mem);
-        Image im;
+		Highgui.imencode(".bmp", frame, mem);
+		Image im;
 		try {
 			im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
-			BufferedImage buff = (BufferedImage) im;
-			for (Rect rect : faceDetections.toArray()) {
+			final BufferedImage buff = (BufferedImage) im;
+			for (final Rect rect : faceDetections.toArray()) {
 				// System.out.println("ttt");
 				Core.rectangle(frame, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height),
-						new Scalar(0, 255,0));
-				System.out.println(rect.x +" "+ rect.width+" "+rect.y +" "+ rect.height);
-				buff.getGraphics().drawRect(rect.x , rect.y, rect.width,rect.height);
+						new Scalar(0, 255, 0));
+				System.out.println(rect.x + " " + rect.width + " " + rect.y + " " + rect.height);
+				buff.getGraphics().drawRect(rect.x, rect.y, rect.width, rect.height);
 			}
-			GamaImageFile gif=new GamaImageFile(scope, varName, matrixValueFromImage(scope, buff, null));
-			return  gif;
-		} catch (IOException e) {
+			final GamaImageFile gif = new GamaImageFile(scope, varName, matrixValueFromImage(scope, buff, null));
+			return gif;
+		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		return wcam.getImage();
+		// return wcam.getImage();
 		return null;
-		
+
 	}
-	
+
 }
