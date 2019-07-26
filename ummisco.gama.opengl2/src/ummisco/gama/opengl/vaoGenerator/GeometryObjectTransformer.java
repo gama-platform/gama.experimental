@@ -4,7 +4,7 @@
  * simulation platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.vaoGenerator;
@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import msi.gama.common.geometry.Scaling3D;
@@ -38,14 +37,14 @@ class GeometryObjectTransformer extends AbstractTransformer {
 			final boolean isLightInteraction, /* final String[] texturePaths, */ final boolean isOverlay,
 			final boolean isTriangulation, final double layerAlpha) {
 		// for GeometryObject
-		
+
 		genericInit(geomObj, isOverlay, isTriangulation, layerAlpha);
 
-		this.colors = geomObj.getColors();
-		if (colors == null || colors.length < 3)
-			colors = null;
-		else
-			colors = Arrays.copyOfRange(colors, 2, colors.length);
+		// this.colors = geomObj.getColors();
+		// if (colors == null || colors.length < 3)
+		// colors = null;
+		// else
+		// colors = Arrays.copyOfRange(colors, 2, colors.length);
 		this.isLightInteraction = isLightInteraction && !is1DShape() && !isWireframe;
 
 		this.textureIDs = textureIds;
@@ -59,9 +58,9 @@ class GeometryObjectTransformer extends AbstractTransformer {
 
 		// the last coordinate is the same as the first one, no need for this
 		this.coordinates = Arrays.copyOf(coordsWithDoublons, coordsWithDoublons.length - 1);
-		System.out.println(" -----  >>  getHashCode() is "+ getHashCode());
+		System.out.println(" -----  >>  getHashCode() is " + getHashCode());
 		if (!ShapeCache.isLoaded(getHashCode())) {
-		//if(1==1) {
+			// if(1==1) {
 			if (is1DShape()) {
 				// special case for 1D shape : no repetition of vertex
 				coordinates = coordsWithDoublons;
@@ -95,13 +94,16 @@ class GeometryObjectTransformer extends AbstractTransformer {
 
 			if (!is1DShape()) {
 				initBorders();
-				if (!isWireframe)
+				if (!isWireframe) {
 					applySmoothShading();
-				if (!isWireframe)
+				}
+				if (!isWireframe) {
 					computeNormals();
+				}
 				computeUVMapping();
-				if (!isWireframe)
+				if (!isWireframe) {
 					triangulate();
+				}
 				correctBorders();
 			}
 
@@ -117,7 +119,7 @@ class GeometryObjectTransformer extends AbstractTransformer {
 	protected void correctBorders() {
 		super.correctBorders();
 		if (type == IShape.Type.CONE) {
-			final ArrayList<Float> listIdx = new ArrayList<Float>();
+			final ArrayList<Float> listIdx = new ArrayList<>();
 			for (final float idx : idxForBorder) {
 				if (idx / BUILT_IN_SHAPE_RESOLUTION - 1 > 0.1) {
 					listIdx.add(idx);
@@ -190,15 +192,19 @@ class GeometryObjectTransformer extends AbstractTransformer {
 		float minY = Float.MAX_VALUE;
 		float maxY = -Float.MAX_VALUE;
 		final Coordinate[] coordinates = geomObj.getGeometry().getCoordinates();
-		for (int i = 0; i < coordinates.length; i++) {
-			if (coordinates[i].x < minX)
-				minX = (float) coordinates[i].x;
-			if (coordinates[i].x > maxX)
-				maxX = (float) coordinates[i].x;
-			if (coordinates[i].y < minY)
-				minY = (float) coordinates[i].y;
-			if (coordinates[i].y > maxY)
-				maxY = (float) coordinates[i].y;
+		for (final Coordinate coordinate : coordinates) {
+			if (coordinate.x < minX) {
+				minX = (float) coordinate.x;
+			}
+			if (coordinate.x > maxX) {
+				maxX = (float) coordinate.x;
+			}
+			if (coordinate.y < minY) {
+				minY = (float) coordinate.y;
+			}
+			if (coordinate.y > maxY) {
+				maxY = (float) coordinate.y;
+			}
 		}
 		float XSize = (maxX - minX) / 2 == 0 ? 1 : (maxX - minX) / 2;
 		float YSize = (maxY - minY) / 2 == 0 ? 1 : (maxY - minY) / 2;
@@ -241,8 +247,9 @@ class GeometryObjectTransformer extends AbstractTransformer {
 	private boolean is1DShape() {
 		// a 1D shape is a line, polyline or point. It cannot have a border, and
 		// it does not have faces
-		if (type == IShape.Type.POINT || type == IShape.Type.LINEARRING
-				|| type == IShape.Type.LINESTRING) { return true; }
+		if (type == IShape.Type.POINT || type == IShape.Type.LINEARRING || type == IShape.Type.LINESTRING) {
+			return true;
+		}
 		return false;
 	}
 
@@ -315,9 +322,9 @@ class GeometryObjectTransformer extends AbstractTransformer {
 		final float[] coordSum = new float[2];
 		// 1) compute the center of the base
 		// sum the coordinates
-		for (int i = 0; i < coordinates.length; i++) {
-			coordSum[0] += (float) coordinates[i].x;
-			coordSum[1] += (float) coordinates[i].y;
+		for (final Coordinate coordinate : coordinates) {
+			coordSum[0] += (float) coordinate.x;
+			coordSum[1] += (float) coordinate.y;
 		}
 		// divide by the number of vertices to get the center
 		center[0] = coordSum[0] / coordinates.length;
@@ -340,17 +347,18 @@ class GeometryObjectTransformer extends AbstractTransformer {
 	}
 
 	private ArrayList<int[]> buildLateralFaces(final int[] topFace, final int[] botFace) {
-		final ArrayList<int[]> result = new ArrayList<int[]>();
+		final ArrayList<int[]> result = new ArrayList<>();
 		if (topFace.length == 1) {
 			// case of pyramid : the topFace is just the summit
 			for (int i = 0; i < botFace.length; i++) {
 				final int[] newFace = new int[3];
 				newFace[0] = topFace[0];
 				newFace[1] = botFace[botFace.length - i - 1];
-				if (i < botFace.length - 1)
+				if (i < botFace.length - 1) {
 					newFace[2] = botFace[botFace.length - i - 2];
-				else
+				} else {
 					newFace[2] = botFace[botFace.length - 1];
+				}
 				result.add(newFace);
 			}
 		} else {
@@ -358,14 +366,16 @@ class GeometryObjectTransformer extends AbstractTransformer {
 				final int[] newFace = new int[4];
 				newFace[2] = topFace[i];
 				newFace[3] = botFace[botFace.length - i - 1];
-				if (i < topFace.length - 1)
+				if (i < topFace.length - 1) {
 					newFace[0] = botFace[botFace.length - i - 2];
-				else
+				} else {
 					newFace[0] = botFace[botFace.length - 1];
-				if (i < topFace.length - 1)
+				}
+				if (i < topFace.length - 1) {
 					newFace[1] = topFace[i + 1];
-				else
+				} else {
 					newFace[1] = topFace[0];
+				}
 				result.add(newFace);
 			}
 		}
@@ -373,7 +383,7 @@ class GeometryObjectTransformer extends AbstractTransformer {
 	}
 
 	private ArrayList<int[]> buildSphereFaces(final int[] topFace, final int[] botFace) {
-		final ArrayList<int[]> result = new ArrayList<int[]>();
+		final ArrayList<int[]> result = new ArrayList<>();
 		if (topFace.length == 1 || botFace.length == 1) {
 			// case of the top and the bottom of the sphere
 			if (topFace.length == 1) {
@@ -381,10 +391,11 @@ class GeometryObjectTransformer extends AbstractTransformer {
 					final int[] newFace = new int[3];
 					newFace[0] = topFace[0];
 					newFace[1] = botFace[i];
-					if (i < botFace.length - 1)
+					if (i < botFace.length - 1) {
 						newFace[2] = botFace[i + 1];
-					else
+					} else {
 						newFace[2] = botFace[0];
+					}
 					result.add(newFace);
 				}
 			} else if (botFace.length == 1) {
@@ -392,10 +403,11 @@ class GeometryObjectTransformer extends AbstractTransformer {
 					final int[] newFace = new int[3];
 					newFace[2] = botFace[0];
 					newFace[1] = topFace[i];
-					if (i < topFace.length - 1)
+					if (i < topFace.length - 1) {
 						newFace[0] = topFace[i + 1];
-					else
+					} else {
 						newFace[0] = topFace[0];
+					}
 					result.add(newFace);
 				}
 			}
@@ -404,14 +416,16 @@ class GeometryObjectTransformer extends AbstractTransformer {
 				final int[] newFace = new int[4];
 				newFace[2] = topFace[i];
 				newFace[3] = botFace[i];
-				if (i < topFace.length - 1)
+				if (i < topFace.length - 1) {
 					newFace[0] = botFace[i + 1];
-				else
+				} else {
 					newFace[0] = botFace[0];
-				if (i < topFace.length - 1)
+				}
+				if (i < topFace.length - 1) {
 					newFace[1] = topFace[i + 1];
-				else
+				} else {
 					newFace[1] = topFace[0];
+				}
 				result.add(newFace);
 			}
 		}
@@ -423,11 +437,13 @@ class GeometryObjectTransformer extends AbstractTransformer {
 		// find the radius of the sphere
 		float minX = Float.MAX_VALUE;
 		float maxX = Float.MIN_VALUE;
-		for (int i = 0; i < coordinates.length; i++) {
-			if (coordinates[i].x < minX)
-				minX = (float) coordinates[i].x;
-			if (coordinates[i].x > maxX)
-				maxX = (float) coordinates[i].x;
+		for (final Coordinate coordinate : coordinates) {
+			if (coordinate.x < minX) {
+				minX = (float) coordinate.x;
+			}
+			if (coordinate.x > maxX) {
+				maxX = (float) coordinate.x;
+			}
 		}
 		final float radius = (maxX - minX) / 2;
 
@@ -435,9 +451,9 @@ class GeometryObjectTransformer extends AbstractTransformer {
 		final float[] center = new float[2];
 		final float[] coordSum = new float[2];
 		// sum the coordinates
-		for (int i = 0; i < coordinates.length; i++) {
-			coordSum[0] += (float) coordinates[i].x;
-			coordSum[1] += (float) coordinates[i].y;
+		for (final Coordinate coordinate : coordinates) {
+			coordSum[0] += (float) coordinate.x;
+			coordSum[1] += (float) coordinate.y;
 		}
 		// divide by the number of vertices to get the center
 		center[0] = coordSum[0] / coordinates.length;
@@ -445,7 +461,7 @@ class GeometryObjectTransformer extends AbstractTransformer {
 
 		// build a serie of circles on the z axis
 		final int sliceNb = BUILT_IN_SHAPE_RESOLUTION / 2;
-		final ArrayList<int[]> circles = new ArrayList<int[]>();
+		final ArrayList<int[]> circles = new ArrayList<>();
 		int idx = 0;
 		for (int i = 0; i < sliceNb; i++) {
 			final float zVal = (float) Math.cos((float) i / (float) sliceNb * Math.PI) * radius;
@@ -528,11 +544,11 @@ class GeometryObjectTransformer extends AbstractTransformer {
 
 	@Override
 	public ArrayList<DrawingEntity> getDrawingEntityList() {
-		if (geometryCorrupted) { return new ArrayList<DrawingEntity>(); }
+		if (geometryCorrupted) { return new ArrayList<>(); }
 		// returns the DrawingEntities corresponding to this shape (can be 2
 		// DrawingEntities
 		// in case it has been asked to draw the border)
-		ArrayList<DrawingEntity> result = new ArrayList<DrawingEntity>();
+		ArrayList<DrawingEntity> result = new ArrayList<>();
 		if (isTriangulation) {
 			// if triangulate, returns only one result
 			result = getTriangulationDrawingEntity();
@@ -547,7 +563,7 @@ class GeometryObjectTransformer extends AbstractTransformer {
 				result = getStandardDrawingEntities();
 			}
 		}
- 		return result;
+		return result;
 	}
 
 }

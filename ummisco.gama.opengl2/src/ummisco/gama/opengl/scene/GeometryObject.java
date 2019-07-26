@@ -4,7 +4,7 @@
  * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
@@ -72,10 +72,10 @@ public class GeometryObject extends AbstractObject {
 	public Geometry getGeometry() {
 		return geometry;
 	}
-
-	public GamaColor[] getColors() {
-		return attributes.getColors();
-	}
+	//
+	// public GamaColor[] getColors() {
+	// return attributes.getColors();
+	// }
 
 	@Override
 	public DrawerType getDrawerType() {
