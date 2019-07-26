@@ -4,7 +4,7 @@
  * simulation platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl;
@@ -42,7 +42,6 @@ import msi.gama.outputs.layers.OverlayLayer;
 import msi.gama.util.GamaColor;
 import msi.gama.util.file.GamaImageFile;
 import msi.gaml.statements.draw.DrawingAttributes;
-import msi.gaml.statements.draw.FileDrawingAttributes;
 import msi.gaml.statements.draw.ShapeDrawingAttributes;
 import msi.gaml.statements.draw.TextDrawingAttributes;
 import msi.gaml.types.GamaGeometryType;
@@ -165,9 +164,9 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 	public abstract IKeystoneState getKeystone();
 
 	public GLAutoDrawable createDrawable(final Composite parent) {
-		//final GLProfile profile = GLProfile.getDefault();
+		// final GLProfile profile = GLProfile.getDefault();
 		final GLProfile profile = GLProfile.get(GLProfile.GL3);
-		
+
 		final GLCapabilities cap = new GLCapabilities(profile);
 		cap.setDepthBits(24);
 		// cap.setBackgroundOpaque(true);
@@ -217,6 +216,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	}
 
+	@Override
 	public final double getMaxEnvDim() {
 		// built dynamically to prepare for the changes in size of the
 		// environment
@@ -225,10 +225,12 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 		return env_width > env_height ? env_width : env_height;
 	}
 
+	@Override
 	public final double getEnvWidth() {
 		return worldDimensions.x;
 	}
 
+	@Override
 	public final double getEnvHeight() {
 		return worldDimensions.y;
 	}
@@ -298,7 +300,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	/**
 	 * Method getDisplayWidthInPixels()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IGraphics#getDisplayWidthInPixels()
 	 */
 	@Override
@@ -308,7 +310,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	/**
 	 * Method getDisplayHeightInPixels()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IGraphics#getDisplayHeightInPixels()
 	 */
 	@Override
@@ -325,7 +327,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	/**
 	 * Method getZoomLevel()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IGraphics#getZoomLevel()
 	 */
 	@Override
@@ -335,7 +337,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	/**
 	 * Useful for drawing fonts
-	 * 
+	 *
 	 * @return
 	 */
 	public final double getGlobalYRatioBetweenPixelsAndModelUnits() {
@@ -344,7 +346,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	/**
 	 * Method is2D()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IGraphics#is2D()
 	 */
 	@Override
@@ -364,17 +366,17 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 		return (SWTOpenGLDisplaySurface) surface;
 	}
 
-//	@Override
+	// @Override
 	public final ILocation getCameraPos() {
 		return camera.getPosition();
 	}
 
-//	@Override
+	// @Override
 	public final ILocation getCameraTarget() {
 		return camera.getTarget();
 	}
 
-//	@Override
+	// @Override
 	public final ILocation getCameraOrientation() {
 		return camera.getOrientation();
 	}
@@ -413,7 +415,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 	 * openGl.
 	 */
 	@Override
-	public Rectangle2D drawShape(final Geometry shape, final ShapeDrawingAttributes attributes) {
+	public Rectangle2D drawShape(final Geometry shape, final DrawingAttributes attributes) {
 		if (shape == null) { return null; }
 		if (sceneBuffer.getSceneToUpdate() == null) { return null; }
 		tryToHighlight(attributes);
@@ -430,7 +432,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 	 *            Integer
 	 */
 	@Override
-	public Rectangle2D drawImage(final BufferedImage img, final FileDrawingAttributes attributes) {
+	public Rectangle2D drawImage(final BufferedImage img, final DrawingAttributes attributes) {
 		if (sceneBuffer.getSceneToUpdate() == null) { return null; }
 		sceneBuffer.getSceneToUpdate().addImage(img, attributes);
 		tryToHighlight(attributes);
@@ -440,7 +442,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 		return rect;
 	}
 
-	protected void tryToHighlight(final FileDrawingAttributes attributes) {
+	protected void tryToHighlight(final DrawingAttributes attributes) {
 		if (highlight) {
 			attributes.setHighlighted(data.getHighlightColor());
 		}
@@ -452,7 +454,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 		final double cellWidth = worldDimensions.x / dimensions.x;
 		final double cellHeight = worldDimensions.y / dimensions.y;
 		final GamaColor color = GamaColor.getInt(lineColor.getRGB());
-		final ShapeDrawingAttributes attributes = new ShapeDrawingAttributes(null, color, color, IShape.Type.GRIDLINE);
+		final DrawingAttributes attributes = new ShapeDrawingAttributes(null, color, color, IShape.Type.GRIDLINE);
 		for (double i = 0; i < dimensions.x; i++) {
 			for (double j = 0; j < dimensions.y; j++) {
 				stepX = i + 0.5;
@@ -482,8 +484,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 	}
 
 	protected void preloadTextures(final DrawingAttributes attributes) {
-		if (!preloadTextures())
-			return;
+		if (!preloadTextures()) { return; }
 		final List<?> textures = attributes.getTextures();
 		if (textures != null && !textures.isEmpty()) {
 			for (final Object img : textures) {
@@ -501,26 +502,27 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 				+ Math.pow(camera.getPosition().y - rotationHelperPosition.y, 2)
 				+ Math.pow(camera.getPosition().z - rotationHelperPosition.z, 2));
 		final double size = distance / 10; // the size of the displayed axis
-		if (currentScene != null)
+		if (currentScene != null) {
 			currentScene.startDrawRotationHelper(pos, size);
+		}
 	}
 
 	public void stopDrawRotationHelper() {
 		rotationHelperPosition = null;
 		drawRotationHelper = false;
-		if (currentScene != null)
+		if (currentScene != null) {
 			currentScene.stopDrawRotationHelper();
+		}
 	}
 
 	public void defineROI(final Point start, final Point end) {
 		final GamaPoint startInWorld = getRealWorldPointFromWindowPoint(start);
-		final GamaPoint endInWorld = getRealWorldPointFromWindowPoint(end);	 
+		final GamaPoint endInWorld = getRealWorldPointFromWindowPoint(end);
 		ROIEnvelope = Envelope3D.of(start.x, end.x, start.y, end.y, 0, getMaxEnvDim() / 20d);
 	}
 
 	public void cancelROI() {
-		if (camera.isROISticky())
-			return;
+		if (camera.isROISticky()) { return; }
 		ROIEnvelope = null;
 	}
 
@@ -582,8 +584,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	@Override
 	public boolean isNotReadyToUpdate() {
-		if (data.isSynchronized())
-			return false;
+		if (data.isSynchronized()) { return false; }
 		return sceneBuffer.isNotReadyToUpdate();
 	}
 
@@ -598,21 +599,22 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 		super.beginDrawingLayer(layer);
 		GamaPoint currentOffset, currentScale;
 		if (!layer.isOverlay()) {
-			final double currentZLayer = getMaxEnvDim() * (layer.getData().getPosition().getZ() + layer.getData().getAddedElevation());
+			final double currentZLayer =
+					getMaxEnvDim() * (layer.getData().getPosition().getZ() + layer.getData().getAddedElevation());
 
 			// get the value of the z scale if positive otherwise set it to 1.
-			double z_scale=1;
-//			if (layer.getExtent().getZ() > 0) {
-//				z_scale = layer.getExtent().getZ();
-//			} else {
-//				z_scale = 1;
-//			}
+			final double z_scale = 1;
+			// if (layer.getExtent().getZ() > 0) {
+			// z_scale = layer.getExtent().getZ();
+			// } else {
+			// z_scale = 1;
+			// }
 
 			currentOffset = new GamaPoint(getXOffsetInPixels() / (getWidth() / worldDimensions.x),
 					getYOffsetInPixels() / (getHeight() / worldDimensions.y), currentZLayer);
 			currentScale = new GamaPoint(getLayerWidth() / getWidth(), getLayerHeight() / getHeight(), z_scale);
 		} else {
-//			layer.recomputeBounds(this, surface.getScope());
+			// layer.recomputeBounds(this, surface.getScope());
 			currentOffset = new GamaPoint(getXOffsetInPixels() * (worldDimensions.x / openGL.getViewWidth()),
 					getYOffsetInPixels() * (worldDimensions.y / openGL.getViewHeight()), 0);
 			// System.out.println("XOffsetinPixels: " + getXOffsetInPixels() + " Y " + getYOffsetInPixels());
@@ -627,7 +629,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	/**
 	 * Method endDrawingLayers()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IGraphics#endDrawingLayers()
 	 */
 	@Override
@@ -642,12 +644,12 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	public abstract void endPicking();
 
-//	@Override
+	// @Override
 	public int getWidthForOverlay() {
 		return getViewWidth();
 	}
 
-//	@Override
+	// @Override
 	public int getHeightForOverlay() {
 		return getViewHeight();
 	}

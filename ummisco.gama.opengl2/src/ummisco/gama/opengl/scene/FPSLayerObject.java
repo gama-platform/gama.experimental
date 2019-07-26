@@ -4,7 +4,7 @@
  * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
@@ -17,6 +17,7 @@ import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaFont;
+import msi.gaml.statements.draw.DrawingAttributes;
 import msi.gaml.statements.draw.ShapeDrawingAttributes;
 import msi.gaml.statements.draw.TextDrawingAttributes;
 import msi.gaml.types.GamaGeometryType;
@@ -74,7 +75,7 @@ public class FPSLayerObject extends LayerObject {
 		final double w = 0.15;
 		final double h = 0.04;
 		final IShape g = GamaGeometryType.buildRectangle(w, h, new GamaPoint(w / 2, h / 2));
-		final ShapeDrawingAttributes drawingAttr =
+		final DrawingAttributes drawingAttr =
 				new ShapeDrawingAttributes(g, (IAgent) null, new GamaColor(255, 255, 255, 255), null); // white for the
 																										// color, null
 		// for the border color
