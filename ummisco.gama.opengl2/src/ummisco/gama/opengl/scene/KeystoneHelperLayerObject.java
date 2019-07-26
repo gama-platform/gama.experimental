@@ -4,7 +4,7 @@
  * simulation platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
@@ -17,6 +17,7 @@ import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaFont;
+import msi.gaml.statements.draw.DrawingAttributes;
 import msi.gaml.statements.draw.ShapeDrawingAttributes;
 import msi.gaml.statements.draw.TextDrawingAttributes;
 import msi.gaml.types.GamaGeometryType;
@@ -125,7 +126,7 @@ public class KeystoneHelperLayerObject extends LayerObject {
 
 	private GeometryObject createCircleObject(final double size, final GamaPoint location, final GamaColor color) {
 		final IShape g = GamaGeometryType.buildCircle(size, location);
-		final ShapeDrawingAttributes drawingAttr = new ShapeDrawingAttributes(g, (IAgent) null, color, null);
+		final DrawingAttributes drawingAttr = new ShapeDrawingAttributes(g, (IAgent) null, color, null);
 		final GeometryObject circleGeom = new GeometryObject(g.getInnerGeometry(), drawingAttr);
 		return circleGeom;
 	}
@@ -133,7 +134,7 @@ public class KeystoneHelperLayerObject extends LayerObject {
 	private GeometryObject createRectangleObject(final double wSize, final double hSize, final GamaPoint location,
 			final GamaColor color) {
 		final IShape g = GamaGeometryType.buildRectangle(wSize, hSize, location);
-		final ShapeDrawingAttributes drawingAttr = new ShapeDrawingAttributes(g, (IAgent) null, color, null);
+		final DrawingAttributes drawingAttr = new ShapeDrawingAttributes(g, (IAgent) null, color, null);
 		// for the border color
 		final GeometryObject rectGeom = new GeometryObject(g.getInnerGeometry(), drawingAttr);
 		return rectGeom;
