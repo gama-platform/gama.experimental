@@ -21,6 +21,7 @@ import msi.gama.common.geometry.AxisAngle;
 import msi.gama.common.preferences.GamaPreferences;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
+import msi.gama.metamodel.shape.IShape.Type;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaMaterial;
 import msi.gama.util.GamaPair;
@@ -439,7 +440,7 @@ abstract class AbstractTransformer {
 			}
 			faceIsClockwise[i] = Utils.isClockwise(coordsOfFace);
 		}
-		if (type.equals("SPHERE")) {
+		if (type.equals(Type.SPHERE)) {
 			faceIsClockwise = new boolean[0];
 		}
 
