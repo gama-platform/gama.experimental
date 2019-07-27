@@ -15,7 +15,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 
 import com.jogamp.opengl.GLRunnable;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.math.FloatUtil;
 
 import msi.gama.common.geometry.Envelope3D;
@@ -64,7 +63,7 @@ public abstract class AbstractCamera implements ICamera {
 	}
 
 	private final Abstract3DRenderer renderer;
-	private final GLU glu;
+	// private final GLU glu;
 	protected static final GamaPoint UNDEFINED = new GamaPoint();
 	protected boolean initialized;
 
@@ -106,7 +105,7 @@ public abstract class AbstractCamera implements ICamera {
 		this.renderer = renderer;
 		setMousePosition(new Point(0, 0));
 		setUpVector(0.0, 1.0, 0.0);
-		glu = new GLU();
+		// glu = new GLU();
 	}
 
 	public void updateSphericalCoordinatesFromLocations() {}
