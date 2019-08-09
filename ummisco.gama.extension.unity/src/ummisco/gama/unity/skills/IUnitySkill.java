@@ -19,6 +19,16 @@ public interface IUnitySkill {
 	public final static String TOPIC_ASK = "ask";
 	public final static String TOPIC_SET = "set";
 	public final static String TOPIC_GET = "get";
+	
+	public final static String CONNECT = "connect_unity";
+	public final static String SERVER_URL = "to";
+	public final static String LOGIN = "login";
+	public final static String PASSWORD = "password";
+	public final static String WITHNAME = "with_name";
+	public final static String PORT = "port";
+	
+	public final static String TOPIC = "topic";
+	public static final String CONTENT = "content";
 
 	// publish topics
 	// subscribe topics
