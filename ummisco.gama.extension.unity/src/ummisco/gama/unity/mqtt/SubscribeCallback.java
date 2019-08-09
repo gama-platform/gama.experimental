@@ -1,6 +1,8 @@
 package ummisco.gama.unity.mqtt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -13,40 +15,47 @@ import ummisco.gama.unity.skills.IUnitySkill;
 
 /**
  */
+
 public class SubscribeCallback implements MqttCallback {
 
 	public ArrayList<MqttMessage> mailBox = new ArrayList<MqttMessage>();
-	public ArrayList<MqttMessage> replayMailBox = new ArrayList<MqttMessage>();
-	public ArrayList<MqttMessage> notificationMailBox = new ArrayList<MqttMessage>();
-	public ArrayList<MqttMessage> littosimMailBox = new ArrayList<MqttMessage>();
-
+	public ArrayList<String> filteredTopics = new ArrayList<String>();
+	Map<String, Object> receivedData = new HashMap<>();
+		
+	static {
+		DEBUG.ON();
+	}
+	
 	// @Override
 	public void connectionLost(Throwable cause) {
-		// This is called when the connection is lost. We could reconnect here.
+		DEBUG.OUT("connection lost");
 	}
 
-	static {
-		DEBUG.OFF();
-	}
-
+	@Override
+	public void deliveryComplete(IMqttDeliveryToken arg0) {
+		DEBUG.OUT("message sent");
+	}	
+		
 	// @Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
-		DEBUG.LOG("Message arrived. Topic: " + topic + "  Message: " + message.toString());
-		// if(!message.isRetained())
-		if (topic.equals(IUnitySkill.TOPIC_REPLAY)) {
-			replayMailBox.add(message);
-			DEBUG.LOG("A replay has been recevied");
-		} else if (topic.equals(IUnitySkill.TOPIC_NOTIFICATION_RECEIVED)) {
-			notificationMailBox.add(message);
-			DEBUG.LOG("A notification has been recevied");
-		} else if (topic.equals(IUnitySkill.TOPIC_LITTOSIM)) {
-			littosimMailBox.add(message);
-			DEBUG.LOG("A littoSIM message has been recevied");
-		} else {
-			mailBox.add(message);
-			DEBUG.LOG("Unknown message has been recevied");
+		storeMessage(topic, message);
+		DEBUG.LOG("Message arrived and saved. Topic: " + topic + "  Message: " + message.toString());
+	}
+	
+	
+	private void storeMessage(String topic, MqttMessage msg) {
+		if(!filteredTopics.contains(topic)) {
+		 if (receivedData.containsKey(topic)) {
+			 	ArrayList<MqttMessage> box = (ArrayList<MqttMessage>) receivedData.get(topic);
+			 	box.add(msg);
+	        } else {
+	        	ArrayList<MqttMessage> newBox = new ArrayList<MqttMessage>();
+	        	newBox.add(msg);
+	        	receivedData.put(topic, newBox);
+	        }
+		}else {
+			mailBox.add(msg);
 		}
-
 	}
 
 	public String getNextMessage() {
@@ -59,52 +68,30 @@ public class SubscribeCallback implements MqttCallback {
 		}
 	}
 
-	public String getNextReplayMessage() {
-		if (replayMailBox.size() > 0) {
-			String msg = replayMailBox.get(0).toString();
-			replayMailBox.remove(0);
-			DEBUG.LOG("replayMailBox size is: " + replayMailBox.size());
-			DEBUG.LOG("And message is : " + msg);
-			return msg;
-		} else {
-			return null;
+	public String getNextMessage(String topic) {
+		 if (receivedData.containsKey(topic)) {
+			 ArrayList<MqttMessage> box = (ArrayList<MqttMessage>) receivedData.get(topic);
+			if (box.size() > 0) {
+				String msg = box.get(box.size()-1).toString();
+				box.remove(box.size()-1);
+				DEBUG.LOG(topic+" Mail Box size is: " + box.size());
+				return msg;
+			} 
 		}
-	}
-
-	public String getNextNotificationMessage() {
-		if (notificationMailBox.size() > 0) {
-			String msg = notificationMailBox.get(0).toString();
-			notificationMailBox.remove(0);
-			return msg;
-		} else {
-			return null;
-		}
+		 return null;
 	}
 
 	public void clearAllMessages() {
 		mailBox.clear();
-		replayMailBox.clear();
-		notificationMailBox.clear();
-		littosimMailBox.clear();
+	}
+	
+	public void clearAllMessages(String topic) {
+		 if (receivedData.containsKey(topic)) {
+			 ((ArrayList<MqttMessage>) receivedData.get(topic)).clear();
+		 }
 	}
 
-	public void clearTopicMessages(String topic) throws Exception {
-		if (topic.equals(IUnitySkill.TOPIC_REPLAY)) {
-			replayMailBox.clear();
-		} else if (topic.equals(IUnitySkill.TOPIC_NOTIFICATION_RECEIVED)) {
-			notificationMailBox.clear();
-		} else if (topic.equals(IUnitySkill.TOPIC_LITTOSIM)) {
-			littosimMailBox.clear();
-		} else if (topic.equals(IUnitySkill.TOPIC_MAIN)) {
-			mailBox.clear();
-		}
-	}
-	// @Override
 
-	@Override
-	public void deliveryComplete(IMqttDeliveryToken arg0) {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 }

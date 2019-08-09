@@ -13,6 +13,7 @@ import msi.gama.util.GamaColor;
 import msi.gama.util.GamaPair;
 import msi.gama.util.IList;
 import msi.gama.util.IMap.IPairList;
+import ummisco.gama.dev.utils.DEBUG;
 import msi.gama.util.GamaColor.NamedGamaColor;
 
 public class UnityAgent {
@@ -32,6 +33,9 @@ public class UnityAgent {
 			
 		}
 				
+		static {
+			DEBUG.OFF();
+		}
 		public void getUnityAgent(MinimalAgent miniAgent) {
 			this.agentName = miniAgent.getName();
 			this.species = miniAgent.getSpecies().getName();
@@ -65,9 +69,9 @@ public class UnityAgent {
 				
 					
 				//GamaColor color = gp.getKey().
-				System.out.println("Object type is : "+e.getClass());
-				System.out.println("Object key is : "+gp.getKey());
-				System.out.println("Object value is : "+gp.getValue());
+				DEBUG.OUT("Object type is : "+e.getClass());
+				DEBUG.OUT("Object key is : "+gp.getKey());
+				DEBUG.OUT("Object value is : "+gp.getValue());
 				
 			
 			}

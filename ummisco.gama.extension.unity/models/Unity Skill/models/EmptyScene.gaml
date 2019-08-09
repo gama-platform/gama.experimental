@@ -39,7 +39,7 @@ species CheckingAgent skills: [unity]{
 		
 		//	do getUnityField objectName: playerName attribute:"speed"; 											    // getUnityField
 		
-		do callUnityMonoAction objectName: playerName   actionName:"setWinText"  attribute:" --- Game ON --- "; // monoActionTopic
+		// do callUnityMonoAction objectName: playerName   actionName:"setWinText"  attribute:" --- Game ON --- "; // monoActionTopic
 		
 		
 		map<string,string> AtList <- ["s"::50, "count"::"Count textchanged", "win"::"Win text changed"];
@@ -47,7 +47,7 @@ species CheckingAgent skills: [unity]{
 	
 		do setUnityFields objectName: playerName attributes: map<string, string>(["speed"::35]);				// setUnityFields
 	
-	//	do setUnityFields objectName: playerName attributes: map<string, string>(["count"::10]);				// setUnityFields
+		//	do setUnityFields objectName: playerName attributes: map<string, string>(["count"::10]);				// setUnityFields
 		
 		
 		//TODO: Add scale as optionnal 
@@ -68,9 +68,9 @@ species CheckingAgent skills: [unity]{
 	//	do setUnityPosition objectName: playerName position: {4,1,9};											// setUnityPosition
 	
 		
-		do setUnityPosition objectName: playerName position: {4,0,7};	
+	//	do setUnityPosition objectName: playerName position: {4,0,7};	
 		
-		do unityMove objectName: playerName position: {1000,200,7} speed: 5 smoothMove: false;	 // unityMove
+	//	do unityMove objectName: playerName position: {1000,200,7} speed: 5 smoothMove: false;	 // unityMove
 		
 	//	do unityMove objectName: playerName position: {0,0,-2} speed: 100 smoothMove: true;						// unityMove
 		
@@ -80,23 +80,28 @@ species CheckingAgent skills: [unity]{
 	}
 	
 	
-	reflex contactUnity when: cycle = 1
+	reflex contactUnity when: cycle = 20
 	{
+			do callUnityMonoAction objectName: playerName   actionName:"setWinText"  attribute:" --- Call to move --- "; // monoActionTopic
 		
+			do unityMove objectName: playerName position: {10,20,7} speed: 5 smoothMove: false;	 // unityMove
+			
+			write "GameObject moved!";
 	}
 	
-	reflex destroyObject when: cycle = 8{
+	
+	
+	reflex destroyObject when: cycle = 8 {
 		
-	//	string fieldValue <- get_unity_replay(); 																// get_unity_replay
-	//	write "Field value is "+fieldValue;
+		//	string fieldValue <- get_unity_replay(); 																// get_unity_replay
+		//	write "Field value is "+fieldValue;
 		
-	//	bool isNotifiyed <- isNotificationTrue("Notification_01");												// isNotifiyed
-	//	write "Notification Statut "+isNotifiyed;
+		//	bool isNotifiyed <- isNotificationTrue("Notification_01");												// isNotifiyed
+		//	write "Notification Statut "+isNotifiyed;
 		
-	//	string mes <- get_unity_notification();	
-	//	write "Notification Message (if exist) "+mes;															// get_unity_notification
-		
-		
+		//	string mes <- get_unity_notification();	
+		//	write "Notification Message (if exist) "+mes;															// get_unity_notification
+				
 		//do destroyUnityObject objectName: playerName;							// destroyUnityObject
 		//string msg<- getAllActionsMessage();
 		//write msg; 															
