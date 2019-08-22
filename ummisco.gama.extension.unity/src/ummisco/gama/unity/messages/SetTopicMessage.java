@@ -1,18 +1,14 @@
 /*********************************************************************************************
  *
- * 'GamaMessage.java, in plugin msi.gama.core, is part of the source code of the
- * GAMA modeling and simulation platform.
+ * 'GamaMessage.java, in plugin msi.gama.core, is part of the source code of the GAMA modeling and simulation platform.
  * (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.unity.messages;
 
-import java.util.Map;
-
-import msi.gama.common.interfaces.IKeyword;
 import msi.gama.common.util.StringUtils;
 import msi.gama.extensions.messaging.GamaMessage;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -32,10 +28,14 @@ import ummisco.gama.unity.skills.IUnitySkill;
  * @author youcef sklab
  */
 
-@vars({ @variable(name = SetTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
-		@doc("Returns the concerned unity game object name") }),
-		@variable(name = SetTopicMessage.ATTRIBUTES_LIST, type = IType.MAP, doc = {
-				@doc("Returns the attribtes list of the message") }), })
+@vars ({ @variable (
+		name = SetTopicMessage.OBJECT_NAME,
+		type = IType.STRING,
+		doc = { @doc ("Returns the concerned unity game object name") }),
+		@variable (
+				name = SetTopicMessage.ATTRIBUTES_LIST,
+				type = IType.MAP,
+				doc = { @doc ("Returns the attribtes list of the message") }), })
 public class SetTopicMessage extends GamaMessage {
 
 	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;
@@ -60,22 +60,22 @@ public class SetTopicMessage extends GamaMessage {
 		setAttributesList(attributes);
 	}
 
-	@getter(SetTopicMessage.OBJECT_NAME)
+	@getter (SetTopicMessage.OBJECT_NAME)
 	public Object getObjectName() {
 		return objectName;
 	}
 
-	@setter(SetTopicMessage.OBJECT_NAME)
+	@setter (SetTopicMessage.OBJECT_NAME)
 	public void setObjectName(final Object objectName) {
 		this.objectName = objectName;
 	}
 
-	@getter(SetTopicMessage.ATTRIBUTES_LIST)
+	@getter (SetTopicMessage.ATTRIBUTES_LIST)
 	public Object getAttributesList() {
 		return attributes;
 	}
 
-	@setter(SetTopicMessage.ATTRIBUTES_LIST)
+	@setter (SetTopicMessage.ATTRIBUTES_LIST)
 	public void setAttributesList(final Object attributesList) {
 		this.attributes = attributesList;
 	}
@@ -93,13 +93,13 @@ public class SetTopicMessage extends GamaMessage {
 
 	@Override
 	public SetTopicMessage copy(final IScope scope) throws GamaRuntimeException {
-		return new SetTopicMessage(scope, getSender(), getReceivers(), getObjectName(), (Map<?, ?>) getAttributesList(),
+		return new SetTopicMessage(scope, getSender(), getReceivers(), getObjectName(), getAttributesList(),
 				getContents(scope));
 	}
 
 	/**
 	 * Method getType()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.ITyped#getType()
 	 */
 	@Override
@@ -107,6 +107,7 @@ public class SetTopicMessage extends GamaMessage {
 		return Types.get(IType.MESSAGE);
 	}
 
+	@Override
 	public void hasBeenReceived(final IScope scope) {
 		// receptionTimeStamp = scope.getClock().getCycle();
 

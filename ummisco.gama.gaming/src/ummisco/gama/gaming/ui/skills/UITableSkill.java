@@ -13,7 +13,7 @@ import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
-import msi.gama.util.GamaList;
+import msi.gama.util.IList;
 import msi.gaml.types.IType;
 
 @vars ({ @variable (
@@ -102,7 +102,7 @@ public class UITableSkill extends UILocatedSkill {
 		final int cellHeight = ((Integer) scope.getArg(IUITableSkill.NUMBER_OF_LINES, IType.INT)).intValue();
 		agt.setAttribute(IUITableSkill.NUMBER_OF_LINES, cellHeight);
 		agt.setAttribute(IUITableSkill.NUMBER_OF_COLUMNS, numberOfColumn);
-		final ArrayList<IAgent[]> data = new ArrayList<IAgent[]>();
+		final ArrayList<IAgent[]> data = new ArrayList<>();
 		agt.setAttribute(IUITableSkill.MATRIX_DATA, data);
 	}
 
@@ -119,8 +119,8 @@ public class UITableSkill extends UILocatedSkill {
 					examples = { @example ("") }))
 	public void addLine(final IScope scope) {
 		final IAgent agt = scope.getAgent();
-		@SuppressWarnings ("unchecked") final GamaList<IAgent> elements =
-				(GamaList<IAgent>) scope.getArg(IUITableSkill.ELEMENTS_TO_ADD, IType.CONTAINER);
+		@SuppressWarnings ("unchecked") final IList<IAgent> elements =
+				(IList<IAgent>) scope.getArg(IUITableSkill.ELEMENTS_TO_ADD, IType.CONTAINER);
 		@SuppressWarnings ("unchecked") final ArrayList<IAgent[]> data =
 				(ArrayList<IAgent[]>) agt.getAttribute(IUITableSkill.MATRIX_DATA);
 		final float ui_width = (float) agt.getAttribute(IUILocatedSkill.AGENT_LOCKED_WIDTH);

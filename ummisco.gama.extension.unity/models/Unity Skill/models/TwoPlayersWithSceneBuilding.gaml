@@ -120,7 +120,7 @@ species Player skills: [unity] {
 		shape <- sphere(4);
 		//name <- playerName;
 	 	
-		do connectMqttClient(); 
+		//do connectMqttClient(); 
 		
 		// subscribe (to unity engine) to get notifiyed by the object: Player, when its field: count of type: field,  is eaqual (operator ==) to 4 
 		do unityNotificationSubscribe notificationId: self.name+"_Notification_01" objectName: playerName fieldType: "field" fieldName: "count" fieldValue: totalCount fieldOperator: "==";
@@ -144,7 +144,7 @@ species Player skills: [unity] {
 		newX <- rnd(-8, 8);
 		newZ <- rnd(-8, 8);
 		formIndex <- rnd(0, 3);
-		speed <- rnd(150.0);
+	 //	speed <- rnd(150.0);
 	}
 	
 	reflex updateCenter when: cycle mod updateCenter = 0
@@ -176,7 +176,7 @@ species Player skills: [unity] {
 		
 				
 		// Move the ball to the new position (not a position reset). The movement speed is specified too.
-		do unityMove objectName: playerName position: {newX,newY,newZ} speed: speed smoothMove: false;
+		do unityMove objectName: playerName position: {newX,newY,newZ}  smoothMove: false;
 		isNewPosition <- false;
 		//location <-{x,y,z};
 		// Create new GameObject:
@@ -233,7 +233,7 @@ species cubeAgent skills: [unity]
 	 	bool instanceCreated <- false;
 	 	
 	init {
-		do connectMqttClient(); 
+	//	do connectMqttClient(); 
 		
 		objectName <- self.name;
 		
@@ -243,9 +243,9 @@ species cubeAgent skills: [unity]
 		//location <-{x,1,z};
        	do setUnityProperty objectName: objectName propertyName:"isTrigger" propertyValue:true;		// setUnityProperty
        	
-       	scale <- {1,1,1};
-       	rotation <- {45,45,45};
-       	speed <- 12.0;
+      // 	scale <- {1,1,1};
+      // 	rotation <- {45,45,45};
+      // 	speed <- 12.0;
 		
 		do setUnityFields objectName: objectName attributes: map<string, string>(["isRotate"::true]);
 		

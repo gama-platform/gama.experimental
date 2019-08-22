@@ -10,3 +10,4 @@ Bundle-ClassPath: .,
  lib/netcdfAll-4.6.4.jar
 Export-Package: cict.gaml.extensions.netcdf.file
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: cict.gaml.extensions.netcdf

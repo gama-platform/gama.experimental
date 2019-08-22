@@ -14,7 +14,8 @@ global {
 
 
 species CheckingAgent skills: [unity]{
-	string playerName <- "Player0";
+	//string playerName <- "Player0";
+	string playerName <- "Object1";
 	
 	aspect default {
 		draw circle(1) color:#red;
@@ -24,13 +25,13 @@ species CheckingAgent skills: [unity]{
 		 do connectMqttClient();
 		 do subscribe_To_Topic topic:"littosim";
 		 do subscribe_To_Topic topic:"replay";
-		 do subscribe_To_Topic topic:"notification";
+		// do subscribe_To_Topic topic:"notification";
 		 write "connected";
 		 
 		 //TODO: Add support for notification frequency.
-		do unityNotificationSubscribe notificationId: "Notification_01" objectName: playerName fieldType: "field" fieldName: "count" fieldValue:10 fieldOperator: "==";
+		//do unityNotificationSubscribe notificationId: "Notification_01" objectName: playerName fieldType: "field" fieldName: "count" fieldValue:10 fieldOperator: "==";
 	
-		do getUnityField objectName: playerName attribute:"speed"; 											    // getUnityField
+	//	do getUnityField objectName: playerName attribute:"speed"; 											    // getUnityField
 		
 		do callUnityMonoAction objectName: playerName   actionName:"setWinText"  attribute:" --- Game ON --- "; // monoActionTopic
 		
@@ -76,19 +77,19 @@ species CheckingAgent skills: [unity]{
 	
 	reflex destroyObject when: cycle = 8{
 		
-		string fieldValue <- get_unity_replay(); 																// get_unity_replay
-		write "Field value is "+fieldValue;
+	//	string fieldValue <- get_unity_replay(); 																// get_unity_replay
+	//	write "Field value is "+fieldValue;
 		
-		bool isNotifiyed <- isNotificationTrue("Notification_01");												// isNotifiyed
-		write "Notification Statut "+isNotifiyed;
+	//	bool isNotifiyed <- isNotificationTrue("Notification_01");												// isNotifiyed
+	//	write "Notification Statut "+isNotifiyed;
 		
-		string mes <- get_unity_notification();	
-		write "Notification Message (if exist) "+mes;															// get_unity_notification
+	//	string mes <- get_unity_notification();	
+	//	write "Notification Message (if exist) "+mes;															// get_unity_notification
 		
 		
 		//do destroyUnityObject objectName: playerName;							// destroyUnityObject
-		string msg<- getAllActionsMessage();
-		write msg; 															
+		//string msg<- getAllActionsMessage();
+		//write msg; 															
 	}
 	
 	aspect base {

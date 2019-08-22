@@ -18,8 +18,6 @@
 */
 package ummisco.gama.apsf.spaces;
 
-import msi.gama.metamodel.agent.IAgent;
-
 public class SandParticle extends BlackParticle {
 	@Override
 	public Particle clone() {

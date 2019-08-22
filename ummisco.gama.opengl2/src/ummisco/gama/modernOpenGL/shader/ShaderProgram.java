@@ -126,22 +126,22 @@ public class ShaderProgram extends AbstractShader {
 			if (i < lights.size()) {
 				LightPropertiesStructure light = lights.get(i);
 				Matrix4f lightPropertyMatrix = new Matrix4f();
-				lightPropertyMatrix.m00 = light.getPosition().x;
-				lightPropertyMatrix.m01 = light.getPosition().y;
-				lightPropertyMatrix.m02 = light.getPosition().z;
+				lightPropertyMatrix.m00 = (float) light.getPosition().x;
+				lightPropertyMatrix.m01 = (float) light.getPosition().y;
+				lightPropertyMatrix.m02 = (float) light.getPosition().z;
 				int lightType = (light.getType() == TYPE.POINT) ? 0 :
 					(light.getType() == TYPE.DIRECTION) ? 1 : 2;
 				lightPropertyMatrix.m03 = lightType; // 0 for point, 1 for direction, 2 for spot
-				lightPropertyMatrix.m10 = light.getDirection().x;
-				lightPropertyMatrix.m11 = light.getDirection().y;
-				lightPropertyMatrix.m12 = light.getDirection().z;
-				lightPropertyMatrix.m20 = light.getColor().x;
-				lightPropertyMatrix.m21 = light.getColor().y;
-				lightPropertyMatrix.m22 = light.getColor().z;
+				lightPropertyMatrix.m10 = (float) light.getDirection().x;
+				lightPropertyMatrix.m11 = (float) light.getDirection().y;
+				lightPropertyMatrix.m12 = (float) light.getDirection().z;
+				lightPropertyMatrix.m20 = (float) light.getColor().x;
+				lightPropertyMatrix.m21 = (float) light.getColor().y;
+				lightPropertyMatrix.m22 = (float) light.getColor().z;
 				lightPropertyMatrix.m30 = light.getLinearAttenuation();
 				lightPropertyMatrix.m31 = light.getQuadraticAttenuation();
 				super.loadMatrix(location_lightProperties[i-1], lightPropertyMatrix);
-				super.loadVector(location_lightColor[i-1], light.getColor());
+				super.loadVector(location_lightColor[i-1], new Vector3f((float)light.getColor().x,(float)light.getColor().y,(float)light.getColor().z));
 				super.loadVector(location_lightAttenuation[i-1], new Vector3f(1.0f,light.getLinearAttenuation(),light.getQuadraticAttenuation()));
 			}
 			else {

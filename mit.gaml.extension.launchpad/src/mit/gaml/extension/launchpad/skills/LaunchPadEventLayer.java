@@ -10,7 +10,10 @@
 package mit.gaml.extension.launchpad.skills;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import msi.gama.common.interfaces.IDisplaySurface;
 import msi.gama.common.interfaces.IEventLayerDelegate;
@@ -44,6 +47,9 @@ public class LaunchPadEventLayer implements ILayer, IEventLayerDelegate {
 
 	MyLPListener myListener=null;
 	IScope executionScope=null;
+	public static final Set<String> EVENTS =
+			new HashSet<>(Arrays.asList("pad_down")); 
+
 	public static HashMap<String, Color> colorMap = new HashMap<String, Color>() {{
 	    put("black",Color.BLACK);
 	    put("red",Color.RED);
@@ -222,6 +228,12 @@ public class LaunchPadEventLayer implements ILayer, IEventLayerDelegate {
 			firstLaunchOn(null);
 		}
 		return false;
+	}
+
+	@Override
+	public Set<String> getEvents() {
+		// TODO Auto-generated method stub
+		return EVENTS;
 	}
 
 }

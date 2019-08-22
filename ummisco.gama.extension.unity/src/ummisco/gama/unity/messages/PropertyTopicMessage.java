@@ -12,6 +12,9 @@ package ummisco.gama.unity.messages;
 
 import java.util.Map;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.common.util.StringUtils;
 import msi.gama.extensions.messaging.GamaMessage;
@@ -35,9 +38,9 @@ import ummisco.gama.unity.skills.IUnitySkill;
 @vars({ @variable(name = PropertyTopicMessage.OBJECT_NAME, type = IType.STRING, doc = {
 		@doc("Returns the concerned unity game object name") }),
 		@variable(name = PropertyTopicMessage.PROPERTY_NAME, type = IType.STRING, doc = {
-				@doc("Returns the property name the message") }),
+		@doc("Returns the property name the message") }),
 		@variable(name = PropertyTopicMessage.VALUE, type = IType.NONE, doc = {
-				@doc("Returns the property value the message") }) })
+		@doc("Returns the property value the message") }) })
 public class PropertyTopicMessage extends GamaMessage {
 
 	public final static String OBJECT_NAME = IUnitySkill.MSG_OBJECT_NAME;

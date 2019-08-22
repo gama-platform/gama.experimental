@@ -12,7 +12,8 @@ package ummisco.gama.opengl.vaoGenerator;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
-import msi.gaml.operators.fastmaths.FastMath;
+import org.apache.commons.math3.util.FastMath;
+
 import ummisco.gama.opengl.camera.ICamera;
 
 /*
