@@ -76,7 +76,7 @@ public class ArgumentationOperators {
 			String n = mat.get(scope, 0, i);
 			if (n != null && !n.isEmpty()) {
 				String conclusion = mat.get(scope, 1,i); 
-				GamaMap<String, Double> criteria = (GamaMap<String, Double>) GamaMapFactory.create();
+				GamaMap<String, Double> criteria = GamaMapFactory.create();
 				for (int j = 2; j < mat.getCols(scope); j++) {
 					String val = mat.get(scope, j,i) ;
 					if ((val != null )) {
