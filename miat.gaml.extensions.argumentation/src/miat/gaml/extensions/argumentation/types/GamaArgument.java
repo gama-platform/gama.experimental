@@ -96,7 +96,7 @@ public class GamaArgument  implements IValue{
 
 	@Override
 	public IValue copy(IScope scope) throws GamaRuntimeException {
-		return new GamaArgument(id, option, conclusion, statement, rationale, criteria.copy(scope), actor, sourceType);
+		return new GamaArgument(id, option, conclusion, statement, rationale, (GamaMap<String, Double>) criteria.copy(scope), actor, sourceType);
 	}
 
 	@Override
