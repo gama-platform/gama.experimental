@@ -225,7 +225,7 @@ public class CameraArcBall extends AbstractCamera {
 		} else {
 			data.setCameraPos(initialPosition);
 			data.setCameraLookPos(initialTarget);
-			data.setCameraUpVector(initialUpVector, true);
+			data.setCameraUpVector(initialUpVector);
 			// update();
 		}
 	}

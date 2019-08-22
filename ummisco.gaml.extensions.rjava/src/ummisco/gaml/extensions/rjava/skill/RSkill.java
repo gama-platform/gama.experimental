@@ -1,11 +1,10 @@
 /*********************************************************************************************
  *
- * 'RSkill.java, in plugin ummisco.gaml.extensions.rjava, is part of the source code of the
- * GAMA modeling and simulation platform.
- * (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
+ * 'RSkill.java, in plugin ummisco.gaml.extensions.rjava, is part of the source code of the GAMA modeling and simulation
+ * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gaml.extensions.rjava.skill;
@@ -42,7 +41,6 @@ import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
-import msi.gama.util.GamaList;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IList;
 import msi.gama.util.file.GamaImageFile;
@@ -51,14 +49,16 @@ import msi.gaml.species.ISpecies;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
-@skill(name = "RSkill", concept = { IConcept.STATISTIC, IConcept.SKILL })
+@skill (
+		name = "RSkill",
+		concept = { IConcept.STATISTIC, IConcept.SKILL })
 public class RSkill extends Skill {
 
 	class TextConsole implements RMainLoopCallbacks {
 		@Override
 		public void rWriteConsole(final Rengine re, final String text, final int oType) {
-//			System.out.print("xxxx"+text);
-			GAMA.getGui().getConsole(null).informConsole("R>"+text, null);
+			// System.out.print("xxxx"+text);
+			GAMA.getGui().getConsole().informConsole("R>" + text, null);
 		}
 
 		@Override
@@ -90,71 +90,80 @@ public class RSkill extends Skill {
 					newFile == 0 ? FileDialog.LOAD : FileDialog.SAVE);
 			fd.setVisible(true);
 			String res = null;
-			if (fd.getDirectory() != null)
+			if (fd.getDirectory() != null) {
 				res = fd.getDirectory();
-			if (fd.getFile() != null)
+			}
+			if (fd.getFile() != null) {
 				res = res == null ? fd.getFile() : res + fd.getFile();
+			}
 			return res;
 		}
 
 		@Override
-		public void rFlushConsole(final Rengine re) {
-		}
+		public void rFlushConsole(final Rengine re) {}
 
 		@Override
-		public void rLoadHistory(final Rengine re, final String filename) {
-		}
+		public void rLoadHistory(final Rengine re, final String filename) {}
 
 		@Override
-		public void rSaveHistory(final Rengine re, final String filename) {
-		}
+		public void rSaveHistory(final Rengine re, final String filename) {}
 
 		public long rExecJCommand(final Rengine re, final String commandId, final long argsExpr, final int options) {
 			System.out.println("rExecJCommand \"" + commandId + "\"");
 			return 0;
 		}
 
-		public void rProcessJEvents(final Rengine re) {
-		}
+		public void rProcessJEvents(final Rengine re) {}
 
 	}
 
-	private String[] args=new String[] {"--vanilla" };
+	private final String[] args = new String[] { "--vanilla" };
 	private Rengine re = null;
-	private GamaList loadedLib=null;
+	private IList<?> loadedLib = null;
 	private String env;
-	@action(name = "R_eval", args = {
-			@arg(name = "command", type = IType.STRING, optional = true, doc = @doc("R command to be evalutated")) }, doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
-					@example(" R_eval(\"data(iris)\")") }))
+
+	@action (
+			name = "R_eval",
+			args = { @arg (
+					name = "command",
+					type = IType.STRING,
+					optional = true,
+					doc = @doc ("R command to be evalutated")) },
+			doc = @doc (
+					value = "evaluate the R command",
+					returns = "value in Gama data type",
+					examples = { @example (" R_eval(\"data(iris)\")") }))
 	public Object primREval(final IScope scope) throws GamaRuntimeException {
 		// re = new Rengine(args, false, new TextConsole());
-	
 
+		final String cmd[] =
+				((String) scope.getArg("command", IType.STRING)).split(System.getProperty("line.separator"));
+		int i = 0;
+		for (i = 0; i < cmd.length; i++) {
+			if (!cmd[i].equals("\r\n")) {
+				Reval(scope, cmd[i].trim());
 
-		final String cmd[]=((String) scope.getArg("command", IType.STRING)).split(System.getProperty("line.separator"));
-		int i=0;
-		for(i=0; i<cmd.length; i++){
-			if(!cmd[i].equals("\r\n")) {				
-				Reval(scope,cmd[i].trim());
-				
-//				System.out.println(cmd[i].trim()+" "+xx);
+				// System.out.println(cmd[i].trim()+" "+xx);
 			}
 		}
-		
-		REXP x =Reval(scope,cmd[i-1].trim());
-//		System.out.println(" ");
-//		System.out.println(x);
-//		System.out.println("type "+x.getType());
-//		System.out.println("rtype "+x.rtype);
-//		System.out.println("contentclass"+x.getContent().getClass());
-//		System.out.println("xp "+x.xp);
+
+		final REXP x = Reval(scope, cmd[i - 1].trim());
+		// System.out.println(" ");
+		// System.out.println(x);
+		// System.out.println("type "+x.getType());
+		// System.out.println("rtype "+x.rtype);
+		// System.out.println("contentclass"+x.getContent().getClass());
+		// System.out.println("xp "+x.xp);
 		return dataConvert_R2G(x);
 	}
 
-	
-	@action(name = "startR", doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
-					@example("startR") }))
-	
+	@action (
+			name = "startR",
+			doc = @doc (
+					value = "evaluate the R command",
+					returns = "value in Gama data type",
+					examples = { @example ("startR") }))
+
 	public String startR(final IScope scope) {
 		initEnv(scope);
 
@@ -165,11 +174,11 @@ public class RSkill extends Skill {
 			re = new Rengine(args, false, new TextConsole());
 
 			if (loadedLib == null) {
-				loadedLib = (GamaList) dataConvert_R2G(re.eval("search()"));
+				loadedLib = (IList<?>) dataConvert_R2G(re.eval("search()"));
 			}
 		} else {
 			scope.getSimulation().postDisposeAction(scope1 -> {
-				GamaList l = (GamaList) dataConvert_R2G(re.eval("search()"));
+				final IList<?> l = (IList<?>) dataConvert_R2G(re.eval("search()"));
 				for (int i = 0; i < l.size(); i++) {
 					if (((String) l.get(i)).contains("package:") && loadedLib != null
 							&& !loadedLib.contains(l.get(i))) {
@@ -200,12 +209,10 @@ public class RSkill extends Skill {
 					value = "to_R_data(people)",
 					isExecutable = false),
 			see = { "R_eval" })
-	public static Object toRData(final IScope scope,final Object o) {
+	public static Object toRData(final IScope scope, final Object o) {
 		return dataConvert_G2R(o);
 	}
-	
-	
-	
+
 	@operator (
 			value = "to_R_dataframe",
 			content_type = IType.CONTAINER,
@@ -220,219 +227,214 @@ public class RSkill extends Skill {
 					value = "to_R_dataframe(people)",
 					isExecutable = false),
 			see = { "R_eval" })
-	public static String toRDataFrame(final IScope scope,final ISpecies species) {
+	public static String toRDataFrame(final IScope scope, final ISpecies species) {
 
-		List<String> names = new ArrayList(species.getAttributeNames(scope));
+		final List<String> names = new ArrayList<>(species.getAttributeNames(scope));
 		names.remove("host");
 		names.remove("peers");
 		names.remove("shape");
 		Collections.sort(names);
-//		for (final String name : names) {
-//			System.out.println(name);
-//		}
-		IList<? extends IAgent> a = species.getAgents(scope).listValue(scope, Types.AGENT, false);
-		List<List> values=new ArrayList();
-		for(IAgent aa:a) {			
-			int i=0;
+		// for (final String name : names) {
+		// System.out.println(name);
+		// }
+		final IList<? extends IAgent> a = species.getAgents(scope).listValue(scope, Types.AGENT, false);
+		final List<List> values = new ArrayList<>();
+		for (final IAgent aa : a) {
+			int i = 0;
 			for (final String name : names) {
-				Object v=aa.getDirectVarValue(scope, name);
-				List vl=null;
-				if(values.size()>i) {					
-					vl=values.get(i);
+				final Object v = aa.getDirectVarValue(scope, name);
+				List<Object> vl = null;
+				if (values.size() > i) {
+					vl = values.get(i);
 				}
-				if(vl==null) {
-					vl=new ArrayList<>();
+				if (vl == null) {
+					vl = new ArrayList<>();
 					vl.add(name);
 					values.add(vl);
 				}
 				vl.add(v);
-//				System.out.println(v.getClass());
+				// System.out.println(v.getClass());
 				i++;
 			}
 		}
-		
-		String df="data.frame(";
-		for(List v:values) {
-			df=df+v.get(0)+"=c(";
+
+		String df = "data.frame(";
+		for (final List<?> v : values) {
+			df = df + v.get(0) + "=c(";
 			v.remove(0);
-			for(Object o:v) {
-				df+=""+dataConvert_G2R(o)+",";
-//				System.out.print(o+"           "+dataConvert_G2R(o));
+			for (final Object o : v) {
+				df += "" + dataConvert_G2R(o) + ",";
+				// System.out.print(o+" "+dataConvert_G2R(o));
 			}
-			if(v.size()>0)			
-				df=df.substring(0, df.length()-1);
-			df+="),";
-//			System.out.println("");
+			if (v.size() > 0) {
+				df = df.substring(0, df.length() - 1);
+			}
+			df += "),";
+			// System.out.println("");
 		}
-		if(values.size()>0)
-			df=df.substring(0, df.length()-1);
-		df+=")";
-//		System.out.println(df);
-		
+		if (values.size() > 0) {
+			df = df.substring(0, df.length() - 1);
+		}
+		df += ")";
+		// System.out.println(df);
+
 		return df;
 	}
 
-	public static Object dataConvert_G2R(Object o) {
-		Object res="\""+o.toString()+"\"";
-		if(o instanceof Integer || o instanceof Double) {
+	public static Object dataConvert_G2R(final Object o) {
+		Object res = "\"" + o.toString() + "\"";
+		if (o instanceof Integer || o instanceof Double) {
 			res = o.toString();
 		}
-		if(o instanceof Boolean) {
+		if (o instanceof Boolean) {
 			res = (Boolean) o ? "TRUE" : "FALSE";
 		}
-		if(o instanceof GamaColor) {
-			res="\""+((GamaColor)o).stringValue(null)+"\"";
+		if (o instanceof GamaColor) {
+			res = "\"" + ((GamaColor) o).stringValue(null) + "\"";
 		}
-		if(o instanceof GamaImageFile) {
-			res="\""+((GamaImageFile)o).getPath(null)+"\"";
+		if (o instanceof GamaImageFile) {
+			res = "\"" + ((GamaImageFile) o).getPath(null) + "\"";
 		}
-		
-//		if(o instanceof IAgent) {
-//			res="\""+o+"\"";
-//		}
-//		if(o instanceof String) {
-//			res="\""+o+"\"";
-//		}
-		if(o instanceof GamaPoint) {
-			res="\""+((GamaPoint)o).x+","+((GamaPoint)o).y+"\"";
+
+		// if(o instanceof IAgent) {
+		// res="\""+o+"\"";
+		// }
+		// if(o instanceof String) {
+		// res="\""+o+"\"";
+		// }
+		if (o instanceof GamaPoint) {
+			res = "\"" + ((GamaPoint) o).x + "," + ((GamaPoint) o).y + "\"";
 		}
-		
-		if(o instanceof GamaShape) {
-			res="\""+((GamaShape)o).getLocation().x+","+((GamaShape)o).getLocation().y+"\"";
+
+		if (o instanceof GamaShape) {
+			res = "\"" + ((GamaShape) o).getLocation().x + "," + ((GamaShape) o).getLocation().y + "\"";
 		}
-		
-		if(o instanceof GamaList) {
-			res="c(";
-			for(Object obj:((GamaList)o)) {
-				res+=""+(obj)+",";
+
+		if (o instanceof IList) {
+			res = "c(";
+			for (final Object obj : (IList<?>) o) {
+				res += "" + obj + ",";
 			}
-			if(((String)res).length()>2) {				
-				res=((String)res).substring(0, ((String)res).length()-1);
-				res+=")";
-			}else {
-				res="\"\"";
+			if (((String) res).length() > 2) {
+				res = ((String) res).substring(0, ((String) res).length() - 1);
+				res += ")";
+			} else {
+				res = "\"\"";
 			}
 		}
 		return res;
 	}
-	
+
 	public void initEnv(final IScope scope) {
 		env = System.getProperty("java.library.path");
-		if(!env.contains("jri")) {			
-			String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "").replace("libjri.so", "").replace("jri.dll", "");
-			if(System.getProperty("os.name").startsWith("Windows")) {				
-				System.setProperty("java.library.path", RPath+ ";" + env);
-			}else {
-				System.setProperty("java.library.path", RPath+ ":" + env);
+		if (!env.contains("jri")) {
+			final String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "")
+					.replace("libjri.so", "").replace("jri.dll", "");
+			if (System.getProperty("os.name").startsWith("Windows")) {
+				System.setProperty("java.library.path", RPath + ";" + env);
+			} else {
+				System.setProperty("java.library.path", RPath + ":" + env);
 			}
 			try {
-				java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField( "sys_paths" );
-				fieldSysPath.setAccessible( true );
-				fieldSysPath.set( null, null );
-				
-			}catch(Exception ex) {
-				scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
+				final java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
+				fieldSysPath.setAccessible(true);
+				fieldSysPath.set(null, null);
+
+			} catch (final Exception ex) {
+				scope.getGui().getConsole().informConsole(ex.getMessage(), null);
 				ex.printStackTrace();
 			}
-//			System.out.println(System.getProperty("java.library.path"));
+			// System.out.println(System.getProperty("java.library.path"));
 		}
 		System.loadLibrary("jri");
-		
-		if(System.getenv("R_HOME")==null) {
-            throw GamaRuntimeException.error("The R_HOME environment variable is not set. R cannot be run.", scope);			
+
+		if (System.getenv("R_HOME") == null) {
+			throw GamaRuntimeException.error("The R_HOME environment variable is not set. R cannot be run.", scope);
 		}
 	}
+
 	public REXP Reval(final IScope scope, final String cmd) {
-		try {			
-			re=Rengine.getMainEngine();
-			if(re==null) {			
-				return null;
-			}
-		}catch(Exception ex) {
+		try {
+			re = Rengine.getMainEngine();
+			if (re == null) { return null; }
+		} catch (final Exception ex) {
 			throw GamaRuntimeException.error("R cannot be found ...", scope);
 		}
-		
-
-
 
 		return re.eval(cmd);
-		
+
 	}
-	
-	
-	public Object dataConvert_R2G(Object o) {
+
+	public Object dataConvert_R2G(final Object o) {
 		REXP x;
-		if(o instanceof REXP) {
-			x=(REXP)o;
-		}else {
+		if (o instanceof REXP) {
+			x = (REXP) o;
+		} else {
 			return o;
 		}
-		
-		
-		if(x.getType()==REXP.XT_ARRAY_STR) {
-			String[] s=x.asStringArray();
 
-			GamaList a=(GamaList) GamaListFactory.create();
-			for(int i=0; i<s.length;i++) {
-				a.add(dataConvert_R2G(s[i]));
+		if (x.getType() == REXP.XT_ARRAY_STR) {
+			final String[] s = x.asStringArray();
+
+			final IList<Object> a = GamaListFactory.create();
+			for (final String element : s) {
+				a.add(dataConvert_R2G(element));
 			}
 			return a;
 		}
-		
-		if(x.getType()==REXP.DOTSXP) {
-			RList s=x.asList();
 
-			GamaList a=(GamaList) GamaListFactory.create();
-			for(int i=0; i<s.keys().length;i++) {
+		if (x.getType() == REXP.DOTSXP) {
+			final RList s = x.asList();
+
+			final IList<Object> a = GamaListFactory.create();
+			for (int i = 0; i < s.keys().length; i++) {
 				a.add(dataConvert_R2G(s.at(0)));
 			}
 			return a;
 		}
-		
-		if(x.getType()==REXP.XT_ARRAY_BOOL_INT) {
-			int[] s=x.asIntArray();
 
-			GamaList a=(GamaList) GamaListFactory.create();
-			for(int i=0; i<s.length;i++) {
-				a.add(s[i]==0?false:true);
+		if (x.getType() == REXP.XT_ARRAY_BOOL_INT) {
+			final int[] s = x.asIntArray();
+
+			final IList<Object> a = GamaListFactory.create();
+			for (final int element : s) {
+				a.add(element == 0 ? false : true);
 			}
 			return a;
 		}
-		if(x.getType()==REXP.XT_ARRAY_DOUBLE) {
-			double[] s=x.asDoubleArray();
+		if (x.getType() == REXP.XT_ARRAY_DOUBLE) {
+			final double[] s = x.asDoubleArray();
 
-			GamaList a=(GamaList) GamaListFactory.create();
-			for(int i=0; i<s.length;i++) {
-				a.add(s[i]);
-			}
-			return a;
-		}
-
-		if(x.getType()==REXP.XT_ARRAY_INT) {
-			int[] s=x.asIntArray();
-
-			GamaList a=(GamaList) GamaListFactory.create();
-			for(int i=0; i<s.length;i++) {
-				a.add(s[i]);
+			final IList<Object> a = GamaListFactory.create();
+			for (final double element : s) {
+				a.add(element);
 			}
 			return a;
 		}
 
-		if(x.getType()==REXP.XT_STR) {
-			return (String)x.getContent();
+		if (x.getType() == REXP.XT_ARRAY_INT) {
+			final int[] s = x.asIntArray();
+
+			final IList<Object> a = GamaListFactory.create();
+			for (final int element : s) {
+				a.add(element);
+			}
+			return a;
 		}
-		if(x.getType()==REXP.XT_FACTOR) {
-			RFactor f=x.asFactor();
-			GamaList a=(GamaList) GamaListFactory.create();
-			for(int i=0; i<f.size(); i++) {
+
+		if (x.getType() == REXP.XT_STR) { return x.getContent(); }
+		if (x.getType() == REXP.XT_FACTOR) {
+			final RFactor f = x.asFactor();
+			final IList<Object> a = GamaListFactory.create();
+			for (int i = 0; i < f.size(); i++) {
 				a.add(dataConvert_R2G(f.at(i)));
 			}
 			return a;
 		}
-		if(x.getType()==REXP.XT_VECTOR) {
-			RVector f=x.asVector();
-			GamaList a=(GamaList) GamaListFactory.create();
-			for(int i=0; i<f.size(); i++) {
+		if (x.getType() == REXP.XT_VECTOR) {
+			final RVector f = x.asVector();
+			final IList<Object> a = GamaListFactory.create();
+			for (int i = 0; i < f.size(); i++) {
 				a.add(dataConvert_R2G(f.at(i)));
 			}
 			return a;

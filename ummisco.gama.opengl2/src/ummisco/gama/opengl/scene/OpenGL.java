@@ -8,14 +8,6 @@ import static msi.gama.common.geometry.GeometryUtils.applyToInnerGeometries;
 import static msi.gama.common.geometry.GeometryUtils.getContourCoordinates;
 import static msi.gama.common.geometry.GeometryUtils.getYNegatedCoordinates;
 import static msi.gama.common.geometry.GeometryUtils.iterateOverTriangles;
-import static msi.gama.metamodel.shape.IShape.Type.CIRCLE;
-import static msi.gama.metamodel.shape.IShape.Type.CONE;
-import static msi.gama.metamodel.shape.IShape.Type.CUBE;
-import static msi.gama.metamodel.shape.IShape.Type.CYLINDER;
-import static msi.gama.metamodel.shape.IShape.Type.POINT;
-import static msi.gama.metamodel.shape.IShape.Type.PYRAMID;
-import static msi.gama.metamodel.shape.IShape.Type.SPHERE;
-import static msi.gama.metamodel.shape.IShape.Type.SQUARE;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -37,8 +29,8 @@ import com.google.common.cache.LoadingCache;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GL2GL3;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.fixedfunc.GLLightingFunc;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
@@ -52,7 +44,6 @@ import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import com.vividsolutions.jts.geom.Polygon;
 
-import jogamp.opengl.glu.GLUquadricImpl;
 import jogamp.opengl.glu.tessellator.GLUtessellatorImpl;
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.geometry.ICoordinates;
@@ -78,7 +69,7 @@ import ummisco.gama.opengl.TextRenderersCache;
  * commands sent to opengl to either record them and ouput VBOs or send them immediately (in immediate mode). Only the
  * immediate mode is implemented now. This class also manages the different caches (textures, geometries, envelopes,
  * text renderers)
- * 
+ *
  * @author drogoul
  *
  */
@@ -115,7 +106,7 @@ public class OpenGL {
 	private final Cache<String, Texture> staticTextures =
 			CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.SECONDS).build();
 	final List<String> texturesToProcess = new CopyOnWriteArrayList<>();
-	private final Envelope3D textureEnvelope = new Envelope3D();
+	private final Envelope3D textureEnvelope = Envelope3D.create();
 	private final Rotation3D currentTextureRotation = Rotation3D.identity();
 	private boolean textured;
 	// private final int currentTexture = NO_TEXTURE;
@@ -134,7 +125,7 @@ public class OpenGL {
 	protected final TextRenderersCache textRendererCache = new TextRenderersCache();
 
 	// Geometries
-//	protected final GeometryCache geometryCache;
+	// protected final GeometryCache geometryCache;
 	protected boolean isWireframe;
 	final GLUtessellatorImpl tobj = (GLUtessellatorImpl) GLU.gluNewTess();
 	final VertexVisitor glTesselatorDrawer;
@@ -150,8 +141,8 @@ public class OpenGL {
 	private double currentZIncrement, currentZTranslation, maxZ, savedZTranslation;
 	private volatile boolean ZTranslationSuspended;
 	private final boolean useJTSTriangulation = !GamaPreferences.Displays.OPENGL_TRIANGULATOR.getValue();
-	private final Rotation3D tempRotation = Rotation3D.identity();
-	private GLUquadricImpl quadric;
+	// private final Rotation3D tempRotation = Rotation3D.identity();
+	// private GLUquadricImpl quadric;
 	private int originalViewHeight;
 	private int originalViewWidth;
 
@@ -161,10 +152,10 @@ public class OpenGL {
 		worldX = renderer.getEnvWidth();
 		worldY = renderer.getEnvHeight();
 		pickingState = renderer.getPickingState();
-//		if (renderer instanceof JOGLRenderer)
-//			geometryCache = new GeometryCache((JOGLRenderer) renderer);
-//		else
-//			geometryCache = null;
+		// if (renderer instanceof JOGLRenderer)
+		// geometryCache = new GeometryCache((JOGLRenderer) renderer);
+		// else
+		// geometryCache = null;
 		volatileTextures = CacheBuilder.newBuilder().build(new CacheLoader<BufferedImage, Texture>() {
 
 			@Override
@@ -203,8 +194,8 @@ public class OpenGL {
 
 	public void dispose() {
 		textRendererCache.dispose();
-//		if (geometryCache != null)
-//			geometryCache.dispose(gl);
+		// if (geometryCache != null)
+		// geometryCache.dispose(gl);
 		volatileTextures.invalidateAll();
 		staticTextures.asMap().forEach((s, t) -> {
 			t.destroy(gl);
@@ -229,8 +220,9 @@ public class OpenGL {
 
 	public void setViewWidth(final int width) {
 		viewWidth = width;
-		if (originalViewWidth == 0)
+		if (originalViewWidth == 0) {
 			originalViewWidth = width;
+		}
 	}
 
 	public int getViewWidth() {
@@ -243,8 +235,9 @@ public class OpenGL {
 
 	public void setViewHeight(final int width) {
 		viewHeight = width;
-		if (originalViewHeight == 0)
+		if (originalViewHeight == 0) {
 			originalViewHeight = width;
+		}
 	}
 
 	public int getViewHeight() {
@@ -269,8 +262,9 @@ public class OpenGL {
 	 * translations are cumulative
 	 */
 	public void translateByZIncrement() {
-		if (!ZTranslationSuspended)
+		if (!ZTranslationSuspended) {
 			currentZTranslation += currentZIncrement;
+		}
 	}
 
 	public void suspendZTranslation() {
@@ -286,7 +280,7 @@ public class OpenGL {
 
 	/**
 	 * Returns the highest z-value outputted to GL since the scene has begun to be drawn
-	 * 
+	 *
 	 * @return
 	 */
 	public double getMaxZ() {
@@ -384,7 +378,7 @@ public class OpenGL {
 	/**
 	 * Draws an arbitrary shape using a set of vertices as input, computing the normal if necessary and drawing the
 	 * contour if a border is present
-	 * 
+	 *
 	 * @param yNegatedVertices
 	 *            the set of vertices to draw
 	 * @param number
@@ -401,8 +395,9 @@ public class OpenGL {
 	public void drawSimpleShape(final ICoordinates yNegatedVertices, final int number, final boolean solid,
 			final boolean clockwise, final boolean computeNormal, final Color border) {
 		if (solid) {
-			if (computeNormal)
+			if (computeNormal) {
 				setNormal(yNegatedVertices, clockwise);
+			}
 			final int style = number == 4 ? GL3.GL_QUADS : number == -1 ? GL3.GL_TRIANGLE_FAN : GL3.GL_TRIANGLES;
 			drawVertices(style, yNegatedVertices, number, clockwise);
 		}
@@ -411,7 +406,7 @@ public class OpenGL {
 
 	/**
 	 * Use whatever triangulator is available (JTS or GLU) to draw a polygon
-	 * 
+	 *
 	 * @param p
 	 * @param yNegatedVertices
 	 * @param clockwise
@@ -440,8 +435,7 @@ public class OpenGL {
 	}
 
 	public void drawClosedLine(final ICoordinates yNegatedVertices, final Color color, final int number) {
-		if (color == null)
-			return;
+		if (color == null) { return; }
 		final Color previous = swapCurrentColor(color);
 		drawClosedLine(yNegatedVertices, number);
 		setCurrentColor(previous);
@@ -455,15 +449,16 @@ public class OpenGL {
 
 	/**
 	 * Outputs a single vertex to OpenGL, applying the z-translation to it and computing the maximum z outputted so far
-	 * 
+	 *
 	 * @param x
 	 * @param y
 	 * @param z
 	 */
 	private void outputVertex(final double x, final double y, final double z) {
 		final double realZ = z * currentScale.z;
-		if (maxZ < realZ)
+		if (maxZ < realZ) {
 			maxZ = realZ;
+		}
 		((GL2) gl).glVertex3d(x, y, z + currentZTranslation);
 	}
 
@@ -477,10 +472,12 @@ public class OpenGL {
 	}
 
 	public void drawVertex(final GamaPoint coords, final GamaPoint normal, final GamaPoint tex) {
-		if (normal != null)
+		if (normal != null) {
 			outputNormal(normal.x, normal.y, normal.z);
-		if (tex != null)
+		}
+		if (tex != null) {
 			((GL2) gl).glTexCoord3d(tex.x, tex.y, tex.z);
+		}
 		outputVertex(coords.x, coords.y, coords.z);
 	}
 
@@ -505,7 +502,7 @@ public class OpenGL {
 	/**
 	 * Draw the vertices using the style provided and uses the double[] parameter to determine the texture coordinates
 	 * associated with each vertex
-	 * 
+	 *
 	 * @param glQuads
 	 * @param yNegatedVertices
 	 * @param i
@@ -525,7 +522,7 @@ public class OpenGL {
 	/**
 	 * Draw the vertices using the style provided (e.g. GL_QUADS, GL_LINE), the color provided (which will be reverted
 	 * as soon as the draw has finished), a given number of vertices in this sequence, in the clockwise or CCW direction
-	 * 
+	 *
 	 * @param style
 	 * @param color
 	 * @param yNegatedVertices
@@ -542,7 +539,7 @@ public class OpenGL {
 	/**
 	 * Replaces the current color by the parameter, sets the alpha of the parameter to be the one of the current color,
 	 * and returns the ex-current color
-	 * 
+	 *
 	 * @param color
 	 *            a Color
 	 * @return the previous current color
@@ -623,7 +620,7 @@ public class OpenGL {
 	/**
 	 * Sets the id of the textures to enable. If the first is equal to NO_TEXTURE, all textures are disabled. If the
 	 * second is equal to NO_TEXTURE, then the first one is also bound to the second unit.
-	 * 
+	 *
 	 * @param t
 	 *            the id of the texture to enable. Integer.MAX_VALUE means disabling textures
 	 */
@@ -642,15 +639,13 @@ public class OpenGL {
 	}
 
 	public void enablePrimaryTexture() {
-		if (primaryTexture == NO_TEXTURE)
-			return;
+		if (primaryTexture == NO_TEXTURE) { return; }
 		bindTexture(primaryTexture);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
 
 	public void enableAlternateTexture() {
-		if (alternateTexture == NO_TEXTURE)
-			return;
+		if (alternateTexture == NO_TEXTURE) { return; }
 		bindTexture(alternateTexture);
 		gl.glEnable(GL.GL_TEXTURE_2D);
 	}
@@ -677,8 +672,9 @@ public class OpenGL {
 	}
 
 	private void initializeStaticTexture(final File file) {
-		if (!texturesToProcess.contains(file.getAbsolutePath()))
+		if (!texturesToProcess.contains(file.getAbsolutePath())) {
 			texturesToProcess.add(file.getAbsolutePath());
+		}
 	}
 
 	public void processUnloadedTextures() {
@@ -702,12 +698,13 @@ public class OpenGL {
 			final BufferedImage image = ImageUtils.getInstance().getImageFromFile(file, useCache, useCache);
 			texture = getTexture(image);
 
-		} else
+		} else {
 			try {
 				texture = staticTextures.get(file.getAbsolutePath(), () -> buildTexture(gl, file));
 			} catch (final ExecutionException e) {
 				e.printStackTrace();
 			}
+		}
 		return texture;
 	}
 
@@ -744,7 +741,7 @@ public class OpenGL {
 			if (!IsPowerOfTwo(image.getWidth()) || !IsPowerOfTwo(image.getHeight())) {
 				final int width = getClosestPow(image.getWidth());
 				final int height = getClosestPow(image.getHeight());
-				corrected = ImageUtils.createCompatibleImage(width, height,true);
+				corrected = ImageUtils.createCompatibleImage(width, height, true);
 				final Graphics2D g2 = corrected.createGraphics();
 				g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 						RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
@@ -770,18 +767,18 @@ public class OpenGL {
 	// GEOMETRIES
 
 	public void cacheGeometry(final ResourceObject object) {
-//		if (geometryCache != null)
-//			geometryCache.saveGeometryToProcess(object);
+		// if (geometryCache != null)
+		// geometryCache.saveGeometryToProcess(object);
 	}
 
 	public void processUnloadedGeometries() {
-//		if (geometryCache != null)
-//			geometryCache.processUnloadedGeometries(this);
+		// if (geometryCache != null)
+		// geometryCache.processUnloadedGeometries(this);
 	}
 
 	public Envelope3D getEnvelopeFor(final GamaGeometryFile file) {
-//		if (geometryCache != null)
-//			return geometryCache.getEnvelope(file);
+		// if (geometryCache != null)
+		// return geometryCache.getEnvelope(file);
 		return null;
 	}
 
@@ -789,7 +786,7 @@ public class OpenGL {
 	/**
 	 * Draws one string in raster at the given coords and with the given font. Enters and exits raster mode before and
 	 * after drawing the string
-	 * 
+	 *
 	 * @param seq
 	 *            the string to draw
 	 * @param font
@@ -798,8 +795,9 @@ public class OpenGL {
 	 *            the {x, y, z} coordinates
 	 */
 	public void rasterText(final String s, final int font, final double x, final double y, final double z) {
-		if (!inRasterTextMode)
+		if (!inRasterTextMode) {
 			beginRasterTextMode();
+		}
 		((GL2) gl).glRasterPos3d(x, y, z);
 		glut.glutBitmapString(font, s);
 		exitRasterTextMode();
@@ -808,7 +806,7 @@ public class OpenGL {
 	/**
 	 * Draws a sequence of strings at the given coords (where s.length = 3 * coords.length). Enters and exits raster
 	 * mode before and after drawing the sequence
-	 * 
+	 *
 	 * @param seq
 	 *            the sequence of strings
 	 * @param font
@@ -817,8 +815,9 @@ public class OpenGL {
 	 *            the sequence of {x, y, z} coordinates
 	 */
 	public void rasterText(final String[] seq, final int font, final double[] coords) {
-		if (!inRasterTextMode)
+		if (!inRasterTextMode) {
 			beginRasterTextMode();
+		}
 		for (int i = 0; i < seq.length; i++) {
 			((GL2) gl).glRasterPos3d(coords[i * 3], coords[i * 3 + 1], coords[i * 3 + 2] + currentZTranslation);
 			glut.glutBitmapString(font, seq[i]);
@@ -842,7 +841,7 @@ public class OpenGL {
 
 	/**
 	 * Draws a string in perspective in the current color, with the given font, at the given position
-	 * 
+	 *
 	 * @param string
 	 *            the string to draw
 	 * @param font
@@ -858,8 +857,9 @@ public class OpenGL {
 		if (r == null) { return; }
 		r.setUseVertexArrays(false);
 
-		if (getCurrentColor() != null)
+		if (getCurrentColor() != null) {
 			r.setColor(getCurrentColor());
+		}
 		final float scale = 1f / (float) (viewHeight / getWorldHeight());
 		r.begin3DRendering();
 		r.draw3D(string, (float) x, (float) y, (float) (z + currentZTranslation), scale);
@@ -873,8 +873,9 @@ public class OpenGL {
 				textRendererCache.get(font.getName(), font.getSize() * (int) layerScalingFactor, font.getStyle());
 		if (r == null) { return; }
 		r.setUseVertexArrays(false);
-		if (getCurrentColor() != null)
+		if (getCurrentColor() != null) {
 			r.setColor(getCurrentColor());
+		}
 		final float scale = 1f / (float) (viewHeight / getWorldHeight());
 		r.beginRendering(1, 1);
 		r.draw3D(string, (float) x, (float) y, (float) z, scale);
@@ -960,104 +961,104 @@ public class OpenGL {
 	}
 
 	public void drawCachedGeometry(final GamaGeometryFile file, final Color border) {
-//		if (geometryCache == null)
-//			return;
-		if (file == null)
-			return;
-//		final Integer index = geometryCache.get(this, file);
-//		if (index != null)
-//			drawList(index);
+		// if (geometryCache == null)
+		// return;
+		if (file == null) { return; }
+		// final Integer index = geometryCache.get(this, file);
+		// if (index != null)
+		// drawList(index);
 		if (border != null && !isWireframe()) {
 			final Color old = swapCurrentColor(border);
 			getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
-//			drawList(index);
+			// drawList(index);
 			setCurrentColor(old);
 			getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
 		}
 	}
 
 	public void drawCachedGeometry(final IShape.Type id, final Color border) {
-//		if (geometryCache == null)
-//			return;
-		if (id == null)
+		// if (geometryCache == null)
+		// return;
+		if (id == null) {
 			return;
-//		final BuiltInGeometry object = geometryCache.get(this, id);
-//		if (object != null) {
-//			object.draw(this);
-//			if (border != null && !isWireframe()) {
-//				final Color old = swapCurrentColor(border);
-//				getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
-//				object.draw(this);
-//				setCurrentColor(old);
-//				getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
-//			}
-//		}
+			// final BuiltInGeometry object = geometryCache.get(this, id);
+			// if (object != null) {
+			// object.draw(this);
+			// if (border != null && !isWireframe()) {
+			// final Color old = swapCurrentColor(border);
+			// getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE);
+			// object.draw(this);
+			// setCurrentColor(old);
+			// getGL().glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL);
+			// }
+			// }
+		}
 	}
 
 	public void initializeShapeCache() {
 		final int slices = GamaPreferences.Displays.DISPLAY_SLICE_NUMBER.getValue();
 		final int stacks = slices;
 		textured = true;
-//		geometryCache.put(SPHERE, BuiltInGeometry.assemble().faces(compileAsList(() -> {
-//			drawSphere(1.0, slices, stacks);
-//		})));
-//		geometryCache.put(CYLINDER, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-//			drawDisk(0d, 1d, slices, slices / 3);
-//		})).top(compileAsList(() -> {
-//			translateBy(0d, 0d, 1d);
-//			drawDisk(0d, 1d, slices, slices / 3);
-//			translateBy(0d, 0d, -1d);
-//		})).faces(compileAsList(() -> {
-//			drawCylinder(1.0d, 1.0d, 1.0d, slices, stacks);
-//		})));
-//		geometryCache.put(CONE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-//			drawDisk(0d, 1d, slices, slices / 3);
-//		})).faces(compileAsList(() -> {
-//			drawCylinder(1.0, 0.0, 1.0, slices, stacks);
-//		})));
-//		final ICoordinates baseVertices = ICoordinates.ofLength(5);
-//		final ICoordinates faceVertices = ICoordinates.ofLength(5);
-//		baseVertices.setTo(-0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0, -0.5, -0.5, 0, -0.5, 0.5, 0);
-//
-//		geometryCache.put(CUBE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-//			drawSimpleShape(baseVertices, 4, true, false, true, null);
-//		})).top(compileAsList(() -> {
-//			baseVertices.translateBy(0, 0, 1);
-//			drawSimpleShape(baseVertices, 4, true, true, true, null);
-//			baseVertices.translateBy(0, 0, -1);
-//		})).faces(compileAsList(() -> {
-//			baseVertices.visit((pj, pk) -> {
-//				faceVertices.setTo(pk.x, pk.y, pk.z, pk.x, pk.y, pk.z + 1, pj.x, pj.y, pj.z + 1, pj.x, pj.y, pj.z, pk.x,
-//						pk.y, pk.z);
-//				drawSimpleShape(faceVertices, 4, true, true, true, null);
-//			});
-//		})));
-//		geometryCache.put(POINT, BuiltInGeometry.assemble().faces(compileAsList(() -> {
-//			drawSphere(1.0, 5, 5);
-//		})));
-//
-//		geometryCache.put(IShape.Type.ROUNDED, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-//			drawRoundedRectangle();
-//		})));
-//		geometryCache.put(SQUARE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-//			drawSimpleShape(baseVertices, 4, true, true, true, null);
-//		})));
-//		geometryCache.put(CIRCLE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-//			drawDisk(0.0, 1.0, slices, 1);
-//		})));
-//		final ICoordinates triangleVertices = ICoordinates.ofLength(4);
-//		final ICoordinates vertices = ICoordinates.ofLength(5);
-//		vertices.setTo(-0.5, -0.5, 0, -0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0, -0.5, -0.5, 0);
-//		geometryCache.put(PYRAMID, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
-//			drawSimpleShape(vertices, 4, true, false, true, null);
-//		})).faces(compileAsList(() -> {
-//			final GamaPoint top = new GamaPoint(0, 0, 1);
-//			vertices.visit((pj, pk) -> {
-//				triangleVertices.setTo(pj.x, pj.y, pj.z, top.x, top.y, top.z, pk.x, pk.y, pk.z, pj.x, pj.y, pj.z);
-//				drawSimpleShape(triangleVertices, 3, true, true, true, null);
-//
-//			});
-//		})));
+		// geometryCache.put(SPHERE, BuiltInGeometry.assemble().faces(compileAsList(() -> {
+		// drawSphere(1.0, slices, stacks);
+		// })));
+		// geometryCache.put(CYLINDER, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+		// drawDisk(0d, 1d, slices, slices / 3);
+		// })).top(compileAsList(() -> {
+		// translateBy(0d, 0d, 1d);
+		// drawDisk(0d, 1d, slices, slices / 3);
+		// translateBy(0d, 0d, -1d);
+		// })).faces(compileAsList(() -> {
+		// drawCylinder(1.0d, 1.0d, 1.0d, slices, stacks);
+		// })));
+		// geometryCache.put(CONE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+		// drawDisk(0d, 1d, slices, slices / 3);
+		// })).faces(compileAsList(() -> {
+		// drawCylinder(1.0, 0.0, 1.0, slices, stacks);
+		// })));
+		// final ICoordinates baseVertices = ICoordinates.ofLength(5);
+		// final ICoordinates faceVertices = ICoordinates.ofLength(5);
+		// baseVertices.setTo(-0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0, -0.5, -0.5, 0, -0.5, 0.5, 0);
+		//
+		// geometryCache.put(CUBE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+		// drawSimpleShape(baseVertices, 4, true, false, true, null);
+		// })).top(compileAsList(() -> {
+		// baseVertices.translateBy(0, 0, 1);
+		// drawSimpleShape(baseVertices, 4, true, true, true, null);
+		// baseVertices.translateBy(0, 0, -1);
+		// })).faces(compileAsList(() -> {
+		// baseVertices.visit((pj, pk) -> {
+		// faceVertices.setTo(pk.x, pk.y, pk.z, pk.x, pk.y, pk.z + 1, pj.x, pj.y, pj.z + 1, pj.x, pj.y, pj.z, pk.x,
+		// pk.y, pk.z);
+		// drawSimpleShape(faceVertices, 4, true, true, true, null);
+		// });
+		// })));
+		// geometryCache.put(POINT, BuiltInGeometry.assemble().faces(compileAsList(() -> {
+		// drawSphere(1.0, 5, 5);
+		// })));
+		//
+		// geometryCache.put(IShape.Type.ROUNDED, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+		// drawRoundedRectangle();
+		// })));
+		// geometryCache.put(SQUARE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+		// drawSimpleShape(baseVertices, 4, true, true, true, null);
+		// })));
+		// geometryCache.put(CIRCLE, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+		// drawDisk(0.0, 1.0, slices, 1);
+		// })));
+		// final ICoordinates triangleVertices = ICoordinates.ofLength(4);
+		// final ICoordinates vertices = ICoordinates.ofLength(5);
+		// vertices.setTo(-0.5, -0.5, 0, -0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, -0.5, 0, -0.5, -0.5, 0);
+		// geometryCache.put(PYRAMID, BuiltInGeometry.assemble().bottom(compileAsList(() -> {
+		// drawSimpleShape(vertices, 4, true, false, true, null);
+		// })).faces(compileAsList(() -> {
+		// final GamaPoint top = new GamaPoint(0, 0, 1);
+		// vertices.visit((pj, pk) -> {
+		// triangleVertices.setTo(pj.x, pj.y, pj.z, top.x, top.y, top.z, pk.x, pk.y, pk.z, pj.x, pj.y, pj.z);
+		// drawSimpleShape(triangleVertices, 3, true, true, true, null);
+		//
+		// });
+		// })));
 		textured = false;
 
 	}
@@ -1105,10 +1106,11 @@ public class OpenGL {
 			beginDrawing(GL2.GL_QUAD_STRIP);
 			for (s = 0; s <= slices; s++) {
 				double a;
-				if (s == slices)
+				if (s == slices) {
 					a = 0.0f;
-				else
+				} else {
 					a = s * da;
+				}
 				sa = Math.sin(a);
 				ca = Math.cos(a);
 				outputTexCoord(0.5f + sa * r2 / dtc, 0.5f + ca * r2 / dtc);

@@ -7,87 +7,6 @@
 	<artifactId>msi.gama.experimental.parent</artifactId>
 	<version>1.7.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<repositories>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-				<checksumPolicy>ignore</checksumPolicy>
-			</snapshots>
-			<releases>
-				<checksumPolicy>ignore</checksumPolicy>
-				<enabled>true</enabled>
-			</releases>
-			<id>p2Repo</id>
-			<name>p2Repo</name>
-			<url>http://51.255.46.42/updates</url>
-		</repository>
-		<repository>
-			<id>portfolio-non-maven-dependencies</id>
-			<url>http://buchen.github.io/maven-repo</url>
-		</repository>
-		<repository>
-			<id>eclipse-oxygen</id>
-			<url>http://download.eclipse.org/releases/oxygen</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>osgeo</id>
-			<name>Open Source Geospatial Foundation Repository</name>
-			<url>http://download.osgeo.org/webdav/geotools/</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<id>imageio-ext-repository</id>
-			<name>imageio-ext Repository</name>
-			<url>http://maven.geo-solutions.it/</url>
-		</repository>
-
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<id>codehaus-snapshots</id>
-			<name>codehaus-snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/codehaus-snapshots/</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<id>sourceforge-repository</id>
-			<name>sourceforge-repository</name>
-			<url>http://logicaldoc.sourceforge.net/maven/</url>
-		</repository>
-
-		<repository>
-			<id>pentaho-releases</id>
-			<url>http://repository.pentaho.org/artifactory/repo/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
 	<dependencies>
 		<dependency>
 			<groupId>msi.gama</groupId>
@@ -170,6 +89,121 @@
 			<version>1.7.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies> 
+
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>buchen-maven-repo</id>
+			<url>http://buchen.github.io/maven-repo</url>
+			<layout>default</layout>
+		</pluginRepository>
+		<!-- 
+		 -->
+		<pluginRepository>
+			<layout>p2</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>p2Repo</id>
+			<name>p2Repo</name>
+			<url>http://51.255.46.42/updates</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>orbit</id>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+
+	<repositories>
+		<repository> 
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>p2Repo</id> 
+			<url>http://51.255.46.42/updates</url>
+		</repository>
+		<repository>
+			<id>portfolio-non-maven-dependencies</id>
+			<url>http://buchen.github.io/maven-repo</url>
+		</repository>
+		<repository>
+			<id>eclipse-2019-03</id>
+			<url>http://download.eclipse.org/releases/2019-03</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>osgeo</id>
+			<name>Open Source Geospatial Foundation Repository</name>
+			<url>http://download.osgeo.org/webdav/geotools/</url>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<id>imageio-ext-repository</id>
+			<name>imageio-ext Repository</name>
+			<url>http://maven.geo-solutions.it/</url>
+		</repository>
+
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<id>codehaus-snapshots</id>
+			<name>codehaus-snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/codehaus-snapshots/</url>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<id>sourceforge-repository</id>
+			<name>sourceforge-repository</name>
+			<url>http://logicaldoc.sourceforge.net/maven/</url>
+		</repository>
+		<!-- 
+		
+		<repository>
+			<id>pentaho-releases</id>
+			<url>http://repository.pentaho.org/artifactory/repo/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		-->
+	</repositories> 
 <modules>
  <module>../cict.feature.netcdf</module> 
  <module>../cict.feature.VR</module> 
@@ -192,18 +226,25 @@
  <module>../simtools.gama.feature.gamanalyzer</module> 
  <module>../simtools.gamanalyzer.fr</module> 
  <module>../ummisco.gama.camisole</module> 
+ <module>../ummisco.gama.extension.hecras</module> 
+ <module>../ummisco.gama.extensions.matlab</module> 
  <module>../ummisco.gama.extension.unity</module> 
  <module>../ummisco.gama.feature.camisole</module> 
+ <module>../ummisco.gama.feature.gaming</module> 
  <module>../ummisco.gama.feature.gamr</module> 
  <module>../ummisco.gama.feature.markdown.documentation</module> 
+ <module>../ummisco.gama.feature.matlab</module> 
  <module>../ummisco.gama.feature.opengl2</module> 
+ <module>../ummisco.gama.feature.remote.gui</module> 
  <module>../ummisco.gama.feature.unity</module> 
  <module>../ummisco.gama.gaming</module> 
  <module>../ummisco.gama.gamr</module> 
  <module>../ummisco.gama.markdown.documentation</module> 
  <module>../ummisco.gama.opengl2</module> 
  <module>../ummisco.gama.remote.gui</module> 
+ <module>../ummisco.gaml.extensions.mike</module> 
  <module>../ummisco.gaml.extensions.rjava</module> 
+ <module>../ummisco.gaml.feature.mike</module> 
  <module>../ummisco.gaml.feature.rjava</module> 
  </modules>
  
@@ -287,9 +328,13 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-compiler-plugin</artifactId>
 				<version>0.25.0</version>
-				<configuration>
+				<configuration> 
+					<debug>false</debug>
 					<source>1.8</source>
 					<target>1.8</target>
+					<compilerArgument>-warn:+discouraged,forbidden</compilerArgument>
+					<useProjectSettings>false</useProjectSettings> 
+					<optimize>true</optimize>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -474,21 +519,25 @@
 					<resolver>p2</resolver>
 					<pomDependencies>consider</pomDependencies>
 					<environments>
+						<!--  obsolete on 1812 
 						<environment>
 							<os>linux</os>
 							<ws>gtk</ws>
 							<arch>x86</arch>
 						</environment>
+						-->
 						<environment>
 							<os>linux</os>
 							<ws>gtk</ws>
 							<arch>x86_64</arch>
 						</environment>
+						<!--  obsolete on 1812 
 						<environment>
 							<os>win32</os>
 							<ws>win32</ws>
 							<arch>x86</arch>
 						</environment>
+						-->
 						<environment>
 							<os>win32</os>
 							<ws>win32</ws>

@@ -25,6 +25,7 @@ import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IContainer;
 import msi.gama.util.IList;
+import msi.gama.util.IMap;
 import msi.gama.util.path.IPath;
 import msi.gaml.operators.Containers;
 import msi.gaml.operators.Spatial;
@@ -269,7 +270,7 @@ public class PedestrianEscapeSkill extends PedestrianSkill {
 		if (!targets.lastValue(scope).equals(target)) targets.add(target.getLocation().toGamaPoint());
 		targets = Containers.remove_duplicates(scope, targets);
 		if (targets == null || targets.isEmpty()) return thePath;
-		GamaMap roadTarget = GamaMapFactory.create();
+		IMap roadTarget = GamaMapFactory.create();
 		IList<IShape> edges = thePath.getEdgeList();
 		edges = (IList<IShape>) edges.reverse(scope);
 		for(GamaPoint tar : targets) {

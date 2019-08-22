@@ -33,7 +33,7 @@ public final class MQTTConnector {
 
 	public MQTTConnector(final String server, final String userName, final String password) throws MqttException {
 		this.connectToServer(server, null, userName, password);
-		receivedData = new HashMap<String, Object>();
+		receivedData = new HashMap<>();
 	}
 
 	class Callback implements MqttCallback {
@@ -72,24 +72,24 @@ public final class MQTTConnector {
 		return dts;
 	}
 
-	private final void storeData(final String topic, final String message) {
+	private void storeData(final String topic, final String message) {
 		final XStream dataStreamer = new XStream(new DomDriver());
 		final Object data = dataStreamer.fromXML(message);
 		storeDataS(topic, data);
 	}
 
-	public final void releaseConnection() throws MqttException {
+	public void releaseConnection() throws MqttException {
 		sendConnection.disconnect();
 		sendConnection = null;
 	}
 
-	public final void sendMessage(final String dest, final Object data) throws MqttException {
+	public void sendMessage(final String dest, final Object data) throws MqttException {
 		final XStream dataStreamer = new XStream(new DomDriver());
 		final String dataS = dataStreamer.toXML(data);
 		this.sendFormatedMessage(dest, dataS);
 	}
 
-	private final void sendFormatedMessage(final String receiver, final String content) throws MqttException {
+	private void sendFormatedMessage(final String receiver, final String content) throws MqttException {
 		final MqttMessage mm = new MqttMessage(content.getBytes());
 		sendConnection.publish(receiver, mm);
 	}
@@ -102,12 +102,13 @@ public final class MQTTConnector {
 		sendConnection.unsubscribe(boxName);
 	}
 
-	protected void connectToServer(String server, String port, String userName, String password) throws MqttException {
+	protected void connectToServer(final String originalServer, final String originalPort,
+			final String originalUserName, final String originalPassword) throws MqttException {
 		if (sendConnection == null) {
-			server = server == null ? DEFAULT_HOST : server;
-			port = port == null ? DEFAULT_PORT : port;
-			userName = userName == null ? DEFAULT_USER : userName;
-			password = password == null ? DEFAULT_PASSWORD : userName;
+			final String server = originalServer == null ? DEFAULT_HOST : originalServer;
+			final String port = originalPort == null ? DEFAULT_PORT : originalPort;
+			final String userName = originalUserName == null ? DEFAULT_USER : originalUserName;
+			final String password = originalPassword == null ? DEFAULT_PASSWORD : originalPassword;
 			final String localName = DEFAULT_LOCAL_NAME + server;
 			sendConnection = new MqttClient("tcp://" + server + ":" + port, localName, new MemoryPersistence());
 			final MqttConnectOptions connOpts = new MqttConnectOptions();

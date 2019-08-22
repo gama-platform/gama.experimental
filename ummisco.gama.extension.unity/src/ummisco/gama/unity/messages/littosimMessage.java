@@ -6,8 +6,8 @@ import java.util.Map;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
-import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
+import msi.gama.util.IMap;
 import msi.gaml.types.Types;
 import ummisco.gama.unity.skills.IUnitySkill;
 
@@ -49,7 +49,8 @@ public class littosimMessage {
 	}
 
 	public Map<String, String> getMapMsg() {
-		GamaMap<String, String> msg = GamaMapFactory.create(Types.STRING, Types.LIST);
+		//GamaMap<String, String> msg = GamaMapFactory.create(Types.STRING, Types.LIST);
+		IMap<String, String> msg = GamaMapFactory.create(Types.STRING, Types.NO_TYPE);		
 		msg.put(IUnitySkill.MSG_UNREAD, "false");
 		msg.put(IUnitySkill.MSG_SENDER, sender);
 		msg.put(IUnitySkill.MSG_RECEIVERS, receivers);

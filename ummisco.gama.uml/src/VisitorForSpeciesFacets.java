@@ -1,29 +1,25 @@
 import msi.gaml.descriptions.IDescription.IFacetVisitor;
-
-import java.util.HashMap;
-
 import msi.gaml.descriptions.IExpressionDescription;
 
-public class VisitorForSpeciesFacets implements IFacetVisitor{
+public class VisitorForSpeciesFacets implements IFacetVisitor {
 
 	GamlToUMLConverter converter;
 	String species;
-	public VisitorForSpeciesFacets(GamlToUMLConverter aConverter)
-	{
+
+	public VisitorForSpeciesFacets(final GamlToUMLConverter aConverter) {
 		this.converter = aConverter;
 	}
+
 	@Override
-	public boolean visit(String name, IExpressionDescription exp) {
-		if(name.equals(IParser.GAMA_KEYWORD_PARENT))
-		{
+	public boolean process(final String name, final IExpressionDescription exp) {
+		if (name.equals(IParser.GAMA_KEYWORD_PARENT)) {
 			converter.generalizations.put(species, exp.toString());
 		}
 		return true;
 	}
-	public void setSpecies(String id)
-	{
+
+	public void setSpecies(final String id) {
 		this.species = id;
 	}
-	
-	
+
 }
