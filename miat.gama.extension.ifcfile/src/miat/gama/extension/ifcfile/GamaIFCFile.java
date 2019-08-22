@@ -60,7 +60,6 @@ import ifc2x3javatoolbox.ifc2x3tc1.IfcSpace;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcTypeObject;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcWall;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcWindow;
-import ifc2x3javatoolbox.ifc2x3tc1.IfcWindowStyle;
 import ifc4javatoolbox.ifcmodel.IfcModel;
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.geometry.GeometryUtils;
@@ -465,7 +464,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 	}
 	
 	private void getMaterial(IfcProduct p, IShape shape) {
-		GamaMap<String, Double> materials = GamaMapFactory.create();
+		GamaMap<String, Double> materials = (GamaMap<String, Double>) GamaMapFactory.create();
 		for (IfcRelAssociates ra : p.getHasAssociations_Inverse()) {
 			if (ra instanceof IfcRelAssociatesMaterial ) {
 				IfcRelAssociatesMaterial ram = (IfcRelAssociatesMaterial) ra;
@@ -491,7 +490,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 			}
 		}
 
-		shape.getAttributes().put("materials", materials);
+		shape.getOrCreateAttributes().put("materials", materials);
 	}
 
 	public IShape createSlab(final IScope scope, final IfcSlab s) {
