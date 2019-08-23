@@ -654,6 +654,8 @@ public class GamaIFCFile extends GamaGeometryFile {
 						continue;
 					}
 					final Map<String, Object> attributes = new Hashtable<>();
+					attributes.put("roof_id", r.getTag().getDecodedValue());
+					attributes.put("roof_name", r.getName().getDecodedValue());
 					for (final IfcRelDefines rd : r.getIsDefinedBy_Inverse()) {
 						if (rd instanceof IfcRelDefinesByProperties) {
 							final IfcRelDefinesByProperties rlp = (IfcRelDefinesByProperties) rd;
