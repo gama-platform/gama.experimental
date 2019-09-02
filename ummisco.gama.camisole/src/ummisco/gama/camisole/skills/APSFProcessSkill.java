@@ -2,7 +2,6 @@ package ummisco.gama.camisole.skills;
 
 import java.util.List;
 
-import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.precompiler.IConcept;
 import msi.gama.precompiler.GamlAnnotations.doc;

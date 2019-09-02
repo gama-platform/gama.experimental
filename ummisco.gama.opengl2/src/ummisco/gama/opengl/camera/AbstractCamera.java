@@ -4,7 +4,7 @@
  * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.camera;
@@ -15,7 +15,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 
 import com.jogamp.opengl.GLRunnable;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.math.FloatUtil;
 
 import msi.gama.common.geometry.Envelope3D;
@@ -64,7 +63,7 @@ public abstract class AbstractCamera implements ICamera {
 	}
 
 	private final Abstract3DRenderer renderer;
-	private final GLU glu;
+	// private final GLU glu;
 	protected static final GamaPoint UNDEFINED = new GamaPoint();
 	protected boolean initialized;
 
@@ -106,7 +105,7 @@ public abstract class AbstractCamera implements ICamera {
 		this.renderer = renderer;
 		setMousePosition(new Point(0, 0));
 		setUpVector(0.0, 1.0, 0.0);
-		glu = new GLU();
+		// glu = new GLU();
 	}
 
 	public void updateSphericalCoordinatesFromLocations() {}
@@ -156,12 +155,13 @@ public abstract class AbstractCamera implements ICamera {
 		cameraInteraction = !data.cameraInteractionDisabled();
 		updateSphericalCoordinatesFromLocations();
 		if (initialized) {
-			if (flipped)
+			if (flipped) {
 				setUpVector(-(-Math.cos(theta * Maths.toRad) * Math.cos(phi * Maths.toRad)),
 						-(-Math.sin(theta * Maths.toRad) * Math.cos(phi * Maths.toRad)), -Math.sin(phi * Maths.toRad));
-			else
+			} else {
 				setUpVector(-Math.cos(theta * Maths.toRad) * Math.cos(phi * Maths.toRad),
 						-Math.sin(theta * Maths.toRad) * Math.cos(phi * Maths.toRad), Math.sin(phi * Maths.toRad));
+			}
 			drawRotationHelper();
 		}
 
@@ -173,18 +173,18 @@ public abstract class AbstractCamera implements ICamera {
 	@Override
 	public void setPosition(final double xPos, final double yPos, final double zPos) {
 		position.setLocation(xPos, yPos, zPos);
-		getRenderer().data.setCameraPos((GamaPoint) position.clone());
+		getRenderer().data.setCameraPos(position.clone());
 	}
 
 	public void setTarget(final double xLPos, final double yLPos, final double zLPos) {
 		target.setLocation(xLPos, yLPos, zLPos);
-		getRenderer().data.setCameraLookPos((GamaPoint) target.clone());
+		getRenderer().data.setCameraLookPos(target.clone());
 	}
 
 	@Override
 	public void setUpVector(final double xPos, final double yPos, final double zPos) {
 		upVector.setLocation(xPos, yPos, zPos);
-		getRenderer().data.setCameraUpVector((GamaPoint) upVector.clone());
+		getRenderer().data.setCameraUpVector(upVector.clone());
 	}
 
 	/* -------Get commands--------- */
@@ -207,28 +207,24 @@ public abstract class AbstractCamera implements ICamera {
 	@Override
 	public void animate() {
 		/*
-		System.out.println("Position x "+position.x);
-		System.out.println("Position y "+position.y);
-		System.out.println("Position z "+position.z);
-		System.out.println("target x "+target.x);
-		System.out.println("target y "+target.y);
-		System.out.println("target z "+target.z);
-		System.out.println("upVector x "+upVector.x);
-		System.out.println("upVector y "+upVector.y);
-		System.out.println("upVector z "+upVector.z);
-		*/
-		//glu.gluLookAt(position.x, position.y, position.z, target.x, target.y, target.z, upVector.x, upVector.y,upVector.z);
-		
-		
-		
-		final float[] lPosition = new float[]{(float) position.x, (float) position.y, (float) position.z};
-		final float[] lLookAt = new float[]{(float) target.x, (float) target.y, (float) target.z};
-		final float[] lUp = new float[]{(float) upVector.x, (float) upVector.y, (float) upVector.z};
-		
+		 * System.out.println("Position x "+position.x); System.out.println("Position y "+position.y);
+		 * System.out.println("Position z "+position.z); System.out.println("target x "+target.x);
+		 * System.out.println("target y "+target.y); System.out.println("target z "+target.z);
+		 * System.out.println("upVector x "+upVector.x); System.out.println("upVector y "+upVector.y);
+		 * System.out.println("upVector z "+upVector.z);
+		 */
+		// glu.gluLookAt(position.x, position.y, position.z, target.x, target.y, target.z, upVector.x,
+		// upVector.y,upVector.z);
+
+		final float[] lPosition = new float[] { (float) position.x, (float) position.y, (float) position.z };
+		final float[] lLookAt = new float[] { (float) target.x, (float) target.y, (float) target.z };
+		final float[] lUp = new float[] { (float) upVector.x, (float) upVector.y, (float) upVector.z };
+
 		FloatUtil.makeLookAt(new float[16], 0, lPosition, 0, lLookAt, 0, lUp, 0, new float[16]);
-		
-		//FloatUtil.makeLookAt(position.x, position.y, position.z, target.x, target.y, target.z, upVector.x, upVector.y,upVector.z);
-		//FloatUtil.makeLookAt(m, m_offset, eye, eye_offset, center, center_offset, up, up_offset, mat4Tmp)
+
+		// FloatUtil.makeLookAt(position.x, position.y, position.z, target.x, target.y, target.z, upVector.x,
+		// upVector.y,upVector.z);
+		// FloatUtil.makeLookAt(m, m_offset, eye, eye_offset, center, center_offset, up, up_offset, mat4Tmp)
 	}
 
 	/*------------------ Events controls ---------------------*/
@@ -254,7 +250,7 @@ public abstract class AbstractCamera implements ICamera {
 
 	/**
 	 * Method mouseScrolled()
-	 * 
+	 *
 	 * @see org.eclipse.swt.events.MouseWheelListener#mouseScrolled(org.eclipse.swt.events.MouseEvent)
 	 */
 	@Override
@@ -274,7 +270,7 @@ public abstract class AbstractCamera implements ICamera {
 
 	/**
 	 * Method mouseMove()
-	 * 
+	 *
 	 * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
 	 */
 	@Override
@@ -298,7 +294,7 @@ public abstract class AbstractCamera implements ICamera {
 
 	/**
 	 * Method mouseEnter()
-	 * 
+	 *
 	 * @see org.eclipse.swt.events.MouseTrackListener#mouseEnter(org.eclipse.swt.events.MouseEvent)
 	 */
 	@Override
@@ -306,7 +302,7 @@ public abstract class AbstractCamera implements ICamera {
 
 	/**
 	 * Method mouseExit()
-	 * 
+	 *
 	 * @see org.eclipse.swt.events.MouseTrackListener#mouseExit(org.eclipse.swt.events.MouseEvent)
 	 */
 	@Override
@@ -314,7 +310,7 @@ public abstract class AbstractCamera implements ICamera {
 
 	/**
 	 * Method mouseHover()
-	 * 
+	 *
 	 * @see org.eclipse.swt.events.MouseTrackListener#mouseHover(org.eclipse.swt.events.MouseEvent)
 	 */
 	@Override
@@ -322,7 +318,7 @@ public abstract class AbstractCamera implements ICamera {
 
 	/**
 	 * Method mouseDoubleClick()
-	 * 
+	 *
 	 * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
 	 */
 	@Override
@@ -330,14 +326,15 @@ public abstract class AbstractCamera implements ICamera {
 		// Already taken in charge by the ZoomListener in the view
 		if (keystoneMode) {
 			final int corner = clickOnKeystone(e);
-			if (corner != -1)
+			if (corner != -1) {
 				getRenderer().getKeystone().resetCorner(corner);
+			}
 		}
 	}
 
 	/**
 	 * Method mouseDown()
-	 * 
+	 *
 	 * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
 	 */
 	@Override
@@ -354,8 +351,9 @@ public abstract class AbstractCamera implements ICamera {
 	protected GamaPoint getNormalizedCoordinates(final int x, final int y) {
 		final double xCoordNormalized = x / getRenderer().getWidth();
 		double yCoordNormalized = y / getRenderer().getHeight();
-		if (!renderer.useShader())
+		if (!renderer.useShader()) {
 			yCoordNormalized = 1 - yCoordNormalized;
+		}
 		return new GamaPoint(xCoordNormalized, yCoordNormalized);
 	}
 
@@ -395,8 +393,9 @@ public abstract class AbstractCamera implements ICamera {
 		if (e.button == 3 && !keystoneMode) {
 			if (renderer.mouseInROI(lastMousePressedPosition)) {
 				renderer.getSurface().selectionIn(renderer.getROIEnvelope());
-			} else
+			} else {
 				renderer.getPickingState().setPicking(true);
+			}
 		} else if (e.button == 2) { // mouse wheel
 			resetPivot();
 		} else {
@@ -418,7 +417,7 @@ public abstract class AbstractCamera implements ICamera {
 
 	/**
 	 * Method mouseUp()
-	 * 
+	 *
 	 * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
 	 */
 	@Override
@@ -440,8 +439,9 @@ public abstract class AbstractCamera implements ICamera {
 				finishROISelection();
 			}
 		}
-		if (e.button == 1)
+		if (e.button == 1) {
 			setMouseLeftPressed(false);
+		}
 
 	}
 
@@ -523,7 +523,7 @@ public abstract class AbstractCamera implements ICamera {
 
 	/**
 	 * Method keyPressed()
-	 * 
+	 *
 	 * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
 	 */
 	@Override
@@ -578,15 +578,17 @@ public abstract class AbstractCamera implements ICamera {
 						quickDownTurn();
 						break;
 					case 'k':
-						if (!GamaKeyBindings.ctrl(e))
+						if (!GamaKeyBindings.ctrl(e)) {
 							activateKeystoneMode();
+						}
 						break;
 					default:
 						return true;
 				}
 			} else if (e.character == 'k') {
-				if (!GamaKeyBindings.ctrl(e))
+				if (!GamaKeyBindings.ctrl(e)) {
 					activateKeystoneMode();
+				}
 				return true;
 			}
 			return true;
@@ -615,7 +617,7 @@ public abstract class AbstractCamera implements ICamera {
 
 	/**
 	 * Method keyReleased()
-	 * 
+	 *
 	 * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
 	 */
 	@Override

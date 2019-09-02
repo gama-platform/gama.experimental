@@ -1,3 +1,2 @@
-
- <feature url="features/ummisco.gama.feature.matlab_1.7.0.qualifier.jar" id="ummisco.gama.feature.matlab" version="1.7.0.qualifier"> <category name="gama.optional.participative"/> </feature> 
-
+ <feature url="features/ummisco.gama.feature.gaming_1.7.0.qualifier.jar" id="ummisco.gama.feature.gaming" version="1.7.0.qualifier"> <category name="gama.optional.participative"/> </feature> 
+ <feature url="features/ummisco.gama.feature.remote.gui_1.7.0.qualifier.jar" id="ummisco.gama.feature.remote.gui" version="1.7.0.qualifier"> <category name="gama.optional.participative"/> </feature> 

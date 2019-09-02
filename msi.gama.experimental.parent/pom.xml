@@ -226,6 +226,7 @@
  <module>../simtools.gama.feature.gamanalyzer</module> 
  <module>../simtools.gamanalyzer.fr</module> 
  <module>../ummisco.gama.camisole</module> 
+ <module>../ummisco.gama.extension.hecras</module> 
  <module>../ummisco.gama.extensions.matlab</module> 
  <module>../ummisco.gama.extension.unity</module> 
  <module>../ummisco.gama.feature.camisole</module> 

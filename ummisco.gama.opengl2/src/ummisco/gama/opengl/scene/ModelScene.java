@@ -4,7 +4,7 @@
  * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
@@ -16,13 +16,13 @@ import com.vividsolutions.jts.geom.Geometry;
 
 import msi.gama.common.interfaces.ILayer;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.util.TOrderedHashMap;
+import msi.gama.util.GamaMapFactory;
+import msi.gama.util.IMap;
 import msi.gama.util.file.GamaGeometryFile;
 import msi.gama.util.file.GamaImageFile;
 import msi.gaml.statements.draw.DrawingAttributes;
 import msi.gaml.statements.draw.FieldDrawingAttributes;
-import msi.gaml.statements.draw.FileDrawingAttributes;
-import msi.gaml.statements.draw.ShapeDrawingAttributes;
+import msi.gaml.statements.draw.DrawingAttributes;
 import ummisco.gama.opengl.Abstract3DRenderer;
 
 /**
@@ -42,7 +42,7 @@ public class ModelScene {
 	public static final String KEYSTONE_HELPER_KEY = "__keystone__0";
 	public static final String LIGHTS_KEY = "__lights__0";
 	public static final String FPS_KEY = "z__fps__0";
-	protected final TOrderedHashMap<String, LayerObject> layers = new TOrderedHashMap<String, LayerObject>();
+	protected final IMap<String, LayerObject> layers = GamaMapFactory.create();
 	protected LayerObject currentLayer;
 	protected final Abstract3DRenderer renderer;
 	private volatile boolean rendered = false;
@@ -70,8 +70,9 @@ public class ModelScene {
 			layers.put(ROTATION_HELPER_KEY, new RotationHelperLayerObject(renderer));
 			layers.put(KEYSTONE_HELPER_KEY, new KeystoneHelperLayerObject(renderer));
 			layers.put(LIGHTS_KEY, new LightsLayerObject(renderer));
-			if (renderer.data.isShowfps())
+			if (renderer.data.isShowfps()) {
 				layers.put(FPS_KEY, new FPSLayerObject(renderer));
+			}
 		}
 	}
 
@@ -122,8 +123,7 @@ public class ModelScene {
 	}
 
 	private double computeVisualZIncrement() {
-		if (objectNumber == 0)
-			return 0d;
+		if (objectNumber == 0) { return 0d; }
 		// The maximum visual z allowance between the object at the bottom and the one at the top
 		final double maxZ = renderer.getMaxEnvDim() / 2000d;
 		// The increment is simply
@@ -131,8 +131,7 @@ public class ModelScene {
 	}
 
 	public boolean cannotAdd() {
-		if (currentLayer == null)
-			return true;
+		if (currentLayer == null) { return true; }
 		return currentLayer.isStatic() && currentLayer.isLocked();
 	}
 
@@ -146,12 +145,12 @@ public class ModelScene {
 		return configure(currentLayer.addString(string, attributes));
 	}
 
-	public GeometryObject addImageFile(final GamaImageFile file, final FileDrawingAttributes attributes) {
+	public GeometryObject addImageFile(final GamaImageFile file, final DrawingAttributes attributes) {
 		if (cannotAdd()) { return null; }
 		return configure(currentLayer.addImage(file, attributes));
 	}
 
-	public ResourceObject addGeometryFile(final GamaGeometryFile file, final FileDrawingAttributes attributes) {
+	public ResourceObject addGeometryFile(final GamaGeometryFile file, final DrawingAttributes attributes) {
 		if (cannotAdd()) { return null; }
 		return configure(currentLayer.addFile(file, attributes));
 	}
@@ -161,7 +160,7 @@ public class ModelScene {
 		return configure(currentLayer.addImage(img, attributes));
 	}
 
-	public GeometryObject addGeometry(final Geometry geometry, final ShapeDrawingAttributes attributes) {
+	public GeometryObject addGeometry(final Geometry geometry, final DrawingAttributes attributes) {
 		if (cannotAdd()) { return null; }
 		return configure(currentLayer.addGeometry(geometry, attributes));
 	}
