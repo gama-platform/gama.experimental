@@ -10,15 +10,7 @@
  ********************************************************************************************************/
 package escape.gaml.skills;
 
-import java.util.List;
-
-import com.vividsolutions.jts.algorithm.CGAlgorithms;
-import com.vividsolutions.jts.geom.Coordinate;
-
-import msi.gama.common.geometry.GeometryUtils;
-import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
@@ -30,18 +22,14 @@ import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.ITypeProvider;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
 import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import msi.gaml.operators.Spatial;
-import msi.gaml.operators.fastmaths.CmnFastMath;
 import msi.gaml.skills.Skill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.types.IType;
-import msi.gaml.types.Types;
 
 @vars ({ @variable (
 		name = "agents_on",
