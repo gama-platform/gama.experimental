@@ -3,7 +3,7 @@
   <groupId>ummisco.gama.extension.unity</groupId>
   <artifactId>ummisco.gama.extension.unity</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <build>
+    <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
@@ -22,6 +22,4 @@
   	<version>1.7.0-SNAPSHOT</version>
   	<relativePath>../msi.gama.experimental.parent</relativePath>
   </parent>
-
-  <packaging>eclipse-plugin</packaging>
 </project>

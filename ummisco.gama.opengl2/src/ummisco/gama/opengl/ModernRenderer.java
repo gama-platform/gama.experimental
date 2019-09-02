@@ -4,7 +4,7 @@
  * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl;
@@ -20,7 +20,6 @@ import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLProfile;
 
 import msi.gama.common.geometry.Scaling3D;
 import msi.gama.metamodel.shape.GamaPoint;
@@ -29,8 +28,8 @@ import msi.gama.outputs.layers.charts.ChartOutput;
 import msi.gama.util.file.GamaFile;
 import msi.gama.util.file.GamaGeometryFile;
 import msi.gama.util.file.GamaImageFile;
+import msi.gaml.statements.draw.DrawingAttributes;
 import msi.gaml.statements.draw.FieldDrawingAttributes;
-import msi.gaml.statements.draw.FileDrawingAttributes;
 import ummisco.gama.modernOpenGL.ModernDrawer;
 import ummisco.gama.opengl.utils.LightHelper;
 import ummisco.gama.opengl.vaoGenerator.DrawingEntityGenerator;
@@ -67,8 +66,9 @@ public class ModernRenderer extends Abstract3DRenderer {
 			// check if the click has been in the center of the screen (in the
 			// intersection between the diagonals)
 			final float[] centerPosition = centerScreen(coords);
-			if (Math.abs(mouse.x - centerPosition[0]) < 0.03 && Math.abs(mouse.y - centerPosition[1]) < 0.03)
+			if (Math.abs(mouse.x - centerPosition[0]) < 0.03 && Math.abs(mouse.y - centerPosition[1]) < 0.03) {
 				return 10;
+			}
 			return -1;
 		}
 
@@ -283,7 +283,7 @@ public class ModernRenderer extends Abstract3DRenderer {
 	// //////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * After drawing we have to calculate which object was nearest screen and return its index
-	 * 
+	 *
 	 * @return name of selected object
 	 */
 	@Override
@@ -320,14 +320,14 @@ public class ModernRenderer extends Abstract3DRenderer {
 
 	@SuppressWarnings ("rawtypes")
 	@Override
-	public Rectangle2D drawFile(final GamaFile file, final FileDrawingAttributes attributes) {
+	public Rectangle2D drawFile(final GamaFile file, final DrawingAttributes attributes) {
 		if (sceneBuffer.getSceneToUpdate() == null) { return null; }
 		if (attributes.getSize() == null) {
 			attributes.setSize(Scaling3D.of(worldDimensions));
 		}
-		if (file instanceof GamaImageFile)
+		if (file instanceof GamaImageFile) {
 			sceneBuffer.getSceneToUpdate().addImageFile((GamaImageFile) file, attributes);
-		else if (file instanceof GamaGeometryFile) {
+		} else if (file instanceof GamaGeometryFile) {
 			sceneBuffer.getSceneToUpdate().addGeometryFile((GamaGeometryFile) file, attributes);
 		}
 		return rect;
@@ -347,7 +347,7 @@ public class ModernRenderer extends Abstract3DRenderer {
 
 	/**
 	 * Method beginOverlay()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IGraphics#beginOverlay(msi.gama.outputs.layers.OverlayLayer)
 	 */
 	@Override
@@ -357,7 +357,7 @@ public class ModernRenderer extends Abstract3DRenderer {
 
 	/**
 	 * Method endOverlay()
-	 * 
+	 *
 	 * @see msi.gama.common.interfaces.IGraphics#endOverlay()
 	 */
 	@Override
@@ -377,7 +377,7 @@ public class ModernRenderer extends Abstract3DRenderer {
 	}
 
 	@Override
-	public Rectangle2D drawChart(ChartOutput chart) {
+	public Rectangle2D drawChart(final ChartOutput chart) {
 		// TODO Auto-generated method stub
 		return null;
 	}

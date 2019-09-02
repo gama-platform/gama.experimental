@@ -58,7 +58,7 @@ public class RSkill extends Skill {
 		@Override
 		public void rWriteConsole(final Rengine re, final String text, final int oType) {
 			// System.out.print("xxxx"+text);
-			GAMA.getGui().getConsole(null).informConsole("R>" + text, null);
+			GAMA.getGui().getConsole().informConsole("R>" + text, null);
 		}
 
 		@Override
@@ -341,7 +341,7 @@ public class RSkill extends Skill {
 				fieldSysPath.set(null, null);
 
 			} catch (final Exception ex) {
-				scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
+				scope.getGui().getConsole().informConsole(ex.getMessage(), null);
 				ex.printStackTrace();
 			}
 			// System.out.println(System.getProperty("java.library.path"));

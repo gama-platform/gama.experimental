@@ -4,7 +4,7 @@
  * platform. (c) 2007-2016 UMI 209 UMMISCO IRD/UPMC & Partners
  *
  * Visit https://github.com/gama-platform/gama for license information and developers contact.
- * 
+ *
  *
  **********************************************************************************************/
 package ummisco.gama.opengl.scene;
@@ -75,8 +75,9 @@ public class LayerObject {
 		if (layer != null && layer.getData().getTrace() != null || renderer instanceof ModernRenderer) {
 			objects = new LinkedList();
 			objects.add(currentList);
-		} else
+		} else {
 			objects = null;
+		}
 	}
 
 	protected boolean computeOverlay() {
@@ -132,8 +133,9 @@ public class LayerObject {
 								de.enableOverlay(true);
 							}
 						}
-						if (drawingEntity != null)
+						if (drawingEntity != null) {
 							renderer.getDrawer().addDrawingEntities(drawingEntity);
+						}
 					}
 				}
 			}
@@ -159,16 +161,16 @@ public class LayerObject {
 			final double worldHeight = gl.getWorldHeight();
 			final double worldWidth = gl.getWorldWidth();
 			final double maxDim = worldHeight > worldWidth ? worldHeight : worldWidth;
-	
+
 			gl.pushIdentity(GL2.GL_PROJECTION);
 			if (viewRatio >= 1.0) {
 				// TODO reset to initial OpenGL
-				//gl.getGL().glOrtho(0, maxDim * viewRatio, -maxDim, 0, -1, 1);
+				// gl.getGL().glOrtho(0, maxDim * viewRatio, -maxDim, 0, -1, 1);
 				((GL2ES1) gl.getGL()).glOrtho(0, maxDim * viewRatio, -maxDim, 0, -1, 1);
-			
+
 			} else {
 				// TODO reset to initial OpenGL
-				//gl.getGL().glOrtho(0, maxDim, -maxDim / viewRatio, 0, -1, 1);
+				// gl.getGL().glOrtho(0, maxDim, -maxDim / viewRatio, 0, -1, 1);
 				((GL2ES1) gl.getGL()).glOrtho(0, maxDim, -maxDim / viewRatio, 0, -1, 1);
 			}
 
@@ -184,8 +186,9 @@ public class LayerObject {
 
 			final boolean picking = renderer.getPickingState().isPicking() && isPickable();
 			if (picking) {
-				if (!overlay)
+				if (!overlay) {
 					gl.runWithNames(() -> drawAllObjects(gl, true));
+				}
 			} else {
 				if (isAnimated || overlay) {
 					drawAllObjects(gl, false);
@@ -210,7 +213,7 @@ public class LayerObject {
 
 	private void addFrame(final OpenGL gl) {
 		GamaPoint scale = new GamaPoint(renderer.getEnvWidth(), renderer.getEnvHeight());
-		final IScope scope = (IScope) renderer.getSurface().getScope();
+		final IScope scope = renderer.getSurface().getScope();
 		final IExpression expr = layer.getDefinition().getFacet(IKeyword.SIZE);
 		if (expr != null) {
 			scale = (GamaPoint) Cast.asPoint(scope, expr.value(scope));
@@ -246,8 +249,9 @@ public class LayerObject {
 				alpha = delta == 0d ? this.alpha : this.alpha * (alpha + delta);
 				drawObjects(gl, list, alpha, picking);
 			}
-		} else
+		} else {
 			drawObjects(gl, currentList, alpha, picking);
+		}
 	}
 
 	protected void drawObjects(final OpenGL gl, final List<AbstractObject> list, final double alpha,
@@ -355,12 +359,13 @@ public class LayerObject {
 			isFading = getFading();
 			final int size = objects.size();
 			for (int i = 0, n = size - sizeLimit; i < n; i++) {
-				final List<AbstractObject> list = objects.poll();
+				objects.poll();
 			}
 			currentList = newCurrentList();
 			objects.offer(currentList);
-		} else
+		} else {
 			currentList.clear();
+		}
 		final Integer index = openGLListIndex;
 		if (index != null) {
 			gl.deleteList(index);
