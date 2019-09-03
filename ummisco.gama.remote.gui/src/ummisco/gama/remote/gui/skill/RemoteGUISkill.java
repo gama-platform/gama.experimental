@@ -118,7 +118,8 @@ public class RemoteGUISkill extends Skill implements IRemoteGUISkill {
 		final String login = (String) agt.getAttribute(IRemoteGUISkill.LOGIN);
 		final String pass = (String) agt.getAttribute(IRemoteGUISkill.PASSWORD);
 		@SuppressWarnings ("unchecked") final ArrayList<String> varName =
-				(ArrayList<String>) scope.getListArg(IRemoteGUISkill.VAR_NAME); // scope.getArg(IRemoteGUISkill.VAR_NAME,IType.MAP);
+			//	(ArrayList<String>) scope.getListArg(IRemoteGUISkill.VAR_NAME); // scope.getArg(IRemoteGUISkill.VAR_NAME,IType.MAP);
+				new ArrayList<String> (scope.getListArg(IRemoteGUISkill.VAR_NAME));
 		final String exposedName = (String) scope.getArg(IRemoteGUISkill.EXPOSED_NAME, IType.STRING);
 
 		try {
