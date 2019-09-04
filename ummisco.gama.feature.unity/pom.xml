@@ -10,4 +10,5 @@
   	<relativePath>../msi.gama.experimental.parent</relativePath>
   </parent>
 
+  <packaging>eclipse-feature</packaging>
 </project>
