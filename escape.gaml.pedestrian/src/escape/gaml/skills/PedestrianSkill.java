@@ -52,7 +52,7 @@ import msi.gaml.types.Types;
 			init = "3.0",
 			doc = @doc ("the coefficient for the maximal distance to take into account the repulsion of the obstacles")),
 	@variable (
-			name = "obstacle_repulsion_intensity",
+			name = "obstacle_consideration_distance",
 			type = IType.FLOAT,
 			init = "1.0",
 			doc = @doc ("Intensity of reaction to obstacles")),
