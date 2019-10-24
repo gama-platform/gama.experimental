@@ -18,9 +18,6 @@ namespace ConsoleApp1
     public class HecRas_Data //: ICalc
     {
         HECRASController hrc;
-        int nmsg = 0;
-        bool block = true;
-        Array sa = null;
 
         public string Init_hecras()
         {
@@ -49,18 +46,22 @@ namespace ConsoleApp1
 
         public string Compute_CurrentPlan()
         {
+            int nmsg = 0;
+            bool block = true;
+            Array sa = null;
             string result = "";
             try
             {
                 hrc.Compute_HideComputationWindow();
 
-                hrc.Compute_CurrentPlan(ref nmsg, ref sa, ref block);
-               
+                hrc.Compute_CurrentPlan( nmsg,  sa);
+                Console.WriteLine(nmsg);
             }
             catch (Exception ex)
             {
                 result=ex.ToString();
             }
+            hrc.QuitRas();
             return result;
         }
 

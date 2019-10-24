@@ -2,7 +2,7 @@ import net.sf.jni4net.Bridge;
 
 import java.io.IOException;
 
-import hecras_gama_coupling.HecRas_Data;
+import HecRas_Gama_Coupling.HecRas_Data;
 
 public class MyCalcUsageInJava {
     public static void main(String arsg[]) throws IOException {

@@ -44,7 +44,8 @@ namespace ConsoleApp1
 
         private static void WorkThreadFunction()
         {
-            hrc.Compute_CurrentPlan(); 
+            String ret = hrc.Compute_CurrentPlan();
+            Console.WriteLine(ret);
         }
     }
 }

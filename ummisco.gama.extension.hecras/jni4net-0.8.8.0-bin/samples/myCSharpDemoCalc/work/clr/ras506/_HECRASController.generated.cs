@@ -31,15 +31,13 @@ namespace RAS506 {
         
         internal static global::net.sf.jni4net.jni.MethodId j4n_QuitRas0;
         
-        internal static global::net.sf.jni4net.jni.MethodId j4n_Compute_ShowComputationWindow1;
+        internal static global::net.sf.jni4net.jni.MethodId j4n_Compute_HideComputationWindow1;
         
         internal static global::net.sf.jni4net.jni.MethodId j4n_Compute_CurrentPlan2;
         
         internal static global::net.sf.jni4net.jni.MethodId j4n_Project_Open3;
         
-        internal static global::net.sf.jni4net.jni.MethodId j4n_Project_Save4;
-        
-        internal static global::net.sf.jni4net.jni.MethodId j4n_Project_Close5;
+        internal static global::net.sf.jni4net.jni.MethodId j4n_Project_Close4;
         
         private ___HECRASController(global::net.sf.jni4net.jni.JNIEnv @__env) : 
                 base(@__env) {
@@ -48,11 +46,10 @@ namespace RAS506 {
         private static void InitJNI(global::net.sf.jni4net.jni.JNIEnv @__env, java.lang.Class @__class) {
             global::RAS506.___HECRASController.staticClass = @__class;
             global::RAS506.___HECRASController.j4n_QuitRas0 = @__env.GetMethodID(global::RAS506.___HECRASController.staticClass, "QuitRas", "()V");
-            global::RAS506.___HECRASController.j4n_Compute_ShowComputationWindow1 = @__env.GetMethodID(global::RAS506.___HECRASController.staticClass, "Compute_ShowComputationWindow", "()V");
+            global::RAS506.___HECRASController.j4n_Compute_HideComputationWindow1 = @__env.GetMethodID(global::RAS506.___HECRASController.staticClass, "Compute_HideComputationWindow", "()V");
             global::RAS506.___HECRASController.j4n_Compute_CurrentPlan2 = @__env.GetMethodID(global::RAS506.___HECRASController.staticClass, "Compute_CurrentPlan", "(Lnet/sf/jni4net/Ref;Lnet/sf/jni4net/Ref;Lnet/sf/jni4net/Ref;)Z");
             global::RAS506.___HECRASController.j4n_Project_Open3 = @__env.GetMethodID(global::RAS506.___HECRASController.staticClass, "Project_Open", "(Ljava/lang/String;)V");
-            global::RAS506.___HECRASController.j4n_Project_Save4 = @__env.GetMethodID(global::RAS506.___HECRASController.staticClass, "Project_Save", "()V");
-            global::RAS506.___HECRASController.j4n_Project_Close5 = @__env.GetMethodID(global::RAS506.___HECRASController.staticClass, "Project_Close", "()V");
+            global::RAS506.___HECRASController.j4n_Project_Close4 = @__env.GetMethodID(global::RAS506.___HECRASController.staticClass, "Project_Close", "()V");
         }
         
         public void QuitRas() {
@@ -62,10 +59,10 @@ namespace RAS506 {
             }
         }
         
-        public void Compute_ShowComputationWindow() {
+        public void Compute_HideComputationWindow() {
             global::net.sf.jni4net.jni.JNIEnv @__env = this.Env;
             using(new global::net.sf.jni4net.jni.LocalFrame(@__env, 10)){
-            @__env.CallVoidMethod(this, global::RAS506.___HECRASController.j4n_Compute_ShowComputationWindow1);
+            @__env.CallVoidMethod(this, global::RAS506.___HECRASController.j4n_Compute_HideComputationWindow1);
             }
         }
         
@@ -83,17 +80,10 @@ namespace RAS506 {
             }
         }
         
-        public void Project_Save() {
-            global::net.sf.jni4net.jni.JNIEnv @__env = this.Env;
-            using(new global::net.sf.jni4net.jni.LocalFrame(@__env, 10)){
-            @__env.CallVoidMethod(this, global::RAS506.___HECRASController.j4n_Project_Save4);
-            }
-        }
-        
         public void Project_Close() {
             global::net.sf.jni4net.jni.JNIEnv @__env = this.Env;
             using(new global::net.sf.jni4net.jni.LocalFrame(@__env, 10)){
-            @__env.CallVoidMethod(this, global::RAS506.___HECRASController.j4n_Project_Close5);
+            @__env.CallVoidMethod(this, global::RAS506.___HECRASController.j4n_Project_Close4);
             }
         }
         
@@ -101,11 +91,10 @@ namespace RAS506 {
             global::System.Type @__type = typeof(___HECRASController);
             global::System.Collections.Generic.List<global::net.sf.jni4net.jni.JNINativeMethod> methods = new global::System.Collections.Generic.List<global::net.sf.jni4net.jni.JNINativeMethod>();
             methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "QuitRas", "QuitRas0", "()V"));
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Compute_ShowComputationWindow", "Compute_ShowComputationWindow1", "()V"));
+            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Compute_HideComputationWindow", "Compute_HideComputationWindow1", "()V"));
             methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Compute_CurrentPlan", "Compute_CurrentPlan2", "(Lnet/sf/jni4net/Ref;Lnet/sf/jni4net/Ref;Lnet/sf/jni4net/Ref;)Z"));
             methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Project_Open", "Project_Open3", "(Ljava/lang/String;)V"));
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Project_Save", "Project_Save4", "()V"));
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Project_Close", "Project_Close5", "()V"));
+            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Project_Close", "Project_Close4", "()V"));
             return methods;
         }
         
@@ -119,13 +108,13 @@ namespace RAS506 {
             }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
         }
         
-        private static void Compute_ShowComputationWindow1(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
+        private static void Compute_HideComputationWindow1(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
             // ()V
             // ()V
             global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
             try {
             global::RAS506._HECRASController @__real = global::net.sf.jni4net.utils.Convertor.FullJ2C<global::RAS506._HECRASController>(@__env, @__obj);
-            @__real.Compute_ShowComputationWindow();
+            @__real.Compute_HideComputationWindow();
             }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
         }
         
@@ -157,17 +146,7 @@ namespace RAS506 {
             }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
         }
         
-        private static void Project_Save4(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
-            // ()V
-            // ()V
-            global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
-            try {
-            global::RAS506._HECRASController @__real = global::net.sf.jni4net.utils.Convertor.FullJ2C<global::RAS506._HECRASController>(@__env, @__obj);
-            @__real.Project_Save();
-            }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
-        }
-        
-        private static void Project_Close5(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
+        private static void Project_Close4(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
             // ()V
             // ()V
             global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
