@@ -21,3 +21,12 @@ C:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\Consol
 C:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
 C:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
 C:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
+E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csprojAssemblyReference.cache
+E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\obj\Debug\Interop.RAS506.dll
+E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.ResolveComReference.cache
+E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CoreCompileInputs.cache
+E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb

@@ -28,7 +28,10 @@ import org.jinterop.dcom.impls.automation.SafeArrayBounds;
 
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
+import com.sun.jna.NativeMapped;
 import com.sun.jna.Pointer;
+import com.sun.jna.StringArray;
+import com.sun.jna.WString;
 import com.sun.jna.platform.win32.OaIdl;
 import com.sun.jna.platform.win32.OaIdl.SAFEARRAY;
 import com.sun.jna.platform.win32.OaIdl.SAFEARRAYBOUND;
@@ -37,6 +40,7 @@ import com.sun.jna.platform.win32.Ole32;
 import com.sun.jna.platform.win32.OleAuto;
 import com.sun.jna.platform.win32.Variant;
 import com.sun.jna.platform.win32.Variant.VARIANT;
+import com.sun.jna.platform.win32.Variant.VARIANT.ByReference;
 import com.sun.jna.platform.win32.WTypes.VARTYPE;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinDef.LONG;
@@ -44,6 +48,9 @@ import com.sun.jna.platform.win32.WinDef.UINT;
 import com.sun.jna.platform.win32.COM.COMException;
 import com.sun.jna.platform.win32.COM.COMLateBindingObject;
 import com.sun.jna.platform.win32.COM.IDispatch;
+import com.sun.jna.ptr.ByteByReference;
+import com.sun.jna.ptr.IntByReference;
+import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.PointerByReference;
 
 public class Program2 extends COMLateBindingObject {
@@ -51,7 +58,7 @@ public class Program2 extends COMLateBindingObject {
 		Ole32.INSTANCE.CoInitializeEx(Pointer.NULL, Ole32.COINIT_MULTITHREADED);
 		Program2 p=new Program2(); 
         try {
-    		p.Project_Open("C:\\Users\\hqngh\\OneDrive\\Documents\\Hello World Coupling\\HelloWorldCoupling.prj"); 
+    		p.Project_Open("E:\\Downloads\\Hello World Coupling\\HelloWorldCoupling.prj"); 
     		p.Compute_CurrentPlan( );
         } finally {
         	p.QuitRas();
@@ -100,15 +107,53 @@ public class Program2 extends COMLateBindingObject {
     	  return psa;
     	}
 
+public class StringByReference extends ByReference {
+    public StringByReference() {
+        this(0);
+    }
+
+    public StringByReference(int size) {
+        super();
+        getPointer().clear(size < 4 ? 4 : size);
+    }
+
+    public StringByReference(String str) {
+        super();
+        setValue(str);
+    }
+
+    private void setValue(String str) {
+        getPointer().setString(0, str);
+    }
+
+    public String getValue() {
+        return getPointer().getString(0);
+    }
+}
     public void Compute_CurrentPlan( ) throws COMException {
     	//Project_Open             hrc.Project_Open(@"C:\Users\hqngh\OneDrive\Documents\Hello World Coupling\HelloWorldCoupling.prj");
-         Pointer p = new Memory(5*Native.getNativeSize(Double.TYPE));      
-//         ArrayList aa = null;
-        for (int i = 0; i < 5; i++) {
-            p.setDouble(i*Native.getNativeSize(Double.TYPE),5);
-        }
-         SAFEARRAY sa= SAFEARRAY.createSafeArray(1);
-        	this.invokeNoReply("Compute_CurrentPlan", new VARIANT(new WinDef.LONG(0)),  new VARIANT(p));  
+//         Pointer p = new Memory(8*Native.getNativeSize(Byte.TYPE));      
+//////         ArrayList aa = null;
+//        for (int i = 0; i < 8; i++) {
+//            p.setByte(i*Native.getNativeSize(Byte.TYPE),(byte) i);
+//        }
+    	WString[] tabs=new WString[] {new WString("0"),new WString("1"),new WString("2"),new WString("3"),new WString("4"),new WString("4"),new WString("4"),new WString("4")};
+    	String[] array = new String[8];
+    	//    	Byte[] bb=new Byte[] {}; 
+//    	Pointer aarray=new Pointer(8);
+    	
+    	
+//    	PointerByReference parray=new PointerByReference();
+//    	parray.setPointer(aarray);
+//    	SAFEARRAYByReference va=new SAFEARRAYByReference(parray.getPointer());
+//    	va.setAutoRead(true);
+//    	va.setAutoWrite(true);
+        VARIANT rr = new VARIANT(new LONG(0));
+//        VARIANT vv = new VARIANT(new StringByReference(4).getPointer());
+        VARIANT.ByReference vv = new VARIANT.ByReference(new StringArray(tabs));
+        
+
+    	this.invokeNoReply("Compute_CurrentPlan", VARIANT.VARIANT_MISSING, vv);  
     }
 //
 //    public void closeActiveWorkbook(boolean bSave) throws COMException {
