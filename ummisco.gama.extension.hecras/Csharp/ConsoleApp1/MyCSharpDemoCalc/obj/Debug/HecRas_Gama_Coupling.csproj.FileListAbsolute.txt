@@ -5,3 +5,11 @@ E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\MyCSha
 E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\MyCSharpDemoCalc\obj\Debug\HecRas_Gama_Coupling.csproj.CoreCompileInputs.cache
 E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\MyCSharpDemoCalc\obj\Debug\HecRas_Gama.dll
 E:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\MyCSharpDemoCalc\obj\Debug\HecRas_Gama.pdb
+C:\git\gama.experimental\ummisco.gama.extension.hecras\jni4net-0.8.8.0-bin\samples\myCSharpDemoCalc\work\HecRas_Gama.dll
+C:\git\gama.experimental\ummisco.gama.extension.hecras\jni4net-0.8.8.0-bin\samples\myCSharpDemoCalc\work\HecRas_Gama.pdb
+C:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\MyCSharpDemoCalc\obj\Debug\HecRas_Gama_Coupling.csprojAssemblyReference.cache
+C:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\MyCSharpDemoCalc\obj\Debug\Interop.RAS506.dll
+C:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\MyCSharpDemoCalc\obj\Debug\HecRas_Gama_Coupling.csproj.ResolveComReference.cache
+C:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\MyCSharpDemoCalc\obj\Debug\HecRas_Gama_Coupling.csproj.CoreCompileInputs.cache
+C:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\MyCSharpDemoCalc\obj\Debug\HecRas_Gama.dll
+C:\git\gama.experimental\ummisco.gama.extension.hecras\Csharp\ConsoleApp1\MyCSharpDemoCalc\obj\Debug\HecRas_Gama.pdb
