@@ -20,7 +20,7 @@ namespace ConsoleApp1
             bool block = true;
             Array sa = null;
             hrc.Init_hecras();
-            hrc.Project_Open(@"C:\Users\hqngh\OneDrive\Documents\Hello World Coupling\HelloWorldCoupling.prj");
+            hrc.Project_Open(@"E:\Downloads\Hello World Coupling\HelloWorldCoupling.prj");
             //hrc.Compute_ShowComputationWindow();
 
             try

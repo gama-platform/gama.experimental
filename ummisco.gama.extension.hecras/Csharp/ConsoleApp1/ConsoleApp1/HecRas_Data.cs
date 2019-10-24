@@ -54,7 +54,7 @@ namespace ConsoleApp1
             {
                 hrc.Compute_HideComputationWindow();
 
-                hrc.Compute_CurrentPlan( nmsg,  sa);
+                hrc.Compute_CurrentPlan( 0,  null);
                 Console.WriteLine(nmsg);
             }
             catch (Exception ex)
