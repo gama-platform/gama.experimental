@@ -47,6 +47,7 @@ import com.sun.jna.platform.win32.WinDef.LONG;
 import com.sun.jna.platform.win32.WinDef.UINT;
 import com.sun.jna.platform.win32.COM.COMException;
 import com.sun.jna.platform.win32.COM.COMLateBindingObject;
+import com.sun.jna.platform.win32.COM.Dispatch;
 import com.sun.jna.platform.win32.COM.IDispatch;
 import com.sun.jna.ptr.ByteByReference;
 import com.sun.jna.ptr.IntByReference;
@@ -148,15 +149,28 @@ public class StringByReference extends ByReference {
 //    	SAFEARRAYByReference va=new SAFEARRAYByReference(parray.getPointer());
 //    	va.setAutoRead(true);
 //    	va.setAutoWrite(true);
-        VARIANT rr = new VARIANT(new LONG(1));
+        VARIANT rrr = new VARIANT(new LONG(0));
+        VARIANT.ByReference rr=new ByReference(rrr.getPointer());
 //        VARIANT vv = new VARIANT(new StringByReference(4).getPointer());
-        VARIANT.ByReference vv = new VARIANT.ByReference(new StringArray(tabs));
+//        VARIANT.ByReference vv = new VARIANT.ByReference(new StringArray(tabs));
         
-        SAFEARRAY vaa=SAFEARRAY.createSafeArray(  new VARTYPE(Variant.VT_BSTR), 32);
-//        vaa.setAutoWrite(true);
-//        vaa.accessData();
+        SAFEARRAY vaa=SAFEARRAY.createSafeArray( new VARTYPE(Variant.VT_BSTR), 8);
+
         VARIANT vava=new VARIANT(vaa);
-    	this.invokeNoReply("Compute_CurrentPlan", rr, vava);  
+        //        vava.setValue(vaa);
+        
+
+//        long nmsg = -999;
+//        boolean BlockingMode = true;
+//        boolean fbyref=true;
+////        SAFEARRAY abc = new SAFEARRAY(8);
+//        VARIANT v[]=new VARIANT[3];
+//        v[0]=new VARIANT(nmsg);
+//        v[1]=new VARIANT(vaa);
+//        v[2]=new VARIANT(BlockingMode);
+//        Variant retval;
+    	VARIANT V=this.invoke("Compute_CurrentPlan", rr,vava);
+    	System.out.println(V);
     }
 //
 //    public void closeActiveWorkbook(boolean bSave) throws COMException {

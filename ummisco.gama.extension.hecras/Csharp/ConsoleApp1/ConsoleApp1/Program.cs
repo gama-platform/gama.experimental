@@ -20,25 +20,28 @@ namespace ConsoleApp1
             bool block = true;
             Array sa = null;
             hrc.Init_hecras();
-            hrc.Project_Open(@"E:\Downloads\Hello World Coupling\HelloWorldCoupling.prj");
+            hrc.Project_Open(@"E:\Downloads\HWC\HelloWorldCoupling.prj");
             //hrc.Compute_ShowComputationWindow();
 
-            try
-            {
-                Thread thread = new Thread(new ThreadStart(WorkThreadFunction));
-                thread.Start();
+            String ret = hrc.Compute_CurrentPlan();
+            Console.WriteLine(ret);            /*
+        try
+        {
+            Thread thread = new Thread(new ThreadStart(WorkThreadFunction));
+            thread.Start();
 
-                while (!hrc.isComplete())
-                {
-                    Console.Write(".");
-                    Thread.Sleep(10);
-                }
-                Console.WriteLine("Done");
-            }
-            catch (Exception ex)
+            while (!hrc.isComplete())
             {
-                Console.WriteLine(ex.ToString());
+                Console.Write(".");
+                Thread.Sleep(10);
             }
+            Console.WriteLine("Done");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+            */
             Console.ReadLine();
         }
 
