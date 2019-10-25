@@ -48,14 +48,14 @@ namespace ConsoleApp1
         {
             int nmsg = 0;
             bool block = true;
-            Array arr = null;// CreateInstance(typeof(string), 0);
-            //string[] arr = new string[1] {null};
+            //Array arr = null;// CreateInstance(typeof(string), 0);
+            string[] arr = new string[1] {null};
             string result = "";
             try
             {
                 hrc.Compute_HideComputationWindow();
 
-                hrc.Compute_CurrentPlan( 0,  arr);
+                hrc.Compute_CurrentPlan( 0,  null);
                 //Console.WriteLine(hrc.Plan_GetFilename());
             }
             catch (Exception ex)
