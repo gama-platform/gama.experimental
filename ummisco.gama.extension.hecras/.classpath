@@ -8,17 +8,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="jni4net-0.8.8.0-bin/samples/myCSharpDemoCalc/work"/>
-	<classpathentry kind="lib" path="jni4net-0.8.8.0-bin/samples/myCSharpDemoCalc/work/jni4net.j-0.8.8.0.jar"/>
 	<classpathentry kind="src" path="gaml">
 		<attributes>
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/j-interop.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/j-interopdeps.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jcifs-1.2.19.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jna-5.4.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jna-platform-5.4.0.jar" sourcepath="C:/git/jna/contrib/platform"/>
-	<classpathentry exported="true" kind="lib" path="lib/jacob-1.19/jacob.jar" sourcepath="e:/git/jacob"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

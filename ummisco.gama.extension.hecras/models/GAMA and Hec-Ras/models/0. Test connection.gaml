@@ -10,8 +10,11 @@ model Testconnection
 global skills:[hecrasSkill]{
 	
 	init{ 
-		do load_hecras();
-		write Dfs0File_Read_Data("C:\\git\\HydraulicTools\\RESULT2015.res11", "KIM_SON");
+		write load_hecras();
+		write Project_Open("E:\\Downloads\\HWC\\HelloWorldCoupling.prj");
+		write Compute_HideComputationWindow();
+//		write Compute_CurrentPlan();
+		write QuitRas();
 		
 	}
 	

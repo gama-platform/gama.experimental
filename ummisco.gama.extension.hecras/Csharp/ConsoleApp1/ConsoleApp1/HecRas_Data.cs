@@ -53,16 +53,18 @@ namespace ConsoleApp1
             string result = "";
             try
             {
-                hrc.Compute_HideComputationWindow();
+                //hrc.Compute_HideComputationWindow();
 
-                hrc.Compute_CurrentPlan( 0,  null);
+                //hrc.Compute_CurrentPlan( 0,  null);
                 //Console.WriteLine(hrc.Plan_GetFilename());
             }
             catch (Exception ex)
             {
                 result=ex.ToString();
             }
+            hrc.Project_Close();
             hrc.QuitRas();
+            hrc = null;
             return result;
         }
 
