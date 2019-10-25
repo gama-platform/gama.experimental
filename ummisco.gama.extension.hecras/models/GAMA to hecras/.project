@@ -16,4 +16,11 @@
 		<nature>msi.gama.application.gamaNature</nature>
 		<nature>msi.gama.application.pluginNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>external/HelloWorldCoupling.prj</name>
+			<type>1</type>
+			<location>E:/Downloads/HWC/HelloWorldCoupling.prj</location>
+		</link>
+	</linkedResources>
 </projectDescription>
