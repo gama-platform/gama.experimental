@@ -148,12 +148,15 @@ public class StringByReference extends ByReference {
 //    	SAFEARRAYByReference va=new SAFEARRAYByReference(parray.getPointer());
 //    	va.setAutoRead(true);
 //    	va.setAutoWrite(true);
-        VARIANT rr = new VARIANT(new LONG(0));
+        VARIANT rr = new VARIANT(new LONG(1));
 //        VARIANT vv = new VARIANT(new StringByReference(4).getPointer());
         VARIANT.ByReference vv = new VARIANT.ByReference(new StringArray(tabs));
         
-
-    	this.invokeNoReply("Compute_CurrentPlan", VARIANT.VARIANT_MISSING, vv);  
+        SAFEARRAY vaa=SAFEARRAY.createSafeArray(  new VARTYPE(Variant.VT_BSTR), 32);
+//        vaa.setAutoWrite(true);
+//        vaa.accessData();
+        VARIANT vava=new VARIANT(vaa);
+    	this.invokeNoReply("Compute_CurrentPlan", rr, vava);  
     }
 //
 //    public void closeActiveWorkbook(boolean bSave) throws COMException {
