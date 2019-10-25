@@ -12,8 +12,8 @@ global skills:[hecrasSkill]{
 	init{ 
 		write load_hecras();
 		write Project_Open("E:\\Downloads\\HWC\\HelloWorldCoupling.prj");
-		write Compute_HideComputationWindow();
-//		write Compute_CurrentPlan();
+//		write Compute_HideComputationWindow();
+		write Compute_CurrentPlan();
 		write QuitRas();
 		
 	}
