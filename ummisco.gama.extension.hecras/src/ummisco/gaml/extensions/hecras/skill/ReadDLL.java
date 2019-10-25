@@ -19,7 +19,7 @@ public class ReadDLL {
 	         * Placed under same folder of program file(.java/.class).
 	         */
 //	        String libFile = System.getProperty("os.arch").equals("amd64") ? "jacob-1.17-x64.dll" : "jacob-1.17-x86.dll";
-		 	String libFile="C:\\git\\gama.experimental\\ummisco.gama.extension.hecras\\lib\\jacob-1.19\\jacob-1.19-x64.dll";
+		 	String libFile="E:\\git\\gama.experimental\\ummisco.gama.extension.hecras\\lib\\jacob-1.19\\jacob-1.19-x64.dll";
 	        try {
 	            /* Read DLL file*/
 //	            InputStream inputStream = ReadDLL.class.getResourceAsStream(libFile);
@@ -70,7 +70,7 @@ public class ReadDLL {
 //	            	System.out.println();
 	            	try {	            	
 	            		Dispatch.call(compCLSID, "Project_Open", new Variant("E:\\Downloads\\HWC\\HelloWorldCoupling.prj"));
-	            		SafeArray sa = new SafeArray(Variant.VariantNull, 1);
+	            		SafeArray sa = new SafeArray(Variant.VariantString, 1);
 //	            	    sa.setString(1, "null");  
 	            	    SafeArray sa1 = new SafeArray(Variant.VariantLongInt, 1);
 	            	    sa1.setLong(1, 0);  
@@ -78,13 +78,14 @@ public class ReadDLL {
 	                    Variant pData= new Variant(Variant.VariantPointer,true); 
 	                    pData.putLong(1);
 	                    Variant vn = new Variant(Variant.VariantArray,true);
-//	                    vn.putSafeArrayRef(sa);
+	                    vn.putSafeArrayRef(sa);
 //	            		Variant vsvs=new Variant(new String[] {});
 	                    
 	                    Variant res=Dispatch.call(compCLSID, "Plan_GetFilename", new Variant("Plan 04"));
 	                    System.out.println(res);
-	            		
-	            		Dispatch.call(compCLSID, "Compute_CurrentPlan",pData, sa);
+	                    Variant optional = new Variant();
+	        			
+	            		Dispatch.call(compCLSID, "Compute_CurrentPlan",pData, vn);
 	            	}catch(Exception ex){ex.printStackTrace();}
 	            	finally {	            		            	
 	            		Dispatch.call(compCLSID, "QuitRas");

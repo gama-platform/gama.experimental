@@ -59,7 +59,7 @@ public class Program2 extends COMLateBindingObject {
 		Ole32.INSTANCE.CoInitializeEx(Pointer.NULL, Ole32.COINIT_MULTITHREADED);
 		Program2 p=new Program2(); 
         try {
-    		p.Project_Open("E:\\Downloads\\Hello World Coupling\\HelloWorldCoupling.prj"); 
+    		p.Project_Open("E:\\Downloads\\HWC\\HelloWorldCoupling.prj"); 
     		p.Compute_CurrentPlan( );
         } finally {
         	p.QuitRas();
@@ -154,9 +154,10 @@ public class StringByReference extends ByReference {
 //        VARIANT vv = new VARIANT(new StringByReference(4).getPointer());
 //        VARIANT.ByReference vv = new VARIANT.ByReference(new StringArray(tabs));
         
+//        Pointer p = new Memory(8);      
         SAFEARRAY vaa=SAFEARRAY.createSafeArray( new VARTYPE(Variant.VT_BSTR), 8);
-
         VARIANT vava=new VARIANT(vaa);
+        VARIANT.ByReference pVal = new VARIANT.ByReference(vava.getPointer());
         //        vava.setValue(vaa);
         
 
@@ -169,8 +170,8 @@ public class StringByReference extends ByReference {
 //        v[1]=new VARIANT(vaa);
 //        v[2]=new VARIANT(BlockingMode);
 //        Variant retval;
-    	VARIANT V=this.invoke("Compute_CurrentPlan", rr,vava);
-    	System.out.println(V);
+    	this.invoke("Compute_CurrentPlan", rr,pVal);
+    	
     }
 //
 //    public void closeActiveWorkbook(boolean bSave) throws COMException {
