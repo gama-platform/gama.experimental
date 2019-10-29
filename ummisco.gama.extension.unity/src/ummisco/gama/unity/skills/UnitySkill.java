@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
@@ -15,19 +14,14 @@ import com.thoughtworks.xstream.XStream;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.ILocation;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.getter;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
@@ -35,7 +29,6 @@ import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.dev.utils.DEBUG;
 import ummisco.gama.network.skills.INetworkSkill;
-import ummisco.gama.network.skills.NetworkSkill;
 import ummisco.gama.serializer.factory.StreamConverter;
 import ummisco.gama.serializer.gamaType.converters.ConverterScope;
 import ummisco.gama.unity.connector.UnityMQTTConnector;
@@ -47,14 +40,12 @@ import ummisco.gama.unity.messages.GetTopicMessage;
 import ummisco.gama.unity.messages.ItemAttributes;
 import ummisco.gama.unity.messages.MonoActionTopicMessage;
 import ummisco.gama.unity.messages.MoveTopicMessage;
-import ummisco.gama.unity.messages.NotificationMessage;
 import ummisco.gama.unity.messages.NotificationTopicMessage;
 import ummisco.gama.unity.messages.PluralActionTopicMessage;
 import ummisco.gama.unity.messages.PositionTopicMessage;
 import ummisco.gama.unity.messages.PropertyTopicMessage;
 import ummisco.gama.unity.messages.ReplayMessage;
 import ummisco.gama.unity.messages.SetTopicMessage;
-import ummisco.gama.unity.messages.littosimMessage;
 import ummisco.gama.unity.mqtt.Utils;
 
 /**
@@ -69,6 +60,7 @@ import ummisco.gama.unity.mqtt.Utils;
 
 @doc ("The unity skill is intended to define the minimal set of behaviors required for agents that are able "
 		+ "to communicate with the unity engine in order to visualize GAMA simulations in different terminals")
+/*
 @vars ({ @variable (
 		name = IUnitySkill.UNITY_LOCATION,
 		type = IType.POINT,
@@ -101,7 +93,9 @@ import ummisco.gama.unity.mqtt.Utils;
 				name = IUnitySkill.UNITY_ROTATE,
 				type = IType.BOOL,
 				init = IKeyword.FALSE,
-				doc = @doc ("true if agent's rotation is enabled")), })
+				doc = @doc ("true if agent's rotation is enabled")),
+		})
+		*/
 @skill (
 		name = IUnitySkill.SKILL_NAME,
 		concept = { IConcept.NETWORK, IConcept.COMMUNICATION, IConcept.SKILL })
@@ -113,6 +107,7 @@ public class UnitySkill extends Skill implements IUnitySkill  {
 	final static String REGISTRED_SERVER = "registred_servers";
 	private final UnitySerializer unitySerializer = new UnitySerializer();
 	
+	   
 
 	static {
 		DEBUG.ON();
@@ -275,7 +270,7 @@ public class UnitySkill extends Skill implements IUnitySkill  {
 		//	connector.sendMessage(scope.getAgent(),"littosim", topicMessage);
 		//	connector.send(scope.getAgent(), "littosim", topicMessage);
 		//	connector.send(scope.getAgent(), IUnitySkill.TOPIC_MAIN, topicMessage);
-		//publishUnityMessage(scope, client, IUnitySkill.TOPIC_MAIN, topicMessage);
+		//  publishUnityMessage(scope, client, IUnitySkill.TOPIC_MAIN, topicMessage);
 
 		
 		}
@@ -851,6 +846,50 @@ public class UnitySkill extends Skill implements IUnitySkill  {
 		final XStream xstream = StreamConverter.loadAndBuild(cScope);
 		return xstream;
 	}
+	
+	
+
+	public synchronized void publishUnityMessage(final IScope scope, final MqttClient client, final String topic,
+			final Object message) {
+		final String messageString = serializeMessage(scope, message);
+		// messageString.replace("class=", "xsi:type=");
+		DEBUG.OUT("The message with replace is : \n " + messageString);
+		// DEBUG.OUT("The shape to send is \n "+messageString);
+		try {
+			final MqttTopic unityTopic = client.getTopic(topic);
+			final MqttMessage mqttMessage = new MqttMessage();
+			mqttMessage.setPayload(messageString.getBytes());
+			unityTopic.publish(mqttMessage);
+		} catch (final MqttPersistenceException e) {
+			e.printStackTrace();
+		} catch (final MqttException e) {
+			e.printStackTrace();
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	public String serializeMessage(final IScope scope, final Object message) {
+		final UnitySerializer unitySerializer = new UnitySerializer();
+		unitySerializer.SetSerializer(getXStream(scope));
+		return unitySerializer.agentShapeToXML(message);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
 
 	@getter (IUnitySkill.UNITY_SPEED)
 	public double getSpeed(final IAgent agent) {
@@ -969,36 +1008,11 @@ public class UnitySkill extends Skill implements IUnitySkill  {
 		if (agent == null) { return new GamaPoint(0, 0, 0); }
 		return (GamaPoint) agent.getAttribute(IUnitySkill.UNITY_SCALE);
 	}
+	
+	
+	
+	*/
 
-	public synchronized void publishUnityMessage(final IScope scope, final MqttClient client, final String topic,
-			final Object message) {
-		final String messageString = serializeMessage(scope, message);
-		// messageString.replace("class=", "xsi:type=");
-		DEBUG.OUT("The message with replace is : \n " + messageString);
-		// DEBUG.OUT("The shape to send is \n "+messageString);
-		try {
-			final MqttTopic unityTopic = client.getTopic(topic);
-			final MqttMessage mqttMessage = new MqttMessage();
-			mqttMessage.setPayload(messageString.getBytes());
-			unityTopic.publish(mqttMessage);
-		} catch (final MqttPersistenceException e) {
-			e.printStackTrace();
-		} catch (final MqttException e) {
-			e.printStackTrace();
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	public String serializeMessage(final IScope scope, final Object message) {
-		final UnitySerializer unitySerializer = new UnitySerializer();
-		unitySerializer.SetSerializer(getXStream(scope));
-		return unitySerializer.agentShapeToXML(message);
-	}
-	
-	
 	
 
 	
