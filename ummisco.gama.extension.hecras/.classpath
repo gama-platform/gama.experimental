@@ -15,5 +15,13 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/jna-5.4.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jna-platform-5.4.0.jar" sourcepath="C:/git/jna/contrib/platform"/>
+	<classpathentry exported="true" kind="lib" path="lib/hamcrest-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/j-interop.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/j-interopdeps.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcifs-1.2.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.25.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/common-lang3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ext/slf4j-simple-1.7.25.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

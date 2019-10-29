@@ -53,9 +53,10 @@ namespace ConsoleApp1
             string result = "";
             try
             {
-                //hrc.Compute_HideComputationWindow();
+                hrc.Compute_HideComputationWindow();
 
-                //hrc.Compute_CurrentPlan( 0,  null);
+                hrc.Compute_CurrentPlan( 0,  null);
+                hrc.ExportGIS();
                 //Console.WriteLine(hrc.Plan_GetFilename());
             }
             catch (Exception ex)
