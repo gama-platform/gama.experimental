@@ -119,12 +119,17 @@ public final class UnityMQTTConnector extends Connector {
 	
 	public void sendMessage(final IScope scope, final String topic, final String sender, final String objectName, final Object content) throws MqttException {
 		final String message = buildMessage(scope, sender, objectName, content);
+		System.out.println(" Message to send is : -------> ");
+		System.out.println(" Message to send is : -------> "+message);
 		sendMessage( topic, message);
 	}
 	
 	private String buildMessage(final IScope scope, final String sender, final String objectName, final Object content) {
-		if(content instanceof MinimalAgent) {
-			final MinimalAgent mAgent = (MinimalAgent) scope.getArg("content", IType.NONE);
+		System.out.println("--------------> The agent is : 1");
+		if(content instanceof MinimalAgent ){
+			System.out.println("--------------> The agent is : 2");
+			final MinimalAgent mAgent = (MinimalAgent) content; //scope.getArg("content", IType.NONE);
+			System.out.println("The agent is : "+mAgent);
 			final UnityAgent UAgent = new UnityAgent();
 			UAgent.getUnityAgent(mAgent);
 			GamaMessage gameMessage = new GamaMessage(scope, sender, objectName, UAgent);

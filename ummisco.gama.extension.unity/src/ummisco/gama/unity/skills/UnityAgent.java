@@ -1,7 +1,9 @@
 package ummisco.gama.unity.skills;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import msi.gama.metamodel.agent.MinimalAgent;
@@ -14,6 +16,7 @@ import msi.gama.util.GamaPair;
 import msi.gama.util.IList;
 import msi.gama.util.IMap.IPairList;
 import ummisco.gama.dev.utils.DEBUG;
+import ummisco.gama.unity.data.type.AgentAttribute;
 import msi.gama.util.GamaColor.NamedGamaColor;
 
 public class UnityAgent {
@@ -23,6 +26,13 @@ public class UnityAgent {
 		public Object geometryType;
 		public Object vertices;
 		public GamaPoint location;
+		
+		public  ArrayList<AgentAttribute> attributes ; 
+		
+		
+				
+	
+
 		
 
 		public Object color;
@@ -34,7 +44,7 @@ public class UnityAgent {
 		}
 				
 		static {
-			DEBUG.OFF();
+			DEBUG.ON();
 		}
 		public void getUnityAgent(MinimalAgent miniAgent) {
 			this.agentName = miniAgent.getName();
@@ -44,6 +54,7 @@ public class UnityAgent {
 			this.location = (GamaPoint) miniAgent.getLocation();
 			
 			
+			this.attributes = new ArrayList<AgentAttribute>();
 			
 		//	GamaShape gs = (GamaShape) miniAgent.getGeometry();
 		//	GamaPairList pairs = gs.getAttributes().getPairs();
@@ -64,6 +75,8 @@ public class UnityAgent {
 					break;
 					
 					default:
+						final AgentAttribute agAtt = new AgentAttribute(e.getClass().getName(), (String) gp.getKey(), ""+gp.getValue());
+						attributes.add(agAtt);
 					break;
 				}
 				
@@ -72,9 +85,10 @@ public class UnityAgent {
 				DEBUG.OUT("Object type is : "+e.getClass());
 				DEBUG.OUT("Object key is : "+gp.getKey());
 				DEBUG.OUT("Object value is : "+gp.getValue());
-				
-			
+				DEBUG.OUT("Object Gaml type is : "+gp.getGamlType());		
 			}
+			
+			DEBUG.OUT("Attributes list size ios : "+attributes.size());		
 			
 					
 				
