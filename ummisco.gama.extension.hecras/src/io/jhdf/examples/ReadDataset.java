@@ -66,6 +66,7 @@ public class ReadDataset {
 				  
 				  
 			    p.println(ArrayUtils.toString(frame[100]).replace("},{", "\n").replace("{{", "").replace("}}", ""));
+			    p.close();
 			} catch (Exception e1) {
 			    e1.printStackTrace();
 			}

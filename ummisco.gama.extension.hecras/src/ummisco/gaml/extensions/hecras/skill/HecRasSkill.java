@@ -103,6 +103,34 @@ public class HecRasSkill extends Skill {
 		}
 		return res;
 	}
+
+
+	@action(name = "Project_Close", doc = @doc(value = "Project_Close", returns = "Project_Close", examples = {
+			@example("Project_Close()") }))
+	public Object primProject_Close(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
+		try {
+			res = hrc.Project_Close();
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+			ex.printStackTrace();
+		}
+		return res;
+	}
+
+
+	@action(name = "ExportGIS", doc = @doc(value = "ExportGIS", returns = "ExportGIS", examples = {
+			@example("ExportGIS()") }))
+	public Object primExportGIS(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
+		try {
+			res = hrc.ExportGIS();
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+			ex.printStackTrace();
+		}
+		return res;
+	}
 	
 	@action(name = "Update_Data", args = {
 			@arg(name = "num", type = IType.INT, optional = false, doc = @doc("number step")) }, doc = @doc(value = "update data", returns = "updated data", examples = {
@@ -154,6 +182,7 @@ public class HecRasSkill extends Skill {
 					  
 					  
 				    p.println(ArrayUtils.toString(frame[num]).replace("},{", "\n").replace("{{", "").replace("}}", ""));//.replace(",", " ")
+				    p.close();
 				} catch (Exception e1) {
 				    e1.printStackTrace();
 				}
