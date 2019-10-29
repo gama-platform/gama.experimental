@@ -30,14 +30,14 @@ public class ReadDataset {
 			Dataset dataset = hdfFile.getDatasetByPath("/Results/Unsteady/Output/Output Blocks/Base Output/Unsteady Time Series/2D Flow Areas/Hello 2D Area/Depth");
 			// data will be a java array of the dimensions of the HDF5 dataset
 			float[][] data = (float[][]) dataset. getData();
-			try (PrintWriter p = new PrintWriter(new FileOutputStream("E:\\Depth.asc", false))) {
+			try (PrintWriter p = new PrintWriter(new FileOutputStream("E:\\Depth.csv", false))) {
 				int x=dataset.getDimensions()[0];
 				int y=dataset.getDimensions()[1];
-				p.println("ncols "+x);
-				p.println("nrows "+y);
-				p.println("xllcorner     0.0");
-				p.println("yllcorner     0.0");
-				p.println("cellsize      2.0");
+//				p.println("ncols 40");//"+x);1118216
+//				p.println("nrows 20");//"+y);
+//				p.println("xllcorner     0.0");
+//				p.println("yllcorner     0.0");
+//				p.println("cellsize      2.0");
 
 				  float[] oneDArray = new float[(int) dataset.getSize()];
 				  for(int i = 0; i < x; i ++)
@@ -50,12 +50,12 @@ public class ReadDataset {
 				  
 				  float[][][] frame=new float[2000][][];
 				  int f =0; int fi=0;
-				  while (fi<oneDArray.length) {
+				  while (fi<oneDArray.length -800) {
 					  
-				      frame[f]=new float[40][20];
-					  for(int i = 0; i < 40; i ++)
+				      frame[f]=new float[20][40];
+					  for(int i = 0; i < 20; i ++)
 					  {
-					    for(int s = 0; s < 20; s ++)
+					    for(int s = 0; s < 40; s ++)
 					    {
 					      frame[f][i][s] = oneDArray[fi];
 					      fi++;
@@ -65,7 +65,7 @@ public class ReadDataset {
 				  }
 				  
 				  
-			    p.println(ArrayUtils.toString(data).replace("},{", "\n").replace(",", " ").replace("{{", "").replace("}}", ""));
+			    p.println(ArrayUtils.toString(frame[100]).replace("},{", "\n").replace("{{", "").replace("}}", ""));
 			} catch (Exception e1) {
 			    e1.printStackTrace();
 			}

@@ -4,12 +4,20 @@ import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.skill;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Ole32;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef.HWND;
+
+import io.jhdf.HdfFile;
+import io.jhdf.api.Dataset;
+
 import com.sun.jna.platform.win32.WinUser;
 
 import msi.gama.precompiler.GamlAnnotations.action;
@@ -95,6 +103,70 @@ public class HecRasSkill extends Skill {
 		}
 		return res;
 	}
+	
+	@action(name = "Update_Data", args = {
+			@arg(name = "num", type = IType.INT, optional = false, doc = @doc("number step")) }, doc = @doc(value = "update data", returns = "updated data", examples = {
+					@example("Update_Data(100)") }))
+	public Object primUpdate_Data(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
+		try {
+
+			Integer num = scope.getIntArg("num");
+			File file = new File("E:\\Downloads\\HWC\\HelloWorldCoupling.p04.hdf");
+
+			try (HdfFile hdfFile = new HdfFile(file)) {
+				Dataset dataset = hdfFile.getDatasetByPath("/Results/Unsteady/Output/Output Blocks/Base Output/Unsteady Time Series/2D Flow Areas/Hello 2D Area/Depth");
+				// data will be a java array of the dimensions of the HDF5 dataset
+				float[][] data = (float[][]) dataset. getData();
+				try (PrintWriter p = new PrintWriter(new FileOutputStream("E:\\git\\hecras_gama_coupling\\includes\\Depth.csv", false))) {
+					int x=dataset.getDimensions()[0];
+					int y=dataset.getDimensions()[1];
+//					p.println("ncols 40");//"+x);1118216
+//					p.println("nrows 20");//"+y);
+//					p.println("xllcorner     0.0");
+//					p.println("yllcorner     0.0");
+//					p.println("cellsize      2.0");
+
+					  float[] oneDArray = new float[(int) dataset.getSize()];
+					  for(int i = 0; i < x; i ++)
+					  {
+					    for(int s = 0; s < y; s ++)
+					    {
+					      oneDArray[(i * y) + s] = data[i][s];
+					    }
+					  }
+					  
+					  float[][][] frame=new float[2000][][];
+					  int f =0; int fi=0;
+					  while (fi<oneDArray.length -800) {
+						  
+					      frame[f]=new float[20][40];
+						  for(int i = 0; i < 20; i ++)
+						  {
+						    for(int s = 0; s < 40; s ++)
+						    {
+						      frame[f][i][s] = oneDArray[fi];
+						      fi++;
+						    }
+						  }
+						  f++;
+					  }
+					  
+					  
+				    p.println(ArrayUtils.toString(frame[num]).replace("},{", "\n").replace("{{", "").replace("}}", ""));//.replace(",", " ")
+				} catch (Exception e1) {
+				    e1.printStackTrace();
+				}
+				//System.out.println(ArrayUtils.toString(data));
+			}
+			
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+			ex.printStackTrace();
+		}
+		return res;
+	}
+
 	
 	@action(name = "QuitRas", doc = @doc(value = "QuitRas", returns = "QuitRas", examples = {
 			@example("QuitRas()") }))
