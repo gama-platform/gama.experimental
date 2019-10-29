@@ -42,7 +42,7 @@ namespace ConsoleApp1
             Console.WriteLine(ex.ToString());
         }
             */
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
         private static void WorkThreadFunction()
