@@ -22,9 +22,10 @@ species CheckingAgent skills: [unity]{
 	}
 	
 	init{
-		 do connectMqttClient();
-		 do subscribe_To_Topic topic:"littosim";
-		 do subscribe_To_Topic topic:"replay";
+		 do connect_unity  to:"localhost"  login:"admin" password:"admin" port: 1883;
+		
+		 do subscribe_to_topic topic:"littosim";
+		 do subscribe_to_topic topic:"replay";
 		// do subscribe_To_Topic topic:"notification";
 		 write "connected";
 		 
@@ -33,7 +34,7 @@ species CheckingAgent skills: [unity]{
 	
 	//	do getUnityField objectName: playerName attribute:"speed"; 											    // getUnityField
 		
-		do callUnityMonoAction objectName: playerName   actionName:"setWinText"  attribute:" --- Game ON --- "; // monoActionTopic
+		do callUnityMonoAction objectName: "GamaManager"   actionName:"InitGenericScene"  attribute:"true "; // monoActionTopic
 		
 		map<string,string> AtList <- ["s"::50, "count"::"Count text", "win"::"Win text"];
 		do callUnityPluralAction objectName: playerName actionName:"changeAllAttributes"  attributes:AtList; 	// callUnityPluralAction
@@ -101,7 +102,7 @@ species CheckingAgent skills: [unity]{
 experiment CheckAll type:gui {
 /** Insert here the definition of the input and output of the model */
 	output {
-		display Dp1 type:opengl2{
+		display Dp1 type:opengl{
 			species CheckingAgent aspect: base;
 		}		
 	}

@@ -30,11 +30,11 @@ global skills: [network] {
 			color <- rnd_color(255);
 			shape <- sphere(4);
 			
-			do connectMqttClient();
+			do connect_unity  to:"localhost"  login:"admin" password:"admin" port: 1883;
 			write "connected";
-			do subscribe_To_Topic topic: "Gama";
-			do subscribe_To_Topic topic: "replay";
-			do subscribe_To_Topic topic: "notification";
+			do subscribe_to_topic topic: "Gama";
+			do subscribe_to_topic topic: "replay";
+			do subscribe_to_topic topic: "notification";
 			do unityNotificationSubscribe notificationId: "Notification_01" objectName: "Player0" fieldType: "field" fieldName: "count" fieldValue: "5" fieldOperator: "==";
 		}
 
@@ -144,7 +144,7 @@ species GamaAgent skills: [unity] {
 	}
 
 	reflex checkNotification when: !isNotifiyed {
-		isNotifiyed <- isNotificationTrue("Notification_01");
+		//isNotifiyed <- isNotificationTrue("Notification_01");
 	}
 
 	reflex endGame when: isNotifiyed
