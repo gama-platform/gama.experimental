@@ -1,27 +1,10 @@
 package ummisco.gama.unity.skills;
 
 import com.thoughtworks.xstream.XStream;
-import com.vividsolutions.jts.geom.Polygon;
 
-import msi.gama.common.geometry.GamaCoordinateSequence;
-import msi.gama.common.geometry.GamaCoordinateSequenceFactory;
-import msi.gama.common.geometry.GamaGeometryFactory;
-import msi.gama.extensions.messaging.GamaMailbox;
-import msi.gama.extensions.messaging.GamaMessage;
-import msi.gama.metamodel.agent.MinimalAgent;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.GamaShape;
-import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaColor;
-import msi.gama.util.GamaColor.NamedGamaColor;
-import msi.gama.util.GamaList;
-import msi.gaml.types.GamaIntegerType;
-import msi.gaml.types.GamaListType;
-import msi.gaml.types.GamaMessageType;
-import msi.gaml.types.GamaNoType;
-import msi.gaml.types.GamaStringType;
-import msi.gaml.types.ParametricType;
-import ummisco.gama.unity.messages.PropertyTopicMessage;
+import msi.gama.util.IReference.AgentAttribute;
 
 public class UnitySerializer {
 
@@ -31,12 +14,21 @@ public class UnitySerializer {
 		
 	}
 	
+	
+	
 	public UnitySerializer (XStream xs) {
 		this.xstream = xs;
 	}
 	
 	public void SetSerializer(XStream xs) {
 		this.xstream = xs;
+			
+		xstream.alias("geometryType", msi.gama.metamodel.shape.IShape.Type.class);
+		xstream.alias("color", GamaColor.class);
+		xstream.alias("NamedGamaColor", msi.gama.util.GamaColor.NamedGamaColor.class);
+		xstream.alias("GamaPoint", GamaPoint.class); 
+		xstream.alias("UnityAgent", UnityAgent.class); 
+		xstream.alias("AgentAttribute", ummisco.gama.unity.data.type.AgentAttribute.class); 
 	}
 	
 	
@@ -78,12 +70,9 @@ public class UnitySerializer {
 		xstream.omitField(GamaGeometryFactory.class, "factory"); // 
 		xstream.omitField(GamaGeometryFactory.class, "factory"); // 
 	*/	
-		
-		xstream.alias("geometryType", msi.gama.metamodel.shape.IShape.Type.class);
-		xstream.alias("color", GamaColor.class);
-		xstream.alias("NamedGamaColor", msi.gama.util.GamaColor.NamedGamaColor.class);
-		xstream.alias("GamaPoint", GamaPoint.class); 
-		xstream.alias("UnityAgent", UnityAgent.class); 
+	
+		//xstream.se
+	
 		//xstream.alias("GamaMessage", GamaMessage.class); 
 
 

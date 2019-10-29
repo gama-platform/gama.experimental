@@ -30,9 +30,9 @@ species CheckingAgent skills: [unity]{
 	}
 	
 	init{
-		 do connectMqttClient();
+		 do connect_unity  to:"localhost"  login:"admin" password:"admin" port: 1883;
 		 
-		 do subscribe_To_Topic topic:"littosim";
+		 do subscribe_to_topic topic:"littosim";
 		
 		 write "connected";
 		 
