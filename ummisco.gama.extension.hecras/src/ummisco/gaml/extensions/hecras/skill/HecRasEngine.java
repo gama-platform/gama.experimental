@@ -46,8 +46,11 @@ public class HecRasEngine extends COMLateBindingObject {
 			p.Project_Open("E:\\Downloads\\HWC\\HelloWorldCoupling.prj");
 			p.Compute_HideComputationWindow();
 			p.Compute_CurrentPlan();
+			p.Output_Initialize();
+			p.ExportGIS();
 		} finally {
 			p.QuitRas();
+			p.release();
 			Ole32.INSTANCE.CoUninitialize();
 
 //			HWND hwnd = User32.INSTANCE.FindWindow
@@ -55,12 +58,12 @@ public class HecRasEngine extends COMLateBindingObject {
 //		        
 //		        User32.INSTANCE.PostMessage(hwnd, WinUser.WM_CLOSE, null, null);
 		}
-		try {
-			Thread.sleep(20000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(20000);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	public HecRasEngine() throws COMException {

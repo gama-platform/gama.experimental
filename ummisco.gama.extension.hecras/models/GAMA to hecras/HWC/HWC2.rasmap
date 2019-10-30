@@ -1,0 +1,290 @@
+<RASMapper>
+  <Version>2.0.0</Version>
+  <RASProjectionFilename Filename=".\Projection.prj" />
+  <Features>
+    <Layer Name="Profile Lines" Type="PolylineFeatureLayer" Filename=".\Features\Profile Lines.shp">
+      <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+    </Layer>
+  </Features>
+  <Geometries Checked="True" Expanded="True">
+    <Layer Name="Hello Plain" Type="RASGeometry" Filename=".\HelloWorldCoupling.g01.hdf">
+      <Layer Type="RASRiver" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="2" r0c0="River" r0c1="Reach" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASJunction">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASBankLines" Checked="True" />
+      <Layer Type="RASXS" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="River Station" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASStorageArea">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="MeshPerimeterLayer">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+    </Layer>
+    <Layer Name="Hello River" Type="RASGeometry" Filename=".\HelloWorldCoupling.g02.hdf">
+      <Layer Type="RASRiver" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="2" r0c0="River" r0c1="Reach" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASJunction">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASBankLines" Checked="True" />
+      <Layer Type="RASXS" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="River Station" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASStorageArea">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="MeshPerimeterLayer">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+    </Layer>
+    <Layer Name="2D Flood Area" Type="RASGeometry" Filename=".\HelloWorldCoupling.g03.hdf">
+      <Layer Type="RASRiver">
+        <LabelFeatures Checked="True" rows="1" cols="2" r0c0="River" r0c1="Reach" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASJunction">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASXS">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="River Station" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASStorageArea">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="MeshPerimeterLayer" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+    </Layer>
+    <Layer Name="Hello Plain 2" Type="RASGeometry" Filename=".\HelloWorldCoupling.g04.hdf">
+      <Layer Type="RASRiver" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="2" r0c0="River" r0c1="Reach" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASJunction">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASBankLines" Checked="True" />
+      <Layer Type="RASXS" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="River Station" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASStorageArea">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="MeshPerimeterLayer">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+    </Layer>
+    <Layer Name="Hello River 2" Type="RASGeometry" Filename=".\HelloWorldCoupling.g05.hdf">
+      <Layer Type="RASRiver" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="2" r0c0="River" r0c1="Reach" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASJunction">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASBankLines" Checked="True" />
+      <Layer Type="RASXS" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="River Station" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASStorageArea">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="MeshPerimeterLayer">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+    </Layer>
+    <Layer Name="Hello Plain 3" Type="RASGeometry" Filename=".\HelloWorldCoupling.g06.hdf">
+      <Layer Type="RASRiver" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="2" r0c0="River" r0c1="Reach" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASJunction">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASBankLines" Checked="True" />
+      <Layer Type="RASXS" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="River Station" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASStorageArea">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="MeshPerimeterLayer">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+    </Layer>
+    <Layer Name="Hello Plain 200x100" Type="RASGeometry" Filename=".\HelloWorldCoupling.g07.hdf">
+      <Layer Type="RASRiver" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="2" r0c0="River" r0c1="Reach" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASJunction">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASBankLines" Checked="True" />
+      <Layer Type="RASXS" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="River Station" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASStorageArea">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="MeshPerimeterLayer">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+    </Layer>
+    <Layer Name="Hello River 200x100" Type="RASGeometry" Filename=".\HelloWorldCoupling.g08.hdf">
+      <Layer Type="RASRiver" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="2" r0c0="River" r0c1="Reach" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASJunction">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASBankLines" Checked="True" />
+      <Layer Type="RASXS" Checked="True">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="River Station" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASStorageArea">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="MeshPerimeterLayer">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+    </Layer>
+    <Layer Name="Hello 2D Area" Type="RASGeometry" Expanded="True" Filename=".\HelloWorldCoupling.g09.hdf">
+      <Layer Type="RASRiver">
+        <LabelFeatures Checked="True" rows="1" cols="2" r0c0="River" r0c1="Reach" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASJunction">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASXS">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="River Station" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASStorageArea">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="MeshPerimeterLayer">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="Name" Position="3" Color="-16777216" />
+      </Layer>
+      <Layer Type="RASBoundaryConditionLines" Checked="True" />
+    </Layer>
+    <Layer Name="Hello Plain" Type="RASGeometry" Filename=".\HWC2.g01.hdf" />
+    <Layer Name="Hello River" Type="RASGeometry" Filename=".\HWC2.g02.hdf" />
+    <Layer Name="2D Flood Area" Type="RASGeometry" Filename=".\HWC2.g03.hdf" />
+    <Layer Name="Hello Plain 2" Type="RASGeometry" Filename=".\HWC2.g04.hdf" />
+    <Layer Name="Hello River 2" Type="RASGeometry" Filename=".\HWC2.g05.hdf" />
+    <Layer Name="Hello Plain 3" Type="RASGeometry" Filename=".\HWC2.g06.hdf" />
+    <Layer Name="Hello Plain 200x100" Type="RASGeometry" Filename=".\HWC2.g07.hdf" />
+    <Layer Name="Hello River 200x100" Type="RASGeometry" Filename=".\HWC2.g08.hdf" />
+    <Layer Name="Hello 2D Area" Type="RASGeometry" Expanded="True" Filename=".\HWC2.g09.hdf">
+      <Layer Type="RASD2FlowArea" Checked="True" />
+    </Layer>
+  </Geometries>
+  <Results Checked="True" Expanded="True">
+    <Layer Name="Plan 01" Type="RASResults" Filename=".\HWC2.p01.hdf">
+      <Layer Type="RASGeometry" Filename=".\HWC2.p01.hdf" />
+      <Layer Name="depth" Type="RASResultsMap">
+        <MapParameters MapType="depth" ProfileIndex="2147483647" ProfileName="Max" />
+      </Layer>
+      <Layer Name="velocity" Type="RASResultsMap">
+        <MapParameters MapType="velocity" ProfileIndex="2147483647" ProfileName="Max" />
+      </Layer>
+      <Layer Name="elevation" Type="RASResultsMap">
+        <MapParameters MapType="elevation" ProfileIndex="2147483647" ProfileName="Max" />
+      </Layer>
+    </Layer>
+    <Layer Name="Plan 04" Type="RASResults" Checked="True" Expanded="True" Filename=".\HWC2.p04.hdf">
+      <Layer Type="RASGeometry" Filename=".\HWC2.p04.hdf" />
+      <Layer Name="depth" Type="RASResultsMap" Checked="True" Filename=".\Plan 04\Depth (25JUL2019 00 01 00).vrt">
+        <LabelFeatures Checked="True" rows="1" cols="1" r0c0="FID" Position="5" Color="-16777216" />
+        <MapParameters MapType="depth" LayerName="Depth" OutputMode="Stored Current Terrain" StoredFilename=".\Plan 04\Depth (25JUL2019 00 01 00).vrt" Terrain="Hello DEM 200x100" ProfileIndex="1" ProfileName="25JUL2019 00:01:00" ArrivalDepth="0" />
+      </Layer>
+      <Layer Name="velocity" Type="RASResultsMap">
+        <MapParameters MapType="velocity" ProfileIndex="2147483647" ProfileName="Max" />
+      </Layer>
+      <Layer Name="elevation" Type="RASResultsMap">
+        <MapParameters MapType="elevation" ProfileIndex="2147483647" ProfileName="Max" />
+      </Layer>
+    </Layer>
+  </Results>
+  <MapLayers Expanded="True">
+    <Layer Name="new_building_phuc_xa" Type="PolygonFeatureLayer" Checked="True" Filename="..\..\Google Drive\SE. Internship\Phuc Xa - ESCAPE\GIS data Phuc Xa\new_building_phuc_xa.shp" />
+    <Layer Name="new_road_phuc_xa" Type="PolylineFeatureLayer" Checked="True" Filename="..\..\Google Drive\SE. Internship\Phuc Xa - ESCAPE\GIS data Phuc Xa\new_road_phuc_xa.shp" />
+    <Layer Name="new_walking_area_phuc_xa" Type="PolygonFeatureLayer" Checked="True" Filename="..\..\Google Drive\SE. Internship\Phuc Xa - ESCAPE\GIS data Phuc Xa\new_walking_area_phuc_xa.shp" />
+    <Layer Name="new_water_body_precise" Type="PolygonFeatureLayer" Filename="..\..\Google Drive\SE. Internship\Phuc Xa - ESCAPE\GIS data Phuc Xa\new_water_body_precise.shp" />
+    <Layer Name="new_water_body_RedRiver" Type="PolygonFeatureLayer" Filename="..\..\Google Drive\SE. Internship\Phuc Xa - ESCAPE\GIS data Phuc Xa\new_water_body_RedRiver.shp" />
+    <Layer Name="OpenStreetMaps" Type="WMSLayer" Filename="%LocalAppData%\HEC\Mapping\506\XML\OpenStreetMaps.xml">
+      <Alpha>255</Alpha>
+      <ResampleMethod>near</ResampleMethod>
+    </Layer>
+  </MapLayers>
+  <Terrains Checked="True" Expanded="True">
+    <Layer Name="Hello Terrain 5m" Type="TerrainLayer" Filename=".\Terrain\Hello Terrain 5m.hdf">
+      <Symbology>
+        <SurfaceFill Colors="-10039894,-256,-16744448,-23296,-7667712,-5952982,-8355712,-1286" Values="0,2.7234705266035,9.96232164414588,9.9698573153167,9.97739298648753,9.98492865765835,9.99246432882918,10" Stretched="True" RegenerateForScreen="False" />
+      </Symbology>
+      <Alpha>255</Alpha>
+      <ResampleMethod>near</ResampleMethod>
+      <Surface On="True" />
+    </Layer>
+    <Layer Name="Hello Terrain 2 - 10m" Type="TerrainLayer" Filename=".\Terrain 2\Hello Terrain 2 - 10m.hdf">
+      <Symbology>
+        <SurfaceFill Colors="-10039894,-256,-16744448,-23296,-7667712,-5952982,-8355712,-1286" Values="0,1.87118767680339,3.74015231092437,9.96388104825224,9.97291078618918,9.98194052412612,9.99097026206306,10" Stretched="True" RegenerateForScreen="False" />
+      </Symbology>
+      <Alpha>255</Alpha>
+      <ResampleMethod>near</ResampleMethod>
+      <Surface On="True" />
+    </Layer>
+    <Layer Name="Hello DEM 200x100" Type="TerrainLayer" Checked="True" Filename=".\Terrain 200x100\Hello DEM 200x100.hdf">
+      <Symbology>
+        <SurfaceFill Colors="-10039894,-256,-16744448,-23296,-7667712,-5952982,-8355712,-1286" Values="0.03125,4.72079031808036,9.96712820870536,9.97370256696429,9.98027692522321,9.98685128348214,9.99342564174107,10" Stretched="True" RegenerateForScreen="False" />
+      </Symbology>
+      <Alpha>255</Alpha>
+      <ResampleMethod>near</ResampleMethod>
+      <Surface On="True" />
+    </Layer>
+    <Layer Name="Hanoi DEM" Type="TerrainLayer" Filename=".\Terrain\Hanoi DEM.hdf">
+      <Symbology>
+        <SurfaceFill Colors="-10039894,-256,-16744448,-23296,-7667712,-5952982,-8355712,-1286" Values="-38,4.68370485910267,6.97145759482251,9.21428816077443,11.4085324708394,14.1179904129552,23.0383071747284,1275" Stretched="True" RegenerateForScreen="False" />
+      </Symbology>
+      <Alpha>255</Alpha>
+      <ResampleMethod>near</ResampleMethod>
+      <Surface On="True" />
+    </Layer>
+  </Terrains>
+  <CurrentView>
+    <MaxX>588391.165540879</MaxX>
+    <MinX>588183.189922303</MinX>
+    <MaxY>2327687.70599662</MaxY>
+    <MinY>2327536.26591893</MinY>
+  </CurrentView>
+  <VelocitySettings>
+    <Density>1.5</Density>
+    <Lifetime>100</Lifetime>
+    <Radius>0.75</Radius>
+    <Method>2</Method>
+    <Timestep>1</Timestep>
+    <StaticColor>Black</StaticColor>
+  </VelocitySettings>
+  <AnimationSettings>
+    <DelayTimer>0</DelayTimer>
+  </AnimationSettings>
+  <Units>SI Units</Units>
+  <RenderMode>hybrid</RenderMode>
+  <MarksWarpMethod>False</MarksWarpMethod>
+  <CurrentSettings>
+    <ProjectSettings>
+      <RiverStationUnits>Feet</RiverStationUnits>
+      <RiverStationDecimalPlaces>0</RiverStationDecimalPlaces>
+      <HorizontalDecimalPlaces>1</HorizontalDecimalPlaces>
+      <VerticalDecimalPlaces>2</VerticalDecimalPlaces>
+      <XSMaxPoints>450</XSMaxPoints>
+      <LSMaxPoints>1000</LSMaxPoints>
+    </ProjectSettings>
+    <Folders>
+      <TerrainDestinationFolder>.\Terrain 200x100</TerrainDestinationFolder>
+      <TerrainSourceFolder>.\Terrain 200x100</TerrainSourceFolder>
+      <AddDataFolder>..\..\Google Drive\SE. Internship\Phuc Xa - ESCAPE\GIS data Phuc Xa</AddDataFolder>
+    </Folders>
+  </CurrentSettings>
+</RASMapper>

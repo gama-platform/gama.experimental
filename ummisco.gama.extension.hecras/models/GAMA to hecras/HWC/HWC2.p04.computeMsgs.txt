@@ -1,0 +1,74 @@
+Message  | Plan: 'Plan 04' (HWC2.p04)
+Message  | Simulation started at: 30Oct2019 10:32:27 PM
+Message  | PROCESS:RasGeomWriter
+Message  | 
+Message  | Writing Geometry
+Message  | Hello 2D Area: Mesh property tables are current.
+Progress | 1
+Message  | Completed Writing Geometry
+Message  | PROCESS:RASGeomPreprocess
+Message  | 	
+Message  | Geometric Preprocessor HEC-RAS 5.0.6 November
+Progress | 0.2
+Progress | 0.3
+Progress | 0.3333333
+Progress | 1
+Message  | 
+Message  | Finished Processing Geometry
+Message  | 
+Message  | Starting to copy Geometry Data to Results
+Message  | Completed copying Geometry Data to Results
+Message  | 
+Message  | PROCESS:RasUnsteady
+Message  | 
+Message  | Performing Unsteady Flow Simulation  HEC-RAS 5.0.6 November
+Message  | 
+Progress | 0.1
+Progress | 0.2
+Progress | 0.3
+Progress | 0.3285714
+Progress | 0.3571429
+Progress | 0.3857143
+Progress | 0.4142857
+Progress | 0.4428571
+Progress | 0.4714286
+Progress | 0.5
+Progress | 0.5285715
+Progress | 0.5571429
+Progress | 0.5857143
+Progress | 0.6142858
+Progress | 0.6428572
+Progress | 0.6714286
+Progress | 0.6
+Progress | 0.7333333
+Progress | 1
+Message  | Writing Results to DSS
+Message  |  
+Message  | 
+Message  | Finished Unsteady Flow Simulation
+Message  | PROCESS:RasComputeMaps
+Message  | 
+Message  | Computing Stored Results Maps
+Message  | 
+Message  | Generating stored map: 'Depth (25JUL2019 00:01:00)'
+Message  | 
+Message  | Unhandled Exception: System.IO.IOException: The process cannot access the file 'E:\\git\\gama.experimental\\ummisco.gama.extension.hecras\\models\\GAMA to hecras\\HWC\\Plan 04\\Depth (25JUL2019 00 01 00).MergedInputs.tif' because it is being used by another process.
+Message  |    at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+Message  |    at System.IO.File.InternalDelete(String path, Boolean checkHost)
+Message  |    at RasMapperLib.MapProcessingEngine.EnsureMapFilename(Int32 t)
+Message  |    at RasMapperLib.MapProcessingEngine.StoreMap()
+Message  |    at RasMapperLib.MapProcessingEngine.StoreMap(RASResultsMap map, TerrainLayer terrain, String mapBaseFilename, ProgressReporterBase reporter)
+Message  |    at RasMapperLib.RASResultsMap.StoreMap(ProgressReporterBase reporter)
+Message  |    at RasComputeMaps.mComputeMaps.Main()
+Message  | 
+Message  | Error with program: RasComputeMaps.exe Exit Code = -532462766
+Message  | 
+Message  | 
+Message  | Computations Summary
+Message  | 
+Message  | Computation Task	Time(hh:mm:ss)
+Message  | Completing Geometry(64)	<1
+Message  | Preprocessing Geometry(64)	<1
+Message  | Unsteady Flow Computations(64)	<1
+Message  | Computing Maps(64)	       1
+Message  | Complete Process	       2

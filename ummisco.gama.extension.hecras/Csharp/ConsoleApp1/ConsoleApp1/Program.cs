@@ -20,7 +20,7 @@ namespace ConsoleApp1
             bool block = true;
             Array sa = null;
             hrc.Init_hecras();
-            hrc.Project_Open(@"E:\Downloads\HWC\HelloWorldCoupling.prj");
+            hrc.Project_Open(@"E:\Downloads\HWC\HWC2.prj");
             //hrc.Compute_ShowComputationWindow();
 
             String ret = hrc.Compute_CurrentPlan();
