@@ -47,6 +47,7 @@ public class HecRasSkill extends Skill {
 			try {
 				if(hrc!=null) {					
 					hrc.QuitRas();
+					hrc.release();
 					Ole32.INSTANCE.CoUninitialize();
 					hrc=null;
 //					HWND hwnd = User32.INSTANCE.FindWindow
@@ -64,7 +65,7 @@ public class HecRasSkill extends Skill {
 	}
 
 	@action(name = "Project_Open", args = {
-			@arg(name = "file", type = IType.STRING, optional = false, doc = @doc("project path")) }, doc = @doc(value = "open hecras project", returns = "opened hecras project", examples = {
+			@arg(name = "file", type = IType.FILE, optional = false, doc = @doc("project path")) }, doc = @doc(value = "open hecras project", returns = "opened hecras project", examples = {
 					@example("Project_Open(\"E:\\Downloads\\HWC\\HelloWorldCoupling.prj\")") }))
 	public Object primProject_Open(final IScope scope) throws GamaRuntimeException {
 		int res = 0;
@@ -203,6 +204,7 @@ public class HecRasSkill extends Skill {
 		int res = 0;
 		try {
 			res = hrc.QuitRas();
+			hrc.release();
 			Ole32.INSTANCE.CoUninitialize();
 			hrc=null;
 //			HWND hwnd = User32.INSTANCE.FindWindow

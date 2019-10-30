@@ -48,23 +48,32 @@ namespace ConsoleApp1
         {
             int nmsg = 0;
             bool block = true;
-            //Array arr = null;// CreateInstance(typeof(string), 0);
-            string[] arr = new string[1] {null};
+            Array arr = null;// CreateInstance(typeof(string), 0);
+            //string[] arr = new string[1] {null};
             string result = "";
             try
             {
                 hrc.Compute_HideComputationWindow();
-
-                hrc.Compute_CurrentPlan( 0,  null);
+                result = hrc.CurrentGeomHDFFile();
+                hrc.Compute_CurrentPlan( 0,  null,true);
+                /*
+                hrc.Output_Initialize();
+                hrc.Output_ComputationLevel_Export("E:\\aa.txt", result, true,true,true,true);
+                //hrc.ShowRasMapper();
                 hrc.ExportGIS();
+                hrc.Output_GetProfiles(0,arr);
+                hrc.PlotPFGeneral("", "");
+                hrc.ShowRas();
+                hrc.Geometry().Save();
+                */
                 //Console.WriteLine(hrc.Plan_GetFilename());
             }
             catch (Exception ex)
             {
                 result=ex.ToString();
             }
-            hrc.Project_Close();
-            hrc.QuitRas();
+            //hrc.Project_Close();
+            //hrc.QuitRas();
             hrc = null;
             return result;
         }
