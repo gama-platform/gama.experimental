@@ -9,11 +9,11 @@ model HelloHydroWorld
 global skills: [hecrasSkill] {
 //definiton of the file to import
 	file grid_data <- file("../includes/Hello DEM 200x100.MergedInputs.tif");
-//	file grid_data2 <- grid_file("../HWC/Plan 04/Depth (25JUL2019 00 01 00).MergedInputs.tif");
+	//	file grid_data2 <- grid_file("../HWC/Plan 04/Depth (25JUL2019 00 01 00).MergedInputs.tif");
 
 	//	file grid_data <- file("../HWC/Plan 04/Depth (25JUL2019 00 01 00).MergedInputs.tif");
 	//	file grid_data <- file("../includes/Depth (25JUL2019 00 01 00).MergedInputs.tif");
-	float regex_val <- -9999.0; 
+	float regex_val <- -9999.0;
 	//computation of the environment size from the geotiff file
 	geometry shape <- envelope(grid_data);
 	list<mnt> water_body;
@@ -24,6 +24,15 @@ global skills: [hecrasSkill] {
 	int nb_houses <- 50;
 
 	init {
+
+	//				write load_hecras();
+	//				file f <- file("../HWC/HWC2.prj");
+	//				write Project_Open(f);
+	//				write Compute_HideComputationWindow();
+	//				write Compute_CurrentPlan();
+	//				//		write Update_Data(550);
+	//				write Project_Close();
+	//				write QuitRas();
 		max_value <- mnt max_of (each.grid_value);
 		min_value <- (mnt where (each.grid_value > regex_val)) min_of (each.grid_value);
 		x_max <- (mnt with_max_of (each.grid_x)).grid_x;
@@ -98,17 +107,26 @@ global skills: [hecrasSkill] {
 
 	}
 
+	int hh <- 0;
+	int mm <- 0;
+
 	reflex call_sim_hecras_and_update_data {
-				write load_hecras();
-				file f <- file("../HWC/HWC2.prj");
-				write Project_Open(f);
-				write Compute_HideComputationWindow();
-				write Compute_CurrentPlan();
-				//		write Update_Data(550);
-				write Project_Close();
-				write QuitRas();
-				
-		file grid_dataa <- grid_file("../HWC/Plan 04/Depth (25JUL2019 00 0" + (cycle + 1) + " 00).MergedInputs.tif");
+	//				write load_hecras();
+	//				file f <- file("../HWC/HWC2.prj");
+	//				write Project_Open(f);
+	//				write Compute_HideComputationWindow();
+	//				write Compute_CurrentPlan();
+	//				//		write Update_Data(550);
+	//				write Project_Close();
+	//				write QuitRas();
+		mm<-mm+1;
+		if(mm>59){
+			mm<-0;
+			hh<-hh+1;
+		}
+		string hrs <- hh < 10 ? "0" + hh : "" + hh;
+		string min <- mm < 10 ? "0" + mm : "" + mm;
+		file grid_dataa <- grid_file("../HWC/Plan 04/Depth (25JUL2019 " + hrs + " " + min + " 00).MergedInputs.tif");
 		create aa from: grid_dataa;
 		ask aa {
 			float v <- float(self["grid_value"]);
@@ -118,7 +136,7 @@ global skills: [hecrasSkill] {
 				}
 
 			}
-//			else{write (int(self) mod 1600);}
+			//			else{write (int(self) mod 1600);}
 			do die;
 		}
 		//		ask mnt{
@@ -142,12 +160,12 @@ global skills: [hecrasSkill] {
 species aa {
 }
 //definition of the grid from the geotiff file: the width and height of the grid are directly read from the asc file. The values of the asc file are stored in the grid_value attribute of the cells.
-grid mnt file:grid_data neighbors: 4 {
+grid mnt file: grid_data neighbors: 4 {
 	rgb color;
 	agent land_use;
 
 	reflex update {
-//		grid_value <- bands[1];
+	//		grid_value <- bands[1];
 		color <- rgb(255 - grid_value);
 	}
 
