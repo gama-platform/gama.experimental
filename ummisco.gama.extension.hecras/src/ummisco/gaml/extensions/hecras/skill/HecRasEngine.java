@@ -22,7 +22,23 @@ package ummisco.gaml.extensions.hecras.skill;
  * containing JNA, in file "AL2.0".
  */
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Array;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.OaIdl.SAFEARRAY;
@@ -35,11 +51,15 @@ import com.sun.jna.platform.win32.Variant.VARIANT.ByReference;
 import com.sun.jna.platform.win32.WTypes.VARTYPE;
 import com.sun.jna.platform.win32.WinDef.HWND;
 import com.sun.jna.platform.win32.WinDef.LONG;
+
+import msi.gama.precompiler.doc.utils.XMLElements;
+import msi.gama.precompiler.doc.utils.XMLUtils;
+
 import com.sun.jna.platform.win32.COM.COMException;
 import com.sun.jna.platform.win32.COM.COMLateBindingObject;
 
 public class HecRasEngine extends COMLateBindingObject {
-	public static void main(String args[]) {
+	public static void main2(String args[]) {
 		Ole32.INSTANCE.CoInitializeEx(Pointer.NULL, Ole32.COINIT_MULTITHREADED);
 		HecRasEngine p = new HecRasEngine();
 		try {
@@ -64,6 +84,83 @@ public class HecRasEngine extends COMLateBindingObject {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
+	}
+	public static void removeChilds(Node node) {
+	    while (node.hasChildNodes())
+	        node.removeChild(node.getFirstChild());
+	}
+	public static void main(String args[]) {
+		File docFile = new File(
+				"C:\\git\\gama.experimental\\ummisco.gama.extension.hecras\\models\\GAMA to hecras\\HWC\\HWC2.rasmap");
+
+		try {
+			Document document = XMLUtils.createDoc(docFile.getAbsolutePath());
+			final NodeList Layers = document.getElementsByTagName("Results").item(0).getChildNodes();
+			for (int j = 0; j < Layers.getLength(); j++) {
+				if (Layers.item(j) instanceof org.w3c.dom.Element) {
+
+					final org.w3c.dom.Element PlanLayer = (org.w3c.dom.Element) Layers.item(j);
+					if (PlanLayer.getAttribute("Name").equals("Plan 04")) {
+						removeChilds(PlanLayer);
+//						final NodeList nLayer = PlanLayer.getChildNodes();
+//						for (int i = 0; i < nLayer.getLength(); i++) {
+//							PlanLayer.removeChild(nLayer.item(i));
+//						}
+
+						for (int hh = 0; hh < 14; hh++) {
+							for (int mm = 0; mm < 60; mm++) {
+								String hrs = hh < 10 ? "0" + hh : "" + hh;
+								String min = mm < 10 ? "0" + mm : "" + mm;
+								final Element aLayer = document.createElement("Layer");
+								aLayer.setAttribute("Name", "depth");
+								aLayer.setAttribute("Type", "RASResultsMap");
+								aLayer.setAttribute("Checked", "True");
+								aLayer.setAttribute("Filename",
+										".\\Plan 04\\Depth (25JUL2019 " + hrs + " " + min + " 00).vrt");
+
+								final Element aMapParam = document.createElement("MapParameters");
+								aMapParam.setAttribute("MapType", "depth");
+								aMapParam.setAttribute("LayerName", "Depth");
+								aMapParam.setAttribute("OutputMode", "Stored Current Terrain");
+								aMapParam.setAttribute("StoredFilename",
+										".\\Plan 04\\Depth (25JUL2019 " + hrs + " " + min + " 00).vrt");
+								aMapParam.setAttribute("Terrain", "Hello DEM 200x100");
+								aMapParam.setAttribute("ProfileIndex", "10");
+								aMapParam.setAttribute("ProfileName", "25JUL2019 " + hrs + ":" + min + ":00");
+								aMapParam.setAttribute("ArrivalDepth", "0");
+								aLayer.appendChild(aMapParam);
+
+								PlanLayer.appendChild(aLayer);
+								if(hh>12) {
+									break;
+								}
+							}
+						}
+
+//						final NodeList nLayer = PlanLayer.getChildNodes();
+//						for(int i=0; i<nLayer.getLength(); i++) {			
+//							if (nLayer.item(i) instanceof org.w3c.dom.Element) {					
+//
+//								final org.w3c.dom.Element layer = (org.w3c.dom.Element) nLayer.item(i);
+//								final String nameFileSpecies = "Op " + layer.getAttribute("Filename") + "Test";
+//								System.out.println(nameFileSpecies);
+//							}
+//						}
+					}
+				}
+			}
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			DOMSource source = new DOMSource(document);
+			FileWriter writer = new FileWriter(docFile);
+			StreamResult result = new StreamResult(writer);
+			transformer.transform(source, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public HecRasEngine() throws COMException {
