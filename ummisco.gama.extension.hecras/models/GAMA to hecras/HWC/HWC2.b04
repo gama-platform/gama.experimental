@@ -42,10 +42,10 @@ Job Control Information
   DSS Message Level     =        4
   Write HDF5 File       =        T
   Write DSS File        =        T
-E:\git\gama.experimental\ummisco.gama.extension.hecras\models\GAMA to hecras\HWC\HWC2.dss
+C:\git\gama.experimental\ummisco.gama.extension.hecras\models\GAMA to hecras\HWC\HWC2.dss
 Computational Time Window
   Start Date/Time       = 24Jul2019 2400
-  End Date/Time         = 25Jul2019 0001
+  End Date/Time         = 25Jul2019 0005
 Initial Conditions (use restart file?)
        F
 Log File Information
