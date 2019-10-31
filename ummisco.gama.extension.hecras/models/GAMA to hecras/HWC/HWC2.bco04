@@ -2,7 +2,7 @@
                                               HEC-RAS - River Analysis System
  
  
-Project File:  E:\git\gama.experimental\ummisco.gama.extension.hecras\models\GAMA to hecras\HWC\HWC2.prj
+Project File:  C:\git\gama.experimental\ummisco.gama.extension.hecras\models\GAMA to hecras\HWC\HWC2.prj
  
 Project Name:  HWC2
  
@@ -14,7 +14,7 @@ Short ID:      Plan 04
 
 Starting Time:   24Jul2019 2400
 
-Ending Time:     25Jul2019 0001
+Ending Time:     25Jul2019 0005
 
 
                 ################################################
@@ -25,7 +25,7 @@ Ending Time:     25Jul2019 0001
                 #                                              #
                 #          HEC-RAS 5.0.6 November              #
                 #                                              #
-                #             30OCT19 at 22:32:28              #
+                #             31OCT19 at 15:36:23              #
                 #                                              #
                 ################################################
  
@@ -40,18 +40,18 @@ Ending Time:     25Jul2019 0001
 
          US Inflow       Lat Hydro      DS Outflow        SA Hydro     Groundwater       2D Inflow      2D Outflow      Diversions
          *********       *********      **********        ********     ***********       *********      **********      **********
-                                                                                            0.6000          0.6000                
+                                                                                             3.000           3.000                
 
                       River Reaches, Storage Areas, and 2D Areas
 
     Start 1D Reach   Starting SA's     Starting 2D  Final 1D Reach      Final SA's  Final 2D Areas
     **************   *************     ***********  **************      **********  **************
-                                                                                            0.6000
+                                                                                             3.000
 
                              Error   Percent Error
 
                              *****   *************
-                            0.6000           100.0
+                             3.000           100.0
 
 
 
@@ -65,4 +65,4 @@ Ending Time:     25Jul2019 0001
            *******    ************      **********      **********     ***********           *****    ************
  
  
-     Hello 2D Area                          0.6000          0.6000          0.6000          0.6000           100.0
+     Hello 2D Area                           3.000           3.000           3.000           3.000           100.0

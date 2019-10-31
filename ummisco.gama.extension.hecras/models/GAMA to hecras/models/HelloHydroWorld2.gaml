@@ -8,11 +8,12 @@ model HelloHydroWorld
 
 global skills: [hecrasSkill] {
 //definiton of the file to import
-//	file grid_data <- file("../includes/Hello DEM 200x100.MergedInputs.tif") ;
-	file grid_data <- file("../HWC/Plan 04/Depth (25JUL2019 00 01 00).MergedInputs.tif");
-	//	file grid_data <- file("../includes/Depth (25JUL2019 00 01 00).MergedInputs.tif");
-	float regex_val <- -9999.0;
+	file grid_data <- file("../includes/Hello DEM 200x100.MergedInputs.tif");
+//	file grid_data2 <- grid_file("../HWC/Plan 04/Depth (25JUL2019 00 01 00).MergedInputs.tif");
 
+	//	file grid_data <- file("../HWC/Plan 04/Depth (25JUL2019 00 01 00).MergedInputs.tif");
+	//	file grid_data <- file("../includes/Depth (25JUL2019 00 01 00).MergedInputs.tif");
+	float regex_val <- -9999.0; 
 	//computation of the environment size from the geotiff file
 	geometry shape <- envelope(grid_data);
 	list<mnt> water_body;
@@ -98,19 +99,33 @@ global skills: [hecrasSkill] {
 	}
 
 	reflex call_sim_hecras_and_update_data {
-		write load_hecras();
-		file f <- file("../HWC/HWC2.prj");
-		write Project_Open(f);
-		write Compute_HideComputationWindow();
-		write Compute_CurrentPlan();
-		//		write Update_Data(550);
-		write QuitRas();
-//		ask mnt{
-//			do _init_;
-//		}
-//		file grid_data2 <- file("../HWC/Plan 04/Depth (25JUL2019 00 01 00).MergedInputs.tif");
-//		matrix data <- matrix(grid_data2.contents);
-//		write data;
+				write load_hecras();
+				file f <- file("../HWC/HWC2.prj");
+				write Project_Open(f);
+				write Compute_HideComputationWindow();
+				write Compute_CurrentPlan();
+				//		write Update_Data(550);
+				write Project_Close();
+				write QuitRas();
+				
+		file grid_dataa <- grid_file("../HWC/Plan 04/Depth (25JUL2019 00 0" + (cycle + 1) + " 00).MergedInputs.tif");
+		create aa from: grid_dataa;
+		ask aa {
+			float v <- float(self["grid_value"]);
+			if (mnt[(int(self) mod 1600)] != nil) {
+				ask mnt[(int(self) mod 1600)] {
+					grid_value <- v;
+				}
+
+			}
+//			else{write (int(self) mod 1600);}
+			do die;
+		}
+		//		ask mnt{
+		//			do _init_;
+		//		}
+		//		matrix data <- matrix(grid_data2.contents collect each.grid_value);
+		//		write data;
 		//		file updated_data <- csv_file("../includes/Depth.csv",",");
 		//		matrix data <- matrix(updated_data);  
 		//		loop i from: 0 to: data.rows -1{ 
@@ -124,12 +139,15 @@ global skills: [hecrasSkill] {
 
 }
 
+species aa {
+}
 //definition of the grid from the geotiff file: the width and height of the grid are directly read from the asc file. The values of the asc file are stored in the grid_value attribute of the cells.
-grid mnt file: grid_data neighbors: 4 {
+grid mnt file:grid_data neighbors: 4 {
 	rgb color;
 	agent land_use;
 
 	reflex update {
+//		grid_value <- bands[1];
 		color <- rgb(255 - grid_value);
 	}
 
