@@ -21,7 +21,7 @@ global skills: [hecrasSkill] {
 	float min_value;
 	int x_max;
 	int y_max;
-	int nb_houses <- 50;
+	int nb_houses <- 100;
 
 	init {
 
@@ -68,7 +68,7 @@ global skills: [hecrasSkill] {
 	}
 
 	action build_house {
-		list<mnt> available <- mnt where (each.grid_x < x_max / 4);
+		list<mnt> available <- mnt where (each.grid_x < x_max / 2);
 		loop times: nb_houses {
 			mnt the_place <- any(available);
 			create house with: [location::the_place.location, my_place::the_place, color::#gray] {
@@ -124,6 +124,9 @@ global skills: [hecrasSkill] {
 			mm<-0;
 			hh<-hh+1;
 		}
+		if(hh>12){
+			do pause;
+		}
 		string hrs <- hh < 10 ? "0" + hh : "" + hh;
 		string min <- mm < 10 ? "0" + mm : "" + mm;
 		file grid_dataa <- grid_file("../HWC/Plan 04/Depth (25JUL2019 " + hrs + " " + min + " 00).MergedInputs.tif");
@@ -139,6 +142,13 @@ global skills: [hecrasSkill] {
 			//			else{write (int(self) mod 1600);}
 			do die;
 		}
+		
+		
+		 
+		max_value <- mnt max_of (each.grid_value);
+		min_value <- (mnt where (each.grid_value > regex_val)) min_of (each.grid_value);
+		x_max <- (mnt with_max_of (each.grid_x)).grid_x;
+		y_max <- max(mnt collect (each.grid_y));
 		//		ask mnt{
 		//			do _init_;
 		//		}
@@ -162,17 +172,30 @@ species aa {
 //definition of the grid from the geotiff file: the width and height of the grid are directly read from the asc file. The values of the asc file are stored in the grid_value attribute of the cells.
 grid mnt file: grid_data neighbors: 4 {
 	rgb color;
-	agent land_use;
+	string land_use;
 
 	reflex update {
-	//		grid_value <- bands[1];
-		color <- rgb(255 - grid_value);
+
+			if (grid_value = regex_val) {
+				color <- #white;
+			} else if (grid_value = max_value) {
+				color <- #white;
+//			} if(land_use = "dyke"){
+//				color <-#green;
+			
+			}else {
+				land_use <- "water";
+				int val <- int(255 * (grid_value - min_value) / (max_value - min_value));
+				color <- rgb(val, val, 255);
+				water_body <+ self;
+			}
+
 	}
 
 }
 
-species water {
-}
+//species water {
+//}
 
 species house {
 	mnt my_place;
