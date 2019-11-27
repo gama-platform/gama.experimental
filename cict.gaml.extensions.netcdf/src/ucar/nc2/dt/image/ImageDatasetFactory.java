@@ -58,8 +58,8 @@ public class ImageDatasetFactory {
 
   // grid stuff
   private GridDatatype grid = null;
-  private int time = 0;
-  private int ntimes = 1;
+  public int time = 0;
+  public int ntimes = 1;
 
   public BufferedImage openDataset( GridDatatype grid) throws java.io.IOException {
     this.grid = grid;

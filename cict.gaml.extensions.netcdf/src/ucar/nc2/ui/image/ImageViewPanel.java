@@ -54,7 +54,7 @@ import ucar.nc2.ui.widget.BAMutil;
 public class ImageViewPanel extends JPanel {
   private static boolean debug = false;
 
-  private ImageDatasetFactory imageDatasetFactory = new ImageDatasetFactory();
+  public ImageDatasetFactory imageDatasetFactory = new ImageDatasetFactory();
   private ImageFactoryRandom imageFactoryRandom;
   private String location;
 

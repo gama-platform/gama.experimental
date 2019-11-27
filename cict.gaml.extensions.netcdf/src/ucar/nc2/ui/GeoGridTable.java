@@ -155,7 +155,11 @@ public class GeoGridTable extends JPanel {
     add(comp, BorderLayout.CENTER);
   }
 
-  public PreferencesExt getPrefs() { return prefs; }
+  public GeoGridTable(boolean b) { 
+ 
+}
+
+public PreferencesExt getPrefs() { return prefs; }
 
   public void save() {
     varTable.saveState(false);
@@ -173,7 +177,7 @@ public class GeoGridTable extends JPanel {
     java.util.List<GridDatatype> list = gridDataset.getGrids();
     for (GridDatatype g : list)
       beanList.add (new GeogridBean( g));
-    varTable.setBeans( beanList);
+//    varTable.setBeans( beanList);
 
     if (csTable != null) {
       List<GeoCoordinateSystemBean> csList = new ArrayList<GeoCoordinateSystemBean>();
@@ -244,15 +248,15 @@ public class GeoGridTable extends JPanel {
 
 
   public GridDatatype getGrid() {
-    GeogridBean vb = (GeogridBean) varTable.getSelectedBean();
-    if (vb == null) {
+//    GeogridBean vb = (GeogridBean) varTable.getSelectedBean();
+//    if (vb == null) {
       List grids = gridDataset.getGrids();
       if (grids.size() > 0)
         return (GridDatatype) grids.get(0);
       else
         return null;
-    }
-    return gridDataset.findGridDatatype( vb.getName());
+//    }
+//    return gridDataset.findGridDatatype( vb.getName());
   }
 
   public class GeogridBean {
