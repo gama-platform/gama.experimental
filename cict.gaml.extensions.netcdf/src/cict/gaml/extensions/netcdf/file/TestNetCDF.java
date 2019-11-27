@@ -67,6 +67,8 @@ public class TestNetCDF extends JPanel {
 	boolean process() {
 
 		dsTable = new GeoGridTable(true);
+//		String command = "E:/test_echam_spectral.nc";
+//		String command = "E:/cami_0000-09-01_64x128_L26_c030918.nc";
 		String command = "E:/tos_O1_2001-2002.nc";
 //		String command = "E:/sresa1b_ncar_ccsm3-example.nc";
 		boolean err = false;
