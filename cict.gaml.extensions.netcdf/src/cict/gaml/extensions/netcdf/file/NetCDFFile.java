@@ -220,11 +220,12 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 	public static void main(final String args[]) throws Exception {
 
 		// Open the file and check to make sure it's valid.
-		final String filename = "D:/roms-benguela.nc";
+		final String filename = "E:\\tos_O1_2001-2002.nc";
 		NetcdfFile dataFile = null;
 
 		try {
 			dataFile = NetcdfFile.open(filename, null);
+			
 			final List<Variable> lv = dataFile.getVariables();
 
 			for (final Variable v : lv) {
@@ -248,25 +249,25 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 			for (final Attribute a : la) {
 				System.out.println(a.getName() + " " + a.getDataType() + " " + a.getValues());
 			}
-			int[] shape;
-			float[] latsIn;
-			final Variable zeta = dataFile.findVariable("zeta");
-
-			ArrayFloat.D3 latArray3;
-
-			latArray3 = (ArrayFloat.D3) zeta.read();
-
-			shape = latArray3.getShape();
-
-			latsIn = new float[shape[0] * shape[1] * shape[2]];
-			for (int i = 0; i < shape[0]; i++) {
-				for (int j = 0; j < shape[1]; j++) {
-					for (int k = 0; k < shape[2]; k++) {
-						latsIn[i * j * k] = latArray3.get(i, j, k);
-						// System.out.println(latsIn[i*j*k]);
-					}
-				}
-			}
+//			int[] shape;
+//			float[] latsIn;
+//			final Variable zeta = dataFile.findVariable("zeta");
+//
+//			ArrayFloat.D3 latArray3;
+//
+//			latArray3 = (ArrayFloat.D3) zeta.read();
+//
+//			shape = latArray3.getShape();
+//
+//			latsIn = new float[shape[0] * shape[1] * shape[2]];
+//			for (int i = 0; i < shape[0]; i++) {
+//				for (int j = 0; j < shape[1]; j++) {
+//					for (int k = 0; k < shape[2]; k++) {
+//						latsIn[i * j * k] = latArray3.get(i, j, k);
+//						// System.out.println(latsIn[i*j*k]);
+//					}
+//				}
+//			}
 
 			// Variable lon_rho = dataFile.findVariable("lon_rho");
 			//
@@ -309,7 +310,7 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 				}
 			}
 		}
-		System.out.println("*** SUCCESS reading example file sfc_pres_temp.nc!");
+		System.out.println("*** SUCCESS reading example file!");
 
 	}
 
