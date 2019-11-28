@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dt.GridDatatype;
 import ucar.nc2.ui.GeoGridTable;
-import ucar.nc2.ui.ToolsUI;
 import ucar.nc2.ui.image.ImageViewPanel;
 
 public class TestNetCDF extends JPanel {
@@ -67,10 +66,10 @@ public class TestNetCDF extends JPanel {
 	boolean process() {
 
 		dsTable = new GeoGridTable(true);
-		String command = "D:/ROMS/SENEGAL_Y1980M1.nc.1";
+//		String command = "E:/ROMS/SENEGAL_Y1980M1.nc";
 //		String command = "E:/test_echam_spectral.nc";
 //		String command = "E:/cami_0000-09-01_64x128_L26_c030918.nc";
-//		String command = "E:/tos_O1_2001-2002.nc";
+		String command = "C:\\git\\gama.experimental\\cict.gaml.extensions.netcdf\\models\\NetCDF\\includes\\tos_O1_2001-2002.nc";
 //		String command = "E:/sresa1b_ncar_ccsm3-example.nc";
 		boolean err = false;
 
