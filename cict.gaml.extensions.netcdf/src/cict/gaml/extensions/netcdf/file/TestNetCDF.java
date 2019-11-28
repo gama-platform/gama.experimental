@@ -119,7 +119,7 @@ public class TestNetCDF extends JPanel {
 		try {
 			dsTable.setDataset(newds, parseInfo);
 		} catch (IOException e) {
-			String info = parseInfo.toString();
+//			String info = parseInfo.toString();
 //			if (info.length() > 0) {
 //				detailTA.setText(info);
 //				detailWindow.show();
