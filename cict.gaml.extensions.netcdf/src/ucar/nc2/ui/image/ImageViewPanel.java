@@ -45,7 +45,6 @@ import javax.swing.event.*;
 import ucar.nc2.dt.image.ImageDatasetFactory;
 import ucar.nc2.dt.image.ImageFactoryRandom;
 import ucar.nc2.dt.GridDatatype;
-//import ucar.nc2.ui.widget.BAMutil;
 
 /**
  *  *
@@ -55,18 +54,9 @@ public class ImageViewPanel extends JPanel {
   private static boolean debug = false;
 
   public ImageDatasetFactory imageDatasetFactory = new ImageDatasetFactory();
-  private ImageFactoryRandom imageFactoryRandom;
-  private String location;
-
-  private boolean movieIsPlaying = false;
   private javax.swing.Timer timer;
   private int delay = 4000; // millisescs
   private JSpinner spinner;
-  private Random random = new Random( System.currentTimeMillis());
-  private long start = 0;
-
-  private boolean fullscreenMode = false;
-
   private PicturePane pixPane;
 
   public ImageViewPanel(Container buttPanel) {
@@ -79,54 +69,6 @@ public class ImageViewPanel extends JPanel {
       add( buttPanel, BorderLayout.NORTH);
     }
 
-    AbstractAction prevAction =  new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        setImage( imageDatasetFactory.getNextImage(false));
-      }
-    };
-//    BAMutil.setActionProperties( prevAction, "VCRPrevFrame", "previous", false, 'P', -1);
-//    BAMutil.addActionToContainer(buttPanel, prevAction);
-
-    AbstractAction nextAction =  new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-       setImage( imageDatasetFactory.getNextImage(true));
-      }
-    };
-//    BAMutil.setActionProperties( nextAction, "VCRNextFrame", "next", false, 'N', -1);
-//    BAMutil.addActionToContainer(buttPanel, nextAction);
-
-    AbstractAction loopAction = new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        if (movieIsPlaying) {
-          if (timer != null) timer.stop();
-          movieIsPlaying = false;
-
-        } else {
-          if (location == null) return;
-          File f = new File(location);
-          if (!f.exists()) return;
-
-          imageFactoryRandom = new ImageFactoryRandom(f.getParentFile());
-
-          timer = new Timer(delay, new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-              setImage(imageFactoryRandom.getNextImage());
-              int delayMsecs = delay + random.nextInt() % delay/2;
-              timer.setDelay(delayMsecs);
-              long time = System.currentTimeMillis();
-              long took = time - start;
-              start = time;
-              System.out.printf(" delay=%d; took=%d%n ",delayMsecs, took);
-            }
-          });
-          timer.start();
-          movieIsPlaying = true;
-        }
-      }
-    };
-//    BAMutil.setActionProperties( loopAction, "MovieLoop", "loop", true, 'N', -1);
-//    BAMutil.addActionToContainer(buttPanel, loopAction);
-
     spinner = new JSpinner( new SpinnerNumberModel(5000, 10, 20000, 1000));
     spinner.addChangeListener( new ChangeListener() {
       public void stateChanged(ChangeEvent e) {
@@ -136,58 +78,6 @@ public class ImageViewPanel extends JPanel {
       }
     });
     buttPanel.add( spinner);
-
-    AbstractAction fullscreenAction = new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice device = ge.getDefaultScreenDevice();
-        System.out.println("isFullScreenSupported= "+device.isFullScreenSupported());
-
-        fullFrame = new JFrame();
-        fullFrame.setUndecorated( true);
-        fullFrame.getContentPane().add( pixPane);
-
-        fullscreenMode = true;
-        device.setFullScreenWindow(fullFrame);
-
-        // look for any input - get out of full screen mode
-        KeyEventDispatcher dispatcher = new MyKeyEventDispatcher();
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher( dispatcher);
-      }
-    };
-//    BAMutil.setActionProperties(fullscreenAction, "Export", "fullscreen", true, 'N', -1);
-//    BAMutil.addActionToContainer(buttPanel, fullscreenAction);
-  }
-
-  private JFrame fullFrame;
-
-  private class MyKeyEventDispatcher implements java.awt.KeyEventDispatcher {
-    public boolean dispatchKeyEvent(KeyEvent e) {
-      System.out.printf(" dispatchKeyEvent=%s code = %d %n",e,e.getKeyCode());
-      if (e.getKeyCode() == 127) {
-        imageFactoryRandom.delete();
-        return false;
-      }
-
-      if (fullscreenMode) {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice device = ge.getDefaultScreenDevice();
-        device.setFullScreenWindow(null);
-        fullscreenMode = false;
-      }
-
-      resetPane();
-      if (fullFrame != null) fullFrame.dispose();
-
-      // deregister yourself
-      KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher( this);
-      return false;
-    }
-  }
-
-  private void resetPane() {
-    add( pixPane, BorderLayout.CENTER);
-    revalidate();
   }
 
   public void setImageFromGrid( GridDatatype grid) {
@@ -203,8 +93,6 @@ public class ImageViewPanel extends JPanel {
 
 
    public boolean setImageFromUrl( String location) {
-     this.location = location;
-
      if (location.startsWith("http")) {
        URL url = null;
        try {
