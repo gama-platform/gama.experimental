@@ -45,7 +45,7 @@ import javax.swing.event.*;
 import ucar.nc2.dt.image.ImageDatasetFactory;
 import ucar.nc2.dt.image.ImageFactoryRandom;
 import ucar.nc2.dt.GridDatatype;
-import ucar.nc2.ui.widget.BAMutil;
+//import ucar.nc2.ui.widget.BAMutil;
 
 /**
  *  *
@@ -84,16 +84,16 @@ public class ImageViewPanel extends JPanel {
         setImage( imageDatasetFactory.getNextImage(false));
       }
     };
-    BAMutil.setActionProperties( prevAction, "VCRPrevFrame", "previous", false, 'P', -1);
-    BAMutil.addActionToContainer(buttPanel, prevAction);
+//    BAMutil.setActionProperties( prevAction, "VCRPrevFrame", "previous", false, 'P', -1);
+//    BAMutil.addActionToContainer(buttPanel, prevAction);
 
     AbstractAction nextAction =  new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
        setImage( imageDatasetFactory.getNextImage(true));
       }
     };
-    BAMutil.setActionProperties( nextAction, "VCRNextFrame", "next", false, 'N', -1);
-    BAMutil.addActionToContainer(buttPanel, nextAction);
+//    BAMutil.setActionProperties( nextAction, "VCRNextFrame", "next", false, 'N', -1);
+//    BAMutil.addActionToContainer(buttPanel, nextAction);
 
     AbstractAction loopAction = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -124,8 +124,8 @@ public class ImageViewPanel extends JPanel {
         }
       }
     };
-    BAMutil.setActionProperties( loopAction, "MovieLoop", "loop", true, 'N', -1);
-    BAMutil.addActionToContainer(buttPanel, loopAction);
+//    BAMutil.setActionProperties( loopAction, "MovieLoop", "loop", true, 'N', -1);
+//    BAMutil.addActionToContainer(buttPanel, loopAction);
 
     spinner = new JSpinner( new SpinnerNumberModel(5000, 10, 20000, 1000));
     spinner.addChangeListener( new ChangeListener() {
@@ -155,8 +155,8 @@ public class ImageViewPanel extends JPanel {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher( dispatcher);
       }
     };
-    BAMutil.setActionProperties(fullscreenAction, "Export", "fullscreen", true, 'N', -1);
-    BAMutil.addActionToContainer(buttPanel, fullscreenAction);
+//    BAMutil.setActionProperties(fullscreenAction, "Export", "fullscreen", true, 'N', -1);
+//    BAMutil.addActionToContainer(buttPanel, fullscreenAction);
   }
 
   private JFrame fullFrame;

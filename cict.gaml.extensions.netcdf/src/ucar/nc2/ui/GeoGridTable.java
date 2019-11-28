@@ -33,31 +33,40 @@
 
 package ucar.nc2.ui;
 
-import ucar.nc2.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Frame;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.List;
+
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.RootPaneContainer;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 import ucar.nc2.constants.AxisType;
-import ucar.nc2.dt.GridDatatype;
+import ucar.nc2.dataset.CoordinateAxis;
+import ucar.nc2.dataset.CoordinateAxis1D;
+import ucar.nc2.dataset.CoordinateSystem;
+import ucar.nc2.dataset.CoordinateTransform;
+import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dataset.ProjectionCT;
+import ucar.nc2.dataset.VerticalCT;
 import ucar.nc2.dt.GridCoordSystem;
 import ucar.nc2.dt.GridDataset;
+import ucar.nc2.dt.GridDatatype;
 import ucar.nc2.dt.grid.GridCoordSys;
-import ucar.nc2.dataset.*;
-
-import ucar.nc2.ui.widget.*;
-import ucar.nc2.ui.widget.PopupMenu;
-import ucar.util.prefs.*;
-import ucar.util.prefs.ui.*;
+//import ucar.nc2.ui.widget.IndependentWindow;
+//import ucar.nc2.ui.widget.TextHistoryPane;
+//import ucar.util.prefs.*;
+//import ucar.util.prefs.ui.*;
 import ucar.unidata.geoloc.ProjectionImpl;
-import thredds.wcs.v1_0_0_1.WcsException;
-import thredds.wcs.v1_0_0_1.DescribeCoverage;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.util.*;
-import java.util.List;
-import java.io.IOException;
-
-import javax.swing.*;
 
 /**
  * A Swing widget to examine a GridDataset.
@@ -67,108 +76,108 @@ import javax.swing.*;
  */
 
 public class GeoGridTable extends JPanel {
-  private PreferencesExt prefs;
+//  private PreferencesExt prefs;
   private GridDataset gridDataset;
 
-  private BeanTableSorted varTable, csTable = null, axisTable = null;
+//  private BeanTableSorted varTable, csTable = null, axisTable = null;
   private JSplitPane split = null, split2 = null;
-  private TextHistoryPane infoTA;
-  private IndependentWindow infoWindow;
+//  private TextHistoryPane infoTA;
+//  private IndependentWindow infoWindow;
 
-  public GeoGridTable(PreferencesExt prefs, boolean showCS) {
-    this.prefs = prefs;
-
-    varTable = new BeanTableSorted(GeogridBean.class, (PreferencesExt) prefs.node("GeogridBeans"), false);
-    JTable jtable = varTable.getJTable();
-
-    PopupMenu csPopup = new ucar.nc2.ui.widget.PopupMenu(jtable, "Options");
-    csPopup.addAction("Show Declaration", new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        GeogridBean vb = (GeogridBean) varTable.getSelectedBean();
-        Variable v = vb.geogrid.getVariable();
-        infoTA.clear();
-        if (v == null)
-          infoTA.appendLine( "Cant find variable "+vb.getName()+" escaped= ("+NetcdfFile.escapeName( vb.getName())+")");
-        else {
-          infoTA.appendLine( "Variable "+ v.getFullName()+" :");
-          infoTA.appendLine( v.toString());
-        }
-        infoTA.gotoTop();
-        infoWindow.showIfNotIconified();
-      }
-    });
-
-    csPopup.addAction("WCS DescribeCoverage", new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        GeogridBean vb = (GeogridBean) varTable.getSelectedBean();
-        if (gridDataset.findGridDatatype(vb.getName()) != null)
-        {
-          List<String> coverageIdList = Collections.singletonList( vb.getName() );
-          try
-          {
-            DescribeCoverage descCov =
-                    ( (thredds.wcs.v1_0_0_1.DescribeCoverageBuilder)
-                            thredds.wcs.v1_0_0_1.WcsRequestBuilder
-                                    .newWcsRequestBuilder( "1.0.0",
-                                                           thredds.wcs.Request.Operation.DescribeCoverage,
-                                                           gridDataset, "" ) )
-                            .setCoverageIdList( coverageIdList )
-                            .buildDescribeCoverage();
-            String dc = descCov.writeDescribeCoverageDocAsString();
-            infoTA.clear();
-            infoTA.appendLine(dc);
-            infoTA.gotoTop();
-            infoWindow.showIfNotIconified();
-          }
-          catch (WcsException e1)
-          {
-            e1.printStackTrace();
-          }
-          catch (IOException e1)
-          {
-            e1.printStackTrace();
-          }
-        }
-      }
-    });
-
-    // the info window
-    infoTA = new TextHistoryPane();
-    infoWindow = new IndependentWindow("Variable Information", BAMutil.getImage( "netcdfUI"), infoTA);
-    infoWindow.setBounds( (Rectangle) prefs.getBean("InfoWindowBounds", new Rectangle( 300, 300, 500, 300)));
-
-    // optionally show coordinate systems and axis
-    Component comp = varTable;
-    if (showCS) {
-      csTable = new BeanTableSorted(GeoCoordinateSystemBean.class, (PreferencesExt) prefs.node("GeoCoordinateSystemBean"), false);
-      axisTable = new BeanTableSorted(GeoAxisBean.class, (PreferencesExt) prefs.node("GeoCoordinateAxisBean"), false);
-
-      split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, varTable, csTable);
-      split.setDividerLocation(prefs.getInt("splitPos", 500));
-
-      split2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, split, axisTable);
-      split2.setDividerLocation(prefs.getInt("splitPos2", 500));
-      comp = split2;
-    }
-
-    setLayout(new BorderLayout());
-    add(comp, BorderLayout.CENTER);
-  }
+//  public GeoGridTable(PreferencesExt prefs, boolean showCS) {
+//    this.prefs = prefs;
+//
+//    varTable = new BeanTableSorted(GeogridBean.class, (PreferencesExt) prefs.node("GeogridBeans"), false);
+//    JTable jtable = varTable.getJTable();
+//
+//    PopupMenu csPopup = new ucar.nc2.ui.widget.PopupMenu(jtable, "Options");
+//    csPopup.addAction("Show Declaration", new AbstractAction() {
+//      public void actionPerformed(ActionEvent e) {
+//        GeogridBean vb = (GeogridBean) varTable.getSelectedBean();
+//        Variable v = vb.geogrid.getVariable();
+//        infoTA.clear();
+//        if (v == null)
+//          infoTA.appendLine( "Cant find variable "+vb.getName()+" escaped= ("+NetcdfFile.escapeName( vb.getName())+")");
+//        else {
+//          infoTA.appendLine( "Variable "+ v.getFullName()+" :");
+//          infoTA.appendLine( v.toString());
+//        }
+//        infoTA.gotoTop();
+//        infoWindow.showIfNotIconified();
+//      }
+//    });
+//
+//    csPopup.addAction("WCS DescribeCoverage", new AbstractAction() {
+//      public void actionPerformed(ActionEvent e) {
+//        GeogridBean vb = (GeogridBean) varTable.getSelectedBean();
+//        if (gridDataset.findGridDatatype(vb.getName()) != null)
+//        {
+//          List<String> coverageIdList = Collections.singletonList( vb.getName() );
+//          try
+//          {
+//            DescribeCoverage descCov =
+//                    ( (thredds.wcs.v1_0_0_1.DescribeCoverageBuilder)
+//                            thredds.wcs.v1_0_0_1.WcsRequestBuilder
+//                                    .newWcsRequestBuilder( "1.0.0",
+//                                                           thredds.wcs.Request.Operation.DescribeCoverage,
+//                                                           gridDataset, "" ) )
+//                            .setCoverageIdList( coverageIdList )
+//                            .buildDescribeCoverage();
+//            String dc = descCov.writeDescribeCoverageDocAsString();
+//            infoTA.clear();
+//            infoTA.appendLine(dc);
+//            infoTA.gotoTop();
+//            infoWindow.showIfNotIconified();
+//          }
+//          catch (WcsException e1)
+//          {
+//            e1.printStackTrace();
+//          }
+//          catch (IOException e1)
+//          {
+//            e1.printStackTrace();
+//          }
+//        }
+//      }
+//    });
+//
+//    // the info window
+//    infoTA = new TextHistoryPane();
+//    infoWindow = new IndependentWindow("Variable Information", BAMutil.getImage( "netcdfUI"), infoTA);
+//    infoWindow.setBounds( (Rectangle) prefs.getBean("InfoWindowBounds", new Rectangle( 300, 300, 500, 300)));
+//
+//    // optionally show coordinate systems and axis
+//    Component comp = varTable;
+//    if (showCS) {
+//      csTable = new BeanTableSorted(GeoCoordinateSystemBean.class, (PreferencesExt) prefs.node("GeoCoordinateSystemBean"), false);
+//      axisTable = new BeanTableSorted(GeoAxisBean.class, (PreferencesExt) prefs.node("GeoCoordinateAxisBean"), false);
+//
+//      split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, varTable, csTable);
+//      split.setDividerLocation(prefs.getInt("splitPos", 500));
+//
+//      split2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, split, axisTable);
+//      split2.setDividerLocation(prefs.getInt("splitPos2", 500));
+//      comp = split2;
+//    }
+//
+//    setLayout(new BorderLayout());
+//    add(comp, BorderLayout.CENTER);
+//  }
 
   public GeoGridTable(boolean b) { 
  
 }
 
-public PreferencesExt getPrefs() { return prefs; }
+//public PreferencesExt getPrefs() { return prefs; }
 
-  public void save() {
-    varTable.saveState(false);
-    prefs.putBeanObject("InfoWindowBounds", infoWindow.getBounds());
-    if (split != null) prefs.putInt("splitPos", split.getDividerLocation());
-    if (split2 != null) prefs.putInt("splitPos2", split2.getDividerLocation());
-    if (csTable != null) csTable.saveState(false);
-    if (axisTable != null) axisTable.saveState(false);
-  }
+//  public void save() {
+//    varTable.saveState(false);
+//    prefs.putBeanObject("InfoWindowBounds", infoWindow.getBounds());
+//    if (split != null) prefs.putInt("splitPos", split.getDividerLocation());
+//    if (split2 != null) prefs.putInt("splitPos2", split2.getDividerLocation());
+//    if (csTable != null) csTable.saveState(false);
+//    if (axisTable != null) axisTable.saveState(false);
+//  }
 
   public void setDataset(NetcdfDataset ds, Formatter parseInfo) throws IOException {
     this.gridDataset = new ucar.nc2.dt.grid.GridDataset(ds, parseInfo);
@@ -179,7 +188,7 @@ public PreferencesExt getPrefs() { return prefs; }
       beanList.add (new GeogridBean( g));
 //    varTable.setBeans( beanList);
 
-    if (csTable != null) {
+//    if (csTable != null) {
       List<GeoCoordinateSystemBean> csList = new ArrayList<GeoCoordinateSystemBean>();
       List<GeoAxisBean> axisList;
       axisList = new ArrayList<GeoAxisBean>();
@@ -194,9 +203,9 @@ public PreferencesExt getPrefs() { return prefs; }
             axisList.add(axisBean);
         }
       }
-      csTable.setBeans( csList);
-      axisTable.setBeans( axisList);
-    }
+//      csTable.setBeans( csList);
+//      axisTable.setBeans( axisList);
+//    }
   }
 
   public void setDataset(GridDataset gds) throws IOException {
@@ -206,9 +215,9 @@ public PreferencesExt getPrefs() { return prefs; }
     java.util.List<GridDatatype> list = gridDataset.getGrids();
     for (GridDatatype g : list)
       beanList.add (new GeogridBean( g));
-    varTable.setBeans( beanList);
+//    varTable.setBeans( beanList);
 
-    if (csTable != null) {
+//    if (csTable != null) {
       List<GeoCoordinateSystemBean> csList = new ArrayList<GeoCoordinateSystemBean>();
       List<GeoAxisBean> axisList;
       axisList = new ArrayList<GeoAxisBean>();
@@ -223,9 +232,9 @@ public PreferencesExt getPrefs() { return prefs; }
             axisList.add(axisBean);
         }
       }
-      csTable.setBeans( csList);
-      axisTable.setBeans( axisList);
-    }
+//      csTable.setBeans( csList);
+//      axisTable.setBeans( axisList);
+//    }
   }
 
   private boolean contains(List<GeoAxisBean> axisList, String name) {
@@ -236,15 +245,15 @@ public PreferencesExt getPrefs() { return prefs; }
 
   public GridDataset getGridDataset() { return gridDataset; }
 
-  public List<String> getSelectedGrids() {
-    ArrayList grids = varTable.getSelectedBeans();
-    List<String> result = new ArrayList<String>();
-    for (Object bean : grids) {
-      GeogridBean gbean = (GeogridBean) bean;
-      result.add( gbean.getName());
-    }
-    return result;
-  }
+//  public List<String> getSelectedGrids() {
+//    ArrayList grids = varTable.getSelectedBeans();
+//    List<String> result = new ArrayList<String>();
+//    for (Object bean : grids) {
+//      GeogridBean gbean = (GeogridBean) bean;
+//      result.add( gbean.getName());
+//    }
+//    return result;
+//  }
 
 
   public GridDatatype getGrid() {
