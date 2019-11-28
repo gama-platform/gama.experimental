@@ -9,14 +9,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Formatter;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dt.GridDataset;
 import ucar.nc2.dt.GridDatatype;
-import ucar.nc2.ui.GeoGridTable;
 import ucar.nc2.ui.image.ImageViewPanel;
 
 public class TestNetCDF extends JPanel {
@@ -25,7 +26,7 @@ public class TestNetCDF extends JPanel {
 	private static JFrame frame;
 	private static ImageViewPanel imgpan;
 	NetcdfDataset ds = null;
-	GeoGridTable dsTable;
+	private GridDataset gridDataset;
 
 	public static void main(final String args[]) throws Exception {
 		frame = new JFrame("NetCDF (4.2) Tools");
@@ -38,8 +39,8 @@ public class TestNetCDF extends JPanel {
 		});
 
 		frame.getContentPane().add(imgpan);
-		frame.pack(); 
-	    frame.setBounds(new Rectangle(50, 50, 800, 450));
+		frame.pack();
+		frame.setBounds(new Rectangle(50, 50, 800, 450));
 		frame.setVisible(true);
 
 		ui.process();
@@ -65,7 +66,6 @@ public class TestNetCDF extends JPanel {
 
 	boolean process() {
 
-		dsTable = new GeoGridTable(true);
 //		String command = "E:/ROMS/SENEGAL_Y1980M1.nc";
 		String command = "E:/tos_O1_2001-2002.nc";
 //		String command = "E:/test_echam_spectral.nc";
@@ -86,7 +86,7 @@ public class TestNetCDF extends JPanel {
 
 		} catch (FileNotFoundException ioe) {
 			JOptionPane.showMessageDialog(null, "NetcdfDataset.open cant open " + command + "\n" + ioe.getMessage());
-			// ioe.printStackTrace();
+			ioe.printStackTrace();
 			err = true;
 
 		} catch (Throwable ioe) {
@@ -96,13 +96,25 @@ public class TestNetCDF extends JPanel {
 		}
 
 		if (ds != null) {
-			GridDatatype grid = dsTable.getGrid();
+			GridDatatype grid = getGrid();
 			if (grid == null)
 				return false;
 			imgpan.setImageFromGrid(grid);
 		}
 		return !err;
 
+	}
+
+	public GridDatatype getGrid() {
+//	    GeogridBean vb = (GeogridBean) varTable.getSelectedBean();
+//	    if (vb == null) {
+		List<?> grids = gridDataset.getGrids();
+		if (grids.size() > 0)
+			return (GridDatatype) grids.get(0);
+		else
+			return null;
+//	    }
+//	    return gridDataset.findGridDatatype( vb.getName());
 	}
 
 	void setDataset(NetcdfDataset newds) {
@@ -117,16 +129,11 @@ public class TestNetCDF extends JPanel {
 		Formatter parseInfo = new Formatter();
 		this.ds = newds;
 		try {
-			dsTable.setDataset(newds, parseInfo);
+
+			this.gridDataset = new ucar.nc2.dt.grid.GridDataset(ds, parseInfo);
 		} catch (IOException e) {
-//			String info = parseInfo.toString();
-//			if (info.length() > 0) {
-//				detailTA.setText(info);
-//				detailWindow.show();
-//			}
 			e.printStackTrace();
 			return;
 		}
-//		setSelectedItem(newds.getLocation());
 	}
 }
