@@ -61,19 +61,19 @@
 	<classpathentry kind="lib" path="lib/external/stax-api-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/external/visad.jar"/>
 	<classpathentry kind="lib" path="lib/external/wstx-lgpl-3.2.5.jar"/>
-	<classpathentry kind="lib" path="lib/release/bufr-3.0.jar"/>
-	<classpathentry kind="lib" path="lib/release/bufrTables-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/release/cdmTestClasses.jar"/>
-	<classpathentry kind="lib" path="lib/release/grib-8.0.jar"/>
-	<classpathentry kind="lib" path="lib/release/ncIdv.jar"/>
-	<classpathentry kind="lib" path="lib/release/ncwms.jar"/>
-	<classpathentry kind="lib" path="lib/release/netcdf-4.2.jar"/>
-	<classpathentry kind="lib" path="lib/release/opendap-2.2.jar"/>
-	<classpathentry kind="lib" path="lib/release/resourcesOptional.jar"/>
-	<classpathentry kind="lib" path="lib/release/source/ncwms-src.jar"/>
-	<classpathentry kind="lib" path="lib/release/source/threddsIso_src-2.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/release/threddsIso-2.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/release/visadNoDods.jar"/>
+	<classpathentry kind="lib" path="lib/bufr-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/bufrTables-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/cdmTestClasses.jar"/>
+	<classpathentry kind="lib" path="lib/grib-8.0.jar"/>
+	<classpathentry kind="lib" path="lib/ncIdv.jar"/>
+	<classpathentry kind="lib" path="lib/ncwms.jar"/>
+	<classpathentry kind="lib" path="lib/netcdf-4.2.jar"/>
+	<classpathentry kind="lib" path="lib/opendap-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/resourcesOptional.jar"/>
+	<classpathentry kind="lib" path="lib/source/ncwms-src.jar"/>
+	<classpathentry kind="lib" path="lib/source/threddsIso_src-2.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/threddsIso-2.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/visadNoDods.jar"/>
 	<classpathentry kind="src" path="gaml">
 		<attributes>
 			<attribute name="optional" value="true"/>
