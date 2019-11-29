@@ -151,13 +151,11 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 		}
 	}
 
-	@operator(value = "readDataSlice", can_be_const = false, category = IOperatorCategory.MATRIX)
+	@operator(value = "openDataSet", can_be_const = false, category = IOperatorCategory.MATRIX)
 	@doc(value = "general operator to manipylate multidimension netcdf data.")
-	public static IMatrix readDataSlice(final IScope scope, final NetCDFFile netcdf, int nbGrid, int t_index,
-			int z_index, int y_index, int x_index) {
-//		final String NCFile = "";
+	public static Boolean openDataSet(final IScope scope, final NetCDFFile netcdf) {
 		if (netcdf == null || scope == null) {
-			return null;//new GamaIntMatrix(0, 0);
+			return false;
 		} else {
 
 			if (netcdf.ds == null) {
@@ -178,7 +176,20 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 				} catch (Throwable ioe) {
 					ioe.printStackTrace();
 				}
+				return true;
 			}
+		}
+
+		return false;
+	}
+
+	@operator(value = "readDataSlice", can_be_const = false, category = IOperatorCategory.MATRIX)
+	@doc(value = "general operator to manipylate multidimension netcdf data.")
+	public static IMatrix readDataSlice(final IScope scope, final NetCDFFile netcdf, int nbGrid, int t_index,
+			int z_index, int y_index, int x_index) {
+		if (netcdf == null || scope == null) {
+			return new GamaIntMatrix(0, 0);
+		} else {
 			if (netcdf.ds != null) {
 
 				List<?> grids = netcdf.gridDataset.getGrids();
@@ -193,9 +204,9 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 					if (gcsys.getTimeAxis() != null)
 						netcdf.ntimes = (int) gcsys.getTimeAxis().getSize();
 
-					Array  ma;
+					Array ma;
 					try {
-						ma = grid.readDataSlice(t_index, z_index, y_index, x_index); 
+						ma = grid.readDataSlice(t_index, z_index, y_index, x_index);
 						if (ma.getRank() == 3)
 							ma = ma.reduce();
 
@@ -204,19 +215,8 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 
 						int h = ma.getShape()[0];
 						int w = ma.getShape()[1];
-//						DataBuffer dataBuffer = makeDataBuffer(ma);
-//						    WritableRaster raster = WritableRaster.createInterleavedRaster(dataBuffer,
-//						        w, h, //   int w, int h,
-//						        w, //   int scanlineStride,
-//						        1,      //    int pixelStride,
-//						        new int[]{0}, //   int bandOffsets[],
-//						        null);     //   Point location)
-//						 
 
-						return matrixValue(scope, ma, h,w);
-//						final GamaImageFile gif = new GamaImageFile(scope, "../includes/local_copy.jpg", matrixValueFromImage(scope, ImageArrayAdapter.makeGrayscaleImage(ma, null), null));
-//						return gif; 
-//					imgpan.setImage(ImageArrayAdapter.makeGrayscaleImage(ma, null));
+						return matrixValue(scope, ma, h, w);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -224,12 +224,11 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 			}
 		}
 
-		return null;//new GamaIntMatrix(0, 0);
-//		return GamaListFactory.create(scope, Types.NO_TYPE, 0);
+		return new GamaIntMatrix(0, 0);
 	}
 
-	private static IMatrix matrixValue(final IScope scope, final Array ma,int h, int w) { 
-		final IMatrix matrix = new GamaIntMatrix(w,h);
+	private static IMatrix matrixValue(final IScope scope, final Array ma, int h, int w) {
+		final IMatrix matrix = new GamaIntMatrix(w, h);
 		double min = MAMath.getMinimum(ma); // LOOK we need missing values to be removed !!
 		double max = MAMath.getMaximum(ma);
 
@@ -249,60 +248,51 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 
 	}
 
-	private static DataBuffer makeDataBuffer(Array ma) {
-		if (ma instanceof ArrayByte)
-			return makeByteDataBuffer((ArrayByte) ma);
-
-		int h = ma.getShape()[0];
-		int w = ma.getShape()[1];
-
-		double min = MAMath.getMinimum(ma); // LOOK we need missing values to be removed !!
-		double max = MAMath.getMaximum(ma);
-		double scale = (max - min);
-		if (scale > 0.0)
-			scale = 255.0 / scale;
-
-		IndexIterator ii = ma.getIndexIterator();
-		byte[] byteData = new byte[h * w];
-		for (int i = 0; i < byteData.length; i++) {
-			double val = ii.getDoubleNext();
-			double sval = ((val - min) * scale);
-			byteData[i] = (byte) (sval); // < 128.0 ? sval : sval - 255.0);
-		}
-
-		return new DataBufferByte(byteData, byteData.length);
-	}
-
-	private static DataBuffer makeByteDataBuffer(ArrayByte ma) {
-		byte[] byteData = (byte[]) ma.copyTo1DJavaArray();
-		return new DataBufferByte(byteData, byteData.length);
-	}
-
-	private static IMatrix matrixValueFromImage(final IScope scope, final BufferedImage image,
-			final ILocation preferredSize) {
-		int xSize, ySize;
-		BufferedImage resultingImage = image;
-		if (preferredSize == null) {
-			xSize = image.getWidth();
-			ySize = image.getHeight();
+	@operator(value = "getTimeAxisSize", can_be_const = false, category = IOperatorCategory.MATRIX)
+	@doc(value = "general operator to manipylate multidimension netcdf data.")
+	public static Integer getTimeAxisSize(final IScope scope, final NetCDFFile netcdf, int nbGrid) {
+		if (netcdf == null || scope == null) {
+			return -1;
 		} else {
-			xSize = (int) preferredSize.getX();
-			ySize = (int) preferredSize.getY();
-			resultingImage = new BufferedImage(xSize, ySize, BufferedImage.TYPE_INT_RGB);
-			final Graphics2D g = resultingImage.createGraphics();
-			g.drawImage(image, 0, 0, xSize, ySize, null);
-			g.dispose();
-			// image = resultingImage;
-		}
-		final IMatrix matrix = new GamaIntMatrix(xSize, ySize);
-		for (int i = 0; i < xSize; i++) {
-			for (int j = 0; j < ySize; j++) {
-				matrix.set(scope, i, j, resultingImage.getRGB(i, j));
+
+			if (netcdf.ds != null) {
+
+				List<?> grids = netcdf.gridDataset.getGrids();
+				GridDatatype grid = null;
+				if (nbGrid >= grids.size()) {
+					nbGrid = 0;
+				}
+				if (grids.size() > 0)
+					grid = (GridDatatype) grids.get(nbGrid);// TODO number of the map
+				if (grid != null) {
+					GridCoordSystem gcsys = grid.getCoordinateSystem();
+					if (gcsys.getTimeAxis() != null)
+						netcdf.ntimes = (int) gcsys.getTimeAxis().getSize();
+
+					return netcdf.ntimes;
+
+				}
 			}
 		}
-		return matrix;
 
+		return -1;
 	}
+
+	@operator(value = "getGridsSize", can_be_const = false, category = IOperatorCategory.FILE)
+	@doc(value = "general operator to manipylate multidimension netcdf data.")
+	public static Integer getGridsSize(final IScope scope, final NetCDFFile netcdf) {
+		if (netcdf == null || scope == null) {
+			return -1;
+		} else {
+			if (netcdf.ds != null) {
+				List<?> grids = netcdf.gridDataset.getGrids();
+				return grids.size();
+			}
+		}
+
+		return -1;
+	}
+
 //	@operator (
 //			value = "fetch",
 //			can_be_const = false,
