@@ -24,10 +24,10 @@ import ucar.nc2.ui.image.ImageViewPanel;
 public class TestNetCDF extends JPanel {
 
 //	String netCDF_File = "E:/ROMS/SENEGAL_Y1980M1.nc";
-	String netCDF_File = "E:/tos_O1_2001-2002.nc";
+//	String netCDF_File = "E:/tos_O1_2001-2002.nc";
 //	String netCDF_File = "E:/test_echam_spectral.nc";
 //	String netCDF_File = "E:/cami_0000-09-01_64x128_L26_c030918.nc";
-//	String netCDF_File = "C:\\git\\gama.experimental\\cict.gaml.extensions.netcdf\\models\\NetCDF\\includes\\tos_O1_2001-2002.nc";
+	String netCDF_File = "C:\\git\\gama.experimental\\cict.gaml.extensions.netcdf\\models\\NetCDF\\includes\\tos_O1_2001-2002.nc";
 //	String netCDF_File = "E:/sresa1b_ncar_ccsm3-example.nc";
 	private static TestNetCDF tester;
 	private static JFrame frame;

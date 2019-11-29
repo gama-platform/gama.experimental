@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>NetCDF</name>
-	<comment>NetCDF plugin</comment>
+	<comment>netcdf plugin</comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -16,4 +16,11 @@
 		<nature>msi.gama.application.gamaNature</nature>
 		<nature>msi.gama.application.pluginNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>external/RESULT2015.res11</name>
+			<type>1</type>
+			<location>C:/git/HydraulicTools/RESULT2015.res11</location>
+		</link>
+	</linkedResources>
 </projectDescription>
