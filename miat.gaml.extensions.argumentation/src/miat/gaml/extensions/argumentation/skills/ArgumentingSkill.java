@@ -286,20 +286,22 @@ public class ArgumentingSkill extends Skill{
 					examples = { @example ("float val <- evaluate_conclusion(args);") }))
 	public Double primEvaluateConcl(final IScope scope) throws GamaRuntimeException {
 		final IList args = scope.hasArg("arguments")? (IList)scope.getArg("arguments", IType.LIST) : null;
+		if (args == null || args.isEmpty()) return 0.0;
 		double val = 0;
 		IAgent ag = scope.getAgent();
 		final ISpecies context = ag.getSpecies();
 		final IStatement.WithArgs evalArgAct = context.getAction("evaluate_argument");
 		final Arguments argsTNR = new Arguments();
-		
+		double sum = 0;
 		for (Object obj : args) {
 			GamaArgument arg = (GamaArgument) obj;
 			argsTNR.put("argument", ConstantExpressionDescription.create(arg));
 			evalArgAct.setRuntimeArgs(scope, argsTNR);
 			Double w = (Double) evalArgAct.executeOn(scope);
+			sum += w;
 			val += ((arg.getConclusion().equals("+")) ? 1.0 : ((arg.getConclusion().equals( "-")) ? -1.0 : 0.0)) * w;
 		}
-		return val;
+		return val/sum;
 	}
 	
 	@action (
