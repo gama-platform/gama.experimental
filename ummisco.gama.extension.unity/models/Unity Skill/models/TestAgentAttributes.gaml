@@ -11,7 +11,7 @@ global {
 
 	init{
 		create agentAttributes number: 1{	
-			speed <- 12.0;
+		//	speed <- 12.0;
 		}
 	}
 }
@@ -29,16 +29,16 @@ species agentAttributes skills: [unity]{
 	
 	init{
 		self.name <- "mainAgent";
-		do connectMqttClient();
+		 do connect_unity  to:"localhost"  login:"admin" password:"admin" port: 1883;
 		
 		do newUnityObject objectName: self.name type:"Cube" color:rgb(255,1,144) position: {-5,1,-8};			// newUnityObject
 		
-		speed <- 12.0;
-		location <-{1.0,1.0,1.0};
-		rotation <- {45,45,45};
-		scale <- {2,2,2};
+	//	speed <- 12.0;
+	//	location <-{1.0,1.0,1.0};
+	//	rotation <- {45,45,45};
+	//	scale <- {2,2,2};
 		
-		write "speed is : "+speed;
+	//	write "speed is : "+speed;
 		
 		write "connected";
 	}

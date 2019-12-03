@@ -28,26 +28,8 @@ public class HecRas_Data extends system.Object {
     @net.sf.jni4net.attributes.ClrMethod("()V")
     private native static void __ctorHecRas_Data0(net.sf.jni4net.inj.IClrProxy thiz);
     
-    @net.sf.jni4net.attributes.ClrMethod("()LSystem/String;")
-    public native java.lang.String init_hecras();
-    
-    @net.sf.jni4net.attributes.ClrMethod("(LSystem/String;)LSystem/String;")
-    public native java.lang.String Project_Open(java.lang.String path);
-    
-    @net.sf.jni4net.attributes.ClrMethod("()LSystem/String;")
-    public native java.lang.String Compute_ShowComputationWindow();
-    
-    @net.sf.jni4net.attributes.ClrMethod("()LSystem/String;")
-    public native java.lang.String Compute_CurrentPlan();
-    
-    @net.sf.jni4net.attributes.ClrMethod("()LSystem/String;")
-    public native java.lang.String Project_Save();
-    
-    @net.sf.jni4net.attributes.ClrMethod("()LSystem/String;")
-    public native java.lang.String Project_Close();
-    
-    @net.sf.jni4net.attributes.ClrMethod("()LSystem/String;")
-    public native java.lang.String QuitRas();
+    @net.sf.jni4net.attributes.ClrMethod("()V")
+    public native void ReadData();
     
     public static system.Type typeof() {
         return hecras_gama_coupling.HecRas_Data.staticType;

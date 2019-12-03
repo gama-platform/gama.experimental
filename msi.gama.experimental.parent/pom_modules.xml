@@ -39,7 +39,7 @@
  <module>../ummisco.gama.remote.gui</module> 
  <module>../ummisco.gaml.extensions.mike</module> 
  <module>../ummisco.gaml.extensions.rjava</module> 
- <module>../ummisco.gaml.feature.mike</module> 
+ <module>../ummisco.gaml.feature.hydro</module> 
  <module>../ummisco.gaml.feature.rjava</module> 
  </modules>
 

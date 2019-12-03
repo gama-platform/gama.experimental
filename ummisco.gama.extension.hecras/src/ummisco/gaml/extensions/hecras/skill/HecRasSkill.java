@@ -1,118 +1,220 @@
 package ummisco.gaml.extensions.hecras.skill;
 
-import java.io.File;
-import java.io.IOException;
+import msi.gama.precompiler.GamlAnnotations.doc;
+import msi.gama.precompiler.GamlAnnotations.skill;
 
-//import hecras_gama_coupling.hecras_Data;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import org.apache.commons.lang3.ArrayUtils;
+
+import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.Ole32;
+import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.WinDef.HWND;
+
+import io.jhdf.HdfFile;
+import io.jhdf.api.Dataset;
+
+import com.sun.jna.platform.win32.WinUser;
+
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
-import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.skill;
+import msi.gaml.types.IType;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gama.util.IList;
 import msi.gaml.skills.Skill;
-import msi.gaml.types.IType;
-import net.sf.jni4net.Bridge;
 
 @skill(name = "hecrasSkill", concept = { IConcept.STATISTIC, IConcept.SKILL })
 @doc("read hecras data")
 public class HecRasSkill extends Skill {
-	/*
-	private String env;
 
-	public static void main(String arsg[]) throws IOException {
-		Bridge.setVerbose(true);
-		Bridge.init();
-		Bridge.LoadAndRegisterAssemblyFrom(new File("hecras_Gama.j4n.dll"));
+	public HecRasEngine hrc;
 
-//		hecras_Data calc = new hecras_Data();
-//		final String result = calc.Dfs0File_Read_Data("C:\\git\\HydraulicTools\\RESULT2015.res11", "KIM_SON");
+	@action(name = "load_hecras", doc = @doc(value = "instantiate hecras engine", returns = "running hecras engine", examples = {
+			@example("load_hecras") }))
 
-//		System.out.printf("Answer to the Ultimate Question is : " + result);
+	public Object load_hecras(final IScope scope) {
+		int res=0;
+		Ole32.INSTANCE.CoInitializeEx(Pointer.NULL, Ole32.COINIT_MULTITHREADED);
+		hrc = new HecRasEngine();
+		scope.getSimulation().postDisposeAction(scope1 -> {
+			try {
+				if(hrc!=null) {					
+					hrc.QuitRas();
+					hrc.release();
+					Ole32.INSTANCE.CoUninitialize();
+					hrc=null;
+//					HWND hwnd = User32.INSTANCE.FindWindow
+//							("Ras", null); // class name
+//					
+//					User32.INSTANCE.PostMessage(hwnd, WinUser.WM_CLOSE, null, null);
+				}
+			} catch (Exception ex) {
+				scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+				ex.printStackTrace();
+			}
+			return null;
+		});
+		return res;
 	}
 
-	@action(name = "Dfs0File_Read_Data",args = { @arg (
-			name = "file",
-			type = IType.STRING,
-			optional = false,
-			doc = @doc ("dsf0 path")),
-			@arg (
-					name = "gate",
-					type = IType.STRING,
-					optional = false,
-					doc = @doc ("gate name"))}, doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
-					@example(" Dfs0File_Read_Data(\"C:\\\\git\\\\HydraulicTools\\\\RESULT2015.res11\", \"KIM_SON\")") }))
-	public Object primDfs0Read(final IScope scope) throws GamaRuntimeException {
-//		hecras_Data calc = new hecras_Data();
-//		return calc.Dfs0File_Read_Data("C:\\git\\HydraulicTools\\RESULT2015.res11", "KIM_SON");
-		String a=scope.getStringArg("file");
-		String b=scope.getStringArg("gate");
-				
-		return calc.Dfs0File_Read_Data(a,b);
-
-	}
-
-	@action(name = "load_hecras", doc = @doc(value = "evaluate the R command", returns = "value in Gama data type", examples = {
-			@example("startR") }))
-
-	public void load_hecras(final IScope scope) {
-		initEnv(scope);
-		Bridge.setVerbose(true);
-		final String RPath = "C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work";
-		try {		
-
-			Bridge.init(new File(RPath));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-//        Bridge.init(new File(System.getProperty("user.dir")));
-//        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\DHI.Generic.hecrasZero.DFS.dll"));
-//
-//        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\DHI.DHIfl.dll"));
-//
-//        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\DHI.Generic.hecrasZero.EUM.dll"));
-//
-//        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\DHI.PFS.dll"));
-//
-//        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\jni4net.n.w64.v40-0.8.8.0.dll"));
-//        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\jni4net.n-0.8.8.0.dll"));
-//        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\MyCSharpDemoCalc.dll"));
-//        Bridge.LoadAndRegisterAssemblyFrom(new File("C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work\\MyCSharpDemoCalc.j4n.dll"));
-		Bridge.LoadAndRegisterAssemblyFrom(new File(RPath+"\\hecras_Gama.j4n.dll"));
-
-//		return "hecras loaded";
-	}
-
-	public void initEnv(final IScope scope) {
-		env = System.getProperty("java.library.path");
-//		if (!env.contains("jri")) {
-//			final String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "")
-//					.replace("libjri.so", "").replace("jri.dll", "");
-		final String RPath = "C:\\git\\BacHungHai_Irrigation\\AAA\\jni4net-0.8.8.0-bin\\samples\\myCSharpDemoCalc\\work";
-		if (System.getProperty("os.name").startsWith("Windows")) {
-			System.setProperty("java.library.path", RPath + ";" + env);
-		} else {
-			System.setProperty("java.library.path", RPath + ":" + env);
-		}
+	@action(name = "Project_Open", args = {
+			@arg(name = "file", type = IType.FILE, optional = false, doc = @doc("project path")) }, doc = @doc(value = "open hecras project", returns = "opened hecras project", examples = {
+					@example("Project_Open(\"E:\\Downloads\\HWC\\HelloWorldCoupling.prj\")") }))
+	public Object primProject_Open(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
 		try {
-			final java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
-			fieldSysPath.setAccessible(true);
-			fieldSysPath.set(null, null);
-
-		} catch (final Exception ex) {
-			scope.getGui().getConsole(scope).informConsole(ex.getMessage(), null);
+			String a = scope.getStringArg("file");
+			res = hrc.Project_Open(a);
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
 			ex.printStackTrace();
 		}
-		// System.out.println(System.getProperty("java.library.path"));
-//		}
-//		System.loadLibrary("jri");
+		return res;
+	}
 
-//		if (System.getenv("R_HOME") == null) {
-//			throw GamaRuntimeException.error("The R_HOME environment variable is not set. R cannot be run.", scope);
-//		}
-	}*/
+	@action(name = "Compute_CurrentPlan", doc = @doc(value = "Compute CurrentPlan", returns = "Computed CurrentPlan", examples = {
+			@example("Compute_CurrentPlan()") }))
+	public Object primCompute_CurrentPlan(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
+		try {
+			res = hrc.Compute_CurrentPlan();
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+			ex.printStackTrace();
+		}
+		return res;
+	}
+
+	@action(name = "Compute_HideComputationWindow", doc = @doc(value = "Compute_HideComputationWindow", returns = "Compute_HideComputationWindow", examples = {
+			@example("Compute_HideComputationWindow()") }))
+	public Object primCompute_HideComputationWindow(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
+		try {
+			res = hrc.Compute_HideComputationWindow();
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+			ex.printStackTrace();
+		}
+		return res;
+	}
+
+
+	@action(name = "Project_Close", doc = @doc(value = "Project_Close", returns = "Project_Close", examples = {
+			@example("Project_Close()") }))
+	public Object primProject_Close(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
+		try {
+			res = hrc.Project_Close();
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+			ex.printStackTrace();
+		}
+		return res;
+	}
+
+
+	@action(name = "ExportGIS", doc = @doc(value = "ExportGIS", returns = "ExportGIS", examples = {
+			@example("ExportGIS()") }))
+	public Object primExportGIS(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
+		try {
+			res = hrc.ExportGIS();
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+			ex.printStackTrace();
+		}
+		return res;
+	}
+	
+	@action(name = "Update_Data", args = {
+			@arg(name = "num", type = IType.INT, optional = false, doc = @doc("number step")) }, doc = @doc(value = "update data", returns = "updated data", examples = {
+					@example("Update_Data(100)") }))
+	public Object primUpdate_Data(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
+		try {
+
+			Integer num = scope.getIntArg("num");
+			File file = new File("E:\\Downloads\\HWC\\HelloWorldCoupling.p04.hdf");
+
+			try (HdfFile hdfFile = new HdfFile(file)) {
+				Dataset dataset = hdfFile.getDatasetByPath("/Results/Unsteady/Output/Output Blocks/Base Output/Unsteady Time Series/2D Flow Areas/Hello 2D Area/Depth");
+				// data will be a java array of the dimensions of the HDF5 dataset
+				float[][] data = (float[][]) dataset. getData();
+				try (PrintWriter p = new PrintWriter(new FileOutputStream("E:\\git\\hecras_gama_coupling\\includes\\Depth.csv", false))) {
+					int x=dataset.getDimensions()[0];
+					int y=dataset.getDimensions()[1];
+//					p.println("ncols 40");//"+x);1118216
+//					p.println("nrows 20");//"+y);
+//					p.println("xllcorner     0.0");
+//					p.println("yllcorner     0.0");
+//					p.println("cellsize      2.0");
+
+					  float[] oneDArray = new float[(int) dataset.getSize()];
+					  for(int i = 0; i < x; i ++)
+					  {
+					    for(int s = 0; s < y; s ++)
+					    {
+					      oneDArray[(i * y) + s] = data[i][s];
+					    }
+					  }
+					  
+					  float[][][] frame=new float[2000][][];
+					  int f =0; int fi=0;
+					  while (fi<oneDArray.length -800) {
+						  
+					      frame[f]=new float[20][40];
+						  for(int i = 0; i < 20; i ++)
+						  {
+						    for(int s = 0; s < 40; s ++)
+						    {
+						      frame[f][i][s] = oneDArray[fi];
+						      fi++;
+						    }
+						  }
+						  f++;
+					  }
+					  
+					  
+				    p.println(ArrayUtils.toString(frame[num]).replace("},{", "\n").replace("{{", "").replace("}}", ""));//.replace(",", " ")
+				    p.close();
+				} catch (Exception e1) {
+				    e1.printStackTrace();
+				}
+				//System.out.println(ArrayUtils.toString(data));
+			}
+			
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+			ex.printStackTrace();
+		}
+		return res;
+	}
+
+	
+	@action(name = "QuitRas", doc = @doc(value = "QuitRas", returns = "QuitRas", examples = {
+			@example("QuitRas()") }))
+	public Object primQuitRas(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
+		try {
+			res = hrc.QuitRas();
+			hrc.release();
+			Ole32.INSTANCE.CoUninitialize();
+			hrc=null;
+//			HWND hwnd = User32.INSTANCE.FindWindow
+//		             ("Ras", null); // class name
+//		        
+//		        User32.INSTANCE.PostMessage(hwnd, WinUser.WM_CLOSE, null, null);
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+			ex.printStackTrace();
+		}
+		return res;
+	}
 }
