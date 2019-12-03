@@ -21,7 +21,7 @@ global skills: [unity] {
 	init {
 		
 		
-		do connectMqttClient(); 
+	    do connect_unity  to:"localhost"  login:"admin" password:"admin" port: 1883;
 		write "Agent "+self.name+ " connected";
 
 		do callUnityMonoAction objectName: "Player0"   actionName:"setWinText"  attribute:" --- Game ON --- ";  
@@ -126,7 +126,7 @@ species Player skills: [unity] {
 		do unityNotificationSubscribe notificationId: self.name+"_Notification_01" objectName: playerName fieldType: "field" fieldName: "count" fieldValue: totalCount fieldOperator: "==";
 			
 		// subscribe to the topic: notification, (Mqtt server) in order to receive notifications 
-		do subscribe_To_Topic topic: "notification";
+		do subscribe_to_topic topic: "notification";
 		name <- playerName;
 		
 	
@@ -200,7 +200,7 @@ species Player skills: [unity] {
 
 	// Check if a notification is received
 	reflex checkNotification when: !isNotifiyed {
-		isNotifiyed <- isNotificationTrue(self.name+"_Notification_01");
+	//	isNotifiyed <- isNotificationTrue(self.name+"_Notification_01");
 	}
 
 

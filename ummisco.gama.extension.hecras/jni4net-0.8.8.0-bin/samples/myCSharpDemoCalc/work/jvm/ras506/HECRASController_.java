@@ -37,16 +37,13 @@ class __HECRASController extends system.Object implements ras506.HECRASControlle
     public native void QuitRas();
     
     @net.sf.jni4net.attributes.ClrMethod("()V")
-    public native void Compute_ShowComputationWindow();
+    public native void Compute_HideComputationWindow();
     
     @net.sf.jni4net.attributes.ClrMethod("(ILSystem/Array;Z)Z")
     public native boolean Compute_CurrentPlan(net.sf.jni4net.Ref<java.lang.Integer> nmsg, net.sf.jni4net.Ref<system.Array> Msg, net.sf.jni4net.Ref<java.lang.Boolean> BlockingMode);
     
     @net.sf.jni4net.attributes.ClrMethod("(LSystem/String;)V")
     public native void Project_Open(java.lang.String projectFilename);
-    
-    @net.sf.jni4net.attributes.ClrMethod("()V")
-    public native void Project_Save();
     
     @net.sf.jni4net.attributes.ClrMethod("()V")
     public native void Project_Close();

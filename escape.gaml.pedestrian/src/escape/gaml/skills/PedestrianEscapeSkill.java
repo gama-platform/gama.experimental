@@ -333,7 +333,7 @@ public class PedestrianEscapeSkill extends PedestrianSkill {
 			IAgent road = (IAgent) getRoadsTargets(agent).get(targets.get(index));
 			IShape bounds = PedestrianRoadSkill.getFreeSpace(scope, road);
 			IContainer obstacles = PedestrianRoadSkill.getAgentsOn(road);
-			walkWithForceModel(scope, agent, currentTarget, bounds,obstacles);
+			walkWithForceModel(scope, agent, currentTarget, getAvoidOther(agent), bounds, obstacles, maxDist);
 			
 			if (arrivedAtTarget(scope,location,currentTarget, getShoulderLength(agent)*2, index, maxIndex, targets)) {
 				PedestrianRoadSkill.unregister(scope, road, agent);

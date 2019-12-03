@@ -15,7 +15,7 @@ global skills:[network, unity]{
 	init{
 		
 		create player number: 1 {
-			do connectMqttClient(); 
+			 do connect_unity  to:"localhost"  login:"admin" password:"admin" port: 1883;
 		}
 		
 	}

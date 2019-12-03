@@ -40,99 +40,19 @@ namespace HecRas_Gama_Coupling {
         private static global::System.Collections.Generic.List<global::net.sf.jni4net.jni.JNINativeMethod> @__Init(global::net.sf.jni4net.jni.JNIEnv @__env, global::java.lang.Class @__class) {
             global::System.Type @__type = typeof(__HecRas_Data);
             global::System.Collections.Generic.List<global::net.sf.jni4net.jni.JNINativeMethod> methods = new global::System.Collections.Generic.List<global::net.sf.jni4net.jni.JNINativeMethod>();
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "init_hecras", "init_hecras0", "()Ljava/lang/String;"));
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Project_Open", "Project_Open1", "(Ljava/lang/String;)Ljava/lang/String;"));
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Compute_ShowComputationWindow", "Compute_ShowComputationWindow2", "()Ljava/lang/String;"));
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Compute_CurrentPlan", "Compute_CurrentPlan3", "()Ljava/lang/String;"));
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Project_Save", "Project_Save4", "()Ljava/lang/String;"));
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "Project_Close", "Project_Close5", "()Ljava/lang/String;"));
-            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "QuitRas", "QuitRas6", "()Ljava/lang/String;"));
+            methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "ReadData", "ReadData0", "()V"));
             methods.Add(global::net.sf.jni4net.jni.JNINativeMethod.Create(@__type, "__ctorHecRas_Data0", "__ctorHecRas_Data0", "(Lnet/sf/jni4net/inj/IClrProxy;)V"));
             return methods;
         }
         
-        private static global::net.sf.jni4net.utils.JniHandle init_hecras0(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
-            // ()Ljava/lang/String;
-            // ()LSystem/String;
+        private static void ReadData0(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
+            // ()V
+            // ()V
             global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
-            global::net.sf.jni4net.utils.JniHandle @__return = default(global::net.sf.jni4net.utils.JniHandle);
             try {
             global::HecRas_Gama_Coupling.HecRas_Data @__real = global::net.sf.jni4net.utils.Convertor.StrongJp2C<global::HecRas_Gama_Coupling.HecRas_Data>(@__env, @__obj);
-            @__return = global::net.sf.jni4net.utils.Convertor.StrongC2JString(@__env, @__real.init_hecras());
+            @__real.ReadData();
             }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
-            return @__return;
-        }
-        
-        private static global::net.sf.jni4net.utils.JniHandle Project_Open1(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj, global::net.sf.jni4net.utils.JniLocalHandle path) {
-            // (Ljava/lang/String;)Ljava/lang/String;
-            // (LSystem/String;)LSystem/String;
-            global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
-            global::net.sf.jni4net.utils.JniHandle @__return = default(global::net.sf.jni4net.utils.JniHandle);
-            try {
-            global::HecRas_Gama_Coupling.HecRas_Data @__real = global::net.sf.jni4net.utils.Convertor.StrongJp2C<global::HecRas_Gama_Coupling.HecRas_Data>(@__env, @__obj);
-            @__return = global::net.sf.jni4net.utils.Convertor.StrongC2JString(@__env, @__real.Project_Open(global::net.sf.jni4net.utils.Convertor.StrongJ2CString(@__env, path)));
-            }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
-            return @__return;
-        }
-        
-        private static global::net.sf.jni4net.utils.JniHandle Compute_ShowComputationWindow2(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
-            // ()Ljava/lang/String;
-            // ()LSystem/String;
-            global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
-            global::net.sf.jni4net.utils.JniHandle @__return = default(global::net.sf.jni4net.utils.JniHandle);
-            try {
-            global::HecRas_Gama_Coupling.HecRas_Data @__real = global::net.sf.jni4net.utils.Convertor.StrongJp2C<global::HecRas_Gama_Coupling.HecRas_Data>(@__env, @__obj);
-            @__return = global::net.sf.jni4net.utils.Convertor.StrongC2JString(@__env, @__real.Compute_ShowComputationWindow());
-            }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
-            return @__return;
-        }
-        
-        private static global::net.sf.jni4net.utils.JniHandle Compute_CurrentPlan3(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
-            // ()Ljava/lang/String;
-            // ()LSystem/String;
-            global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
-            global::net.sf.jni4net.utils.JniHandle @__return = default(global::net.sf.jni4net.utils.JniHandle);
-            try {
-            global::HecRas_Gama_Coupling.HecRas_Data @__real = global::net.sf.jni4net.utils.Convertor.StrongJp2C<global::HecRas_Gama_Coupling.HecRas_Data>(@__env, @__obj);
-            @__return = global::net.sf.jni4net.utils.Convertor.StrongC2JString(@__env, @__real.Compute_CurrentPlan());
-            }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
-            return @__return;
-        }
-        
-        private static global::net.sf.jni4net.utils.JniHandle Project_Save4(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
-            // ()Ljava/lang/String;
-            // ()LSystem/String;
-            global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
-            global::net.sf.jni4net.utils.JniHandle @__return = default(global::net.sf.jni4net.utils.JniHandle);
-            try {
-            global::HecRas_Gama_Coupling.HecRas_Data @__real = global::net.sf.jni4net.utils.Convertor.StrongJp2C<global::HecRas_Gama_Coupling.HecRas_Data>(@__env, @__obj);
-            @__return = global::net.sf.jni4net.utils.Convertor.StrongC2JString(@__env, @__real.Project_Save());
-            }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
-            return @__return;
-        }
-        
-        private static global::net.sf.jni4net.utils.JniHandle Project_Close5(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
-            // ()Ljava/lang/String;
-            // ()LSystem/String;
-            global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
-            global::net.sf.jni4net.utils.JniHandle @__return = default(global::net.sf.jni4net.utils.JniHandle);
-            try {
-            global::HecRas_Gama_Coupling.HecRas_Data @__real = global::net.sf.jni4net.utils.Convertor.StrongJp2C<global::HecRas_Gama_Coupling.HecRas_Data>(@__env, @__obj);
-            @__return = global::net.sf.jni4net.utils.Convertor.StrongC2JString(@__env, @__real.Project_Close());
-            }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
-            return @__return;
-        }
-        
-        private static global::net.sf.jni4net.utils.JniHandle QuitRas6(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
-            // ()Ljava/lang/String;
-            // ()LSystem/String;
-            global::net.sf.jni4net.jni.JNIEnv @__env = global::net.sf.jni4net.jni.JNIEnv.Wrap(@__envp);
-            global::net.sf.jni4net.utils.JniHandle @__return = default(global::net.sf.jni4net.utils.JniHandle);
-            try {
-            global::HecRas_Gama_Coupling.HecRas_Data @__real = global::net.sf.jni4net.utils.Convertor.StrongJp2C<global::HecRas_Gama_Coupling.HecRas_Data>(@__env, @__obj);
-            @__return = global::net.sf.jni4net.utils.Convertor.StrongC2JString(@__env, @__real.QuitRas());
-            }catch (global::System.Exception __ex){@__env.ThrowExisting(__ex);}
-            return @__return;
         }
         
         private static void @__ctorHecRas_Data0(global::System.IntPtr @__envp, global::net.sf.jni4net.utils.JniLocalHandle @__class, global::net.sf.jni4net.utils.JniLocalHandle @__obj) {
