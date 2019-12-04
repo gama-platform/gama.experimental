@@ -346,6 +346,28 @@ public class ArgumentingSkill extends Skill{
 		return false;
 	}
 	
+	@action (
+			name = "remove_argument",
+			
+			args = {@arg (
+					name = "argument",
+					type = GamaArgumentType.id,
+					optional = false,
+					doc = @doc ("the argument to remove"))},
+			doc = @doc (
+					value = "remove and arguments and all the attacks concerning this argument from the agent argumentation graph",
+					examples = { @example ("do remove_argument(an_agrument);") }))
+	public boolean primRemoveArguments(final IScope scope) throws GamaRuntimeException {
+		IGraph graph = getArgGraph(scope.getAgent());
+		final GamaArgument arg = scope.hasArg("argument")? (GamaArgument)scope.getArg("argument", GamaArgumentType.id) : null;
+		if ((graph != null) && (arg != null) && (graph.getVertices().contains(arg))) {
+			graph.removeVertex(arg);
+			
+			return true;
+		}
+		return false;
+	}
+	
 	
 	@action (
 			name = "make_decision",
