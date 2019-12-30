@@ -236,8 +236,8 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 		if (scale > 0.0)
 			scale = 255.0 / scale;
 		IndexIterator ii = ma.getIndexIterator();
-		for (int i = 0; i < h; i++) {
-			for (int j = 0; j < w; j++) {
+		for (int i = 0; i <h; i++) {
+			for (int j = 0; j <w; j++) {
 
 				double val = ii.getDoubleNext();
 				double sval = ((val - min) * scale);
