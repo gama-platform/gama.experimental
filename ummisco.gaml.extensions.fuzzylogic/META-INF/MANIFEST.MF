@@ -7,7 +7,6 @@ Automatic-Module-Name: ummisco.gaml.extensions.fuzzylogic
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: msi.gama.core;bundle-version="1.7.0",
  msi.gama.ext;bundle-version="1.7.0"
-Bundle-ClassPath: lib/jFuzzyLogic_core.jar,
- lib/jFuzzyLogic.jar,
+Bundle-ClassPath: lib/jFuzzyLogic.jar,
  .
 Export-Package: ummisco.gaml.extensions.fuzzylogic.gaml
