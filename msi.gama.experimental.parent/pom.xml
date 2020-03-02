@@ -242,8 +242,10 @@
  <module>../ummisco.gama.markdown.documentation</module> 
  <module>../ummisco.gama.opengl2</module> 
  <module>../ummisco.gama.remote.gui</module> 
+ <module>../ummisco.gaml.extensions.fuzzylogic</module> 
  <module>../ummisco.gaml.extensions.mike</module> 
  <module>../ummisco.gaml.extensions.rjava</module> 
+ <module>../ummisco.gaml.feature.fuzzylogic</module> 
  <module>../ummisco.gaml.feature.hydro</module> 
  <module>../ummisco.gaml.feature.rjava</module> 
  </modules>
