@@ -13,6 +13,8 @@
  <module>../idees.gama.weka</module> 
  <module>../miat.gama.extension.ifcfile</module> 
  <module>../miat.gama.feature.ifcfile</module> 
+ <module>../miat.gaml.extension.bayesiannetwork</module> 
+ <module>../miat.gaml.extension.bayesiannetwork.feature</module> 
  <module>../miat.gaml.extensions.argumentation</module> 
  <module>../miat.gaml.extensions.argumentation.feature</module> 
  <module>../mit.feature.launchpad</module> 
