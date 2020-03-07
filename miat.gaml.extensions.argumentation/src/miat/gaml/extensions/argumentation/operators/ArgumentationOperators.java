@@ -27,6 +27,7 @@ public class ArgumentationOperators {
 			concept = { "argumentation"})
 	public static IGraph<GamaArgument, Object> loadGraph(IScope scope, GamaFile f, IList<GamaArgument> arguments) {
 		GamaGraph<GamaArgument, Object> graph = new GamaGraph(scope, Types.get(GamaArgumentType.id), Types.PAIR);
+		graph.setDirected(true);
 		Map<String, GamaArgument> argNames = arguments.stream().collect(Collectors.toMap(GamaArgument::getId,
                 Function.identity()));
 		for (Object obj : f.getContents(scope).iterable(scope)) {
