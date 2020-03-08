@@ -9,6 +9,7 @@ import miat.gaml.extension.bayesiannetwork.types.GamaBayesianNetwork;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
 import msi.gaml.operators.Cast;
@@ -63,23 +64,17 @@ public class BayesianNetworkOperator {
 			value = { "add_node_probabilities" },
 			category = { "bayesian_network" },
 			concept = { "bayesian_network"})
-	public static GamaBayesianNetwork addNodeProbabilities(IScope scope, GamaBayesianNetwork network, String node, GamaMap<String,Object> probabilities) {
+	public static GamaBayesianNetwork addNodeProbabilities(IScope scope, GamaBayesianNetwork network, String node, GamaMap<Object,Object> probabilities) {
 		if (network == null) return null;
 		BayesNode bn = network.getNetwork().getNode(node);
 		
 		if (bn == null) GamaRuntimeException.error("Node " + node + " does not exist in network " + network.getId(), scope);
 		else { 
-			int N = 0;
-			int out = bn.getOutcomeCount();
 			if (bn.getParents().isEmpty()) {
-				N = out;
-			} else {
-				for (BayesNode nn : bn.getParents()) {
-					N += out * nn.getOutcomeCount();
-				}
-			}
-			double proba[] = new double[N];
-			if (bn.getParents().isEmpty()) {
+				int N = bn.getOutcomeCount();
+				
+				double proba[] = new double[N];
+				
 				for (int i = 0; i < N; i++) {
 					Object obj =  probabilities.get(bn.getOutcomes().get(i));
 					if (obj == null || (!(obj instanceof Double) && !(obj instanceof Integer))) {
@@ -88,14 +83,17 @@ public class BayesianNetworkOperator {
 						proba[i] = Cast.asFloat(scope, obj);
 					}
 					
-				}	
+				}
+				bn.setProbabilities(proba);
 			} else {
+				List<Map<String, String>> list = GamaListFactory.create();
+				
+				combinaison(list,GamaMapFactory.create(),0,bn);
+				double proba[] = new double[list.size()* bn.getOutcomeCount()];
 				int index = 0;
-				for (BayesNode par : bn.getParents()) {
-					Map vals = (Map) probabilities.get(par.getName());
-					for (String outcomeP : par.getOutcomes()) {
-						Map vals2 = (Map) vals.get(outcomeP); 
-						for (String outcome : bn.getOutcomes()) {
+				for (Map<String, String> comb : list) {
+					Map<String,Object> vals2 = (Map<String, Object>) probabilities.get(comb);
+					for (String outcome : bn.getOutcomes()) {
 							Object obj =  vals2.get(outcome);
 							if (obj == null || (!(obj instanceof Double) && !(obj instanceof Integer))) {
 								 GamaRuntimeException.error("problem with probabilities " + probabilities + ": inconsistency with network " + network.getId(), scope);
@@ -105,13 +103,25 @@ public class BayesianNetworkOperator {
 							index ++;
 						}
 					}
-				}
+				bn.setProbabilities(proba);	
 			}
-			
-			bn.setProbabilities(proba);
-			
 		}
 		return network;
+	}
+	
+	static void combinaison(List<Map<String, String>> list,Map<String, String> current, int currentIndex, BayesNode node) {
+		if (currentIndex >= node.getParents().size()) {
+			list.add(current);
+		} else {
+			BayesNode p = node.getParents().get(currentIndex);
+			for (String v : p.getOutcomes()) {
+				Map<String,String> c = GamaMapFactory.create();
+				c.putAll(current);
+				c.put(p.getName(),v);
+				combinaison(list,c,currentIndex+1,node);
+			}
+		}
+		
 	}
 	
 	@operator (
