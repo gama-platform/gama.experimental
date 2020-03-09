@@ -9,10 +9,7 @@ model pedestrianModel
 
 global {
 	//si false, petite zone de test, sinon, grosse zone
-	bool all_data <- true;
-	
-	//pour faire des jolies gif... seulement pour all_data
-	bool demo_mode <- false; 
+	bool all_data <- false parameter:true;
 	
 	//si jamais on veut sauvegarder les plus courts chemins pour les réutiliser
 	bool save_shortest_path <- false;
@@ -20,29 +17,41 @@ global {
 	bool use_shortest_path_file <- false;
 	
 	//batiments et routes
-	file building_shapefile <- demo_mode ? file("../includes/buildings_PM.shp") : (all_data ? file("../includes/buildings.shp"): file("../includes/bds.shp"));
-	file pedestrian_shapefile <- demo_mode ? file("../includes/buildings_pedestrian_PM.shp") : (all_data ? file("../includes/buildings_pedestrian2.shp") : file("../includes/bds_pedestrian2.shp"));
+	file building_shapefile <- all_data ? file("../includes/buildings.shp"): file("../includes/bds.shp");
+	file pedestrian_shapefile <- all_data ? file("../includes/pedestrian.shp") : file("../includes/bds_pedestrian2.shp");
 	
 	//c'est l'enveloppe extérieure de la zone d'étude (ils ne peuvent pas en sortir)
-	file bounds_shapefile <- demo_mode ? file("../includes/buildings_bounds_PM.shp") : (all_data ? file("../includes/buildings_bounds.shp") : file("../includes/bds_bounds.shp"));
+	file bounds_shapefile <- all_data ? file("../includes/buildings_bounds.shp") : file("../includes/bds_bounds.shp");
 	
 	graph network;
 	
 	geometry shape <- envelope(pedestrian_shapefile);
 	
-	float P_obstacle_distance_repulsion_coeff <- 5.0 parameter: true;
-	float P_obstacle_repulsion_intensity <- 1.0 parameter: true;
-	float P_overlapping_coefficient <- 2.0 parameter: true;
-	float P_perception_sensibility <- 1.0 parameter: true;
-	float P_shoulder_length <- 0.5 parameter: true;
-	float P_proba_detour <- 0.5 parameter: true;
-	bool P_avoid_other <- true parameter: true;
+	float P_shoulder_length <- 0.45 parameter: true;
+	float P_body_depth <- 0.28 parameter: true;
+	bool P_use_body_geometry <- false parameter: true ;
+	float P_proba_detour <- 0.5 parameter: true ;
+	bool P_avoid_other <- true parameter: true ;
+	float P_obstacle_consideration_distance <- 1.0 parameter: true ;
+	
+	
+	string P_pedestrian_model among: ["simple", "SFM"] <- "simple" parameter: true ;
+	float P_obstacle_distance_repulsion_coeff <- 5.0 category: "simple model" parameter: true ;
+	float P_overlapping_coefficient <- 2.0 category: "simple model" parameter: true ;
+	float P_perception_sensibility <- 1.0 category: "simple model" parameter: true ;
+	
+	float P_A_SFM parameter: true <- 4.5 category: "SFM" ;
+	float P_relaxion_SFM parameter: true <- 0.54 category: "SFM" ;
+	float P_gama_SFM parameter: true <- 0.35 category: "SFM" ;
+	float P_n_SFM <- 2.0 parameter: true category: "SFM" ;
+	float P_n_prime_SFM <- 3.0 parameter: true category: "SFM";
+	float P_lambda_SFM <- 2.0 parameter: true category: "SFM" ;
 	
 	
 	//une distance qui represente la distance à laquelle une personne peut s'éloigner d'une route (linéaire) au max 
 	float dist_segments <- 5.0;
 	
-	int nb_people <- all_data ? 17000: 1000;
+	int nb_people <- all_data ? 15700: 1000;
 	
 	//nombre de personne pouvant sortir par la(es) sortie(s) en un pas de temps
 	int max_exit_flow <- 10;
@@ -93,7 +102,7 @@ global {
 		
 		//creation des routes, pour chaque route je créé des agents segements qui vont servir au déplacement des agents
 		create road from: rds  {
-			do initialize obstacles:[building] distance: 10.0;
+			do initialize obstacles:[building] distance: 1.0;
 		}
 		
 		if (verbose) {write "import road ok";}
@@ -109,14 +118,21 @@ global {
 		//je creer des people que je place aléatoirement dans des batiments
 		create people number:nb_people{
 			location <- any_location_in(one_of(building));
-			obstacle_species <- [people];
+			pedestrian_model <- P_pedestrian_model;
 			obstacle_distance_repulsion_coeff <- P_obstacle_distance_repulsion_coeff;
-			obstacle_repulsion_intensity <-P_obstacle_repulsion_intensity;
+			obstacle_consideration_distance <- P_obstacle_consideration_distance;
 			overlapping_coefficient <- P_overlapping_coefficient;
 			perception_sensibility <- P_perception_sensibility ;
 			shoulder_length <- P_shoulder_length;
 			avoid_other <- P_avoid_other;
 			proba_detour <- P_proba_detour;
+			A_SFM <- P_A_SFM;
+			relaxion_SFM <- P_relaxion_SFM;
+			gama_SFM <- P_gama_SFM;
+			n_SFM <- P_n_SFM;
+			n_prime_SFM <- P_n_prime_SFM;
+			lambda_SFM <- P_lambda_SFM;
+			
 			obstacle_species <- [people, building];
 			
 		}
@@ -197,7 +213,7 @@ species people skills: [escape_pedestrian]{
 	
 	reflex move when: final_target != nil and not reach_exit {
 		do walk ;
-		reach_exit <- self distance_to final_target < 1.0;
+		if final_target = nil {reach_exit <- true;}
 	}	
 	
 	reflex wait_for_exiting when: reach_exit {
@@ -219,7 +235,7 @@ species people skills: [escape_pedestrian]{
 	}
 	
 	
-	aspect demo{
+	aspect demo {
 		if (not in_building) {
 			draw triangle(P_shoulder_length) rotate: heading + 90 color: color depth: 1;
 		}
@@ -235,9 +251,8 @@ experiment normal_sim type: gui {
 				draw simulation_outside color: #black;
 			}
 			species building refresh: false;
-			//species segment refresh: false;
 			species exit_place refresh: false;
-			//species road refresh: false;
+			species road refresh: false;
 			species people;
 		}
 		
@@ -245,20 +260,6 @@ experiment normal_sim type: gui {
 			chart "nb of people" {
 				data "nb of people" value: length(people) color: #blue;
 			}
-		}
-	}
-}
-
-experiment demo_sim type: gui {
-	action _init_ {
-		create pedestrianModel_model with: [demo_mode::true];
-	}
-	output {
-		display map type: opengl autosave: true{
-			image "../includes/background.png" refresh: false;
-			species building aspect: demo refresh: false;
-			species exit_place aspect: demo refresh: false;
-			species people aspect: demo;
 		}
 	}
 }

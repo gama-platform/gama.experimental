@@ -1,47 +1,109 @@
 package escape.gaml.operator;
 
-import escape.gama.preprocessing.PedestrianNetwork;
 import msi.gama.metamodel.shape.IShape;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.precompiler.GamlAnnotations.doc;
+import msi.gama.precompiler.GamlAnnotations.example;
+import msi.gama.precompiler.GamlAnnotations.no_test;
 import msi.gama.precompiler.GamlAnnotations.operator;
+import msi.gama.precompiler.GamlAnnotations.usage;
+import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
+import msi.gama.util.IContainer;
 import msi.gama.util.IList;
-import msi.gaml.types.IType;
 
 public class Operators {
-	@operator (
-			value = { "generate_pedestrian_network" },
-			content_type = IType.GEOMETRY,
-			category = { IOperatorCategory.SPATIAL},
-			concept = { IConcept.GEOMETRY, IConcept.SPATIAL_COMPUTATION, IConcept.SPATIAL_RELATION})
+
+	@operator(value = "generate_pedestrian_network", category = { "Pedestrian" } , concept = { IConcept.NETWORK })
 	@doc (
-			value = "A list of lines forming a graph computed from an open space that can be used by the pedestrian skill")
+			value = "generateNetwork(obstacles (list of lists of geometries/agents), bounds (list of geometries/agents), add point to open areas (boolean),\n" + 
+					" random densification (boolean; if true, use random points to fill open areas; if false, use uniform points), min distance to considered an area as open area (float), density of points in the open areas (float),\n" + 
+			" clean network (boolean), tolerance for the cliping in triangulation (float; distance), tolerance for the triangulation (float), minimal distance to obstacles to keep a path (float; if 0.0, no filtering), size of squares for decomposition (optimization)",
+			examples = { @example (
+					value = "generate_pedestrian_network([wall], [world],true,false,3.0,0.1, true,0.1,0.0,0.0,50.0)",
+					equals = "a list of polylines corresponding to the pedestrian paths",
+					isExecutable = false) })
+	@no_test
+	public static IList<IShape> generateNetwork(IScope scope,  IList<IContainer<?, ? extends IShape>> obst, IContainer<?, ? extends IShape> bounds, Boolean openArea,
+			boolean randomDist, double valDistForOpenArea, double valDensityOpenArea,
+			Boolean cleanNetwork, double toleranceClip, double toleranceTriang, double minDistPath, double SizeSquares) {
+		return generateNetwork(scope, obst, bounds, null, openArea, randomDist,valDistForOpenArea,
+				valDensityOpenArea, cleanNetwork, toleranceClip, toleranceTriang, minDistPath, SizeSquares);
+	}
 
+	@operator(value = "generate_pedestrian_network", category = { "Pedestrian" } , concept = { IConcept.NETWORK })
+	@doc (
+			usages = { @usage (
+					value = "generateNetwork("
+							+ "obstacles (list of lists of geometries/agents), "
+							+ "bounds (list of geometries/agents), "
+							+ "add point to open areas (boolean), \n" 
+							+ "random densification (boolean; if true, use random points to fill open areas; if false, use uniform points), "
+							+ "min distance to considered an area as open area (float), "
+							+ "density of points in the open areas (float), \n" 
+							+ "clean network (boolean), "
+							+ "tolerance for the cliping in triangulation (float; distance), "
+							+ "tolerance for the triangulation (float), "
+							+ "minimal distance to obstacles to keep a path (float; if 0.0, no filtering)") },
+			examples = { @example (
+					value = "generate_pedestrian_network([wall], [world],true,false,3.0,0.1, true,0.1,0.0,0.0)",
+					equals = "a list of polylines corresponding to the pedestrian paths",
+					isExecutable = false) })
+	@no_test
+	public static IList<IShape> generateNetwork(IScope scope,  IList<IContainer<?, ? extends IShape>> obst, IContainer<?, ? extends IShape> bounds, Boolean openArea,
+			boolean randomDist, double valDistForOpenArea, double valDensityOpenArea,
+			Boolean cleanNetwork, double toleranceClip, double toleranceTriang, double minDistPath) {
+		return generateNetwork(scope, obst, bounds, null, openArea, randomDist,valDistForOpenArea,
+				valDensityOpenArea, cleanNetwork, toleranceClip, toleranceTriang, minDistPath, 0);
+	}
 
-	public static IList<IShape>  generatePedestrianNetwork(IScope scope, IList<String> obstaclesPath, String boundsPath, double valTolClip,double valTolTri,
-				double valFiltering, boolean openAreaManagement,double valDistForOpenArea, double valDensityOpenArea, boolean randomDist, boolean cleanNetwork  ){
-	   
-		return PedestrianNetwork.generateNetwork(scope, obstaclesPath, boundsPath, valTolClip,valTolTri,
-				valFiltering, openAreaManagement,valDistForOpenArea, valDensityOpenArea, randomDist,  cleanNetwork );
-	   
+	@operator(value = "generate_pedestrian_network", category = { "Pedestrian" } , concept = { IConcept.NETWORK })
+	@doc (
+			usages = { @usage (
+					value = "generateNetwork("
+							+ "obstacles (list of lists of geometries/agents), \n"
+							+ "bounds (list of geometries/agents), \n"
+							+ "the road network (list of line) to have simple pedestrian behavior (1D movement) outside of the bounds \n"
+							+ "add point to open areas (boolean), \n"
+							+ "random densification (boolean; if true, use random points to fill open areas; if false, use uniform points), \n"
+							+ "min distance to considered an area as open area (float), \n"
+							+ "density of points in the open areas (float), \n" 
+							+ "clean network (boolean), tolerance for the cliping in triangulation (float; distance), tolerance for the triangulation (float), "
+							+ "minimal distance to obstacles to keep a path (float; if 0.0, no filtering)") },
+			examples = { @example (
+					value = "generate_pedestrian_network([wall], [world], [road], true,false,3.0,0.1, true,0.1,0.0,0.0,50.0)",
+					equals = "a list of polylines corresponding to the pedestrian paths",
+					isExecutable = false) })
+	@no_test
+	public static IList<IShape> generateNetwork(IScope scope,  IList<IContainer<?, ? extends IShape>> obst, IContainer<?, ? extends IShape> bounds, 
+			IContainer<?, ? extends IShape> regular_network, Boolean openArea,
+			boolean randomDist, double valDistForOpenArea, double valDensityOpenArea,
+			Boolean cleanNetwork, double toleranceClip, double toleranceTriang, double minDistPath, double sizeSquareOpti) {
+		return generateNetwork(scope, obst, bounds, regular_network, openArea, randomDist,valDistForOpenArea,
+				valDensityOpenArea, cleanNetwork, toleranceClip, toleranceTriang, minDistPath, sizeSquareOpti);
 	}
 	
-	@operator (
-			value = { "generate_pedestrian_network" },
-			content_type = IType.GEOMETRY,
-			category = { IOperatorCategory.SPATIAL},
-			concept = { IConcept.GEOMETRY, IConcept.SPATIAL_COMPUTATION, IConcept.SPATIAL_RELATION})
+	@operator(value = "generate_pedestrian_network", category = { "Pedestrian" } , concept = { IConcept.NETWORK })
 	@doc (
-			value = "A list of lines forming a graph computed from an open space that can be used by the pedestrian skill")
-
-
-	public static IList<IShape>  generatePedestrianNetwork(IScope scope, IList<String> obstaclesPath, String boundsPath ){
-	   
-		return PedestrianNetwork.generateNetwork(scope, obstaclesPath, boundsPath, 0.1,0.1,	0.0, false,0.0, 0.0, true, false );
-	   
+			usages = { @usage (
+					value = "generateNetwork(obstacles (list of lists of geometries/agents), bounds (list of geometries/agents), \n"
+							+ "the road network (list of line) to have simple pedestrian behavior (1D movement) outside of the bounds \n"
+							+ "add point to open areas (boolean), random densification (boolean; if true, use random points to fill open areas; if false, use uniform points), "
+							+ "min distance to considered an area as open area (float), density of points in the open areas (float),\n" + 
+							" clean network (boolean), tolerance for the cliping in triangulation (float; distance), tolerance for the triangulation (float), "
+							+ "minimal distance to obstacles to keep a path (float; if 0.0, no filtering)") },
+			examples = { @example (
+					value = "generate_pedestrian_network([wall], [world], [road], true,false,3.0,0.1, true,0.1,0.0,0.0)",
+					equals = "a list of polylines corresponding to the pedestrian paths",
+					isExecutable = false) })
+	@no_test
+	public static IList<IShape> generateNetwork(IScope scope,  IList<IContainer<?, ? extends IShape>> obst, IContainer<?, ? extends IShape> bounds, 
+			IContainer<?, ? extends IShape> regular_network, Boolean openArea,
+			boolean randomDist, double valDistForOpenArea, double valDensityOpenArea,
+			Boolean cleanNetwork, double toleranceClip, double toleranceTriang, double minDistPath) {
+		return generateNetwork(scope, obst, bounds, regular_network, openArea, randomDist,valDistForOpenArea,
+				valDensityOpenArea, cleanNetwork, toleranceClip, toleranceTriang, minDistPath, 0);
 	}
 
+	
 
 }

@@ -1,7 +1,5 @@
 package escape.gaml.skills;
 
-import java.util.Collection;
-
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
@@ -23,10 +21,13 @@ import msi.gama.util.GamaList;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IContainer;
 import msi.gama.util.IList;
+import msi.gaml.operators.Cast;
 import msi.gaml.operators.Maths;
 import msi.gaml.operators.Points;
 import msi.gaml.operators.Random;
 import msi.gaml.operators.Spatial;
+import msi.gaml.operators.Spatial.Creation;
+import msi.gaml.operators.Spatial.Transformations;
 import msi.gaml.skills.MovingSkill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.types.GamaGeometryType;
@@ -40,8 +41,8 @@ import msi.gaml.types.Types;
 @vars({
 	@variable(
 			name = "shoulder_length", 
-			type = IType.FLOAT, init = "0.5",
-			doc = @doc ("The length of the pedestrian (in meters)")),
+			type = IType.FLOAT, init = "0.45",
+			doc = @doc ("The width of the pedestrian (in meters) - classic values: [0.39, 0.515]")),
 	@variable(
 			name = "body_depth", 
 			type = IType.FLOAT, init = "0.280",
@@ -54,8 +55,8 @@ import msi.gaml.types.Types;
 	@variable (
 			name = "obstacle_consideration_distance",
 			type = IType.FLOAT,
-			init = "1.0",
-			doc = @doc ("Intensity of reaction to obstacles")),
+			init = "2.0",
+			doc = @doc ("Distance of consideration of obstacles (to compute the nearby obstacles, used as distance, the max between this value and (step * speed) - classic value: 3.5m")),
 	@variable (
 			name = "overlapping_coefficient",
 			type = IType.FLOAT,
@@ -127,6 +128,7 @@ public class PedestrianSkill extends MovingSkill {
 	
 	// ---------- CONSTANTS -------------- //
 	
+	// VAR
 	public static boolean BENCHMARK = false;
 	public static Long t;
 	public static Long t1 = 0l;
@@ -141,8 +143,6 @@ public class PedestrianSkill extends MovingSkill {
 	public static Long t10 = 0l;
 	
 	public static int cpt = 0;
-	
-	// VAR
 	
 	// General mode of walking
 	public final static String PEDESTRIAN_MODEL = "pedestrian_model";
@@ -167,7 +167,6 @@ public class PedestrianSkill extends MovingSkill {
 	public final static String BODY_DEPTH = "body_depth";
 	
 	// ACTION
-	
 	public final static String COMPUTE_VIRTUAL_PATH = "compute_virtual_path";
 	public final static String WALK = "walk";
 	
@@ -177,12 +176,17 @@ public class PedestrianSkill extends MovingSkill {
 	public double getShoulderLength(final IAgent agent) {
 	    return (Double) agent.getAttribute(SHOULDER_LENGTH);
 	}
-
+	
 	@setter(SHOULDER_LENGTH)
 	public void setShoulderLength(final IAgent agent, final double s) {
 	    agent.setAttribute(SHOULDER_LENGTH, s);
 	}
 	
+	@getter(BODY_DEPTH)
+	public double getbody_depth(final IAgent agent) {
+	    return (Double) agent.getAttribute(BODY_DEPTH);
+	}
+
 	@setter(BODY_DEPTH)
 	public void setBodyDepth(final IAgent agent, final double s) {
 	    agent.setAttribute(BODY_DEPTH, s);
@@ -207,7 +211,6 @@ public class PedestrianSkill extends MovingSkill {
 	public void setCurrentTarget(final IAgent agent, final ILocation point) {
 		agent.setAttribute(CURRENT_TARGET, point);
 	}
-
 		
 	@getter (OBSTACLE_DISTANCE_REPULSION_COEFF)
 	public Double getObstacleDistRepulsionCoeff(final IAgent agent) {
@@ -253,21 +256,6 @@ public class PedestrianSkill extends MovingSkill {
 		return (Double) agent.getAttribute(PROBA_DETOUR);
 	}
 
-	@setter (PROBA_DETOUR)
-	public void setProbaDetour(final IAgent agent, final Double val) {
-		agent.setAttribute(PROBA_DETOUR, val);
-	}
-	
-	@getter (AVOID_OTHER)
-	public Boolean getAvoidOther(final IAgent agent) {
-		return (Boolean) agent.getAttribute(AVOID_OTHER);
-	}
-
-	@setter (AVOID_OTHER)
-	public void setAvoidOther(final IAgent agent, final Boolean val) {
-		agent.setAttribute(AVOID_OTHER, val);
-	}
-	
 	@setter (lAMBDA_SFM)
 	public void setlAMBDA_SFM(final IAgent agent, final Double val) {
 		agent.setAttribute(lAMBDA_SFM, val);
@@ -305,6 +293,10 @@ public class PedestrianSkill extends MovingSkill {
 		return (Double) agent.getAttribute(GAMA_SFM);
 	}
 
+	@setter (PROBA_DETOUR)
+	public void setProbaDetour(final IAgent agent, final Double val) {
+		agent.setAttribute(PROBA_DETOUR, val);
+	}
 	@getter (RELAXION_SFM)
 	public Double getRELAXION_SFM(final IAgent agent) {
 		return (Double) agent.getAttribute(RELAXION_SFM);
@@ -322,6 +314,16 @@ public class PedestrianSkill extends MovingSkill {
 	@setter (A_SFM)
 	public void setA_SFM(final IAgent agent, final Double val) {
 		agent.setAttribute(A_SFM, val);
+	}
+	
+	@getter (AVOID_OTHER)
+	public Boolean getAvoidOther(final IAgent agent) {
+		return (Boolean) agent.getAttribute(AVOID_OTHER);
+	}
+
+	@setter (AVOID_OTHER)
+	public void setAvoidOther(final IAgent agent, final Boolean val) {
+		agent.setAttribute(AVOID_OTHER, val);
 	}
 	
 	@getter (PEDESTRIAN_MODEL)
@@ -348,6 +350,16 @@ public class PedestrianSkill extends MovingSkill {
 	
 	// ----------------------------------- //
 	
+	
+	@action (
+			name = "compute_body",
+			doc = @doc (
+					value = "action to compute the shape (geometry) of the agent: correspond to an ellipse with shoulder_length and body_depth sizes and with the right orientation",
+					examples = { @example ("geometry shape <- compute_body() update: compute_body();") }))
+	public IShape primComputeBody(final IScope scope) throws GamaRuntimeException {
+		IAgent agent = scope.getAgent();
+		return Transformations.rotated_by(scope,Creation.ellipse(scope, getShoulderLength(agent), getbody_depth(agent)), getHeading(agent) + 90);
+	}
 	
 	
 	@action (
@@ -390,7 +402,8 @@ public class PedestrianSkill extends MovingSkill {
 		else {
 			obstacles = GamaListFactory.create(Types.AGENT);
 			for (ISpecies species : speciesList) {
-				((IList<IAgent>) obstacles).addAll( (Collection<? extends IAgent>) species.getAgents(scope));
+				
+				((IList<IAgent>) obstacles).addAll( Cast.asList(scope, species));
 			}
 		}
 		
@@ -429,10 +442,12 @@ public class PedestrianSkill extends MovingSkill {
 		if (avoidOther) {
 			double distPercep = Math.max(maxDist, getObstacleConsiderationDistance(agent));
 			switch(modelType) {
+				case "simple": 
+					velocity = avoidSimple(scope, agent, location, currentTarget, distPercep,obstaclesList);
+					break;
 				case "SFM":
 					velocity = avoidSFM(scope, agent, location, currentTarget, distPercep,obstaclesList);
 					break;
-				case "simple":
 				default:
 					velocity = avoidSimple(scope, agent, location, currentTarget, distPercep,obstaclesList);
 					break;
@@ -547,7 +562,7 @@ public class PedestrianSkill extends MovingSkill {
 		
 		return target_dir.add(acc);
 	}
-		
+	
 	/**
 	 * Classical implementation of the Social Force Model (Helbing and Molnar, 1998)
 	 * 
@@ -622,6 +637,8 @@ public class PedestrianSkill extends MovingSkill {
 		}
 		return current_velocity;//.multiplyBy(step);
 	}
+		
+		
 	
 		
 }
