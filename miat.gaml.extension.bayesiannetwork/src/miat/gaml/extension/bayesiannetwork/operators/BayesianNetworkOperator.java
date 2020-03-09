@@ -102,7 +102,7 @@ public class BayesianNetworkOperator {
 							}
 							index ++;
 						}
-					}
+					} 
 				bn.setProbabilities(proba);	
 			}
 		}
