@@ -7,7 +7,7 @@
 model Testconnection
 
 global {
-	nc_file netcdf_sample <- nc_file("../includes/tos_O1_2001-2002.nc");
+	file netcdf_sample <- file("../includes/tos_O1_2001-2002.nc");
 	int times <- 0;
 	int grid_num <- 0;
 	int gridsSize <- 0;
