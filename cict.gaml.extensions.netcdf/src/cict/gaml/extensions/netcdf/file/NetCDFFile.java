@@ -10,11 +10,6 @@
  **********************************************************************************************/
 package cict.gaml.extensions.netcdf.file;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Formatter;
@@ -23,32 +18,24 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import msi.gama.common.geometry.Envelope3D;
-import msi.gama.metamodel.shape.ILocation;
 import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.file;
 import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.IConcept;
 import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import msi.gama.util.IMap;
 import msi.gama.util.file.GamaFile;
-import msi.gama.util.file.GamaImageFile;
 import msi.gama.util.matrix.GamaIntMatrix;
 import msi.gama.util.matrix.IMatrix;
 import msi.gaml.types.IContainerType;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 import ucar.ma2.Array;
-import ucar.ma2.ArrayByte;
-import ucar.ma2.ArrayFloat;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
-import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
@@ -56,11 +43,7 @@ import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dt.GridCoordSystem;
 import ucar.nc2.dt.GridDataset;
 import ucar.nc2.dt.GridDatatype;
-import ucar.nc2.dt.image.ImageArrayAdapter;
 
-@file(name = "nc", extensions = {
-		"nc" }, buffer_type = IType.MAP, buffer_content = IType.LIST, buffer_index = IType.STRING, concept = {
-				IConcept.FILE, IConcept.R }, doc = @doc("Represents multi-dimensional arrays encoded in NetCDF format"))
 public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 	NetcdfDataset ds = null;
 	private GridDataset gridDataset;
@@ -151,8 +134,6 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 		}
 	}
 
-	@operator(value = "openDataSet", can_be_const = false, category = IOperatorCategory.MATRIX)
-	@doc(value = "general operator to manipylate multidimension netcdf data.")
 	public static Boolean openDataSet(final IScope scope, final NetCDFFile netcdf) {
 		if (netcdf == null || scope == null) {
 			return false;
@@ -182,9 +163,6 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 
 		return false;
 	}
-
-	@operator(value = "readDataSlice", can_be_const = false, category = IOperatorCategory.MATRIX)
-	@doc(value = "general operator to manipylate multidimension netcdf data.")
 	public static IMatrix readDataSlice(final IScope scope, final NetCDFFile netcdf, int nbGrid, int t_index,
 			int z_index, int y_index, int x_index) {
 		if (netcdf == null || scope == null) {
@@ -248,8 +226,6 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 
 	}
 
-	@operator(value = "getTimeAxisSize", can_be_const = false, category = IOperatorCategory.MATRIX)
-	@doc(value = "general operator to manipylate multidimension netcdf data.")
 	public static Integer getTimeAxisSize(final IScope scope, final NetCDFFile netcdf, int nbGrid) {
 		if (netcdf == null || scope == null) {
 			return -1;
@@ -278,8 +254,6 @@ public class NetCDFFile extends GamaFile<IMap<String, IList<?>>, IList<?>> {
 		return -1;
 	}
 
-	@operator(value = "getGridsSize", can_be_const = false, category = IOperatorCategory.FILE)
-	@doc(value = "general operator to manipylate multidimension netcdf data.")
 	public static Integer getGridsSize(final IScope scope, final NetCDFFile netcdf) {
 		if (netcdf == null || scope == null) {
 			return -1;

@@ -7,7 +7,7 @@
 model Testconnection
 
 global {
-	nc_file netcdf_sample <- nc_file("../includes/ENS_mm_rcp85.2015_2050_MKD_tas.nc");
+	file netcdf_sample <- file("../includes/ENS_mm_rcp85.2015_2050_MKD_tas.nc");
 	int times <- 0;
 	int grid_num <- 0;
 	int gridsSize <- 0;
@@ -42,8 +42,18 @@ global {
 
 }
 
-grid cell width: 16 height: 12 {
+
+//definition of the grid from the asc file: the width and height of the grid are directly read from the asc file. The values of the asc file are stored in the grid_value attribute of the cells.
+grid cell 
+//width: 16 height: 12
+file: netcdf_sample
+{
+//	init {
+//		color<- grid_value = 0.0 ? #black  : (grid_value = 1.0  ? #green :   #yellow);
+//	}
 }
+//grid cell width: 16 height: 12 {
+//}
 
 experiment sim type: gui {
 	output {
