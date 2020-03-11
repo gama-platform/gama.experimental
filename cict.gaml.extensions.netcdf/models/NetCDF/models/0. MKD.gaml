@@ -22,8 +22,11 @@ global {
 	reflex s {
 		matrix<int> m <- (matrix<int>(netcdf_sample readDataSlice (grid_num, times, 0, -1, -1)));
 //						write ""+m.columns+" "+m.rows;
+
 		ask cell {
-			grid_value <- float(m at {grid_x, 12-grid_y-1});
+					int yy <- int(self) / 12;
+					int xx <- int(self) - yy * 16;
+			grid_value <- float(m at {xx, 12-yy-1});
 			color <- rgb(grid_value);
 		}
 
@@ -48,9 +51,10 @@ grid cell
 //width: 16 height: 12
 file: netcdf_sample
 {
-//	init {
+	init {
 //		color<- grid_value = 0.0 ? #black  : (grid_value = 1.0  ? #green :   #yellow);
-//	}
+			color <- rgb(grid_value);
+	}
 }
 //grid cell width: 16 height: 12 {
 //}
