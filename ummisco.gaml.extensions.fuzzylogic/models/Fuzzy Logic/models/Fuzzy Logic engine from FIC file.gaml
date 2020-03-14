@@ -17,29 +17,34 @@ global {
 	string OUTPUT_TIP <- "tip";
 	
 	init {
-		create client;
+		create client ; 
 	}
 }
 
 species client skills: [fuzzy_logic] {
 	
-	float quality;
+	float quality_food;
 	float service;
+	
+	float tip;
 	
 	init {		
 		// Initialize the Fuzzy logic Inference System (FIS) for the fcl file
-		do fl_init_fis(tipper_fcl_file);
+		fl_init_fis from_file: tipper_fcl_file;
 		
-		// The operator fl_set_variable(name_agent_attribute, name_fis_variable) 
-		// associates an agent attribute (through its name) and a variable of the FIS
-		// TODO fl_set_variable should takes the variable itself instead of the variable name.
-		do fl_set_variable("service", VARIABLE_SERVICE);
-		do fl_set_variable("quality", VARIABLE_FOOD);
+		// The statement fl_set_variable binds agent's attributes with either FIS variables or outputs
+		// Bind attributes with FIS variables
+		fl_bind quality_food with_fis_variable: VARIABLE_FOOD;
+		fl_bind service with_fis_variable: VARIABLE_SERVICE;
+		
+		// Bind attribute with FIS outputs
+		fl_bind tip with_fis_output: OUTPUT_TIP ;
+		
 	}
 	
 	reflex computer_tip {
 		// Recompute the quality of food and of service to simulate a new restaurant
-		quality <- rnd(10.0);
+		quality_food <- rnd(10.0);
 		service <- rnd(10.0);
 		
 		// Evaluate the FIS; evaluation takes into account the new values of the agent attribute
@@ -47,10 +52,11 @@ species client skills: [fuzzy_logic] {
 		
 		// Access to an output value given its name.
 		write sample(self.fl_get_output(OUTPUT_TIP));
-		write sample(quality);
+		write sample(tip);
+		write sample(quality_food);
 		write sample(service);		
 		write "--------------------------------------------------";
 	}
 }
 
-experiment FuzzyLogicenginfromFICfile type: gui {}
+experiment FuzzyLogicenginfromFICfile type: gui { }
