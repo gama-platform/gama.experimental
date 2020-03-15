@@ -15,24 +15,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-// ArcGridReader still requires input streams
-import java.io.StringBufferInputStream;
 import java.nio.channels.FileChannel;
 import java.util.Formatter;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
 import org.geotools.coverage.grid.GridCoverage2D;
-import org.geotools.coverage.grid.io.AbstractGridCoverage2DReader;
 import org.geotools.data.DataSourceException;
 import org.geotools.data.PrjFileReader;
-import org.geotools.factory.Hints;
-import org.geotools.gce.arcgrid.ArcGridReader;
 import org.geotools.gce.geotiff.GeoTiffReader;
-import org.geotools.geometry.DirectPosition2D;
-import org.geotools.geometry.GeneralEnvelope;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -162,6 +154,8 @@ public class GamaNetCDFFile extends GamaGridFile {
 				throws GamaRuntimeException {
 			setBuffer(GamaListFactory.<IShape>create(Types.GEOMETRY));
 //			AbstractGridCoverage2DReader store = null;
+			Array ma = null;
+			double[][] cov = null;
 			try {
 				if (fillBuffer) {
 					scope.getGui().getStatus(scope).beginSubStatus("Reading file " + getName(scope));
@@ -172,63 +166,48 @@ public class GamaNetCDFFile extends GamaGridFile {
 
 				if (ds == null) {
 					String netCDF_File = getFile(scope).getAbsolutePath();
-					try {
-						ds = NetcdfDataset.openDataset(netCDF_File, true, null);
-						if (ds != null) {
-							gridDataset = new ucar.nc2.dt.grid.GridDataset(ds, new Formatter());
 
-							List<?> grids = gridDataset.getGrids();
-							GridDatatype grid = null;
-							int nbGrid = 0;
-							if (nbGrid >= grids.size()) {
-								nbGrid = 0;
-							}
-							if (grids.size() > 0)
-								grid = (GridDatatype) grids.get(nbGrid);// TODO number of the map
-							if (grid != null) {
-								GridCoordSystem gcsys = grid.getCoordinateSystem();
-								if (gcsys.getTimeAxis() != null)
-									ntimes = (int) gcsys.getTimeAxis().getSize();
+					ds = NetcdfDataset.openDataset(netCDF_File, true, null);
+					if (ds != null) {
+						gridDataset = new ucar.nc2.dt.grid.GridDataset(ds, new Formatter());
 
-								Array ma;
-								try {
-									int t_index = 1;
-									int z_index = 0;
-									int y_index = -1;
-									int x_index = -1;
-									ma = grid.readDataSlice(t_index, z_index, y_index, x_index);
-									if (ma.getRank() == 3)
-										ma = ma.reduce();
-
-									if (ma.getRank() == 3)
-										ma = ma.slice(0, 0); // we need 2D
-
-									numCols = ma.getShape()[0];
-									numRows = ma.getShape()[1];
-									coverage = matrixValue(scope, ma, numCols, numRows);
-//									setBuffer(matrixValue(scope, ma, h, w));
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
+						List<?> grids = gridDataset.getGrids();
+						GridDatatype grid = null;
+						int nbGrid = 0;
+						if (nbGrid >= grids.size()) {
+							nbGrid = 0;
 						}
+						if (grids.size() > 0)
+							grid = (GridDatatype) grids.get(nbGrid);// TODO number of the map
+						if (grid != null) {
+							GridCoordSystem gcsys = grid.getCoordinateSystem();
+							if (gcsys.getTimeAxis() != null)
+								ntimes = (int) gcsys.getTimeAxis().getSize();
 
-					} catch (FileNotFoundException ioe) {
-						ioe.printStackTrace();
-					} catch (Throwable ioe) {
-						ioe.printStackTrace();
+							int t_index = 0;
+							int z_index = 0;
+							int y_index = -1;
+							int x_index = -1;
+							ma = grid.readDataSlice(t_index, z_index, y_index, x_index);
+							if (ma.getRank() == 3)
+								ma = ma.reduce();
+
+							if (ma.getRank() == 3)
+								ma = ma.slice(0, 0); // we need 2D
+
+							numCols = ma.getShape()[1];
+							numRows = ma.getShape()[0];
+//							cov = rotateCW(matrixValue(scope, ma, numRows, numCols));
+							coverage = matrixValue(scope, ma, numRows, numCols);
+//									coverage =flip(scope,matrixValue(scope, ma, numCols,numRows));
+//									coverage =flip(scope, rotateCW(scope,matrixValue(scope, ma, numCols,numRows)));
+//									setBuffer(matrixValue(scope, ma, h, w));
+
+						}
 					}
+
 				}
 
-//				if (crs == null) {
-//					store = new ArcGridReader(fis);
-//				} else {
-//					store = new ArcGridReader(fis, new Hints(Hints.DEFAULT_COORDINATE_REFERENCE_SYSTEM, crs));
-//				}
-
-//				final GeneralEnvelope genv = store.getOriginalEnvelope();
-//				numRows = store.getOriginalGridRange().getHigh(1) + 1;
-//				numCols = store.getOriginalGridRange().getHigh(0) + 1;
 				final Envelope3D env = Envelope3D.of(0, 100, 0, 100, 0, 0);
 				computeProjection(scope, env);
 				final Envelope envP = gis.getProjectedEnvelope();
@@ -253,95 +232,37 @@ public class GamaNetCDFFile extends GamaGridFile {
 //				coverage = store.read(null);
 				final double cmx = cellWidth / 2;
 				final double cmy = cellHeight / 2;
-//				boolean doubleValues = false;
-//				boolean floatValues = false;
-//				boolean intValues = false;
-//				boolean longValues = false;
-//				boolean byteValues = false;
-//				final double cellHeightP = genv.getSpan(1) / numRows;
-//				final double cellWidthP = genv.getSpan(0) / numCols;
-//				final double originXP = genv.getMinimum(0);
-//				final double maxYP = genv.getMaximum(1);
-//				final double cmxP = cellWidthP / 2;
-//				final double cmyP = cellHeightP / 2;
-				
+//				for (int n = numRows * numCols, i = n-1 ; i > -1; i--) {
 				for (int i = 0, n = numRows * numCols; i < n; i++) {
 					scope.getGui().getStatus(scope).setSubStatusCompletion(i / (double) n);
 					final int yy = i / numCols;
 					final int xx = i - yy * numCols;
+//					final int xx = i / numRows;
+//					final int yy = i - xx * numRows;
+//					System.out.println(numCols - xx - 1 + " " + yy);
 					p.x = originX + xx * cellWidth + cmx;
 					p.y = maxY - (yy * cellHeight + cmy);
 					GamaShape rect = (GamaShape) GamaGeometryType.buildRectangle(cellWidth, cellHeight, p);
-					final double vals = (double) coverage.get(scope, yy, xx);
-//					if (i == 0) {
-//						doubleValues = vals instanceof double[];
-//						intValues = vals instanceof int[];
-//						byteValues = vals instanceof byte[];
-//						longValues = vals instanceof long[];
-//						floatValues = vals instanceof float[];
-//					}
+//					final double vals = cov[numCols-1-xx][numRows-1-yy];
+					final double vals = (double) coverage.get(scope,xx,yy);
 					if (gis == null) {
 						rect = new GamaShape(rect.getInnerGeometry());
 					} else {
 						rect = new GamaShape(gis.transform(rect.getInnerGeometry()));
 					}
-//					if (doubleValues) {
-//						final double[] vd = (double[]) vals;
-//						if (i == 0) {
-//							nbBands = vd.length;
-//						}
-						rect.setAttribute("grid_value", vals);
-						rect.setAttribute("bands", GamaListFactory.create(scope, Types.FLOAT, vals));
-//					} else if (intValues) {
-//						final int[] vi = (int[]) vals;
-//						if (i == 0) {
-//							nbBands = vi.length;
-//						}
-//						final double v = Double.valueOf(vi[0]);
-//						rect.setAttribute("grid_value", v);
-//						rect.setAttribute("bands", GamaListFactory.create(scope, Types.FLOAT, vi));
-//					} else if (longValues) {
-//						final long[] vi = (long[]) vals;
-//						if (i == 0) {
-//							nbBands = vi.length;
-//						}
-//						final double v = Double.valueOf(vi[0]);
-//						rect.setAttribute("grid_value", v);
-//						rect.setAttribute("bands", GamaListFactory.create(scope, Types.FLOAT, vi));
-//					} else if (floatValues) {
-//						final float[] vi = (float[]) vals;
-//						if (i == 0) {
-//							nbBands = vi.length;
-//						}
-//						final double v = Double.valueOf(vi[0]);
-//						rect.setAttribute("grid_value", v);
-//						rect.setAttribute("bands", GamaListFactory.create(scope, Types.FLOAT, vi));
-//					} else if (byteValues) {
-//						final byte[] bv = (byte[]) vals;
-//						if (i == 0) {
-//							nbBands = bv.length;
-//						}
-//						if (bv.length == 1) {
-//							final double v = Double.valueOf(((byte[]) vals)[0]);
-//							rect.setAttribute("grid_value", v);
-//						} else if (bv.length == 3) {
-//							final int red = bv[0] < 0 ? 256 + bv[0] : bv[0];
-//							final int green = bv[0] < 0 ? 256 + bv[1] : bv[1];
-//							final int blue = bv[0] < 0 ? 256 + bv[2] : bv[2];
-//							rect.setAttribute("grid_value", (red + green + blue) / 3.0);
-//						}
-//						rect.setAttribute("bands", GamaListFactory.create(scope, Types.FLOAT, bv));
-//					}
-					nbBands=1;
+
+					rect.setAttribute("grid_value", vals);
+					rect.setAttribute("bands", GamaListFactory.create(scope, Types.FLOAT, vals));
+					nbBands = 1;
 					((IList) getBuffer()).add(rect);
 				}
 			} catch (final Exception e) {
-				final GamaRuntimeException ex = GamaRuntimeException.error(
-						"The format of " + getFile(scope).getName() + " is not correct. Error: " + e.getMessage(),
-						scope);
-				ex.addContext("for file " + getFile(scope).getPath());
-				ex.printStackTrace();
-				throw ex;
+//				final GamaRuntimeException ex = GamaRuntimeException.error(
+//						"The format of " + getFile(scope).getName() + " is not correct. Error: " + e.getMessage(),
+//						scope);
+//				ex.addContext("for file " + getFile(scope).getPath());
+				e.printStackTrace();
+//				throw ex;
 			} finally {
 //				if (store != null) {
 //					store.dispose();
@@ -350,6 +271,86 @@ public class GamaNetCDFFile extends GamaGridFile {
 			}
 		}
 
+	}
+
+	IMatrix flip(IScope scope, IMatrix mat) {
+		final int M = mat.getCols(scope);
+		final int N = mat.getRows(scope);
+//	    int[][] ret = new int[N][M];
+		final IMatrix ret = new GamaFloatMatrix(N, M);
+
+		for (int r = 0; r < M; r++) {
+			for (int c = 0; c < N; c++) {
+//	            ret.set(scope, N-1-c,M-1-r,mat.get(scope, r,c));
+				ret.set(scope, c, r, mat.get(scope, M - 1 - r, N - 1 - c));
+			}
+		}
+		return ret;
+	}
+
+	double[][] rotateCW(double[][] mat) {
+		final int M = mat.length;
+		final int N = mat[0].length;
+//	    int[][] ret = new int[N][M];
+//		double[][] ret = new double[N][M];
+//
+//		for (int r = 0; r < M; r++) {
+//			for (int c = 0; c < N; c++) {
+//				ret[c][r]=mat[r][c];
+//			}
+//		}
+		double[][] ret = mat;
+
+		double[] temp = new double[ret.length]; // This temporarily holds the row that needs to be flipped out
+		for (int row = 0; row < ret.length / 2; row++) { // Working one row at a time and only do half the image!!!
+			temp = ret[(ret.length) - row - 1]; // Collect the temp row from the 'other side' of the array
+			ret[ret.length - row - 1] = ret[row]; // Put the current row in the row on the 'other side' of the array
+			ret[row] = temp; // Now put the row from the other side in the current row
+		}
+
+//        for (int col = 0; col<ret.length; col++){ // Each column is accessed through each row
+//            for(int row = 0; row<ret[0].length/2; row++){ // Access each column for half of the image
+//                double temp = ret[row][(ret[0].length) - col - 1]; // Holds the opposite value to swap
+//                ret[row][ret[0].length - col - 1] = ret[row][col]; // Puts current entry into 'opposite position'
+//                ret[row][col] = temp; // Sets the current entry to that of the 'opposite position'
+//            }
+//        }
+		return ret;
+	}
+
+	private static IMatrix matrixValue(final IScope scope, final Array ma, int col, int row) {
+		double[][] matrix = new double[col][row];
+		double min = MAMath.getMinimum(ma); // LOOK we need missing values to be removed !!
+		double max = MAMath.getMaximum(ma);
+		double scale = (max - min);
+		if (scale > 0.0)
+			scale = 255.0 / scale;
+		IndexIterator ii = ma.getIndexIterator();
+		for (int i = 0; i < col; i++) {
+			for (int j = 0; j < row; j++) {
+
+				double val = ii.getDoubleNext();
+				double sval = ((val - min) * scale);
+				matrix[i][j] = sval;
+			}
+		}
+
+		double[] temp = new double[matrix.length]; // This temporarily holds the row that needs to be flipped out
+		for (int r = 0; r < matrix.length / 2; r++) { // Working one row at a time and only do half the image!!!
+			temp = matrix[(matrix.length) - r - 1]; // Collect the temp row from the 'other side' of the array
+			matrix[matrix.length - r - 1] = matrix[r]; // Put the current row in the row on the 'other side' of the
+														// array
+			matrix[r] = temp; // Now put the row from the other side in the current row
+		}
+
+		final IMatrix ret = new GamaFloatMatrix(row, col);
+		for (int i = 0; i < col; i++) {
+			for (int j = 0; j < row; j++) {
+
+				ret.set(scope, j,i, matrix[i][j]);
+			}
+		}
+		return ret;
 	}
 
 	@doc(value = "This file constructor allows to read a asc file or a tif (geotif) file", examples = {
@@ -393,14 +394,14 @@ public class GamaNetCDFFile extends GamaGridFile {
 	}
 
 	public int getNbRows(final IScope scope) {
-		if(reader==null) {
+		if (reader == null) {
 			createReader(scope, true);
 		}
 		return reader.numRows;
 	}
 
 	public int getNbCols(final IScope scope) {
-		if(reader==null) {
+		if (reader == null) {
 			createReader(scope, true);
 		}
 		return reader.numCols;
@@ -412,7 +413,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 
 	@Override
 	public IShape getGeometry(final IScope scope) {
-		if(reader==null) {
+		if (reader == null) {
 			createReader(scope, true);
 		}
 		return reader.geom;
@@ -554,6 +555,9 @@ public class GamaNetCDFFile extends GamaGridFile {
 		} else {
 
 			if (netcdf.reader == null) {
+				netcdf.createReader(scope, true);
+			}
+			if (netcdf.reader.ds == null) {
 				String netCDF_File = netcdf.getFile(scope).getAbsolutePath();
 				try {
 					netcdf.reader.ds = NetcdfDataset.openDataset(netCDF_File, true, null);
@@ -666,26 +670,4 @@ public class GamaNetCDFFile extends GamaGridFile {
 
 		return new GamaIntMatrix(0, 0);
 	}
-
-	private static IMatrix matrixValue(final IScope scope, final Array ma, int h, int w) {
-		final IMatrix matrix = new GamaFloatMatrix(w, h);
-		double min = MAMath.getMinimum(ma); // LOOK we need missing values to be removed !!
-		double max = MAMath.getMaximum(ma);
-
-		double scale = (max - min);
-		if (scale > 0.0)
-			scale = 255.0 / scale;
-		IndexIterator ii = ma.getIndexIterator();
-		for (int i = 0; i < h; i++) {
-			for (int j = 0; j < w; j++) {
-
-				double val = ii.getDoubleNext();
-				double sval = ((val - min) * scale);
-				matrix.set(scope, j, i, sval);
-			}
-		}
-		return matrix;
-
-	}
-
 }
