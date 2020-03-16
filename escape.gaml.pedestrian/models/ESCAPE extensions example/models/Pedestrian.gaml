@@ -11,7 +11,7 @@ global {
 	bool snapsave <- true;
 	float environment_size <- 50.0 parameter: true;
 	float margin <- 2.0;
-	string scenario <- "big crowd" among: ["big crowd", "frontal crossing", "perpandicular crossing"] ;
+	string scenario <- "frontal crossing" among: ["big crowd", "frontal crossing", "perpandicular crossing"] ;
 	float step <- 0.3 min: 0.1 max: 1.0 step: 0.1 parameter: true;
 				
 	int nb_people <-  500 ;
