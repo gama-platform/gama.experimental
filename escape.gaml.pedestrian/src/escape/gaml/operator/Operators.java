@@ -1,5 +1,6 @@
 package escape.gaml.operator;
 
+import escape.gama.preprocessing.PedestrianNetwork;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
@@ -26,7 +27,7 @@ public class Operators {
 	public static IList<IShape> generateNetwork(IScope scope,  IList<IContainer<?, ? extends IShape>> obst, IContainer<?, ? extends IShape> bounds, Boolean openArea,
 			boolean randomDist, double valDistForOpenArea, double valDensityOpenArea,
 			Boolean cleanNetwork, double toleranceClip, double toleranceTriang, double minDistPath, double SizeSquares) {
-		return generateNetwork(scope, obst, bounds, null, openArea, randomDist,valDistForOpenArea,
+		return PedestrianNetwork.generateNetwork(scope, obst, bounds, null, openArea, randomDist,valDistForOpenArea,
 				valDensityOpenArea, cleanNetwork, toleranceClip, toleranceTriang, minDistPath, SizeSquares);
 	}
 
@@ -52,7 +53,7 @@ public class Operators {
 	public static IList<IShape> generateNetwork(IScope scope,  IList<IContainer<?, ? extends IShape>> obst, IContainer<?, ? extends IShape> bounds, Boolean openArea,
 			boolean randomDist, double valDistForOpenArea, double valDensityOpenArea,
 			Boolean cleanNetwork, double toleranceClip, double toleranceTriang, double minDistPath) {
-		return generateNetwork(scope, obst, bounds, null, openArea, randomDist,valDistForOpenArea,
+		return PedestrianNetwork.generateNetwork(scope, obst, bounds, null, openArea, randomDist,valDistForOpenArea,
 				valDensityOpenArea, cleanNetwork, toleranceClip, toleranceTriang, minDistPath, 0);
 	}
 
@@ -78,7 +79,7 @@ public class Operators {
 			IContainer<?, ? extends IShape> regular_network, Boolean openArea,
 			boolean randomDist, double valDistForOpenArea, double valDensityOpenArea,
 			Boolean cleanNetwork, double toleranceClip, double toleranceTriang, double minDistPath, double sizeSquareOpti) {
-		return generateNetwork(scope, obst, bounds, regular_network, openArea, randomDist,valDistForOpenArea,
+		return PedestrianNetwork.generateNetwork(scope, obst, bounds, regular_network, openArea, randomDist,valDistForOpenArea,
 				valDensityOpenArea, cleanNetwork, toleranceClip, toleranceTriang, minDistPath, sizeSquareOpti);
 	}
 	
@@ -100,7 +101,7 @@ public class Operators {
 			IContainer<?, ? extends IShape> regular_network, Boolean openArea,
 			boolean randomDist, double valDistForOpenArea, double valDensityOpenArea,
 			Boolean cleanNetwork, double toleranceClip, double toleranceTriang, double minDistPath) {
-		return generateNetwork(scope, obst, bounds, regular_network, openArea, randomDist,valDistForOpenArea,
+		return PedestrianNetwork.generateNetwork(scope, obst, bounds, regular_network, openArea, randomDist,valDistForOpenArea,
 				valDensityOpenArea, cleanNetwork, toleranceClip, toleranceTriang, minDistPath, 0);
 	}
 
