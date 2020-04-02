@@ -47,7 +47,9 @@ global {
 	}
 
 }
-species shp{}
+species shp{
+	
+}
 grid cell file: netcdf_sample {
 
 	init {
@@ -58,7 +60,7 @@ grid cell file: netcdf_sample {
 
 experiment sim type: gui {
 	output {
-		display "s" type:java2D synchronized:true{ 
+		display "s" type:opengl synchronized:true camera_pos: {316512.7586,169804.7114,32663.0105} camera_look_pos: {316512.7586,169804.1413,-0.0675} camera_up_vector: {0.0,1.0,0.0}{ 
 			grid cell;
 			species shp;
 		}

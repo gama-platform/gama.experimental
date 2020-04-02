@@ -27,8 +27,7 @@ import org.geotools.data.DataSourceException;
 import org.geotools.data.PrjFileReader;
 import org.geotools.factory.Hints;
 import org.geotools.gce.arcgrid.ArcGridReader;
-import org.geotools.gce.geotiff.GeoTiffReader;
-import org.geotools.imageio.netcdf.utilities.NetCDFCRSUtilities;
+import org.geotools.gce.geotiff.GeoTiffReader; 
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
