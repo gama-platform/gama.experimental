@@ -22,9 +22,13 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.geotools.coverage.grid.GridCoverage2D;
+import org.geotools.coverage.grid.io.AbstractGridCoverage2DReader;
 import org.geotools.data.DataSourceException;
 import org.geotools.data.PrjFileReader;
+import org.geotools.factory.Hints;
+import org.geotools.gce.arcgrid.ArcGridReader;
 import org.geotools.gce.geotiff.GeoTiffReader;
+import org.geotools.imageio.netcdf.utilities.NetCDFCRSUtilities;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -60,6 +64,7 @@ import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dt.GridCoordSystem;
 import ucar.nc2.dt.GridDataset;
 import ucar.nc2.dt.GridDatatype;
+import ucar.unidata.geoloc.ProjectionRect;
 
 @file(name = "netcdf", extensions = {
 		"nc" }, buffer_type = IType.LIST, buffer_content = IType.GEOMETRY, buffer_index = IType.INT, concept = {
@@ -154,8 +159,8 @@ public class GamaNetCDFFile extends GamaGridFile {
 				throws GamaRuntimeException {
 			setBuffer(GamaListFactory.<IShape>create(Types.GEOMETRY));
 //			AbstractGridCoverage2DReader store = null;
-			Array ma = null;
-			double[][] cov = null;
+			
+			
 			try {
 				if (fillBuffer) {
 					scope.getGui().getStatus(scope).beginSubStatus("Reading file " + getName(scope));
@@ -163,14 +168,17 @@ public class GamaNetCDFFile extends GamaGridFile {
 				// Necessary to compute it here, because it needs to be passed
 				// to the Hints
 				final CoordinateReferenceSystem crs = getExistingCRS(scope);
-
+//				NetCDFCRSUtilities nu=new NetCDFCRSUtilities();
+//				nu.getCoordinateSystem(variableDS);
+				ProjectionRect proj = null;
 				if (ds == null) {
 					String netCDF_File = getFile(scope).getAbsolutePath();
 
 					ds = NetcdfDataset.openDataset(netCDF_File, true, null);
 					if (ds != null) {
+						ds.getCoordinateSystems().get(0);
 						gridDataset = new ucar.nc2.dt.grid.GridDataset(ds, new Formatter());
-
+						Array ma = null;
 						List<?> grids = gridDataset.getGrids();
 						GridDatatype grid = null;
 						int nbGrid = 0;
@@ -183,7 +191,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 							GridCoordSystem gcsys = grid.getCoordinateSystem();
 							if (gcsys.getTimeAxis() != null)
 								ntimes = (int) gcsys.getTimeAxis().getSize();
-
+							proj=gcsys.getBoundingBox();
 							int t_index = 0;
 							int z_index = 0;
 							int y_index = -1;
@@ -197,18 +205,15 @@ public class GamaNetCDFFile extends GamaGridFile {
 
 							numCols = ma.getShape()[1];
 							numRows = ma.getShape()[0];
-//							cov = rotateCW(matrixValue(scope, ma, numRows, numCols));
+
 							coverage = matrixValue(scope, ma, numRows, numCols);
-//									coverage =flip(scope,matrixValue(scope, ma, numCols,numRows));
-//									coverage =flip(scope, rotateCW(scope,matrixValue(scope, ma, numCols,numRows)));
-//									setBuffer(matrixValue(scope, ma, h, w));
+
 
 						}
 					}
 
-				}
-
-				final Envelope3D env = Envelope3D.of(0, 100, 0, 100, 0, 0);
+				} 
+				final Envelope3D env = Envelope3D.of(proj.getMinX(), proj.getMaxX(), proj.getMinY(), proj.getMaxY(), 0, 0);
 				computeProjection(scope, env);
 				final Envelope envP = gis.getProjectedEnvelope();
 				final double cellHeight = envP.getHeight() / numRows;
@@ -271,51 +276,6 @@ public class GamaNetCDFFile extends GamaGridFile {
 			}
 		}
 
-	}
-
-	IMatrix flip(IScope scope, IMatrix mat) {
-		final int M = mat.getCols(scope);
-		final int N = mat.getRows(scope);
-//	    int[][] ret = new int[N][M];
-		final IMatrix ret = new GamaFloatMatrix(N, M);
-
-		for (int r = 0; r < M; r++) {
-			for (int c = 0; c < N; c++) {
-//	            ret.set(scope, N-1-c,M-1-r,mat.get(scope, r,c));
-				ret.set(scope, c, r, mat.get(scope, M - 1 - r, N - 1 - c));
-			}
-		}
-		return ret;
-	}
-
-	double[][] rotateCW(double[][] mat) {
-		final int M = mat.length;
-		final int N = mat[0].length;
-//	    int[][] ret = new int[N][M];
-//		double[][] ret = new double[N][M];
-//
-//		for (int r = 0; r < M; r++) {
-//			for (int c = 0; c < N; c++) {
-//				ret[c][r]=mat[r][c];
-//			}
-//		}
-		double[][] ret = mat;
-
-		double[] temp = new double[ret.length]; // This temporarily holds the row that needs to be flipped out
-		for (int row = 0; row < ret.length / 2; row++) { // Working one row at a time and only do half the image!!!
-			temp = ret[(ret.length) - row - 1]; // Collect the temp row from the 'other side' of the array
-			ret[ret.length - row - 1] = ret[row]; // Put the current row in the row on the 'other side' of the array
-			ret[row] = temp; // Now put the row from the other side in the current row
-		}
-
-//        for (int col = 0; col<ret.length; col++){ // Each column is accessed through each row
-//            for(int row = 0; row<ret[0].length/2; row++){ // Access each column for half of the image
-//                double temp = ret[row][(ret[0].length) - col - 1]; // Holds the opposite value to swap
-//                ret[row][ret[0].length - col - 1] = ret[row][col]; // Puts current entry into 'opposite position'
-//                ret[row][col] = temp; // Sets the current entry to that of the 'opposite position'
-//            }
-//        }
-		return ret;
 	}
 
 	private static IMatrix matrixValue(final IScope scope, final Array ma, int col, int row) {
