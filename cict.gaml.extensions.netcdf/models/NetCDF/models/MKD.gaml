@@ -7,7 +7,13 @@
 model Testconnection
 
 global {
+	file shp_file<-shape_file("../includes/commune_myxuyen.shp");
+//	file netcdf_sample <- file("../includes/ENS_mm_rcp45.2015_2050_MKD_pr.nc");
+//	file netcdf_sample <- file("../includes/ENS_mm_rcp45.2015_2050_MKD_tas.nc");
+//	file netcdf_sample <- file("../includes/ENS_mm_rcp85.2015_2050_MKD_pr.nc");
 	file netcdf_sample <- file("../includes/ENS_mm_rcp85.2015_2050_MKD_tas.nc");
+//	file netcdf_sample <- file("../includes/tos_O1_2001-2002.nc");
+	geometry shape<-to_GAMA_CRS(envelope(netcdf_sample),"4326");
 	int times <- 1;
 	int grid_num <- 0;
 	int gridsSize <- 0;
@@ -17,6 +23,7 @@ global {
 //		write openDataSet(netcdf_sample);
 		gridsSize <- getGridsSize(netcdf_sample);
 		timesAxisSize <- netcdf_sample getTimeAxisSize grid_num;
+		create shp from:shp_file;
 	}
 
 	reflex s {
@@ -40,7 +47,7 @@ global {
 	}
 
 }
-
+species shp{}
 grid cell file: netcdf_sample {
 
 	init {
@@ -51,8 +58,9 @@ grid cell file: netcdf_sample {
 
 experiment sim type: gui {
 	output {
-		display "s" {
+		display "s" type:java2D synchronized:true{ 
 			grid cell;
+			species shp;
 		}
 
 	}
