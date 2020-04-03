@@ -45,7 +45,6 @@ public class PedestrianNetwork {
 			walking_shape = Spatial.Operators.union(scope, (IContainer<?, IShape>) bounds).copy(scope);
 		}
 		IShape area = walking_shape.copy(scope);
-		
 		double t1 = System.currentTimeMillis();
 		DEBUG.OUT("Processing walking area: "+(t1-t));
 		
@@ -71,7 +70,6 @@ public class PedestrianNetwork {
 				}
 			}
 		}
-		
 		if (decomp != null) {
 			area = Spatial.Operators.union(scope, decomp);
 		}
@@ -96,9 +94,10 @@ public class PedestrianNetwork {
 
 		double valTolClip = toleranceClip;
 		double valTolTri =toleranceTriang;
+		
 
+		IList<IShape> lines = Transformations.skeletonize(scope, area, valTolClip, valTolTri,false);
 
-		IList<IShape> lines = Transformations.skeletonize(scope, area, valTolClip, valTolTri, true);
 		
 		double t4 = System.currentTimeMillis();
 		DEBUG.OUT("Skeletonization : "+(t4-t3));
