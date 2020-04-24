@@ -14,8 +14,16 @@ import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang.SystemUtils;
 import org.rosuda.JRI.REXP;
 import org.rosuda.JRI.RList;
 import org.rosuda.JRI.RMainLoopCallbacks;
@@ -87,20 +95,23 @@ class TextConsole implements RMainLoopCallbacks {
 }
 
 public class rtest {
-	static { 
-	   }
+	static {
+	}
+
+
 	@SuppressWarnings("rawtypes")
 	public static void main(final String[] args) {
 		// just making sure we have the right version of everything
 //		String env = System.getProperty("java.library.path");
 //		System.setProperty("java.library.path", "\"C:/Program Files/R/R-3.4.0/bin/x64/\";E:/OneDrive/Documents/R/win-library/3.4/rJava/jri;" + env);
 //		
+		RSkill.setenv("R_HOME", "rhome env variable");
 		System.out.println(System.getenv().toString());
+		System.out.println(System.getenv("R_HOME"));
 		System.out.println(System.getProperty("java.library.path"));
 		System.out.println(System.getenv().values());
-		
 
-	    System.loadLibrary("jri");     
+		System.loadLibrary("jri");
 		if (!Rengine.versionCheck()) {
 			System.err.println("** Version mismatch - Java files don't match library version.");
 			System.exit(1);
@@ -111,7 +122,7 @@ public class rtest {
 		// (that's the "false" as second argument)
 		// 3) the callbacks are implemented by the TextConsole class above
 //		final Rengine re = new Rengine(args, false, null);
-	    Rengine re = new Rengine(new String[] { "" }, false, new TextConsole());
+		Rengine re = new Rengine(new String[] { "" }, false, new TextConsole());
 		System.out.println("Rengine created, waiting for R");
 		// the engine creates R is a new thread, so we should wait until it's
 		// ready
@@ -121,17 +132,17 @@ public class rtest {
 		}
 
 		/*
-		 * High-level API - do not use RNI methods unless there is no other way
-		 * to accomplish what you want
+		 * High-level API - do not use RNI methods unless there is no other way to
+		 * accomplish what you want
 		 */
 		try {
 			REXP x;
-			x=re.eval("gama.data.frame=read.csv(\"E://prey.csv\",header=TRUE, sep=\",\")");
-			System.out.println("sssss "+x);
+			x = re.eval("gama.data.frame=read.csv(\"E://prey.csv\",header=TRUE, sep=\",\")");
+			System.out.println("sssss " + x);
 
 			re.eval("source(\"E:/OneDrive/Gama1.7/Rjava/models/r2.txt\")");
-			x=re.eval("u <- myFirstFun(n)");
-			System.out.println("sssss "+x);
+			x = re.eval("u <- myFirstFun(n)");
+			System.out.println("sssss " + x);
 			re.eval("data(iris)", false);
 			System.out.println(x = re.eval("iris"));
 			// generic vectors are RVector to accomodate names
