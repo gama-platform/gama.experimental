@@ -447,7 +447,7 @@ public class RSkill extends Skill {
 	
 		String rhome=RPath.substring(0,RPath.indexOf("library"));
 //		setenv("R_HOME", rhome);
-		setenv("R_HOME", "/Library/Frameworks/R.framework/Resources/");
+		setenv("R_HOME", "/Library/Frameworks/R.framework/Versions/3.6/Resources");
 		env = System.getProperty("java.library.path");
 		if (!env.contains("jri")) {
 			if (System.getProperty("os.name").startsWith("Windows")) {
