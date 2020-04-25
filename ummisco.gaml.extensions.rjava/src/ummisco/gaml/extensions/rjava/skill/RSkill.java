@@ -347,10 +347,10 @@ public class RSkill extends Skill {
 			// System.out.println(System.getProperty("java.library.path"));
 		}
 		System.loadLibrary("jri");
-
+/*
 		if (System.getenv("R_HOME") == null) {
 			throw GamaRuntimeException.error("The R_HOME environment variable is not set. R cannot be run.", scope);
-		}
+		}*/
 	}
 
 	public REXP Reval(final IScope scope, final String cmd) {
