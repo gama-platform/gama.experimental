@@ -410,7 +410,7 @@ public class RSkill extends Skill {
 									+ value + "> when locating in-class memory map of environment", e1);
 						}
 					}).forEach(field -> {
-						try {
+						try {System.out.println(field);
 							final boolean fieldAccessibility = field.isAccessible();
 							field.setAccessible(true);
 							// we obtain the environment
@@ -445,9 +445,9 @@ public class RSkill extends Skill {
 		final String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "")
 			.replace("libjri.so", "").replace("jri.dll", "");
 	
-		String rhome=RPath.substring(0,RPath.indexOf("library"));
-//		setenv("R_HOME", rhome);
-		setenv("R_HOME", "/Library/Frameworks/R.framework/Versions/3.6/Resources");
+//		String rhome=RPath.substring(0,RPath.indexOf("library"));
+////		setenv("R_HOME", rhome);
+//		setenv("R_HOME", "/Library/Frameworks/R.framework/Versions/3.6/Resources");
 		env = System.getProperty("java.library.path");
 		if (!env.contains("jri")) {
 			if (System.getProperty("os.name").startsWith("Windows")) {
@@ -468,9 +468,9 @@ public class RSkill extends Skill {
 		}
 		System.loadLibrary("jri");
 
-		if (System.getenv("R_HOME") == null) {
-			throw GamaRuntimeException.error("The R_HOME environment variable is not set. R cannot be run.", scope);
-		}
+//		if (System.getenv("R_HOME") == null) {
+//			throw GamaRuntimeException.error("The R_HOME environment variable is not set. R cannot be run.", scope);
+//		}
 	}
 
 	public REXP Reval(final IScope scope, final String cmd) {
