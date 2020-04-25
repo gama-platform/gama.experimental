@@ -14,17 +14,8 @@ import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
-import java.util.Map;
-import java.util.stream.Stream;
 
-import org.apache.commons.lang.SystemUtils;
 import org.rosuda.JRI.REXP;
 import org.rosuda.JRI.RList;
 import org.rosuda.JRI.RMainLoopCallbacks;
@@ -95,53 +86,21 @@ class TextConsole implements RMainLoopCallbacks {
 
 }
 
-public class rtest { 
-	public static void addLibraryPath(String pathToAdd) throws Exception {
-		final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
-		usrPathsField.setAccessible(true);
-
-		// get array of paths
-		final String[] paths = (String[]) usrPathsField.get(null);
-
-		// check if the path to add is already present
-		for (String path : paths) {
-			if (path.equals(pathToAdd)) {
-				return;
-			}
-		}
-
-		// add the new path
-		final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
-		newPaths[newPaths.length - 1] = pathToAdd;
-		usrPathsField.set(null, newPaths);
-	}
-
+public class rtest {
+	static { 
+	   }
 	@SuppressWarnings("rawtypes")
 	public static void main(final String[] args) {
 		// just making sure we have the right version of everything
-		//rhome or path have no effect in java code
-		String path = System.getenv("Path");
-		RSkill.setenv("Path", "C:\\Program Files\\R\\R-3.6.3\\bin\\x64;");
-		//only this have effect
-		String env = System.getenv("java.library.path");
-		System.setProperty("java.library.path",
-				"C:\\Users\\hqngh\\OneDrive\\Documents\\R\\win-library\\3.6\\rJava\\jri\\x64;" + env);
-		try {
-//			addLibraryPath("C:\\Program Files\\R\\R-3.6.3\\bin\\x64");
-			final java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
-			fieldSysPath.setAccessible(true);
-			fieldSysPath.set(null, null);
+//		String env = System.getProperty("java.library.path");
+//		System.setProperty("java.library.path", "\"C:/Program Files/R/R-3.4.0/bin/x64/\";E:/OneDrive/Documents/R/win-library/3.4/rJava/jri;" + env);
+//		
+		System.out.println(System.getenv().toString());
+		System.out.println(System.getProperty("java.library.path"));
+		System.out.println(System.getenv().values());
+		
 
-		} catch (final Exception ex) {
-			ex.printStackTrace();
-		}
-//		RSkill.setenv("R_HOME", "rhome env variable");
-//		System.out.println(System.getenv().toString());
-		System.out.println("PATH: "+System.getenv("Path"));
-//		System.out.println(System.getProperty("java.library.path"));
-//		System.out.println(System.getenv().values());
-
-		System.loadLibrary("jri");
+	    System.loadLibrary("jri");     
 		if (!Rengine.versionCheck()) {
 			System.err.println("** Version mismatch - Java files don't match library version.");
 			System.exit(1);
@@ -152,7 +111,7 @@ public class rtest {
 		// (that's the "false" as second argument)
 		// 3) the callbacks are implemented by the TextConsole class above
 //		final Rengine re = new Rengine(args, false, null);
-		Rengine re = new Rengine(new String[] { "" }, false, new TextConsole());
+	    Rengine re = new Rengine(new String[] { "" }, false, new TextConsole());
 		System.out.println("Rengine created, waiting for R");
 		// the engine creates R is a new thread, so we should wait until it's
 		// ready
@@ -162,17 +121,17 @@ public class rtest {
 		}
 
 		/*
-		 * High-level API - do not use RNI methods unless there is no other way to
-		 * accomplish what you want
+		 * High-level API - do not use RNI methods unless there is no other way
+		 * to accomplish what you want
 		 */
 		try {
 			REXP x;
-			x = re.eval("gama.data.frame=read.csv(\"E://prey.csv\",header=TRUE, sep=\",\")");
-			System.out.println("sssss " + x);
+			x=re.eval("gama.data.frame=read.csv(\"E://prey.csv\",header=TRUE, sep=\",\")");
+			System.out.println("sssss "+x);
 
 			re.eval("source(\"E:/OneDrive/Gama1.7/Rjava/models/r2.txt\")");
-			x = re.eval("u <- myFirstFun(n)");
-			System.out.println("sssss " + x);
+			x=re.eval("u <- myFirstFun(n)");
+			System.out.println("sssss "+x);
 			re.eval("data(iris)", false);
 			System.out.println(x = re.eval("iris"));
 			// generic vectors are RVector to accomodate names
