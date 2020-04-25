@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
@@ -94,22 +95,51 @@ class TextConsole implements RMainLoopCallbacks {
 
 }
 
-public class rtest {
-	static {
-	}
+public class rtest { 
+	public static void addLibraryPath(String pathToAdd) throws Exception {
+		final Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
+		usrPathsField.setAccessible(true);
 
+		// get array of paths
+		final String[] paths = (String[]) usrPathsField.get(null);
+
+		// check if the path to add is already present
+		for (String path : paths) {
+			if (path.equals(pathToAdd)) {
+				return;
+			}
+		}
+
+		// add the new path
+		final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
+		newPaths[newPaths.length - 1] = pathToAdd;
+		usrPathsField.set(null, newPaths);
+	}
 
 	@SuppressWarnings("rawtypes")
 	public static void main(final String[] args) {
 		// just making sure we have the right version of everything
-//		String env = System.getProperty("java.library.path");
-//		System.setProperty("java.library.path", "\"C:/Program Files/R/R-3.4.0/bin/x64/\";E:/OneDrive/Documents/R/win-library/3.4/rJava/jri;" + env);
-//		
-		RSkill.setenv("R_HOME", "rhome env variable");
-		System.out.println(System.getenv().toString());
-		System.out.println(System.getenv("R_HOME"));
-		System.out.println(System.getProperty("java.library.path"));
-		System.out.println(System.getenv().values());
+		//rhome or path have no effect in java code
+		String path = System.getenv("Path");
+		RSkill.setenv("Path", "C:\\Program Files\\R\\R-3.6.3\\bin\\x64;");
+		//only this have effect
+		String env = System.getenv("java.library.path");
+		System.setProperty("java.library.path",
+				"C:\\Users\\hqngh\\OneDrive\\Documents\\R\\win-library\\3.6\\rJava\\jri\\x64;" + env);
+		try {
+//			addLibraryPath("C:\\Program Files\\R\\R-3.6.3\\bin\\x64");
+			final java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
+			fieldSysPath.setAccessible(true);
+			fieldSysPath.set(null, null);
+
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
+//		RSkill.setenv("R_HOME", "rhome env variable");
+//		System.out.println(System.getenv().toString());
+		System.out.println("PATH: "+System.getenv("Path"));
+//		System.out.println(System.getProperty("java.library.path"));
+//		System.out.println(System.getenv().values());
 
 		System.loadLibrary("jri");
 		if (!Rengine.versionCheck()) {
