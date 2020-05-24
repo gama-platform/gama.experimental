@@ -1,27 +1,26 @@
 /**
-* Name: Testconnection
-* Author: ben
-* Description: 
-* Tags: Tag1, Tag2, TagN
+* Name: Eval a R script
+* Author: Benoit Gaudou
+* Description: Model illustrating the evaluation of a R script in GAML, using R_eval operator.
+*    This requieres to loop over the text file lines and to execute each line of the script one by one.
+* Tags: R, script
 */
 
-model Testconnection
+model EvalRScript
 
 global skills:[RSkill]{
-	file Rcode<-text_file("../includes/rScript.txt");
+	file Rcode <- text_file("../includes/rScript.txt");
 	
 	init{
 		do startR;
 
-	 	loop s over:Rcode.contents{
-			unknown a<- R_eval(s);
+		// Loop that takes each line of the R script and execute it.
+	 	loop s over: Rcode.contents{
+			unknown a <- R_eval(s);
 			write "R>"+s;
 			write a;
 		}
-	}
-	
+	}	
 }
-experiment RJava type:gui{
-	output{
-	}
-}
+
+experiment RJava type:gui {}
