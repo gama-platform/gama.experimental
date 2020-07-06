@@ -295,10 +295,10 @@ public class ArgumentingSkill extends Skill {
 		return false;
 	}
 
-	@action(name = "make_decision", doc = @doc(value = "make decision concerning the option proposed by the argumentation graph", returns = "a float value: if the value is > 0, pro option; if value < 0, cons option, elsewere neutral", examples = {
+	@action(name = "make_decision", doc = @doc(value = "make decision concerning the option proposed by the argumentation graph", returns = "a pair best extension:value: if the value is > 0, pro option; if value < 0, cons option, elsewere neutral", examples = {
 			@example("do make_decision;") }))
-	public Double primMakeDecision(final IScope scope) throws GamaRuntimeException {
-		return ((GamaPair<IList<GamaArgument>, Double>) scope.getAgent().getSpecies().getAction("get_best_extension").executeOn(scope)).getValue();		
+	public GamaPair<IList<GamaArgument>, Double>  primMakeDecision(final IScope scope) throws GamaRuntimeException {
+		return ((GamaPair<IList<GamaArgument>, Double>) scope.getAgent().getSpecies().getAction("get_best_extension").executeOn(scope));
 	}
 	
 	@action(name = "get_best_extension")
