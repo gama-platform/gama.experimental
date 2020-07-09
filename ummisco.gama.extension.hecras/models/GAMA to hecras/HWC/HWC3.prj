@@ -1,0 +1,41 @@
+Proj Title=HWC3
+Current Plan=p04
+Default Exp/Contr=0.3,0.1
+SI Units
+Geom File=g01
+Geom File=g02
+Geom File=g03
+Geom File=g04
+Geom File=g05
+Geom File=g06
+Geom File=g07
+Geom File=g08
+Geom File=g09
+Unsteady File=u01
+Plan File=p01
+Plan File=p02
+Plan File=p03
+Plan File=p04
+Background Map Layer=new_building_phuc_xa
+Y Axis Title=Elevation
+X Axis Title(PF)=Main Channel Distance
+X Axis Title(XS)=Station
+BEGIN DESCRIPTION:
+
+END DESCRIPTION:
+DSS Start Date=
+DSS Start Time=
+DSS End Date=
+DSS End Time=
+DSS File=HWC2.dss
+DSS Export Filename=
+DSS Export Rating Curves= 0 
+DSS Export Rating Curve Sorted= 0 
+DSS Export Volume Flow Curves= 0 
+DXF Filename=HelloWorldCoupling.
+DXF OffsetX= 0 
+DXF OffsetY= 0 
+DXF ScaleX= 1 
+DXF ScaleY= 10 
+GIS Export SA=Hello 2D Area   
+GIS Export Profiles= 0 
