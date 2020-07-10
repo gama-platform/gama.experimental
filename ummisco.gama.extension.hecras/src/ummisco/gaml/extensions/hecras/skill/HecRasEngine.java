@@ -59,15 +59,14 @@ import com.sun.jna.platform.win32.COM.COMException;
 import com.sun.jna.platform.win32.COM.COMLateBindingObject;
 
 public class HecRasEngine extends COMLateBindingObject {
-	public static void main2(String args[]) {
+	public static void main(String args[]) {
 		Ole32.INSTANCE.CoInitializeEx(Pointer.NULL, Ole32.COINIT_MULTITHREADED);
 		HecRasEngine p = new HecRasEngine();
 		try {
-			p.Project_Open("E:\\Downloads\\HWC\\HelloWorldCoupling.prj");
-			p.Compute_HideComputationWindow();
-			p.Compute_CurrentPlan();
-			p.Output_Initialize();
-			p.ExportGIS();
+			p.Project_Open("C:\\git\\gama.experimental\\ummisco.gama.extension.hecras\\models\\GAMA to hecras\\HWC\\HWC2.prj");
+//			p.Project_Open("E:\\Downloads\\HWC\\HelloWorldCoupling.prj");
+//			p.Compute_HideComputationWindow();
+			p.Compute_CurrentPlan(); 
 		} finally {
 			p.QuitRas();
 			p.release();
@@ -91,7 +90,7 @@ public class HecRasEngine extends COMLateBindingObject {
 			node.removeChild(node.getFirstChild());
 	}
 
-	public static void main(String args[]) {
+	public static void main2(String args[]) {
 		HecRasEngine hec=new HecRasEngine();
 		hec.generateTiff(
 				"C:\\git\\gama.experimental\\ummisco.gama.extension.hecras\\models\\GAMA to hecras\\HWC\\HWC2.rasmap",
@@ -166,12 +165,13 @@ public class HecRasEngine extends COMLateBindingObject {
 			FileWriter writer = new FileWriter(docFile);
 			StreamResult result = new StreamResult(writer);
 			transformer.transform(source, result);
-			return 0;
+			writer.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return -1;
 		}
 
+		return 0;
 	}
 
 	public HecRasEngine() throws COMException {

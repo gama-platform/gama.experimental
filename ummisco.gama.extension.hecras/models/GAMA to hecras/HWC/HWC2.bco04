@@ -14,7 +14,7 @@ Short ID:      Plan 04
 
 Starting Time:   24Jul2019 2400
 
-Ending Time:     25Jul2019 1300
+Ending Time:     25Jul2019 2400
 
 
                 ################################################
@@ -25,7 +25,7 @@ Ending Time:     25Jul2019 1300
                 #                                              #
                 #          HEC-RAS 5.0.6 November              #
                 #                                              #
-                #             10JUL20 at 21:25:24              #
+                #             11JUL20 at 00:24:51              #
                 #                                              #
                 ################################################
  
@@ -40,18 +40,18 @@ Ending Time:     25Jul2019 1300
 
          US Inflow       Lat Hydro      DS Outflow        SA Hydro     Groundwater       2D Inflow      2D Outflow      Diversions
          *********       *********      **********        ********     ***********       *********      **********      **********
-                                                                                             3181.           1753.                
+                                                                                             7020.           3780.                
 
                       River Reaches, Storage Areas, and 2D Areas
 
     Start 1D Reach   Starting SA's     Starting 2D  Final 1D Reach      Final SA's  Final 2D Areas
     **************   *************     ***********  **************      **********  **************
-                                                                                             1443.
+                                                                                             3255.
 
                              Error   Percent Error
 
                              *****   *************
-                             14.80          0.4654
+                             14.74          0.2100
 
 
 
@@ -65,4 +65,4 @@ Ending Time:     25Jul2019 1300
            *******    ************      **********      **********     ***********           *****    ************
  
  
-     Hello 2D Area                           1443.           3181.           1753.           14.80          0.4654
+     Hello 2D Area                           3255.           7020.           3780.           14.74          0.2100
