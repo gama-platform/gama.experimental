@@ -88,7 +88,7 @@ public class ArgumentingSkill extends Skill {
 		IAgent ag = scope.getAgent();
 		Map<String, Double> agVal = getCritImp(ag);
 		for (String c : a.getCriteria().keySet()) {
-			val += a.getCriteria().get(c) * agVal.get(c);
+			val += a.getCriteria().get(c) * (agVal.containsKey(c) ? agVal.get(c) : 1.0);
 		}
 		return val;
 	}
