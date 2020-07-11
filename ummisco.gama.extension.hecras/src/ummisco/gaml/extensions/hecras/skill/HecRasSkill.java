@@ -67,6 +67,7 @@ public class HecRasSkill extends Skill {
 	@action(name = "Generate_RasMap", args = {
 			@arg(name = "filePath", type = IType.STRING, optional = false, doc = @doc("filePath")),
 			@arg(name = "planName", type = IType.STRING, optional = false, doc = @doc("planName")),
+			@arg(name = "terrain", type = IType.STRING, optional = false, doc = @doc("terrain")),
 			@arg(name = "simDate", type = IType.STRING, optional = false, doc = @doc("simDate")),
 			@arg(name = "startHour", type = IType.INT, optional = false, doc = @doc("startHour")),
 			@arg(name = "endHour", type = IType.INT, optional = false, doc = @doc("endHour")),
@@ -80,12 +81,13 @@ public class HecRasSkill extends Skill {
 		try {
 			String filePath = scope.getStringArg("filePath");
 			String planName = scope.getStringArg("planName");
+			String terrain = scope.getStringArg("terrain");
 			String simDate = scope.getStringArg("simDate");
 			int startHour = scope.getIntArg("startHour");
 			int endHour = scope.getIntArg("endHour");
 			int startMin = scope.getIntArg("startMin");
 			int endMin = scope.getIntArg("endMin");
-			res = hrc.generateTiff(filePath, planName, simDate, startHour, endHour, startMin, endMin);
+			res = hrc.generateTiff(filePath, planName, terrain, simDate, startHour, endHour, startMin, endMin);
 
 		} catch (Exception ex) {
 			scope.getGui().getConsole().informConsole(ex.getMessage(), null);

@@ -1,5 +1,5 @@
 Message  | Plan: 'Plan 04' (HWC2.p04)
-Message  | Simulation started at: 11Jul2020 12:24:50 AM
+Message  | Simulation started at: 11Jul2020 08:43:21 AM
 Message  | PROCESS:RasGeomWriter
 Message  | 
 Message  | Writing Geometry
@@ -1568,6 +1568,6 @@ Message  |
 Message  | Computation Task	Time(hh:mm:ss)
 Message  | Completing Geometry(64)	       1
 Message  | Preprocessing Geometry(64)	<1
-Message  | Unsteady Flow Computations(64)	      15
-Message  | Computing Maps(64)	      36
-Message  | Complete Process	      53
+Message  | Unsteady Flow Computations(64)	      10
+Message  | Computing Maps(64)	      33
+Message  | Complete Process	      45
