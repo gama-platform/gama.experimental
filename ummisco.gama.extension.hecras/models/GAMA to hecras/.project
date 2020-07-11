@@ -27,5 +27,10 @@
 			<type>1</type>
 			<location>E:/Downloads/HWC/HelloWorldCoupling.prj</location>
 		</link>
+		<link>
+			<name>external/PhucXaSimulation.rasmap</name>
+			<type>1</type>
+			<location>D:/Downloads/Taha - Transfert/Phuc Xa Simulation/PhucXaSimulation.rasmap</location>
+		</link>
 	</linkedResources>
 </projectDescription>

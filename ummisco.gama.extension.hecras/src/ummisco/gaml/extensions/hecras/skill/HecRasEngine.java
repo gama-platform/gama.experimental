@@ -94,10 +94,10 @@ public class HecRasEngine extends COMLateBindingObject {
 		HecRasEngine hec=new HecRasEngine();
 		hec.generateTiff(
 				"C:\\git\\gama.experimental\\ummisco.gama.extension.hecras\\models\\GAMA to hecras\\HWC\\HWC2.rasmap",
-				"Plan 04", "25JUL2019", 0, 24, 0, 60);
+				"Plan 04", "Hello DEM 200x100", "25JUL2019", 0, 24, 0, 60);
 	}
 
-	public int generateTiff(String filePath, String planName, String simDate, int startHour, int endHour,
+	public int generateTiff(String filePath, String planName, String terrain, String simDate, int startHour, int endHour,
 			int startMin, int endMin) {
 		File docFile = new File(filePath);
 
@@ -132,7 +132,7 @@ public class HecRasEngine extends COMLateBindingObject {
 								aMapParam.setAttribute("OutputMode", "Stored Current Terrain");
 								aMapParam.setAttribute("StoredFilename",
 										".\\" + planName + "\\Depth (" + simDate + " " + hrs + " " + min + " 00).vrt");
-								aMapParam.setAttribute("Terrain", "Hello DEM 200x100");
+								aMapParam.setAttribute("Terrain", terrain);
 								aMapParam.setAttribute("ProfileIndex", "10");
 								aMapParam.setAttribute("ProfileName", simDate + " " + hrs + ":" + min + ":00");
 								aMapParam.setAttribute("ArrivalDepth", "0");
