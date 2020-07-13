@@ -36,6 +36,7 @@ import msi.gama.util.graph.GamaGraph;
 import msi.gama.util.graph.IGraph;
 import msi.gaml.descriptions.ConstantExpressionDescription;
 import msi.gaml.operators.Graphs;
+import msi.gaml.operators.Random;
 import msi.gaml.skills.Skill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.statements.Arguments;
@@ -301,21 +302,25 @@ public class ArgumentingSkill extends Skill {
 		return ((GamaPair<IList<GamaArgument>, Double>) scope.getAgent().getSpecies().getAction("get_best_extension").executeOn(scope));
 	}
 	
+
 	@action(name = "get_best_extension")
 	public GamaPair<IList<GamaArgument>, Double> primGetBestExtension(final IScope scope) throws GamaRuntimeException {
 	
 		final IStatement evaluateExtensions = scope.getAgent().getSpecies().getAction("evaluate_extensions");
 		IMap<IList<GamaArgument>, Double> extensionsEvaluations = (IMap<IList<GamaArgument>, Double>) evaluateExtensions.executeOn(scope);
 		
-		Iterator<Map.Entry<IList<GamaArgument>, Double>> it = extensionsEvaluations.entrySet().iterator();
-		Map.Entry<IList<GamaArgument>, Double> res = it.hasNext() ? it.next() : null;
+		Iterator<IList<GamaArgument>> it = Random.opShuffle(scope, extensionsEvaluations.getKeys()).iterator();
+		IList<GamaArgument> res = it.hasNext() ? it.next() : null;
+		double maxVal = res == null ? 0.0 : Math.abs(extensionsEvaluations.get(res));
 		while(it.hasNext()) {
-			Map.Entry<IList<GamaArgument>, Double> ext = it.next();
-			if (Math.abs(ext.getValue()) > Math.abs(res.getValue())) {
+			IList<GamaArgument> ext = it.next();
+			double v = Math.abs(extensionsEvaluations.get(ext));
+			if (v > maxVal) {
 				res = ext;
+				maxVal = v;
 			}
 		}
-		return new GamaPair<IList<GamaArgument>, Double>(res.getKey(), res.getValue(), Types.LIST, Types.FLOAT);
+		return new GamaPair<IList<GamaArgument>, Double>(res,  extensionsEvaluations.get(res), Types.LIST, Types.FLOAT);
 	}
 	
 	@action(name = "evaluate_extensions")
