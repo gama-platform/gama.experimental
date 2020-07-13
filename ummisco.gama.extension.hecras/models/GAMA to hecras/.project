@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>GAMA to hecras</name>
-	<comment>hecras plugin</comment>
+	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -14,23 +14,42 @@
 	<natures>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
 		<nature>msi.gama.application.gamaNature</nature>
-		<nature>msi.gama.application.pluginNature</nature>
 	</natures>
 	<linkedResources>
 		<link>
 			<name>external/Depth (25JUL2019 00 01 00).MergedInputs.tif</name>
 			<type>1</type>
-			<location>E:/Downloads/HWC/Plan 04/Depth (25JUL2019 00 01 00).MergedInputs.tif</location>
+			<location>/Applications/Gama 1.8.1.app/Contents/MacOS/E::/Downloads/HWC/Plan 04/Depth (25JUL2019 00 01 00).MergedInputs.tif</location>
 		</link>
 		<link>
 			<name>external/HelloWorldCoupling.prj</name>
 			<type>1</type>
-			<location>E:/Downloads/HWC/HelloWorldCoupling.prj</location>
+			<location>/Applications/Gama 1.8.1.app/Contents/MacOS/E::/Downloads/HWC/HelloWorldCoupling.prj</location>
+		</link>
+		<link>
+			<name>external/HelloWorldCoupling.rasmap</name>
+			<type>1</type>
+			<location>/Applications/Gama 1.8.1.app/Contents/MacOS/C::/Users/benoit/Documents/Hello World Coupling/HelloWorldCoupling.rasmap</location>
+		</link>
+		<link>
+			<name>external/PhucXaSimulation.prj</name>
+			<type>1</type>
+			<location>/Applications/Gama 1.8.1.app/Contents/MacOS/C::/Users/benoit/Documents/Phuc Xa Simulation/PhucXaSimulation.prj</location>
 		</link>
 		<link>
 			<name>external/PhucXaSimulation.rasmap</name>
 			<type>1</type>
-			<location>D:/Downloads/Taha - Transfert/Phuc Xa Simulation/PhucXaSimulation.rasmap</location>
+			<location>/Applications/Gama 1.8.1.app/Contents/MacOS/D::/Downloads/Taha - Transfert/Phuc Xa Simulation/PhucXaSimulation.rasmap</location>
+		</link>
+		<link>
+			<name>external/copy of HelloWorldCoupling.prj</name>
+			<type>1</type>
+			<location>/Applications/Gama 1.8.1.app/Contents/MacOS/C::/Users/benoit/Documents/Hello World Coupling/HelloWorldCoupling.prj</location>
+		</link>
+		<link>
+			<name>external/copy of PhucXaSimulation.rasmap</name>
+			<type>1</type>
+			<location>/Applications/Gama 1.8.1.app/Contents/MacOS/C::/Users/benoit/Documents/Phuc Xa Simulation/PhucXaSimulation.rasmap</location>
 		</link>
 	</linkedResources>
 </projectDescription>
