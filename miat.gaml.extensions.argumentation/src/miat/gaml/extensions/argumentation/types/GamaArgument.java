@@ -7,18 +7,20 @@ import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaMap;
 import msi.gama.util.IMap;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
-@vars({ @variable(name = "id", type = IType.STRING), @variable(name = "option", type = IType.STRING),
-	@variable(name = "conclusion", type = IType.STRING),
-	@variable(name = "statement", type = IType.STRING), @variable(name = "rationale", type = IType.STRING),
-	@variable(name = "criteria", type = IType.MAP), @variable(name = "actor", type = IType.AGENT),
-	@variable(name = "source_type", type = IType.STRING) })
+@vars({ @variable(name = "id", type = IType.STRING), 
+		@variable(name = "option", type = IType.STRING),
+		@variable(name = "conclusion", type = IType.STRING),
+		@variable(name = "statement", type = IType.STRING), 
+		@variable(name = "rationale", type = IType.STRING),
+		@variable(name = "criteria", type = IType.MAP), 
+		@variable(name = "actor", type = IType.AGENT),
+		@variable(name = "source_type", type = IType.NONE) })
 public class GamaArgument  implements IValue{
-	private String id = "0" ;
+	private String id = "0";
 	private String option = "";
 	private String conclusion = "";
 	private String statement = "";
@@ -104,10 +106,25 @@ public class GamaArgument  implements IValue{
 	public String toString() {
 		return id ;
 	}
-
 	
+	public void setActor(IAgent actor) {
+		this.actor = actor;
+	}
 	
-
+	@Override
+	public boolean equals(final Object other) {
+		if (this == other) {return true;}
+		if (!(other instanceof GamaArgument)) {
+			return false;
+		}
+		return this.id.equals(((GamaArgument) other).id);
+	}
 	
-	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (id == null ? 0 : id.hashCode());
+		return result;
+	} 
 }

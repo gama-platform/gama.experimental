@@ -1,0 +1,68 @@
+ 
+                                              HEC-RAS - River Analysis System
+ 
+ 
+Project File:  C:\Users\benoit\Documents\Hello World Coupling\HelloWorldCoupling.prj
+ 
+Project Name:  Hello World Coupling
+ 
+ 
+Plan Name:     Plan 04
+ 
+Short ID:      Plan 03
+ 
+
+Starting Time:   24Jul2019 2400
+
+Ending Time:     25Jul2019 2400
+
+
+                ################################################
+                #                                              #
+                #                                              #
+                #       1D and 2D Unsteady Flow Module         #
+                #                                              #
+                #                                              #
+                #          HEC-RAS 5.0.6 November              #
+                #                                              #
+                #             12JUL20 at 14:01:56              #
+                #                                              #
+                ################################################
+ 
+ 
+ 
+
+
+
+                 Volume Accounting in 1000 m^3
+
+                           External Boundary Flux of Water
+
+         US Inflow       Lat Hydro      DS Outflow        SA Hydro     Groundwater       2D Inflow      2D Outflow      Diversions
+         *********       *********      **********        ********     ***********       *********      **********      **********
+                                                                                             7020.           3780.                
+
+                      River Reaches, Storage Areas, and 2D Areas
+
+    Start 1D Reach   Starting SA's     Starting 2D  Final 1D Reach      Final SA's  Final 2D Areas
+    **************   *************     ***********  **************      **********  **************
+                                                                                             3255.
+
+                             Error   Percent Error
+
+                             *****   *************
+                             15.06          0.2146
+
+
+
+
+
+
+
+                 Volume Accounting for 2D Flow Area in 1000 m^3                  
+
+           2D Area    Starting Vol      Ending Vol      Cum Inflow     Cum Outflow           Error   Percent Error
+           *******    ************      **********      **********     ***********           *****    ************
+ 
+ 
+     Hello 2D Area                           3255.           7020.           3780.           15.06          0.2146

@@ -1,14 +1,13 @@
 /**
-* Name: 3Other
-* Author: ben
-* Description: 
-* Tags: Tag1, Tag2, TagN
+* Name: RtoDataframe
+* Author: Benoit Gaudou
+* Description: Example model illustrating the to_R_dataframe transforming a species into a dataframe.
+* Tags: R, dataframe
 */
 
-model Other
+model RtoDataframe
 
-
-global skills:[RSkill]{
+global skills: [RSkill] {
 	
 	init{
 		do startR();
@@ -16,11 +15,11 @@ global skills:[RSkill]{
 		create people number: 10;
 		
 		write to_R_dataframe(people);
+		
 		do R_eval("df<-" + to_R_dataframe(people));
 		write R_eval("df");
 		write R_eval("df$flipCoin");	
 	}
-	
 }
 
 species people {
@@ -30,7 +29,5 @@ species people {
 	bool flipCoin <- flip(0.5);
 }
 
-experiment RJava type:gui{
-	output{}
-}
+experiment RtoDataframeEx type:gui {}
 

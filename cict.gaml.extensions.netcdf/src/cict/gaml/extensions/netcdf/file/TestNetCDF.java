@@ -27,7 +27,7 @@ public class TestNetCDF extends JPanel {
 //	String netCDF_File = "E:/tos_O1_2001-2002.nc";
 //	String netCDF_File = "E:/test_echam_spectral.nc";
 //	String netCDF_File = "E:/cami_0000-09-01_64x128_L26_c030918.nc";
-	String netCDF_File = "C:\\git\\gama.experimental\\cict.gaml.extensions.netcdf\\models\\NetCDF\\includes\\tos_O1_2001-2002.nc";
+	String netCDF_File = "C:\\git\\gama.experimental\\cict.gaml.extensions.netcdf\\models\\NetCDF\\includes\\ENS_mm_rcp85.2015_2050_MKD_tas.nc";
 //	String netCDF_File = "E:/sresa1b_ncar_ccsm3-example.nc";
 	private static TestNetCDF tester;
 	private static JFrame frame;
@@ -100,6 +100,7 @@ public class TestNetCDF extends JPanel {
 
 		try {
 			this.ds = NetcdfDataset.openDataset(netCDF_File, true, null);
+			ds.getCoordinateSystems().get(0);
 			if (this.ds == null) {
 				JOptionPane.showMessageDialog(null, "NetcdfDataset.open cant open " + netCDF_File);
 				return false;
@@ -126,7 +127,7 @@ public class TestNetCDF extends JPanel {
 			GridCoordSystem gcsys = grid.getCoordinateSystem();
 			if (gcsys.getTimeAxis() != null)
 				ntimes = (int) gcsys.getTimeAxis().getSize();
-
+			
 			Array data;
 			try {
 				data = grid.readDataSlice(this.time, 0, -1, -1);

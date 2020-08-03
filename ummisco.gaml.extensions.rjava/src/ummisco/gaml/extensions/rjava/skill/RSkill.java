@@ -117,7 +117,7 @@ public class RSkill extends Skill {
 
 	}
 
-	private final String[] args = new String[] { "--vanilla" };
+	private final String[] args = new String[] { "--vanilla","--slave" };
 	private Rengine re = null;
 	private IList<?> loadedLib = null;
 	private String env;
