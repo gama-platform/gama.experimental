@@ -71,10 +71,19 @@ public final class MQTTConnector {
 		this.receivedData.put(topic, dts);
 		return dts;
 	}
-
+	
+	class Data{
+			public Object name;
+			public Object value;
+	}
+	
 	private void storeData(final String topic, final String message) {
 		final XStream dataStreamer = new XStream(new DomDriver());
 		final Object data = dataStreamer.fromXML(message);
+	
+		System.out.println(" Received message is : "+ message);
+		System.out.println(" Received Data is : "+ data);
+	
 		storeDataS(topic, data);
 	}
 
@@ -92,6 +101,7 @@ public final class MQTTConnector {
 	private void sendFormatedMessage(final String receiver, final String content) throws MqttException {
 		final MqttMessage mm = new MqttMessage(content.getBytes());
 		sendConnection.publish(receiver, mm);
+		System.out.println(" ---> Content is : "+content);
 	}
 
 	public void subscribeToGroup(final String boxName) throws MqttException {
