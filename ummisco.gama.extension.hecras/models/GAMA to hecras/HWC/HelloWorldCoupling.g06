@@ -1,0 +1,45 @@
+Geom Title=Hello Plain 3
+Program Version=5.06
+Viewing Rectangle= 588183.677075836 , 588402.243237691 , 2327671.74064273 , 2327562.24311144 
+
+River Reach=River 1         ,Reach 1         
+Reach XY= 2 
+588193.6119013752327618.57560076588392.3084121522327618.78171747
+Rch Text X Y=,
+Reverse River Text= 0 
+
+Type RM Length L Ch R = 1 ,647     ,196.7,196.7,196.7
+XS GIS Cut Line=2
+588195.0439718232327666.54152606588195.1942309072327567.22027196
+Node Last Edited Time=Jul/09/2019 18:54:28
+#Sta/Elev= 0 
+#Mann= 0 , 0 , 0 
+Bank Sta=0.6,99.1
+XS Rating Curve= 0 ,0
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,2       ,,,
+XS GIS Cut Line=2
+588391.7331119382327666.76348221588391.8833710222327567.44222812
+Node Last Edited Time=Jul/09/2019 18:54:28
+#Sta/Elev= 0 
+#Mann= 0 , 0 , 0 
+Bank Sta=0.6,99.2
+XS Rating Curve= 0 ,0
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+LCMann Time=Dec/30/1899 00:00:00
+LCMann Region Time=Dec/30/1899 00:00:00
+LCMann Table=0
+Chan Stop Cuts=-1 
+
+
+
+Use User Specified Reach Order=0
+GIS Ratio Cuts To Invert=-1
+GIS Limit At Bridges=0
+Composite Channel Slope=5

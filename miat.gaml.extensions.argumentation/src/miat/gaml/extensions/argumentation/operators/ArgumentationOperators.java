@@ -6,6 +6,11 @@ import java.util.stream.Collectors;
 
 import miat.gaml.extensions.argumentation.types.GamaArgument;
 import miat.gaml.extensions.argumentation.types.GamaArgumentType;
+import msi.gama.metamodel.agent.IAgent;
+import msi.gama.precompiler.GamlAnnotations.action;
+import msi.gama.precompiler.GamlAnnotations.arg;
+import msi.gama.precompiler.GamlAnnotations.doc;
+import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaListFactory;
@@ -80,9 +85,17 @@ public class ArgumentationOperators {
 				GamaArgument arg = new GamaArgument(n, option, conclusion, "", "", criteria, null, "");
 				args.add(arg);
 			}
-			
 		}
-		return args;
 		
+		return args;
+	}
+	
+	@operator (
+			value = {"set_actor"},
+			category = {"argumentation"},
+			concept = {"argumentation"})
+	public static GamaArgument setActor(GamaArgument argument, IAgent newActor) {
+		argument.setActor(newActor);
+		return argument;
 	}
 }

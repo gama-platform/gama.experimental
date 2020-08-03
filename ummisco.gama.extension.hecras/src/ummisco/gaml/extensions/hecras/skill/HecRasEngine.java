@@ -59,15 +59,14 @@ import com.sun.jna.platform.win32.COM.COMException;
 import com.sun.jna.platform.win32.COM.COMLateBindingObject;
 
 public class HecRasEngine extends COMLateBindingObject {
-	public static void main2(String args[]) {
+	public static void main(String args[]) {
 		Ole32.INSTANCE.CoInitializeEx(Pointer.NULL, Ole32.COINIT_MULTITHREADED);
 		HecRasEngine p = new HecRasEngine();
 		try {
-			p.Project_Open("E:\\Downloads\\HWC\\HelloWorldCoupling.prj");
-			p.Compute_HideComputationWindow();
-			p.Compute_CurrentPlan();
-			p.Output_Initialize();
-			p.ExportGIS();
+			p.Project_Open("C:\\git\\gama.experimental\\ummisco.gama.extension.hecras\\models\\GAMA to hecras\\HWC\\HWC2.prj");
+//			p.Project_Open("E:\\Downloads\\HWC\\HelloWorldCoupling.prj");
+//			p.Compute_HideComputationWindow();
+			p.Compute_CurrentPlan(); 
 		} finally {
 			p.QuitRas();
 			p.release();
@@ -85,13 +84,22 @@ public class HecRasEngine extends COMLateBindingObject {
 //			e.printStackTrace();
 //		}
 	}
+
 	public static void removeChilds(Node node) {
-	    while (node.hasChildNodes())
-	        node.removeChild(node.getFirstChild());
+		while (node.hasChildNodes())
+			node.removeChild(node.getFirstChild());
 	}
-	public static void main(String args[]) {
-		File docFile = new File(
-				"C:\\git\\gama.experimental\\ummisco.gama.extension.hecras\\models\\GAMA to hecras\\HWC\\HWC2.rasmap");
+
+	public static void main2(String args[]) {
+		HecRasEngine hec=new HecRasEngine();
+		hec.generateTiff(
+				"C:\\git\\gama.experimental\\ummisco.gama.extension.hecras\\models\\GAMA to hecras\\HWC\\HWC2.rasmap",
+				"Plan 04", "Hello DEM 200x100", "25JUL2019", 0, 24, 0, 60);
+	}
+
+	public int generateTiff(String filePath, String planName, String terrain, String simDate, int startHour, int endHour,
+			int startMin, int endMin) {
+		File docFile = new File(filePath);
 
 		try {
 			Document document = XMLUtils.createDoc(docFile.getAbsolutePath());
@@ -100,15 +108,15 @@ public class HecRasEngine extends COMLateBindingObject {
 				if (Layers.item(j) instanceof org.w3c.dom.Element) {
 
 					final org.w3c.dom.Element PlanLayer = (org.w3c.dom.Element) Layers.item(j);
-					if (PlanLayer.getAttribute("Name").equals("Plan 04")) {
+					if (PlanLayer.getAttribute("Name").equals(planName)) {
 						removeChilds(PlanLayer);
 //						final NodeList nLayer = PlanLayer.getChildNodes();
 //						for (int i = 0; i < nLayer.getLength(); i++) {
 //							PlanLayer.removeChild(nLayer.item(i));
 //						}
 
-						for (int hh = 0; hh < 14; hh++) {
-							for (int mm = 0; mm < 60; mm++) {
+						for (int hh = startHour; hh < endHour; hh++) {
+							for (int mm = startMin; mm < endMin; mm++) {
 								String hrs = hh < 10 ? "0" + hh : "" + hh;
 								String min = mm < 10 ? "0" + mm : "" + mm;
 								final Element aLayer = document.createElement("Layer");
@@ -116,24 +124,24 @@ public class HecRasEngine extends COMLateBindingObject {
 								aLayer.setAttribute("Type", "RASResultsMap");
 								aLayer.setAttribute("Checked", "True");
 								aLayer.setAttribute("Filename",
-										".\\Plan 04\\Depth (25JUL2019 " + hrs + " " + min + " 00).vrt");
+										".\\" + planName + "\\Depth (" + simDate + " " + hrs + " " + min + " 00).vrt");
 
 								final Element aMapParam = document.createElement("MapParameters");
 								aMapParam.setAttribute("MapType", "depth");
 								aMapParam.setAttribute("LayerName", "Depth");
 								aMapParam.setAttribute("OutputMode", "Stored Current Terrain");
 								aMapParam.setAttribute("StoredFilename",
-										".\\Plan 04\\Depth (25JUL2019 " + hrs + " " + min + " 00).vrt");
-								aMapParam.setAttribute("Terrain", "Hello DEM 200x100");
+										".\\" + planName + "\\Depth (" + simDate + " " + hrs + " " + min + " 00).vrt");
+								aMapParam.setAttribute("Terrain", terrain);
 								aMapParam.setAttribute("ProfileIndex", "10");
-								aMapParam.setAttribute("ProfileName", "25JUL2019 " + hrs + ":" + min + ":00");
+								aMapParam.setAttribute("ProfileName", simDate + " " + hrs + ":" + min + ":00");
 								aMapParam.setAttribute("ArrivalDepth", "0");
 								aLayer.appendChild(aMapParam);
 
 								PlanLayer.appendChild(aLayer);
-								if(hh>12) {
-									break;
-								}
+//								if(hh>12) {
+//									break;
+//								}
 							}
 						}
 
@@ -157,10 +165,13 @@ public class HecRasEngine extends COMLateBindingObject {
 			FileWriter writer = new FileWriter(docFile);
 			StreamResult result = new StreamResult(writer);
 			transformer.transform(source, result);
+			writer.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return -1;
 		}
 
+		return 0;
 	}
 
 	public HecRasEngine() throws COMException {

@@ -1,0 +1,71 @@
+Geom Title=Hello Plain Mini
+Program Version=5.06
+Viewing Rectangle=-29498.1342579046 , 619460.819415996 , 2445271.5037083 ,-116442.547795633 
+
+River Reach=Hello Plain Mini,Reach 1         
+Reach XY= 2 
+ 587386.727438972327308.77667692589962.6851580912327308.77667692
+Rch Text X Y=588030.7168688,2327308.7766769
+Reverse River Text= 0 
+
+Type RM Length L Ch R = 1 ,8443    ,2514.3,2514.3,2514.3
+XS GIS Cut Line=2
+587388.1914169472328147.65345975587389.9776825042326757.95848621
+Node Last Edited Time=Jul/08/2019 23:08:38
+#Sta/Elev= 7 
+       0   18.93      .6   18.93    13.4      10    1368      10  1380.3   16.95
+  1383.2   17.09  1389.7   17.52
+#Mann= 3 , 0 , 0 
+       0               0    13.4               0    1368               0
+Bank Sta=13.4,1368
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=8.15,0.3, 96 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,194     ,,,
+XS GIS Cut Line=2
+589901.4499977962328181.39445934589904.8229291842326764.76327631
+Node Last Edited Time=Jul/08/2019 23:09:49
+#Sta/Elev= 8 
+       0   11.12     3.6      11     8.6   10.92    29.3   10.92    34.3   10.84
+    47.1      10  1401.8      10  1416.6   14.12
+#Mann= 3 , 0 , 0 
+       0               0    47.1               0  1401.8               0
+Bank Sta=47.1,1401.8
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=10.99,0.3, 46 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+River Reach=River (Missing) ,Reach (Missing) 
+Reach XY= 2 
+              0.             -1.              0.              1.
+Rch Text X Y=0,-0.5
+Reverse River Text= 0 
+
+Type RM Length L Ch R = 1 ,1       ,,,
+XS GIS Cut Line=2
+              0.              0.              0.              0.
+Node Last Edited Time=Jul/08/2019 23:07:56
+#Sta/Elev= 0 
+#Mann= 0 , 0 , 0 
+Bank Sta=0,0
+XS Rating Curve= 0 ,0
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+LCMann Time=Dec/30/1899 00:00:00
+LCMann Region Time=Dec/30/1899 00:00:00
+LCMann Table=0
+Chan Stop Cuts=-1 
+
+
+
+Use User Specified Reach Order=0
+GIS Ratio Cuts To Invert=-1
+GIS Limit At Bridges=0
+Composite Channel Slope=5

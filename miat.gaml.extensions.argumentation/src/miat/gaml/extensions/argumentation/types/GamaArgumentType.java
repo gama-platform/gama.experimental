@@ -34,7 +34,7 @@ public class GamaArgumentType extends GamaType<GamaArgument> {
 					m.containsKey("rationale") ? (String)m.get("rationale"): "",
 					m.containsKey("criteria") ? (GamaMap<String, Double>)m.get("criteria"): GamaMapFactory.create(),
 					(IAgent)m.get("actor"),
-					m.containsKey("sourceType") ? (String)m.get("sourceType"): "");
+					m.containsKey("source_type") ? (String)m.get("source_type"): "");
 			return arg;
 		}
 		return null;

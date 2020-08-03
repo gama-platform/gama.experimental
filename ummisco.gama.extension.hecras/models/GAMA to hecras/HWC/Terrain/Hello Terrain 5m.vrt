@@ -1,0 +1,32 @@
+<VRTDataset rasterXSize="996" rasterYSize="666">
+  <SRS>PROJCS["WGS 84 / UTM zone 48N",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",105],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","32648"]]</SRS>
+  <GeoTransform>  5.8654433158554125e+05,  5.0000000000000000e+00,  0.0000000000000000e+00,  2.3272728365083733e+06,  0.0000000000000000e+00, -5.0000000000000000e+00</GeoTransform>
+  <VRTRasterBand dataType="Float32" band="1">
+    <Metadata>
+      <MDI key="STATISTICS_MAXIMUM">10</MDI>
+      <MDI key="STATISTICS_MEAN">8.0361681697019</MDI>
+      <MDI key="STATISTICS_MINIMUM">0</MDI>
+      <MDI key="STATISTICS_STDDEV">3.3649685505876</MDI>
+    </Metadata>
+    <NoDataValue>-9999</NoDataValue>
+    <ColorInterp>Gray</ColorInterp>
+    <Histograms>
+      <HistItem>
+        <HistMin>0</HistMin>
+        <HistMax>10</HistMax>
+        <BucketCount>256</BucketCount>
+        <IncludeOutOfRange>1</IncludeOutOfRange>
+        <Approximate>0</Approximate>
+        <HistCounts>138|513|1016|2151|1650|1284|1183|1167|1176|1185|1201|1215|1236|1240|1238|1234|1232|1234|1238|1230|1234|1229|1230|1229|1232|1227|1229|1225|1224|1226|1221|1227|1222|1224|1222|1217|1222|1214|1222|1217|1216|1214|1218|1215|1212|1209|1216|1211|1213|1208|1207|1212|1202|1214|1205|1199|1210|1203|1202|1210|1195|1210|1190|1196|1208|1203|1188|1200|1207|1176|1208|1192|1188|1203|1186|1184|1201|1182|1201|1173|1202|1174|1196|1187|1183|1189|1179|1184|1186|1174|1180|1191|1175|1179|1177|1185|1172|1176|1183|1160|1183|1175|1176|1175|1165|1177|1165|1170|1171|1166|1173|1164|1171|1160|1170|1167|1165|1159|1165|1159|1167|1163|1156|1157|1163|1157|1156|1161|114|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|435920</HistCounts>
+      </HistItem>
+    </Histograms>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="1">Hello Terrain 5m.MergedInputs.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="996" RasterYSize="666" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="996" ySize="666" />
+      <DstRect xOff="0" yOff="0" xSize="996" ySize="666" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+  </VRTRasterBand>
+</VRTDataset>

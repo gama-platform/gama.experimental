@@ -40,16 +40,16 @@ public class HecRasSkill extends Skill {
 			@example("load_hecras") }))
 
 	public Object load_hecras(final IScope scope) {
-		int res=0;
+		int res = 0;
 		Ole32.INSTANCE.CoInitializeEx(Pointer.NULL, Ole32.COINIT_MULTITHREADED);
 		hrc = new HecRasEngine();
 		scope.getSimulation().postDisposeAction(scope1 -> {
 			try {
-				if(hrc!=null) {					
+				if (hrc != null) {
 					hrc.QuitRas();
 					hrc.release();
 					Ole32.INSTANCE.CoUninitialize();
-					hrc=null;
+					hrc = null;
 //					HWND hwnd = User32.INSTANCE.FindWindow
 //							("Ras", null); // class name
 //					
@@ -61,6 +61,38 @@ public class HecRasSkill extends Skill {
 			}
 			return null;
 		});
+		return res;
+	}
+
+	@action(name = "Generate_RasMap", args = {
+			@arg(name = "filePath", type = IType.STRING, optional = false, doc = @doc("filePath")),
+			@arg(name = "planName", type = IType.STRING, optional = false, doc = @doc("planName")),
+			@arg(name = "terrain", type = IType.STRING, optional = false, doc = @doc("terrain")),
+			@arg(name = "simDate", type = IType.STRING, optional = false, doc = @doc("simDate")),
+			@arg(name = "startHour", type = IType.INT, optional = false, doc = @doc("startHour")),
+			@arg(name = "endHour", type = IType.INT, optional = false, doc = @doc("endHour")),
+			@arg(name = "startMin", type = IType.INT, optional = false, doc = @doc("startMin")),
+			@arg(name = "endMin", type = IType.INT, optional = false, doc = @doc("endMin")), }, doc = @doc(value = "Generate_RasMap hecras", returns = "vrf files", examples = {
+					@example("generateTiff(\r\n"
+							+ "				\"C:\\\\git\\\\gama.experimental\\\\ummisco.gama.extension.hecras\\\\models\\\\GAMA to hecras\\\\HWC\\\\HWC2.rasmap\",\r\n"
+							+ "				\"Plan 04\", \"25JUL2019\", 0, 24, 0, 60)") }))
+	public Object primGenerate_RasMap(final IScope scope) throws GamaRuntimeException {
+		int res = 0;
+		try {
+			String filePath = scope.getStringArg("filePath");
+			String planName = scope.getStringArg("planName");
+			String terrain = scope.getStringArg("terrain");
+			String simDate = scope.getStringArg("simDate");
+			int startHour = scope.getIntArg("startHour");
+			int endHour = scope.getIntArg("endHour");
+			int startMin = scope.getIntArg("startMin");
+			int endMin = scope.getIntArg("endMin");
+			res = hrc.generateTiff(filePath, planName, terrain, simDate, startHour, endHour, startMin, endMin);
+
+		} catch (Exception ex) {
+			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+			ex.printStackTrace();
+		}
 		return res;
 	}
 
@@ -105,7 +137,6 @@ public class HecRasSkill extends Skill {
 		return res;
 	}
 
-
 	@action(name = "Project_Close", doc = @doc(value = "Project_Close", returns = "Project_Close", examples = {
 			@example("Project_Close()") }))
 	public Object primProject_Close(final IScope scope) throws GamaRuntimeException {
@@ -119,7 +150,6 @@ public class HecRasSkill extends Skill {
 		return res;
 	}
 
-
 	@action(name = "ExportGIS", doc = @doc(value = "ExportGIS", returns = "ExportGIS", examples = {
 			@example("ExportGIS()") }))
 	public Object primExportGIS(final IScope scope) throws GamaRuntimeException {
@@ -132,7 +162,7 @@ public class HecRasSkill extends Skill {
 		}
 		return res;
 	}
-	
+
 	@action(name = "Update_Data", args = {
 			@arg(name = "num", type = IType.INT, optional = false, doc = @doc("number step")) }, doc = @doc(value = "update data", returns = "updated data", examples = {
 					@example("Update_Data(100)") }))
@@ -144,52 +174,52 @@ public class HecRasSkill extends Skill {
 			File file = new File("E:\\Downloads\\HWC\\HelloWorldCoupling.p04.hdf");
 
 			try (HdfFile hdfFile = new HdfFile(file)) {
-				Dataset dataset = hdfFile.getDatasetByPath("/Results/Unsteady/Output/Output Blocks/Base Output/Unsteady Time Series/2D Flow Areas/Hello 2D Area/Depth");
+				Dataset dataset = hdfFile.getDatasetByPath(
+						"/Results/Unsteady/Output/Output Blocks/Base Output/Unsteady Time Series/2D Flow Areas/Hello 2D Area/Depth");
 				// data will be a java array of the dimensions of the HDF5 dataset
-				float[][] data = (float[][]) dataset. getData();
-				try (PrintWriter p = new PrintWriter(new FileOutputStream("E:\\git\\hecras_gama_coupling\\includes\\Depth.csv", false))) {
-					int x=dataset.getDimensions()[0];
-					int y=dataset.getDimensions()[1];
+				float[][] data = (float[][]) dataset.getData();
+				try (PrintWriter p = new PrintWriter(
+						new FileOutputStream("E:\\git\\hecras_gama_coupling\\includes\\Depth.csv", false))) {
+					int x = dataset.getDimensions()[0];
+					int y = dataset.getDimensions()[1];
 //					p.println("ncols 40");//"+x);1118216
 //					p.println("nrows 20");//"+y);
 //					p.println("xllcorner     0.0");
 //					p.println("yllcorner     0.0");
 //					p.println("cellsize      2.0");
 
-					  float[] oneDArray = new float[(int) dataset.getSize()];
-					  for(int i = 0; i < x; i ++)
-					  {
-					    for(int s = 0; s < y; s ++)
-					    {
-					      oneDArray[(i * y) + s] = data[i][s];
-					    }
-					  }
-					  
-					  float[][][] frame=new float[2000][][];
-					  int f =0; int fi=0;
-					  while (fi<oneDArray.length -800) {
-						  
-					      frame[f]=new float[20][40];
-						  for(int i = 0; i < 20; i ++)
-						  {
-						    for(int s = 0; s < 40; s ++)
-						    {
-						      frame[f][i][s] = oneDArray[fi];
-						      fi++;
-						    }
-						  }
-						  f++;
-					  }
-					  
-					  
-				    p.println(ArrayUtils.toString(frame[num]).replace("},{", "\n").replace("{{", "").replace("}}", ""));//.replace(",", " ")
-				    p.close();
+					float[] oneDArray = new float[(int) dataset.getSize()];
+					for (int i = 0; i < x; i++) {
+						for (int s = 0; s < y; s++) {
+							oneDArray[(i * y) + s] = data[i][s];
+						}
+					}
+
+					float[][][] frame = new float[2000][][];
+					int f = 0;
+					int fi = 0;
+					while (fi < oneDArray.length - 800) {
+
+						frame[f] = new float[20][40];
+						for (int i = 0; i < 20; i++) {
+							for (int s = 0; s < 40; s++) {
+								frame[f][i][s] = oneDArray[fi];
+								fi++;
+							}
+						}
+						f++;
+					}
+
+					p.println(ArrayUtils.toString(frame[num]).replace("},{", "\n").replace("{{", "").replace("}}", ""));// .replace(",",
+																														// "
+																														// ")
+					p.close();
 				} catch (Exception e1) {
-				    e1.printStackTrace();
+					e1.printStackTrace();
 				}
-				//System.out.println(ArrayUtils.toString(data));
+				// System.out.println(ArrayUtils.toString(data));
 			}
-			
+
 		} catch (Exception ex) {
 			scope.getGui().getConsole().informConsole(ex.getMessage(), null);
 			ex.printStackTrace();
@@ -197,16 +227,14 @@ public class HecRasSkill extends Skill {
 		return res;
 	}
 
-	
-	@action(name = "QuitRas", doc = @doc(value = "QuitRas", returns = "QuitRas", examples = {
-			@example("QuitRas()") }))
+	@action(name = "QuitRas", doc = @doc(value = "QuitRas", returns = "QuitRas", examples = { @example("QuitRas()") }))
 	public Object primQuitRas(final IScope scope) throws GamaRuntimeException {
 		int res = 0;
 		try {
 			res = hrc.QuitRas();
 			hrc.release();
 			Ole32.INSTANCE.CoUninitialize();
-			hrc=null;
+			hrc = null;
 //			HWND hwnd = User32.INSTANCE.FindWindow
 //		             ("Ras", null); // class name
 //		        
