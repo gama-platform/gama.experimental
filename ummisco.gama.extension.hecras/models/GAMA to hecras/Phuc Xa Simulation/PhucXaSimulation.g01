@@ -1,0 +1,210 @@
+Geom Title=Bathymetry
+Program Version=5.06
+Viewing Rectangle= 587966.424551959 , 590407.077849597 , 2329384.26179413 , 2325702.78866064 
+
+River Reach=River 1         ,Reach 1         
+Reach XY= 9 
+588506.9015855832329210.99250743588818.3380749732328404.08887583
+ 589073.149748112328000.63706003589511.9920740682327512.24801985
+589639.3979106362327229.12393859589660.632216731 2326917.6874492
+589717.257032983  2326648.719572589830.5066654892326238.18965416
+ 589880.053379712325870.12834852
+Rch Text X Y=588850.1895341,2328375.7764677
+Reverse River Text= 0 
+
+Type RM Length L Ch R = 1 ,12107   ,,,
+XS GIS Cut Line=2
+588968.5789070532329209.25476642588077.3633382162329206.51256467
+Node Last Edited Time=Jul/23/2019 13:54:59
+#Sta/Elev= 12 
+       0   18.05     8.1    19.9    16.4   21.12    24.6   18.58    29.315.82245
+      30       5     450       0   871.1       5   874.7      11   876.7      11
+   882.3   11.09   891.2   11.09
+#Mann= 3 , 0 , 0 
+       0               0    29.3               0   874.7               0
+Bank Sta=29.3,874.7
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=0.15,0.3, 70 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,10726   ,726.8,726.8,726.8
+XS GIS Cut Line=2
+589133.1110120692328871.40468571588208.989022228 2328761.7166157
+Node Last Edited Time=Jul/23/2019 13:55:21
+#Sta/Elev= 10 
+       0   10.17    24.710.97082      25       5     450       0     905       5
+   907.811.53424   921.7   11.06   922.9   11.03   923.8   11.04   930.6   11.01
+#Mann= 3 , 0 , 0 
+       0               0    24.7               0   907.8               0
+Bank Sta=24.7,907.8
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=5.15,0.3, 23 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,8341    ,623.1,623.1,623.1
+XS GIS Cut Line=2
+589415.5577923462328358.61295841588540.7954340112327971.96251162
+Node Last Edited Time=Jul/23/2019 13:55:36
+#Sta/Elev= 11 
+       0    6.02      .7       6     8.2    6.56    18.47.572093      20       5
+     450       0     935       5   935.59.099524   941.3     9.5   952.9   10.48
+   956.4   10.55
+#Mann= 3 , 0 , 0 
+       0               0    18.4               0   935.5               0
+Bank Sta=18.4,935.5
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=5.15,0.27, 20 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,6297    ,447.4,447.4,447.4
+XS GIS Cut Line=2
+589716.1665390572327909.40859427589045.3748095242327473.68063321
+Node Last Edited Time=Jul/23/2019 13:55:58
+#Sta/Elev= 13 
+       0    8.94     1.5    8.76    14.9     7.8    23.7    7.31    40.17.155283
+      45       5     400       0     775       5   778.59.318323   778.9    9.32
+   788.4    9.57   798.9     9.8   799.9    9.88
+#Mann= 3 , 0 , 0 
+       0               0    40.1               0   778.5               0
+Bank Sta=40.1,778.5
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=5.15,0.24, 20 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,4829    ,464,464,464
+XS GIS Cut Line=2
+589905.3642063622327445.01431998589268.972052702 2327158.3511877
+Node Last Edited Time=Jul/23/2019 13:56:18
+#Sta/Elev= 14 
+       0   18.28     2.6   18.17    11.2      18    25.8    17.9    41.518.13584
+      45       5     325       0     660       5   661.7  12.458   663.1   12.43
+   672.7   12.47   676.4    12.6   684.5   13.05     698   14.25
+#Mann= 3 , 0 , 0 
+       0               0    41.5               0   661.7               0
+Bank Sta=41.5,661.7
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=5.15,0.3, 44 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,3307    ,201.4,201.4,201.4
+XS GIS Cut Line=2
+589939.7637822352326923.28741923589360.7042550312326774.22259045
+Node Last Edited Time=Jul/23/2019 13:56:46
+#Sta/Elev= 16 
+       0   14.26     2.6   14.44     6.3   14.65    20.8   15.72    31.6   16.56
+    34.3   16.67      39   15.97    43.2 15.2409      45       5     300       0
+     550       5   554.44.382367   573.7    5.46   586.7    6.39   594.4    6.48
+   597.9    6.65
+#Mann= 3 , 0 , 0 
+       0               0    43.2               0   554.4               0
+Bank Sta=43.2,554.4
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=3.84,0.3, 43 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,2646    ,252.9,252.9,252.9
+XS GIS Cut Line=2
+589928.2972569442326716.88996399589515.5023464622326602.22471108
+Node Last Edited Time=Jul/23/2019 13:57:15
+#Sta/Elev= 13 
+       0   16.63       4   16.29    11.4   15.23    22.6      14    28.514.09219
+      30       5     200       0     390       5   394.519.91637   396.2   20.15
+   403.3   20.91   405.3   21.08   428.4   22.01
+#Mann= 3 , 0 , 0 
+       0               0    28.5               0   394.5               0
+Bank Sta=28.5,394.5
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=5.15,0.3, 56 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,1816    ,272.2,272.2,272.2
+XS GIS Cut Line=2
+ 590037.229247212326487.55945817589521.2356091082326338.49462938
+Node Last Edited Time=Jul/23/2019 13:57:32
+#Sta/Elev= 12 
+       0   14.99     8.1   14.91      12   14.94    27.9 15.2191      30       5
+     250       0     490       5   494.910.15153   502.3   10.65   506.7   10.77
+   519.8   11.42   537.1   11.73
+#Mann= 3 , 0 , 0 
+       0               0    27.9               0   494.9               0
+Bank Sta=27.9,494.9
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=5.15,0.3, 34 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,923     ,179.5,179.5,179.5
+XS GIS Cut Line=2
+590203.493863932 2326189.4298006589538.435397044 2326114.8973862
+Node Last Edited Time=Jul/23/2019 13:57:56
+#Sta/Elev= 12 
+       0   13.62    20.6   14.21    44.614.12456      45       5     320       0
+     630       5   633.68.536157     638    8.13   638.9     8.1     640    8.13
+   665.8    9.19   669.2    9.27
+#Mann= 3 , 0 , 0 
+       0               0    44.6               0   633.6               0
+Bank Sta=44.6,633.6
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=4.15,0.3, 34 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,334     ,93.9,93.9,93.9
+XS GIS Cut Line=2
+590272.2930156792325965.83255742589383.6373056142325977.29908271
+Node Last Edited Time=Jul/23/2019 13:58:17
+#Sta/Elev= 10 
+       0   13.82    25.8 12.1411      30       5     400       0     865       5
+   866.511.81313   868.9   11.93   876.7   12.69   888.2   13.24   888.7   13.29
+#Mann= 3 , 0 , 0 
+       0               0    25.8               0   866.5               0
+Bank Sta=25.8,866.5
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=4.15,0.3, 32 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+Type RM Length L Ch R = 1 ,26      ,,,
+XS GIS Cut Line=2
+ 590296.139063342325880.29011628589387.9218436522325875.35415313
+Node Last Edited Time=Jul/23/2019 13:58:33
+#Sta/Elev= 8 
+       0   13.28    14.2   11.43    15.3 11.3397      20       5     450       0
+     890       5   890.314.71875   908.2   16.48
+#Mann= 3 , 0 , 0 
+       0               0    15.3               0   890.3               0
+Bank Sta=15.3,890.3
+XS Rating Curve= 0 ,0
+XS HTab Starting El and Incr=4.15,0.3, 41 
+XS HTab Horizontal Distribution= 5 , 5 , 5 
+Exp/Cntr(USF)=0,0
+Exp/Cntr=0.3,0.1
+
+LCMann Time=Dec/30/1899 00:00:00
+LCMann Region Time=Dec/30/1899 00:00:00
+LCMann Table=0
+Chan Stop Cuts=-1 
+
+
+
+Use User Specified Reach Order=0
+GIS Ratio Cuts To Invert=-1
+GIS Limit At Bridges=0
+Composite Channel Slope=5

@@ -403,7 +403,7 @@ public class PedestrianEscapeSkill extends PedestrianSkill {
 		GamaPoint location = (GamaPoint) getLocation(agent).copy(scope);
 		double maxDist = computeDistance(scope, agent);
 		
-		DEBUG.OUT("Agent walk", 15, agent);
+//		DEBUG.OUT("Agent walk", 15, agent);
 
 		boolean movement = true;
 		int maxIndex = targets.size() - 1;
@@ -415,7 +415,7 @@ public class PedestrianEscapeSkill extends PedestrianSkill {
 			GamaPoint currentTarget = getCurrentTarget(agent);
 			IAgent road = (IAgent) getRoadsTargets(agent).get(currentTarget);
 			
-			DEBUG.OUT(debug_id+"On road "+road);
+//			DEBUG.OUT(debug_id+"On road "+road);
 			
 			IShape bounds = null;
 			boolean avoidOther = getAvoidOther(agent);
@@ -433,7 +433,7 @@ public class PedestrianEscapeSkill extends PedestrianSkill {
 			walkWithForceModel(scope, agent, currentTarget, avoidOther, bounds,obstacles,maxDist);
 			location = agent.getLocation().toGamaPoint();
 			
-			DEBUG.OUT(debug_id+"moves from "+prevLoc+" to "+location);
+//			DEBUG.OUT(debug_id+"moves from "+prevLoc+" to "+location);
 			
 			if (arrivedAtTarget(scope,location,currentTarget,getToleranceTarget(agent), index, maxIndex, targets)) {
 				if (road != null) PedestrianRoadSkill.unregister(scope, road, agent);
@@ -446,7 +446,7 @@ public class PedestrianEscapeSkill extends PedestrianSkill {
 					
 					if (road != null) { PedestrianRoadSkill.register(scope, road, agent); }
 					
-					DEBUG.OUT(debug_id+"switches to a new road context: "+road);
+//					DEBUG.OUT(debug_id+"switches to a new road context: "+road);
 					
 					maxDist -= location.distance(prevLoc);
 					if (maxDist > 0) movement = true;
@@ -459,7 +459,7 @@ public class PedestrianEscapeSkill extends PedestrianSkill {
 					
 					actionTNR.executeOn(scope) ;
 					
-					DEBUG.OUT(debug_id+"End of movement and launch 'release_path' action");
+//					DEBUG.OUT(debug_id+"End of movement and launch 'release_path' action");
 				}
 			}
 		}
