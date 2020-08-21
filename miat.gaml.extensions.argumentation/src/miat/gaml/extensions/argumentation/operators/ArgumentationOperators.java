@@ -31,7 +31,7 @@ public class ArgumentationOperators {
 			category = { "argumentation" },
 			concept = { "argumentation"})
 	public static IGraph<GamaArgument, Object> loadGraph(IScope scope, GamaFile f, IList<GamaArgument> arguments) {
-		GamaGraph<GamaArgument, Object> graph = new GamaGraph(scope, Types.get(GamaArgumentType.id), Types.PAIR);
+		GamaGraph<GamaArgument, Object> graph = new GamaGraph<GamaArgument, Object>(scope, Types.get(GamaArgumentType.id), Types.PAIR);
 		graph.setDirected(true);
 		Map<String, GamaArgument> argNames = arguments.stream().collect(Collectors.toMap(GamaArgument::getId,
                 Function.identity()));
@@ -87,6 +87,21 @@ public class ArgumentationOperators {
 			}
 		}
 		
+		return args;
+	}
+	
+	public static IList<GamaArgument> loadMyChoiceArguments(IScope scope, GamaFile f){
+		IList<GamaArgument> args = GamaListFactory.create();
+		IMatrix<String> mat = f.getContents(scope).matrixValue(scope, Types.STRING, false);
+		for (int i = 1; i < mat.getRows(scope); i++) {
+			String id = mat.get(scope, 0, i);
+			String option = mat.get(scope, 2, i);
+			String conclusion = mat.get(scope, 3, i);
+			GamaMap<String, Double> criteria = (GamaMap<String, Double>) GamaMapFactory.create(Types.STRING, Types.FLOAT);
+			criteria.put(mat.get(scope, 4, i), 1.0);
+			String source_type = mat.get(scope, 16, i);
+			args.add(new GamaArgument(id, option, conclusion, "", "", criteria, null, source_type));
+		}
 		return args;
 	}
 	
