@@ -7,10 +7,6 @@ import java.util.stream.Collectors;
 import miat.gaml.extensions.argumentation.types.GamaArgument;
 import miat.gaml.extensions.argumentation.types.GamaArgumentType;
 import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.GamlAnnotations.action;
-import msi.gama.precompiler.GamlAnnotations.arg;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaListFactory;
@@ -31,7 +27,7 @@ public class ArgumentationOperators {
 			category = { "argumentation" },
 			concept = { "argumentation"})
 	public static IGraph<GamaArgument, Object> loadGraph(IScope scope, GamaFile f, IList<GamaArgument> arguments) {
-		GamaGraph<GamaArgument, Object> graph = new GamaGraph<GamaArgument, Object>(scope, Types.get(GamaArgumentType.id), Types.PAIR);
+		GamaGraph<GamaArgument, Object> graph = new GamaGraph(scope, Types.get(GamaArgumentType.id), Types.PAIR);
 		graph.setDirected(true);
 		Map<String, GamaArgument> argNames = arguments.stream().collect(Collectors.toMap(GamaArgument::getId,
                 Function.identity()));
@@ -90,6 +86,10 @@ public class ArgumentationOperators {
 		return args;
 	}
 	
+	@operator (
+			value = { "load_myChoice_arguments" },
+			category = { "argumentation" },
+			concept = { "argumentation"})
 	public static IList<GamaArgument> loadMyChoiceArguments(IScope scope, GamaFile f){
 		IList<GamaArgument> args = GamaListFactory.create();
 		IMatrix<String> mat = f.getContents(scope).matrixValue(scope, Types.STRING, false);
