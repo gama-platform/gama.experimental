@@ -1,0 +1,59 @@
+Message  | Plan: 'Plan 01' (PhucXaSimulation.p01)
+Message  | Simulation started at: 12Jul2020 06:16:46 PM
+Message  | PROCESS:RasGeomWriter
+Message  | 
+Message  | Writing Geometry
+Message  | Perimeter 1: Mesh property tables are current.
+Progress | 1
+Message  | Completed Writing Geometry
+Message  | PROCESS:RASGeomPreprocess
+Message  | 	
+Message  | Geometric Preprocessor HEC-RAS 5.0.6 November
+Progress | 0.2
+Progress | 0.3
+Progress | 0.3333333
+Progress | 1
+Message  | 
+Message  | Finished Processing Geometry
+Message  | 
+Message  | Starting to copy Geometry Data to Results
+Message  | Completed copying Geometry Data to Results
+Message  | 
+Message  | PROCESS:RasUnsteady
+Message  | 
+Message  | Performing Unsteady Flow Simulation  HEC-RAS 5.0.6 November
+Message  | 
+Progress | 0.1
+Progress | 0.2
+Progress | 0.3
+Progress | 0.3285714
+Progress | 0.3571429
+Progress | 0.3857143
+Progress | 0.4142857
+Progress | 0.4428571
+Progress | 0.4714286
+Progress | 0.5
+Progress | 0.5285715
+Progress | 0.5571429
+Progress | 0.5857143
+Progress | 0.6142858
+Progress | 0.6428572
+Progress | 0.6714286
+Progress | 0.6
+Progress | 0.7333333
+Progress | 2.893519E-05
+Message  | Process: RasUnsteady64 killed.
+Message  | 
+Message  | Note - Computations stopped by the user !!!
+Message  | 
+Message  | 
+Message  | Error with program: RasUnsteady64.exe Exit Code = -1
+Message  | 
+Message  | 
+Message  | Computations Summary
+Message  | 
+Message  | Computation Task	Time(hh:mm:ss)
+Message  | Completing Geometry(64)	       1
+Message  | Preprocessing Geometry(64)	<1
+Message  | Unsteady Flow Computations(64)	<1
+Message  | Complete Process	       2

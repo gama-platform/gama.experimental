@@ -134,7 +134,7 @@ grid mnt file: grid_data neighbors: 4 {
 	aspect water{
 		draw shape color: (water_depth<0) ? 
 						#white : 
-						rgb(255-(water_depth*30), 255-(water_depth*30), water_depth*30);
+						rgb(255-(water_depth*30), 255-(water_depth*30), 255);
 	}
 }
 
