@@ -1,0 +1,15 @@
+Geom Title=DEMmodif
+Program Version=5.06
+Viewing Rectangle= 586757.197748337 , 590352.031607963 , 2329237.84250103 , 2325858.08417146 
+
+LCMann Time=Dec/30/1899 00:00:00
+LCMann Region Time=Dec/30/1899 00:00:00
+LCMann Table=0
+Chan Stop Cuts=-1 
+
+
+
+Use User Specified Reach Order=0
+GIS Ratio Cuts To Invert=-1
+GIS Limit At Bridges=0
+Composite Channel Slope=5

@@ -1,0 +1,48 @@
+<VRTDataset rasterXSize="120" rasterYSize="113">
+  <SRS>PROJCS["WGS 84 / UTM zone 48N",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",105],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","32648"]]</SRS>
+  <GeoTransform>  5.8675719774833694e+05,  3.0000000000000000e+01,  0.0000000000000000e+00,  2.3292378425010256e+06,  0.0000000000000000e+00, -3.0000000000000000e+01</GeoTransform>
+  <VRTRasterBand dataType="Float32" band="1">
+    <Metadata>
+      <MDI key="STATISTICS_MAXIMUM">39</MDI>
+      <MDI key="STATISTICS_MEAN">10.28201075665</MDI>
+      <MDI key="STATISTICS_MINIMUM">0.0090567525476217</MDI>
+      <MDI key="STATISTICS_STDDEV">6.6384224116116</MDI>
+    </Metadata>
+    <NoDataValue>-9999</NoDataValue>
+    <ColorInterp>Gray</ColorInterp>
+    <Histograms>
+      <HistItem>
+        <HistMin>0.00905675254762173</HistMin>
+        <HistMax>39</HistMax>
+        <BucketCount>256</BucketCount>
+        <IncludeOutOfRange>1</IncludeOutOfRange>
+        <Approximate>0</Approximate>
+        <HistCounts>88|172|101|144|99|167|86|150|97|151|110|142|97|110|154|98|147|109|138|102|156|96|147|103|149|102|366|140|125|126|112|136|95|3034|3|6|1|1|2|107|1|3|1|1|1|112|2|1|0|0|1|0|656|0|1|1|0|1|376|0|1|0|0|0|2|495|1|0|1|0|0|695|0|0|0|1|0|0|0|779|0|0|0|0|0|756|1|0|0|0|0|0|682|1|0|0|0|0|642|0|0|1|0|1|0|689|0|0|0|0|0|807|0|0|0|0|0|910|0|0|0|0|0|0|791|0|0|0|0|0|629|0|0|0|0|0|0|0|480|0|0|0|0|0|285|0|0|0|0|0|0|174|0|0|0|0|0|69|0|0|0|0|0|0|44|0|0|0|0|0|18|0|0|0|0|0|0|8|0|0|0|0|0|3|0|0|0|0|0|1|0|0|0|0|0|0|0|1|0|0|0|0|0|1|0|0|0|0|0|0|0|0|0|0|0|0|2|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|1|0|0|0|0|0|0|0|0|0|0|0|0|1|0|0|0|0|0|2</HistCounts>
+      </HistItem>
+    </Histograms>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="1">Phuc Xa DEM + 2 Bathymetries.Phuc Xa Bathymetry 2.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="74" RasterYSize="110" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="74" ySize="110" />
+      <DstRect xOff="20.2262388711873" yOff="0.643451108767961" xSize="74" ySize="110" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="1">Phuc Xa DEM + 2 Bathymetries.Phuc Xa Bathymetry.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="74" RasterYSize="112" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="74" ySize="112" />
+      <DstRect xOff="44.0055196626345" yOff="0.952924486715347" xSize="74" ySize="112" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="1">Phuc Xa DEM + 2 Bathymetries.Phuc Xa DEM.PhucXa_DEM1.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="117" RasterYSize="110" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="117" ySize="110" />
+      <DstRect xOff="0" yOff="0" xSize="119.827795320866" ySize="112.658610985429" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+  </VRTRasterBand>
+</VRTDataset>

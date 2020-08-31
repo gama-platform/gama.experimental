@@ -1,0 +1,68 @@
+ 
+                                              HEC-RAS - River Analysis System
+ 
+ 
+Project File:  C:\Users\benoit\Documents\Phuc Xa Simulation\PhucXaSimulation.prj
+ 
+Project Name:  Phuc Xa Simulation
+ 
+ 
+Plan Name:     Plan 01
+ 
+Short ID:      Plan 02
+ 
+
+Starting Time:   31Jul2019 2400
+
+Ending Time:     24Aug2019 2400
+
+
+                ################################################
+                #                                              #
+                #                                              #
+                #       1D and 2D Unsteady Flow Module         #
+                #                                              #
+                #                                              #
+                #          HEC-RAS 5.0.6 November              #
+                #                                              #
+                #             13JUL20 at 18:35:36              #
+                #                                              #
+                ################################################
+ 
+ 
+ 
+
+
+
+                 Volume Accounting in 1000 m^3
+
+                           External Boundary Flux of Water
+
+         US Inflow       Lat Hydro      DS Outflow        SA Hydro     Groundwater       2D Inflow      2D Outflow      Diversions
+         *********       *********      **********        ********     ***********       *********      **********      **********
+                                                                                          5246329.        5246329.                
+
+                      River Reaches, Storage Areas, and 2D Areas
+
+    Start 1D Reach   Starting SA's     Starting 2D  Final 1D Reach      Final SA's  Final 2D Areas
+    **************   *************     ***********  **************      **********  **************
+                                                                                            41100.
+
+                             Error   Percent Error
+
+                             *****   *************
+                            41100.          0.7834
+
+
+
+
+
+
+
+                 Volume Accounting for 2D Flow Area in 1000 m^3                  
+
+           2D Area    Starting Vol      Ending Vol      Cum Inflow     Cum Outflow           Error   Percent Error
+           *******    ************      **********      **********     ***********           *****    ************
+ 
+ 
+       Perimeter 1                          41100.        5246329.        5246329.          41100.          0.7834

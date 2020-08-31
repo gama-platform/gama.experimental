@@ -1,0 +1,32 @@
+<VRTDataset rasterXSize="117" rasterYSize="110">
+  <SRS>PROJCS["WGS 84 / UTM zone 48N",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",105],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","32648"]]</SRS>
+  <GeoTransform>  5.8675719774833694e+05,  3.0725075723298897e+01,  0.0000000000000000e+00,  2.3292378425010256e+06,  0.0000000000000000e+00, -3.0725075723298897e+01</GeoTransform>
+  <VRTRasterBand dataType="Float32" band="1">
+    <Metadata>
+      <MDI key="STATISTICS_MAXIMUM">9.8793411254883</MDI>
+      <MDI key="STATISTICS_MEAN">5.1811995506185</MDI>
+      <MDI key="STATISTICS_MINIMUM">0.031463623046875</MDI>
+      <MDI key="STATISTICS_STDDEV">3.0649401713848</MDI>
+    </Metadata>
+    <NoDataValue>-9999</NoDataValue>
+    <ColorInterp>Gray</ColorInterp>
+    <Histograms>
+      <HistItem>
+        <HistMin>0.031463623046875</HistMin>
+        <HistMax>9.879341125488279</HistMax>
+        <BucketCount>256</BucketCount>
+        <IncludeOutOfRange>1</IncludeOutOfRange>
+        <Approximate>0</Approximate>
+        <HistCounts>6|0|1|7|0|0|1|1|2|0|0|1|0|0|0|0|11|18|4|35|132|557|444|0|0|0|5|1|0|5|0|0|0|0|0|0|1|0|0|0|0|0|7|36|0|17|136|126|210|0|0|0|1|2|0|4|0|0|0|0|0|0|0|0|0|0|0|0|3|9|0|4|127|114|139|0|0|0|2|0|0|4|0|0|0|0|0|0|0|0|0|0|0|0|1|4|0|10|79|118|84|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|8|34|70|52|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|5|28|31|35|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|5|27|42|25|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|141|366|1496|818|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|191|1|0|1|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|1|1|1</HistCounts>
+      </HistItem>
+    </Histograms>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="1">Depth (09AUG2019 23 10 00).DEM_PhucXa_modif12.tif</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="117" RasterYSize="110" DataType="Float32" BlockXSize="256" BlockYSize="256" />
+      <SrcRect xOff="0" yOff="0" xSize="117" ySize="110" />
+      <DstRect xOff="0" yOff="0" xSize="117" ySize="110" />
+      <NODATA>-9999</NODATA>
+    </ComplexSource>
+  </VRTRasterBand>
+</VRTDataset>

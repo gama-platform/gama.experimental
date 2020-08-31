@@ -7,10 +7,6 @@ import java.util.stream.Collectors;
 import miat.gaml.extensions.argumentation.types.GamaArgument;
 import miat.gaml.extensions.argumentation.types.GamaArgumentType;
 import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.GamlAnnotations.action;
-import msi.gama.precompiler.GamlAnnotations.arg;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaListFactory;
@@ -87,6 +83,25 @@ public class ArgumentationOperators {
 			}
 		}
 		
+		return args;
+	}
+	
+	@operator (
+			value = { "load_myChoice_arguments" },
+			category = { "argumentation" },
+			concept = { "argumentation"})
+	public static IList<GamaArgument> loadMyChoiceArguments(IScope scope, GamaFile f){
+		IList<GamaArgument> args = GamaListFactory.create();
+		IMatrix<String> mat = f.getContents(scope).matrixValue(scope, Types.STRING, false);
+		for (int i = 1; i < mat.getRows(scope); i++) {
+			String id = mat.get(scope, 0, i);
+			String option = mat.get(scope, 2, i);
+			String conclusion = mat.get(scope, 3, i);
+			GamaMap<String, Double> criteria = (GamaMap<String, Double>) GamaMapFactory.create(Types.STRING, Types.FLOAT);
+			criteria.put(mat.get(scope, 4, i), 1.0);
+			String source_type = mat.get(scope, 16, i);
+			args.add(new GamaArgument(id, option, conclusion, "", "", criteria, null, source_type));
+		}
 		return args;
 	}
 	
