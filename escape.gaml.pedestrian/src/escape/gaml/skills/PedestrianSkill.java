@@ -588,6 +588,7 @@ public class PedestrianSkill extends MovingSkill {
 		obstacles.addAll( (IList<IAgent>) Spatial.Queries.at_distance(scope, obstaclesList, distPercep));
 	
 		obstacles.remove(agent);
+		obstacles.removeIf(a -> a.dead());
 		double lambda = getlAMBDA_SFM(agent);
 		double gama_ = getGAMA_SFM(agent);
 		double A = getA_SFM(agent);
@@ -595,7 +596,6 @@ public class PedestrianSkill extends MovingSkill {
 		double n_prime = getN_PRIME_SFM(agent);
 		for (IAgent ag : obstacles) {
 			GamaPoint force = new GamaPoint(0,0,0);
-			
 			double distance = agent.euclidianDistanceTo(ag);
 			GamaPoint itoj = Points.subtract(ag.getLocation().toGamaPoint(), agent.getLocation().toGamaPoint()).toGamaPoint();
 			itoj = itoj.divideBy(Maths.sqrt(scope, (itoj.x * itoj.x + itoj.y * itoj.y + itoj.z * itoj.z)));
