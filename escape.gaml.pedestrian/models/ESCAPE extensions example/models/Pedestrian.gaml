@@ -103,9 +103,9 @@ species people skills: [pedestrian] schedules: shuffle(people) {
 	
 	reflex move when: current_target != nil{
 		if (nb_obstacles > 0) {
-			do walk target: current_target bounds: free_space;
+			do walk_to target: current_target bounds: free_space;
 		} else {
-			do walk target: current_target;
+			do walk_to target: current_target;
 		}
 		if (self distance_to current_target < 0.5) {
 			do die;
