@@ -254,7 +254,7 @@ public class PedestrianEscapeSkill extends PedestrianSkill {
 	@action (
 			name = COMPUTE_VIRTUAL_PATH,
 			args = { @arg (
-						name = PEDESTRIAN_GRAPH,
+						name = PEDESTRIAN_GRAPH, 
 						type = IType.GRAPH,
 						optional = false,
 						doc = @doc ("the graph on wich compute the path")),

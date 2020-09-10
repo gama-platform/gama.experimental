@@ -168,8 +168,7 @@ public class PedestrianSkill extends MovingSkill {
 	
 	// ACTION
 	public final static String COMPUTE_VIRTUAL_PATH = "compute_virtual_path";
-	public final static String WALK = "walk";
-	
+	public final static String WALK_TO = "walk_to";
 	// ---------- VARIABLES GETTER AND SETTER ------------- //
 	
 	@getter(SHOULDER_LENGTH)
@@ -363,7 +362,7 @@ public class PedestrianSkill extends MovingSkill {
 	
 	
 	@action (
-			name = WALK,
+			name = WALK_TO,
 			args = { @arg (
 							name = "target",
 							type = IType.GEOMETRY,
@@ -383,8 +382,8 @@ public class PedestrianSkill extends MovingSkill {
 			},
 					
 			doc = @doc (
-					value = "action to walk toward the final target",
-					examples = { @example ("do walk;") }))
+					value = "action to walk toward a target",
+					examples = { @example ("do walk_to {10,10};") }))
 	public void primWalk(final IScope scope) throws GamaRuntimeException {
 		final IAgent agent = getCurrentAgent(scope);
 		if (agent == null || agent.dead()) { return; }
