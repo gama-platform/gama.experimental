@@ -1,0 +1,12 @@
+code;name
+CO;colza
+BL;ble
+OR;orge
+MA;mais
+TO;tournesol
+LU;luzerne
+FE;fetuque
+OE;oeillette
+LE;lentilles
+JA;jachere
+

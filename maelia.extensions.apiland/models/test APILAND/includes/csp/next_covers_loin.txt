@@ -1,0 +1,4 @@
+previous;CO;BL;OR
+CO;0;1;0
+BL;0;0;1
+OR;1;0;0
