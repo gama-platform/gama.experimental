@@ -125,13 +125,6 @@ public class MarkdownModelDocumentor {
 		this.modelElement = GAML.getContents(URI.createURI(aFile.getResource().getLocationURI().toString()));
 		this.mDText = new StringBuilder();
 
-		// load the imports, species and experiments to give them to the visitors
-		loadImports();
-		loadSpeciesAndExperiments();
-
-		this.visitorModel = new VisitorModel(this.speciesLink, this.experimentsLink);
-		this.visitorSpecies = new VisitorSpecies(this.speciesLink, this.experimentsLink);
-		this.visitorExperiments = new VisitorExperiments(this.speciesLink, this.experimentsLink);
 		visitorForLoading = element -> {
 			if (element.isSpecies() || element.getKeyword().equals(IParser.GAMA_KEYWORD_GRID)) {
 				species.add(element);
@@ -140,7 +133,16 @@ public class MarkdownModelDocumentor {
 			if (element.isExperiment()) {
 				experiments.add(element);
 			}
-		};
+		};		
+		
+		// load the imports, species and experiments to give them to the visitors
+		loadImports();
+		loadSpeciesAndExperiments();
+
+		this.visitorModel = new VisitorModel(this.speciesLink, this.experimentsLink);
+		this.visitorSpecies = new VisitorSpecies(this.speciesLink, this.experimentsLink);
+		this.visitorExperiments = new VisitorExperiments(this.speciesLink, this.experimentsLink);
+		
 		this.pathToSave = pathToSave;
 	}
 
