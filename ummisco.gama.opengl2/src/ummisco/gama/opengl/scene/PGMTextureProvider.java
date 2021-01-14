@@ -53,7 +53,6 @@ public class PGMTextureProvider implements TextureProvider, SupportsImageTypes {
 	 * @see com.jogamp.opengl.util.texture.spi.TextureProvider#newTextureData(com.jogamp.opengl.GLProfile, java.io.File,
 	 *      int, int, boolean, java.lang.String)
 	 */
-	@Override
 	public TextureData newTextureData(final GLProfile glp, final File file, final int internalFormat,
 			final int pixelFormat, final boolean mipmap, final String fileSuffix) throws IOException {
 		final IScope scope = GAMA.getRuntimeScope();
@@ -84,7 +83,6 @@ public class PGMTextureProvider implements TextureProvider, SupportsImageTypes {
 	 * @see com.jogamp.opengl.util.texture.spi.TextureProvider#newTextureData(com.jogamp.opengl.GLProfile, java.net.URL,
 	 *      int, int, boolean, java.lang.String)
 	 */
-	@Override
 	public TextureData newTextureData(final GLProfile glp, final URL url, final int internalFormat,
 			final int pixelFormat, final boolean mipmap, final String fileSuffix) throws IOException {
 		return null;

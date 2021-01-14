@@ -12,7 +12,7 @@ package ummisco.gama.opengl.scene;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 import msi.gama.common.interfaces.ILayer;
 import msi.gama.metamodel.shape.GamaPoint;

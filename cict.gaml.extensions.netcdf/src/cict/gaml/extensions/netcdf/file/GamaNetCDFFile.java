@@ -24,14 +24,13 @@ import javax.swing.JOptionPane;
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.coverage.grid.io.AbstractGridCoverage2DReader;
 import org.geotools.data.DataSourceException;
-import org.geotools.data.PrjFileReader;
-import org.geotools.factory.Hints;
+import org.geotools.data.PrjFileReader; 
 import org.geotools.gce.arcgrid.ArcGridReader;
-import org.geotools.gce.geotiff.GeoTiffReader; 
+import org.geotools.gce.geotiff.GeoTiffReader;
+import org.locationtech.jts.geom.Envelope;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-
-import com.vividsolutions.jts.geom.Envelope;
+ 
 
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.metamodel.shape.GamaPoint;
