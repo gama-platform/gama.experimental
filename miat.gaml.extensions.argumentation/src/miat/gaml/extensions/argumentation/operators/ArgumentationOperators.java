@@ -7,8 +7,13 @@ import java.util.stream.Collectors;
 import miat.gaml.extensions.argumentation.types.GamaArgument;
 import miat.gaml.extensions.argumentation.types.GamaArgumentType;
 import msi.gama.metamodel.agent.IAgent;
+import msi.gama.precompiler.GamlAnnotations.action;
+import msi.gama.precompiler.GamlAnnotations.arg;
+import msi.gama.precompiler.GamlAnnotations.doc;
+import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.runtime.IScope;
+import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
@@ -17,6 +22,11 @@ import msi.gama.util.file.GamaFile;
 import msi.gama.util.graph.GamaGraph;
 import msi.gama.util.graph.IGraph;
 import msi.gama.util.matrix.IMatrix;
+import msi.gaml.descriptions.ConstantExpressionDescription;
+import msi.gaml.species.ISpecies;
+import msi.gaml.statements.Arguments;
+import msi.gaml.statements.IStatement;
+import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
 public class ArgumentationOperators {
@@ -103,6 +113,27 @@ public class ArgumentationOperators {
 			args.add(new GamaArgument(id, option, conclusion, "", "", criteria, null, source_type));
 		}
 		return args;
+	}
+	
+	
+	@operator(
+			value = { "add_attack" },
+			category = { "argumentation" },
+			concept = { "argumentation"})
+	public static boolean primAddAttacks(final IScope scope, GamaArgument source, GamaArgument target,IGraph graph ) throws GamaRuntimeException {
+		if ((graph != null) && (source != null) && !(graph.containsVertex(source)) && (target!= null) && !(graph.containsVertex(target))) {
+			Object edge = graph.addEdge(source, target);
+			IAgent ag = scope.getAgent();
+			final ISpecies context = ag.getSpecies();
+			final IStatement.WithArgs evalArgAct = context.getAction("evaluate_argument");
+			final Arguments argsTNR = new Arguments();
+			argsTNR.put("argument", ConstantExpressionDescription.create(source));
+			evalArgAct.setRuntimeArgs(scope, argsTNR);
+			Double weight = (Double) evalArgAct.executeOn(scope);
+			graph.setEdgeWeight(edge, weight);
+			return true;
+		} 
+		return false;
 	}
 	
 	@operator (
