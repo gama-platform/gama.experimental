@@ -48,10 +48,13 @@ import net.sf.jargsemsat.jargsemsat.datastructures.DungAF;
 
 @skill(name = "argumenting")
 @vars({ @variable(name = "argumentation_graph", type = IType.GRAPH),
+
+	@variable(name = "source_type_confidence", type = IType.MAP),
 		@variable(name = "crit_importance", type = IType.MAP) })
 public class ArgumentingSkill extends Skill {
 	static final String ARGUMENTATION_GRAPH = "argumentation_graph";
 	static final String CRIT_IMPORTANCE = "crit_importance";
+	static final String SOURCE_TYPE_CONFIDENCE = "source_type_confidence";
 
 	public static int BLANK = 0;
 	public static int IN = 1;
@@ -79,6 +82,17 @@ public class ArgumentingSkill extends Skill {
 		agent.setAttribute(CRIT_IMPORTANCE, s);
 	}
 
+	@getter(SOURCE_TYPE_CONFIDENCE)
+	public GamaMap getSourceConf(final IAgent agent) {
+		return (GamaMap) agent.getAttribute(SOURCE_TYPE_CONFIDENCE);
+	}
+
+	@setter(SOURCE_TYPE_CONFIDENCE)
+	public void setSourceConf(final IAgent agent, final GamaMap s) {
+		agent.setAttribute(SOURCE_TYPE_CONFIDENCE, s);
+	}
+
+	
 	@action(name = "evaluate_argument", args = {
 			@arg(name = "argument", type = GamaArgumentType.id, optional = false, doc = @doc("the argument to evaluate")) }, doc = @doc(value = "evaluate the strength  of an argument for the agent", returns = "the strength of argument", examples = {
 					@example("float val <- evaluate_argument(one_argument);") }))
@@ -90,6 +104,10 @@ public class ArgumentingSkill extends Skill {
 		Map<String, Double> agVal = getCritImp(ag);
 		for (String c : a.getCriteria().keySet()) {
 			val += a.getCriteria().get(c) * (agVal.containsKey(c) ? agVal.get(c) : 1.0);
+		}
+		Map<String,Double> sourceEval = getSourceConf(ag);
+		if (sourceEval.containsKey(a.getSourceType())) {
+			val *= sourceEval.get(a.getSourceType());
 		}
 		return val;
 	}
@@ -250,10 +268,14 @@ public class ArgumentingSkill extends Skill {
 		}
 		return val / sum;
 	}
+	
+	
+	
+	
 
 	@action(name = "add_argument",
 			args = { @arg(name = "argument", type = GamaArgumentType.id, optional = false, doc = @doc("the argument to add")),
-					@arg(name = "graph", type = IType.GRAPH, optional = false, doc = @doc("the global argumentation graph with all the arguments and attacks")) }, doc = @doc(value = "add and arguments and all the attacks to the agent argumentation graph", examples = {
+					@arg(name = "graph", type = IType.GRAPH, optional = false, doc = @doc("the global argumentation graph with all the arguments and attacks")) }, doc = @doc(value = "add an argument and all the attacks to the agent argumentation graph", examples = {
 							@example("do add_argument(new_agrument, reference_graph);") }))
 	public boolean primAddArguments(final IScope scope) throws GamaRuntimeException {
 		IGraph<GamaArgument, Object> graph = (IGraph<GamaArgument, Object>) getArgGraph(scope.getAgent());
