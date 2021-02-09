@@ -95,7 +95,7 @@ public class ArgumentationOperators {
 		
 		return args;
 	}
-	
+	 
 	@operator (
 			value = { "load_myChoice_arguments" },
 			category = { "argumentation" },
