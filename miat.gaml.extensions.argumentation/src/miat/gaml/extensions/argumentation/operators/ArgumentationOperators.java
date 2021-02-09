@@ -121,7 +121,7 @@ public class ArgumentationOperators {
 			category = { "argumentation" },
 			concept = { "argumentation"})
 	public static boolean primAddAttacks(final IScope scope, GamaArgument source, GamaArgument target,IGraph graph ) throws GamaRuntimeException {
-		if ((graph != null) && (source != null) && !(graph.containsVertex(source)) && (target!= null) && !(graph.containsVertex(target))) {
+		if ((graph != null) && (source != null) && (graph.containsVertex(source)) && (target!= null) && (graph.containsVertex(target))) {
 			Object edge = graph.addEdge(source, target);
 			IAgent ag = scope.getAgent();
 			final ISpecies context = ag.getSpecies();
