@@ -18,6 +18,7 @@ import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.getter;
+import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.GamlAnnotations.variable;
@@ -41,6 +42,7 @@ import msi.gaml.skills.Skill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.statements.Arguments;
 import msi.gaml.statements.IStatement;
+import msi.gaml.types.GamaAttributesType;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 import net.sf.jargsemsat.jargsemsat.alg.Misc;
@@ -181,6 +183,36 @@ public class ArgumentingSkill extends Skill {
 		return toGAMAList(graph, dungAF.getStableExts());
 	}
 
+	@action(
+			name = "add_attack",args = {
+			@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to which add an attack")),
+			@arg(name = "source", type = GamaArgumentType.id, optional = false, doc = @doc("the source (argument) of the attack")),
+			@arg(name = "target", type = GamaArgumentType.id, optional = false, doc = @doc("the target (argument) of the attack"))}, 
+			doc = @doc(value = "add an attack to the argumention graph", examples = {
+				@example("bool is_added <-add_attack(source_arg, target_arg);") }))
+	public boolean primAddAttacks(final IScope scope ) throws GamaRuntimeException {
+		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
+		if (graph == null)
+			graph = getArgGraph(scope.getAgent());
+		final GamaArgument source = scope.hasArg("source") ? (GamaArgument) scope.getArg("source", GamaArgumentType.id): null;
+		final GamaArgument target = scope.hasArg("target") ? (GamaArgument) scope.getArg("target", GamaArgumentType.id): null;
+		
+		if ((graph != null) && (source != null) && (graph.containsVertex(source)) && (target!= null) && (graph.containsVertex(target))) {
+			Object edge = graph.addEdge(source, target);
+			IAgent ag = scope.getAgent();
+			final ISpecies context = ag.getSpecies();
+			final IStatement.WithArgs evalArgAct = context.getAction("evaluate_argument");
+			final Arguments argsTNR = new Arguments();
+			argsTNR.put("argument", ConstantExpressionDescription.create(source));
+			evalArgAct.setRuntimeArgs(scope, argsTNR);
+			Double weight = (Double) evalArgAct.executeOn(scope);
+			graph.setEdgeWeight(edge, weight);
+			return true;
+		} 
+		return false;
+	}
+	
+	
 	@action(name = "semi_stable_extensions", args = {
 			@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) }, doc = @doc(value = "evaluate the semi stable extensions of an argument graph", returns = "a list of list of arguments representing the semi stable extensions", examples = {
 					@example("list<list<argument>> results <-semi_stable_extensions(a_graph);") }))

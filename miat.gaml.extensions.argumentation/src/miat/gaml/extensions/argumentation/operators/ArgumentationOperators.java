@@ -116,25 +116,6 @@ public class ArgumentationOperators {
 	}
 	
 	
-	@operator(
-			value = { "add_attack" },
-			category = { "argumentation" },
-			concept = { "argumentation"})
-	public static boolean primAddAttacks(final IScope scope, GamaArgument source, GamaArgument target,IGraph graph ) throws GamaRuntimeException {
-		if ((graph != null) && (source != null) && (graph.containsVertex(source)) && (target!= null) && (graph.containsVertex(target))) {
-			Object edge = graph.addEdge(source, target);
-			IAgent ag = scope.getAgent();
-			final ISpecies context = ag.getSpecies();
-			final IStatement.WithArgs evalArgAct = context.getAction("evaluate_argument");
-			final Arguments argsTNR = new Arguments();
-			argsTNR.put("argument", ConstantExpressionDescription.create(source));
-			evalArgAct.setRuntimeArgs(scope, argsTNR);
-			Double weight = (Double) evalArgAct.executeOn(scope);
-			graph.setEdgeWeight(edge, weight);
-			return true;
-		} 
-		return false;
-	}
 	
 	@operator (
 			value = {"set_actor"},
