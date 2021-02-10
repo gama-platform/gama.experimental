@@ -22,6 +22,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.locationtech.jts.geom.Polygon;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -41,8 +43,7 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
-import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
-import com.vividsolutions.jts.geom.Polygon;
+import com.jogamp.opengl.util.texture.awt.AWTTextureIO; 
 
 import jogamp.opengl.glu.tessellator.GLUtessellatorImpl;
 import msi.gama.common.geometry.Envelope3D;
@@ -77,22 +78,22 @@ public class OpenGL {
 
 	public static final int NO_TEXTURE = Integer.MAX_VALUE;
 
-	static {
-		AWTTextureIO.addTextureProvider(new PGMTextureProvider());
-		GamaPreferences.Displays.DISPLAY_POWER_OF_TWO.addChangeListener(new IPreferenceChangeListener<Boolean>() {
-
-			@Override
-			public boolean beforeValueChange(final Boolean newValue) {
-				return true;
-			}
-
-			@Override
-			public void afterValueChange(final Boolean newValue) {
-				AWTTextureIO.setTexRectEnabled(newValue);
-			}
-		});
-		AWTTextureIO.setTexRectEnabled(GamaPreferences.Displays.DISPLAY_POWER_OF_TWO.getValue());
-	}
+//	static {
+//		AWTTextureIO.addTextureProvider(new PGMTextureProvider());
+//		GamaPreferences.Displays.DISPLAY_POWER_OF_TWO.addChangeListener(new IPreferenceChangeListener<Boolean>() {
+//
+//			@Override
+//			public boolean beforeValueChange(final Boolean newValue) {
+//				return true;
+//			}
+//
+//			@Override
+//			public void afterValueChange(final Boolean newValue) {
+//				AWTTextureIO.setTexRectEnabled(newValue);
+//			}
+//		});
+//		AWTTextureIO.setTexRectEnabled(GamaPreferences.Displays.DISPLAY_POWER_OF_TWO.getValue());
+//	}
 
 	// The real openGL context
 	private GL3 gl;
