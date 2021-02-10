@@ -7,8 +7,13 @@ import java.util.stream.Collectors;
 import miat.gaml.extensions.argumentation.types.GamaArgument;
 import miat.gaml.extensions.argumentation.types.GamaArgumentType;
 import msi.gama.metamodel.agent.IAgent;
+import msi.gama.precompiler.GamlAnnotations.action;
+import msi.gama.precompiler.GamlAnnotations.arg;
+import msi.gama.precompiler.GamlAnnotations.doc;
+import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.runtime.IScope;
+import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
@@ -17,6 +22,11 @@ import msi.gama.util.file.GamaFile;
 import msi.gama.util.graph.GamaGraph;
 import msi.gama.util.graph.IGraph;
 import msi.gama.util.matrix.IMatrix;
+import msi.gaml.descriptions.ConstantExpressionDescription;
+import msi.gaml.species.ISpecies;
+import msi.gaml.statements.Arguments;
+import msi.gaml.statements.IStatement;
+import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
 public class ArgumentationOperators {
@@ -85,7 +95,7 @@ public class ArgumentationOperators {
 		
 		return args;
 	}
-	
+	 
 	@operator (
 			value = { "load_myChoice_arguments" },
 			category = { "argumentation" },
@@ -104,6 +114,8 @@ public class ArgumentationOperators {
 		}
 		return args;
 	}
+	
+	
 	
 	@operator (
 			value = {"set_actor"},

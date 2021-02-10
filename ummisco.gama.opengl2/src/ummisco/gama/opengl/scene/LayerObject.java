@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.locationtech.jts.geom.Geometry;
+
 import com.google.common.collect.ImmutableList;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES1;
-import com.jogamp.opengl.GL3;
-import com.vividsolutions.jts.geom.Geometry;
+import com.jogamp.opengl.GL3; 
 
 import msi.gama.common.geometry.Scaling3D;
 import msi.gama.common.interfaces.IKeyword;

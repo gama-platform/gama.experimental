@@ -11348,11 +11348,11 @@ public class OwnGL extends GL4bcImpl {
 		super.glStringMarkerGREMEDY(len, string);
 	}
 
-	@Override
-	public void glBlendFuncSeparateINGR(final int sfactorRGB, final int dfactorRGB, final int sfactorAlpha,
-			final int dfactorAlpha) {
-		super.glBlendFuncSeparateINGR(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
-	}
+//	@Override
+//	public void glBlendFuncSeparateINGR(final int sfactorRGB, final int dfactorRGB, final int sfactorAlpha,
+//			final int dfactorAlpha) {
+//		super.glBlendFuncSeparateINGR(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
+//	}
 
 	@Override
 	public void glApplyFramebufferAttachmentCMAAINTEL() {
@@ -13313,10 +13313,10 @@ public class OwnGL extends GL4bcImpl {
 		super.glFramebufferTextureMultiviewOVR(target, attachment, texture, level, baseViewIndex, numViews);
 	}
 
-	@Override
-	public void glHintPGI(final int target, final int mode) {
-		super.glHintPGI(target, mode);
-	}
+//	@Override
+//	public void glHintPGI(final int target, final int mode) {
+//		super.glHintPGI(target, mode);
+//	}
 
 	@Override
 	public void glFinishTextureSUNX() {
