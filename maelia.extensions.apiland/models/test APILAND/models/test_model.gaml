@@ -8,35 +8,37 @@
 model new
 
 global {
-	file building_file <- shape_file("../includes/building.shp");
-	
-	file covers_file <- file("../includes/csp/covers.txt");
-	file next_covers_file <- file("../includes/csp/next_covers.txt");
-	file constraints_file <- csv_file("../includes/csp/system.csv",";");
-	file proba_times_folder <- folder("../includes/proba_times");
-	
-	geometry shape <- envelope(building_file);
+	file parcelles_file <- shape_file("C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/workspace_capfarm/MAELIA_1.3.6_GAMA_1.8.1/includes/vendee_capfarm/modeleAgricole/ilots/dansZone/parcelles.shp"); // Donner plutot des géométries que le shemin du fichier
+	file covers_file <- file("C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/workspace_capfarm/MAELIA_1.3.6_GAMA_1.8.1/includes/vendee_capfarm/capfarm/csp/covers.txt");
+	file next_covers_file <- file("C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/workspace_capfarm/MAELIA_1.3.6_GAMA_1.8.1/includes/vendee_capfarm/capfarm/csp/next_covers.txt");
+	file constraints_file <- csv_file("C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/workspace_capfarm/MAELIA_1.3.6_GAMA_1.8.1/includes/vendee_capfarm/capfarm/csp/contraintes.csv",";"); //C:\Users\rmisslin\git\gama.experimental\maelia.extensions.apiland\models\     "../includes/csp/system.csv"
+	file proba_times_folder <- folder("C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/workspace_capfarm/MAELIA_1.3.6_GAMA_1.8.1/includes/vendee_capfarm/capfarm/proba_times");
+	file groups_file <- file("C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/workspace_capfarm/MAELIA_1.3.6_GAMA_1.8.1/includes/vendee_capfarm/capfarm/csp/groups.txt");
+	file historic_file <- file("C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/workspace_capfarm/MAELIA_1.3.6_GAMA_1.8.1/includes/vendee_capfarm/capfarm/csp/historic.txt");
+	geometry shape <- envelope(parcelles_file);
 	
 	init { 
-		create building from:  building_file;
+		create parcelle from:  parcelles_file;
 		create happyAPI number: 1;
 		
-		save building to:"../results/buildings.shp" type:"shp" attributes:["farm","id","facility","type","area"];
+//		save building to:"../results/buildings.shp" type:"shp" attributes:["farm","id","facility","type","area"];
 		
-		file shp_file <- shape_file("../results/buildings.shp");
 		
 		write covers_file;
 		
 		ask happyAPI {
-			map m <- self firstCAPFarm(
-				shapefile:shp_file.path,
-				constraints: constraints_file.path,
-				covers:covers_file.path,
-				next_covers:next_covers_file.path,
-				proba_times_folder:proba_times_folder.path,
-				farm:"f0"
+			map m <- map(self.firstCAPFarm(
+					shapefile:parcelles_file.path,
+					constraints: constraints_file.path, //récupération des contraintes
+					covers:covers_file.path,
+					groups:groups_file.path,
+					historic:historic_file.path,
+//					next_covers:next_covers_file.path,
+					proba_times_folder:proba_times_folder.path,
+					farm:"4")
 			);		
 			write m;
+			write length(m);
 		}
 		
 		
@@ -54,12 +56,12 @@ species happyAPI skills: [APILandExtension] {
 	
 }
 
-species building {
-	int id -> {int(self)};
-	string farm -> {"f0"};
-	string facility -> {nil};
-	string type -> {"parcel"};
-	string area -> {"AA"};
+species parcelle {
+	//int id -> {int(self)};
+	//string farm -> {"f0"};
+	//string facility -> {nil};
+	//string type -> {"parcel"};
+	//string area -> {"AA"};
 	
 }
 
@@ -67,7 +69,7 @@ experiment new type: gui {
 	/** Insert here the definition of the input and output of the model */
 	output {
 		display d {
-			species building;
+			species parcelle;
 		}
 	}
 }
