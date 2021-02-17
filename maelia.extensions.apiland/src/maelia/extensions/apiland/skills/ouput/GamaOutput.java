@@ -25,7 +25,6 @@ public class GamaOutput extends OutputAnalysis {
 	public void close(Simulation simulation){
 		if(!simulation.isCancelled()){
 			for(CoverLocationModel model : (GlobalCoverLocationModel) simulation.model().get("agriculture")){
-				System.out.println(model.getCoverAllocator().getCode());
 				for(Parcel p : model.getCoverAllocator().parcels()){
 					IList<String> l = GamaListFactory.create(Types.STRING);
 	

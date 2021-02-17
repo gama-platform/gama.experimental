@@ -3,19 +3,16 @@ package maelia.extensions.apiland.skills;
 import java.io.File;
 
 import fr.inra.sad.bagap.apiland.capfarm.CAPFarm;
-import fr.inra.sad.bagap.apiland.capfarm.model.ConstraintSystem;
 import fr.inra.sad.bagap.apiland.capfarm.model.ConstraintSystemFactory;
 import fr.inra.sad.bagap.apiland.capfarm.model.CoverFactory;
 import fr.inra.sad.bagap.apiland.capfarm.model.Farm;
 import fr.inra.sad.bagap.apiland.capfarm.model.GenericConstraintSystem;
 import fr.inra.sad.bagap.apiland.capfarm.model.constraint.ConstraintBuilder;
-import fr.inra.sad.bagap.apiland.capfarm.model.constraint.ConstraintType;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.Territory;
 import fr.inra.sad.bagap.apiland.capfarm.model.territory.TerritoryFactory;
 import fr.inra.sad.bagap.apiland.capfarm.simul.farm.CfmFarmManager;
 import fr.inra.sad.bagap.apiland.capfarm.simul.farm.CfmFarmSimulator;
 import fr.inra.sad.bagap.apiland.capfarm.simul.output.ConsoleOutput;
-import fr.inra.sad.bagap.apiland.capfarm.simul.output.FarmMemoryOutput;
 import fr.inra.sad.bagap.apiland.capfarm.simul.output.FarmShapefileOutput;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
 import maelia.extensions.apiland.skills.ouput.GamaOutput;
@@ -29,7 +26,6 @@ import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaMap;
-import msi.gama.util.IMap;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 

@@ -3,31 +3,30 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/antlr-4.4.jar"/>
+	<classpathentry kind="lib" path="lib/apiland-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/choco-3.3.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.6.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-pool-1.5.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-text-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/csv.jar"/>
+	<classpathentry kind="lib" path="lib/exp4j-0.4.8.jar"/>
+	<classpathentry kind="lib" path="lib/gt-arcgrid-21.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-coverage-21.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-epsg-hsql-21.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-geotiff-21.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-main-21.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-metadata-21.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-opengis-21.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-referencing-21.3.jar"/>
+	<classpathentry kind="lib" path="lib/gt-shapefile-21.3.jar"/>
+	<classpathentry kind="lib" path="lib/imageJ-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jts-core-1.16.0.jar"/>
 	<classpathentry kind="src" path="gaml">
 		<attributes>
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/antlr-4.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/choco-3.3.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/commons-io-2.6.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/commons-lang3-3.7.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/commons-lang3-3.8.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/commons-pool-1.5.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/commons-text-1.6.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/csv.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/exp4j-0.4.8.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/gt-arcgrid-21.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/gt-coverage-21.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/gt-epsg-hsql-21.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/gt-geotiff-21.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/gt-main-21.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/gt-metadata-21.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/gt-opengis-21.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/gt-referencing-21.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/gt-shapefile-21.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/imageJ-1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/rmisslin/Dropbox/inra/maelia/capfarm/vendee_capfarm/code/lib/jts-core-1.16.0.jar"/>
-	<classpathentry kind="lib" path="lib/apiland-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
