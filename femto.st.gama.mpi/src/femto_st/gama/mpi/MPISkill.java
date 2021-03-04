@@ -19,12 +19,17 @@ import ummisco.gama.serializer.factory.StreamConverter;
 @vars ({ @variable (
 		name = IMPISkill.MPI_RANK,
 		type = IType.INT,
+		doc = @doc ("Init MPI Brocker")),
+	 @variable (
+		name = IMPISkill.MPI_INIT_DONE,
+		type = IType.BOOL,
 		doc = @doc ("Init MPI Brocker")) })
 @skill (
 		name = IMPISkill.MPI_NETWORK,
 		concept = { IConcept.GUI, IConcept.COMMUNICATION, IConcept.SKILL })
+		
 public class MPISkill extends Skill {
-	static boolean isMPIInit = false;
+	
 
 	private void initialize(final IScope scope) {
 		isMPIInit = true;
@@ -49,9 +54,36 @@ public class MPISkill extends Skill {
 		try {
 			MPI.Init(arg);
 			isMPIInit = true;
+
+                        final IAgent agt = scope.getAgent();
+		        agt.setAttribute (IMPISkill.MPI_INIT_DONE, IType.BOOL);
+			
 		} catch (final MPIException e) {
 			System.out.println("MPI Init Error" + e);
 		}
+	}
+
+	@action (
+			name = IMPISkill.MPI_FINALIZE,
+			args = {},
+			doc = @doc (
+					value = "",
+					returns = "",
+					examples = { @example ("") }))
+	public void mpiFinalize(final IScope scope) {
+	    
+	    final IAgent agt = scope.getAgent();
+	    boolean isMPIInit == (boolean) scope.getArg(IMPISkill.MPI_INIT_DONE, IType.BOOL);
+	    
+	    if (!isMPIInit) { return; }
+	    
+	    final String[] arg = {};
+	    try {
+		System.out.println("************* Call Finalize");
+		MPI.Finalize();
+	    } catch (final MPIException e) {
+		System.out.println("MPI Finalize Error" + e);
+	    }
 	}
 
 	@action (
