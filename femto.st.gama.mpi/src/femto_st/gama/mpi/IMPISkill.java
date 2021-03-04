@@ -4,7 +4,7 @@ public interface IMPISkill {
 	String MPI_NETWORK = "MPI_Network";
 
 	String MPI_INIT = "MPI_INIT";
-        String MPI_INIT = "MPI_INIT_DONE";
+        String MPI_INIT_DONE = "MPI_INIT_DONE";
 	String MPI_RANK = "MPI_RANK";
 	String MPI_SIZE = "MPI_SIZE";
         String MPI_FINALIZE = "MPI_FINALIZE";
