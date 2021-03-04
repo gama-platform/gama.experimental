@@ -5,170 +5,200 @@
 * Tags: inheritance
 */
 
-model controler
+model ParallelMPIExperimentControler
 
 global skills:[MPI_Network] {
-		
-    int netSize <- 0;
+
+    /* Paralleization values must be part of the skill */
+    int mpiRank <- 0;
+    int mpiNetSize <- 0;
+    Agent simutatedModel;
+
+    int leftNeighbor;
+    int rightNeighbor;
+
+    // Not circular env
+    int modelSize <- 0;
+    int modelStripSize;
+    int stripStart;
+    int stripEnd;
+
+    /* OverLap Zone (OLZ) values */
+    int OLZSize <- 10;
+    int leftOuterOLZBound;
+    int leftInnerOLZBound;	
+    int rightInnerOLZBound;
+    int rightOuterOLZBound;
+
+    /* Simulation values */
     int nbLoop <- 5;
     agent exp;
 
+    init {
+    
+	// to be put in skill	
+        do MPI_INIT; 
+	/* Set Env position values */
+	myRank <- MPI_RANK();
+	write "mon rank est " + myRank ;
+	mpiNetSize <- MPI_SIZE ();
+	// end: to be put in skill
 
-    int timeStep(int node, int start, int end, int overlap )
+	//
+    	leftNeighbor <- mpiRank - 1;
+    	if (leftNeighbor = -1){ leftNeighbor <- mpiNetSize -1;	}
+    	rightNeighbor <- mpiRank + 1;
+    	if (rightNeighbor = mpiNetSize) { rightNeighbor <- 0; }
+
+	modelSize <- simutatedModel.shape.width;
+	modelStripSize <- modelSize / mpiNetSize;
+
+	/* Defines strip position values */
+	stripStart <- modelStripSize * mpiRank;
+	stripEnd <- (modelStripSize * mpiRank) +1;
+	
+	/* Defines overlap bounds */
+    	leftOuterOLZBound <- stripStart - OLZSize;
+    	leftInnerOLZBound <- stripStart + OLZSize;	
+    	rightInnerOLZBound <- stripEnd - OLZSize;
+    	rightOuterOLZBound <- stripEnd + OLZSize;
+    }
+
+    action cleanOuterStrips() {
+    
+    	/*  First: kill agents that or not on our environment part : left and right */
+	int p:
+	if (node != 0){ // Only nodes with a left part of the env 
+	   p <- evaluate_sub_model(exp,"ask prey where (each.location.x < stripStart {remove self from: scheduled_preys; do die;}");
+	   p <- evaluate_sub_model(exp,"ask predator where (each.location.x < stripStart {remove self from: scheduled_predators; do die;}");
+	}
+	if ( node != (mpiNetSize-1) ) { // Only nodes with a right part of the env
+	   p <- evaluate_sub_model(exp,"ask prey where (each.location.x >= stripEnd {remove self from: scheduled_preys; do die;}");	
+	   p <- evaluate_sub_model(exp,"ask predator where (each.location.x >= stripEnd {remove self from: scheduled_predators; do die;}");
+	}
+    
+    }
+
+    action updateOuterOLZ() {
+
+    	/*
+	 * Get agents in the overlap zone and send them to neighbors
+	 */
+
+	/* Left inner overlap zone */
+	if ( node != 0 ) { // Only nodes with a left part of the env
+	   // Should be: list<Agent> agentList <- getAgentList(stripStart, leftInnertOLZBound) + sendAgents(leftNdeighbor, agentList)
+	   list<prey> leftPreyList <- evaluate_sub_model(exp,"(prey where (each.location.x >= stripStart and each.location.x < leftInnertOLZBound)) collect (each)"); 
+	   list<predator> leftPredatorList <- evaluate_sub_model(exp,"(predator where (each.location.x >= stripStart and each.location.x < leftInnertOLZBound)) collect (each)"); 
+	   do MPI_SEND mesg: leftPreyList dest: leftNeighbor stag: 50; 
+	   do MPI_SEND mesg: leftPredatorList dest: leftNeighbor stag: 50;
+	   write("*** " + node + " sends left overlap");
+	}
+
+	/* Right inner overlap zone */
+	if ( node != mpiNetSize - 1){ // Only nodes with a right part of the env
+	   list<prey> rightPreyList <- evaluate_sub_model(exp,"(prey where (each.location.x >= rightInnertOLZBound and each.location.x < stripEnd)) collect (each)");
+	   list<predator> rightPredatorList <- evaluate_sub_model(exp,"(predator where (each.location.x >= rightInnertOLZBound and each.location.x < stripEnd)) collect (each)");
+	   do MPI_SEND mesg: rightPreyList dest: rightNeighbor stag: 50;      
+	   do MPI_SEND mesg: rightPredatorList dest: rightNeighbor stag: 50;
+	   write("*** " + node + " sends right overlap");		
+    	}
+	   
+	/*
+	 * Receive overlap zones from neighbors
+	 */
+	 
+	/* Left outer overlap zone */
+	if ( node != 0 ){
+	   list<prey> leftOuterOLZPreys <- self MPI_RECV [rcvsize:: 2, source:: leftNeighbor, rtag:: 50];
+	   list<predator> leftOuterOLZPreds <- self MPI_RECV [rcvsize:: 2, source:: leftNeighbor, rtag:: 50];
+	   write("*** 0 receive overlap. received = " + leftOuterOLZPreys + " loop " + leftOverlapPreds);
+	        
+           int nbCreatePrey <- evaluate_sub_model(exp,"create_preys(" + leftOuterOLZPreys + ", false)");
+           int nbCreatePred <- evaluate_sub_model(exp,"create_predators(" + leftOuterOLZPreds + ", false)");
+        }
+	
+	/* Right outer overlap zone */
+        if ( node != (mpiNetSize-1) ) {
+	   list<prey> rightOuterOLZPreys <- self MPI_RECV [rcvsize:: 2, source:: rightNeighbor, rtag:: 50];
+	   list<predator> rightOuterOLZPreds <- self MPI_RECV [rcvsize:: 2, source:: rightNeighbor, rtag:: 50];
+	   write("*** 0 receive overlap. received = " + rightOuterOLZPreys + " loop " + rightOuterOLZPreds);
+	        
+           int nbCreatePrey <- evaluate_sub_model(exp,"create_preys(" + rightOuterOLZPreys + ", false)");
+       	   int nbCreatePred <- evaluate_sub_model(exp,"create_predators(" + rightOuterOLZPreds + ", false)");
+        }
+    }
+
+    action updateInnerOLZ() {
+    
+    	/*
+	 * Gather agents that have moved in the OLZ and send then to the neighbors */
+	 */
+
+	/* Left outer overlap zone */
+	if ( node != 0 ) {
+	   list<prey> leftOutcomePreyd <- evaluate_sub_model(exp,"(scheduled_preys where (each.location.x >= leftOuterOLZBound and each.location.x < stripStart)) collect (each)"); 
+	   list<predator> leftOutcomePredators <- evaluate_sub_model(exp,"(scheduled_predators where (each.location.x >= leftOuterOLZBound and each.location.x < stripStart)) collect (each)"); 
+	   do MPI_SEND mesg: leftOutcomePreys dest: leftNeighbor stag: 50;
+	   do MPI_SEND mesg: leftOutcomePreys dest: leftNeighbor stag: 50;
+    	}
+	
+    	/* Right outer overlap zone */
+    	if ( node != (mpiNetSize-1) ) {
+	   list<prey> rightOutcomePreys <- evaluate_sub_model(exp,"(scheduled_preys where (each.location.x >= stripEnd and each.location.x < rightOuterOLZBound)) collect (each)"); 
+	   list<predator> rightOutcomePredators <- evaluate_sub_model(exp,"(scheduled_predators where (each.location.x >= stripEnd and each.location.x < rightOuterOLZBound))) collect (each)"); 
+	   do MPI_SEND mesg: rightOutcomePreys dest: rightNeighbor stag: 50;
+	   do MPI_SEND mesg: rightOutcomePredators dest: rightNeighbor stag: 50;
+    	}
+	write ("*** " + node + " after send outcomes" );
+		
+    	/*
+	 * Receive incominig agents and create them in my part
+	 */
+	 
+	/* Left outer overlap zone */
+    	if (node != 0 ) {
+	   list<prey> leftIncomePreys <- self MPI_RECV [rcvsize:: 2, source:: leftNeighbor, rtag:: 50];
+	   list<predator> leftIncomePredators <- self MPI_RECV [rcvsize:: 2, source:: leftNeighbor, rtag:: 50];
+	   // MERGE !!!
+	   int nbCreatePrey <- evaluate_sub_model(exp,"create_preys("+ leftIncomePreys +", true)");
+	   int nbCreatePred <- evaluate_sub_model(exp,"create_predators("+ leftIncomePredators +", true)");
+	   write ("*** " + node + " after incomes" );	
+	}
+
+	/* Right outer overlap zone */
+    	if ( node != (mpiNetSize-1) ) {
+	   list<point> rightIncomePreys <- self MPI_RECV [rcvsize:: 2, source:: rightNeighbor, rtag:: 50];
+	   list<point> rightIncomePredators <- self MPI_RECV [rcvsize:: 2, source:: rightNeighbor, rtag:: 50];
+	   // MERGE !!!
+	   int nbCreatePrey <- evaluate_sub_model(exp,"create_preys("+ rightIncomePreys +", true)");
+	   int nbCreatePred <- evaluate_sub_model(exp,"create_predators("+ rightIncomePredators +", true)");
+	   write ("*** " + node + " after incomes" );
+	}
+    }
+
+    reflex timeStep()
     {
     	
-	   	/* Find neighbors  */
-    	int leftNeighbor <- node-1;
-    	if (leftNeighbor = -1){ leftNeighbor <- netSize -1;	}
-    	int rightNeighbor <- node+ 1;
-    	if (rightNeighbor = netSize) { rightNeighbor <- 0; }
-
-		/*  First: kill agents that or not on our environment part : left and right */
-    	int p <- evaluate_sub_model(exp,"ask prey where (each.location.x <= start {remove self from: scheduled_preys; do die;}");	
-   		p <- evaluate_sub_model(exp,"ask predator where (each.location.x <= start {remove self from: scheduled_predators; do die;}");
-    	p <- evaluate_sub_model(exp,"ask prey where (each.location.x > end {remove self from: scheduled_preys; do die;}");	
-   		p <- evaluate_sub_model(exp,"ask predator where (each.location.x > end {remove self from: scheduled_predators; do die;}");
+	cleanOuterStrips();
+	updateOuterOLZ();
+	simutatedModel.step();
+	updateInnerOLZ();
 	
-		/* Get agents in the overlap zone  and send them to neighbors */
-		int leftOverlap <- (start + overlap);
-		int rightOverlap <- (end - overlap);
-		
-		if ( node != 0 ) {
-			list<point> leftPreyList <- evaluate_sub_model(exp,"(prey where (each.location.x > start and each.location.x < leftOverlap)) collect (each.location)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
-			list<point> leftPredatorList <- evaluate_sub_model(exp,"(predator where (each.location.x > start and each.location.x < leftOverlap)) collect (each.location)"); //([each.location,each.max_energy,each.max_transfert,each.energy_consum])");
-			do MPI_SEND mesg: leftPreyList dest: leftNeighbor stag: 50;
-			do MPI_SEND mesg: leftPredatorList dest: leftNeighbor stag: 50;
-			write("*** " + node + " sends left overlap");
-		}
-		
-		if ( node != netSize + 1){
-			list<point> rightPreyList <- evaluate_sub_model(exp,"(prey where (each.location.x > start and each.location.x < leftOverlap)) collect (each.location)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
-			list<point> rightPredatorList <- evaluate_sub_model(exp,"(predator where (each.location.x > start and each.location.x < leftOverlap)) collect (each.location)"); //([each.location,each.max_energy,each.max_transfert,each.energy_consum])");
-		    do MPI_SEND mesg: rightPreyList dest: rightNeighbor stag: 50;
-		    do MPI_SEND mesg: rightPredatorList dest: rightNeighbor stag: 50;
-			write("*** " + node + " sends right overlap");		
-		}
-		
-		/* Receive overlap zones from neighbors  */
-		if ( node != 0 ){
-			list<point> leftOverlapPreys <- self MPI_RECV [rcvsize:: 2, source:: leftNeighbor, rtag:: 50];
-	        list<point> leftOverlapPreds <- self MPI_RECV [rcvsize:: 2, source:: leftNeighbor, rtag:: 50];
-	        write("*** 0 receive overlap. received = " + leftOverlapPreys + " loop " + leftOverlapPreds);
-	        
-            int nbCreatePrey <- evaluate_sub_model(exp,"create_preys(" + leftOverlapPreys + ", false)");
-        	int nbCreatePred <- evaluate_sub_model(exp,"create_predators(" + leftOverlapPreds + ", false)");
-        }
-        
-        if ( node != (netSize-1) ) {
-			list<point> rightOverlapPreys <- self MPI_RECV [rcvsize:: 2, source:: rightNeighbor, rtag:: 50];
-	        list<point> rightOverlapPreds <- self MPI_RECV [rcvsize:: 2, source:: rightNeighbor, rtag:: 50];
-	        write("*** 0 receive overlap. received = " + rightOverlapPreys + " loop " + rightOverlapPreds);
-	        
-            int nbCreatePrey <- evaluate_sub_model(exp,"create_preys(" + rightOverlapPreys + ", false)");
-       		int nbCreatePred <- evaluate_sub_model(exp,"create_predators(" + rightOverlapPreds + ", false)");
-        }
-        		        
-		/* run the model */
-		int st <- step_sub_model(exp);
-		p <- evaluate_sub_model(exp,"length(prey)"); 
-		write "*** 0 model run, step" + st + " prey " + p;
-		
-		/* Gather agents that have moved in the other part  and send then on the neighbors */
-		if ( node != 0 ) {
-			list<point> leftOutcomePreyList <- evaluate_sub_model(exp,"(scheduled_preys where (each.location.x < start)) collect (each.location)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
-			list<point> leftOutcomePredatorList <- evaluate_sub_model(exp,"(scheduled_predators where (each.location.x < start)) collect (each.location)"); //each.max_energy,each.max_transfert,each.energy_consum])");
-	    	do MPI_SEND mesg: leftOutcomePreyList dest: leftNeighbor stag: 50;
-	    	do MPI_SEND mesg: leftOutcomePreyList dest: leftNeighbor stag: 50;
-    	}
-    	
-    	if ( node != (netSize-1) ) {
-			list<point> rightOutcomePreyList <- evaluate_sub_model(exp,"(scheduled_preys where (each.location.x > end)) collect (each.location)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
-			list<point> rightOutcomePredatorList <- evaluate_sub_model(exp,"(scheduled_predators where (each.location.x > end)) collect (each.location)"); //each.max_energy,each.max_transfert,each.energy_consum])");
-	    	do MPI_SEND mesg: rightOutcomePreyList dest: rightNeighbor stag: 50;
-	    	do MPI_SEND mesg: rightOutcomePreyList dest: rightNeighbor stag: 50;
-    	}
-		write ("*** " + node + " after send outcomes" );
-		
-    	/*  Receive incominig agents and create them in my part */
-    	if (node != 0 ) {
-			list<point> leftIncomePreyList <- self MPI_RECV [rcvsize:: 2, source:: leftNeighbor, rtag:: 50];
-	        list<point> leftIncomePredatorList <- self MPI_RECV [rcvsize:: 2, source:: leftNeighbor, rtag:: 50];
-	        int nbCreatePrey <- evaluate_sub_model(exp,"create_preys("+leftIncomePreyList+", true)");
-	        int nbCreatePred <- evaluate_sub_model(exp,"create_predators("+leftIncomePredatorList+", true)");
-			write ("*** " + node + " after incomes" );	
-		}	
-    	if ( node != (netSize-1) ) {
-			list<point> rightIncomePreyList <- self MPI_RECV [rcvsize:: 2, source:: rightNeighbor, rtag:: 50];
-	        list<point> rightIncomePredatorList <- self MPI_RECV [rcvsize:: 2, source:: rightNeighbor, rtag:: 50];
-	        int nbCreatePrey <- evaluate_sub_model(exp,"create_preys("+rightIncomePreyList+", true)");
-	        int nbCreatePred <- evaluate_sub_model(exp,"create_predators("+rightIncomePredatorList+", true)");
-			write ("*** " + node + " after incomes" );
-		}		
-    	return step ;
     }
     		
-    init {
-		
-        do MPI_INIT;
-		
-		int my_rank <- MPI_RANK();
-		write "mon rank est " + my_rank;
-		
-		/* Attention ici le nom de l'expe doit etre le meme que celui donne dans le gaml */	
-		agent exp <- load_sub_model("prey_predatorExp","/home/philippe/recherche/git/gama.experimental/femto.st.gama.mpi/models/parallelPredatorPrey/predatorPrey.gaml"); 
-		
-		netSize <- MPI_SIZE ();
-		int size <- 200 / netSize;
-    	int start <- my_rank*size ;		
-		int l <-  0;
-				
-		if (my_rank = 0){	
-			
-		    loop while: l < nbLoop {
-		    	
-
-				int step <- timeStep( my_rank, start, start + size, 10 );	
-		    		
-				l <- l + 1;
-			}
-			
-		} else {
-			    
-			loop while: l < nbLoop {
-				
-				int step <- timeStep( my_rank, start, start + size, 10 );				
-				l <- l + 1;
-			}
-			    
-		}
-		write("End");
-    }
-}
-
-species generic_species {
-	float size <- 1.0;
-	rgb color  ;
-	float max_energy;
-	float max_transfert;
-	float energy_consum;
-	float energy <- nil ;
-}
-
-species prey parent: generic_species schedules:[]{
-	rgb color <- #blue;
-	float max_energy <- nil ;
-	float max_transfert <- nil ;
-	float energy_consum <- nil ;
-}
-	
-species predator parent: generic_species schedules:[]{
-	rgb color <- #red ;
-	float max_energy <- nil ;
-	float max_transfert <- nil ;
-	float energy_consum <- nil ;
-	list<prey> reachable_preys <- nil ;	
-}
-
-
 /* Attention ici le nom de l'expe doit etre le meme que celui donne dans le xml */
-experiment ParallelControler type: gui { }
+experiment ParallelMPIStarter type: gui {
+
+    init {
+
+	/* Set model */
+	/* Caution ! ici le nom de l'expe doit etre le meme que celui donne dans le gaml */	
+	simulatedModel <- load_sub_model("prey_predatorExp","/home/philippe/recherche/git/gama.experimental/femto.st.gama.mpi/models/parallelPredatorPrey/predatorPrey.gaml");
+	
+	createControler()
+
+
+}
+
+}
