@@ -9,17 +9,18 @@ model ParallelMPIExperimentControler
 
 global skills:[MPI_Network] {
 
-    /* Paralleization values must be part of the skill */
+    /* Parallelization values must be part of the skill */
     int mpiRank <- 0;
     int mpiNetSize <- 0;
-    Agent simutatedModel;
-
+    
+    /* lau 16/3/21 only one of  simulatedModel or exp ? */
+    Agent simulatedModel;
+    agent exp;
+    
     int leftNeighbor;
     int rightNeighbor;
 
-    // Not circular env
-    int modelSize <- 0;
-    int modelStripSize;
+    /* Strip limits */
     int stripStart;
     int stripEnd;
 
@@ -29,10 +30,6 @@ global skills:[MPI_Network] {
     int leftInnerOLZBound;	
     int rightInnerOLZBound;
     int rightOuterOLZBound;
-
-    /* Simulation values */
-    int nbLoop <- 5;
-    agent exp;
 
     init {
     
@@ -44,14 +41,16 @@ global skills:[MPI_Network] {
 	mpiNetSize <- MPI_SIZE ();
 	// end: to be put in skill
 
-	//
+	/* Recup parameters from starter ? */
+
+	// Circular model
     	leftNeighbor <- mpiRank - 1;
     	if (leftNeighbor = -1){ leftNeighbor <- mpiNetSize -1;	}
     	rightNeighbor <- mpiRank + 1;
     	if (rightNeighbor = mpiNetSize) { rightNeighbor <- 0; }
 
-	modelSize <- simutatedModel.shape.width;
-	modelStripSize <- modelSize / mpiNetSize;
+	int modelSize <- simulatedModel.shape.width;
+	int modelStripSize <- modelSize / mpiNetSize;
 
 	/* Defines strip position values */
 	stripStart <- modelStripSize * mpiRank;
@@ -64,9 +63,9 @@ global skills:[MPI_Network] {
     	rightOuterOLZBound <- stripEnd + OLZSize;
     }
 
-    action cleanOuterStrips() {
+    action cleanOuterOLZ() {
     
-    	/*  First: kill agents that or not on our environment part : left and right */
+    	/*  First: kill agents that are not on our environment part : left and right */
 	int p:
 	if (node != 0){ // Only nodes with a left part of the env 
 	   p <- evaluate_sub_model(exp,"ask prey where (each.location.x < stripStart {remove self from: scheduled_preys; do die;}");
@@ -177,28 +176,14 @@ global skills:[MPI_Network] {
 	}
     }
 
+    /* lau 16/3/21 ici ou dans starter ? */
     reflex timeStep()
     {
     	
-	cleanOuterStrips();
+	cleanOuterOLZ();
 	updateOuterOLZ();
-	simutatedModel.step();
+	simulatedModel.step();
 	updateInnerOLZ();
 	
     }
-    		
-/* Attention ici le nom de l'expe doit etre le meme que celui donne dans le xml */
-experiment ParallelMPIStarter type: gui {
-
-    init {
-
-	/* Set model */
-	/* Caution ! ici le nom de l'expe doit etre le meme que celui donne dans le gaml */	
-	simulatedModel <- load_sub_model("prey_predatorExp","/home/philippe/recherche/git/gama.experimental/femto.st.gama.mpi/models/parallelPredatorPrey/predatorPrey.gaml");
-	
-	createControler()
-
-
-}
-
 }
