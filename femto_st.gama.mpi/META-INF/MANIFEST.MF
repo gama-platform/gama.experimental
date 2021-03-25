@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MPI addition
+Bundle-SymbolicName: femto_st.gama.mpi;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: femto.st.gama.mpi
+Bundle-RequiredExecutionEnvironment: JavaSE-15
+Require-Bundle: msi.gama.core;bundle-version="1.8.1",
+ msi.gama.ext;bundle-version="1.8.1",
+ ummisco.gama.serialize;bundle-version="1.8.1",
+ ummisco.gama.network;bundle-version="1.8.1"
+Bundle-ClassPath: ext/mpi.jar,
+ .
+Import-Package: ummisco.gama.serializer.factory
