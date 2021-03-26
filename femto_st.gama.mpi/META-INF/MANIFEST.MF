@@ -4,7 +4,7 @@ Bundle-Name: MPI addition
 Bundle-SymbolicName: femto_st.gama.mpi;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: femto.st.gama.mpi
-Bundle-RequiredExecutionEnvironment: JavaSE-15
+Bundle-RequiredExecutionEnvironment: JavaSE-12
 Require-Bundle: msi.gama.core;bundle-version="1.8.1",
  msi.gama.ext;bundle-version="1.8.1",
  ummisco.gama.serialize;bundle-version="1.8.1",
