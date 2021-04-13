@@ -18,10 +18,7 @@
 */
 package ummisco.gama.apsf.spaces;
 
-import javax.vecmath.*;
-
-
-
+import javax.vecmath.Point3d;
 
 public class SoilLocation {
 	public final static String SEPARATOR_LOCATION=":";

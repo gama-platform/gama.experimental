@@ -4,10 +4,10 @@ Bundle-Name: Mpi
 Bundle-SymbolicName: femto.st.gama.mpi;singleton:=true
 Bundle-Version: 1.7.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: msi.gama.core;bundle-version="1.7.0",
- msi.gama.ext;bundle-version="1.7.0",
- ummisco.gama.network;bundle-version="1.7.0",
- ummisco.gama.serialize;bundle-version="1.7.0"
+Require-Bundle: msi.gama.core,
+ msi.gama.ext,
+ ummisco.gama.network,
+ ummisco.gama.serialize
 Bundle-ClassPath: .,
  ext/mpi.jar
 Export-Package: femto_st.gama.mpi
