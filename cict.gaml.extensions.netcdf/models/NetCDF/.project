@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>NetCDF</name>
-	<comment>netcdf plugin</comment>
+	<comment>geotiff plugin</comment>
 	<projects>
 	</projects>
 	<buildSpec>
