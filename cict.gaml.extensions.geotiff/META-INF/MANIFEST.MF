@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Gaml.geotiff extension
+Bundle-SymbolicName: cict.gaml.extensions.geotiff;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: msi.gama.core;visibility:=reexport,
+ msi.gama.ext;visibility:=reexport
+Bundle-ClassPath: .
+Export-Package: cict.gaml.extensions.geotiff
+Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: cict.gaml.extensions.netcdf
