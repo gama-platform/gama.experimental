@@ -1,5 +1,6 @@
 
  
+ <feature url="features/cict.feature.geotiff_1.0.0.qualifier.jar" id="cict.feature.geotiff" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/cict.feature.netcdf_1.0.0.qualifier.jar" id="cict.feature.netcdf" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/cict.feature.VR_1.0.0.qualifier.jar" id="cict.feature.VR" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/escape.gaml.feature.pedestrian_1.0.0.qualifier.jar" id="escape.gaml.feature.pedestrian" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
