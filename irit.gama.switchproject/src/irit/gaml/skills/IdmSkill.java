@@ -289,7 +289,7 @@ public class IdmSkill extends MovingSkill {
 	}
 
 	/**
-	 * Set values
+	 * Set values and compute speed
 	 * 
 	 * @param scope                the scope
 	 * @param agent                the agent
