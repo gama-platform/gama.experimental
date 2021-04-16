@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>QueueEventManaged</name>
-	<comment>miscellaneous plugin</comment>
+	<comment>switchproject plugin</comment>
 	<projects>
 	</projects>
 	<buildSpec>

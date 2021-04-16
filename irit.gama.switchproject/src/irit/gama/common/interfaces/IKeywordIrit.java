@@ -1,6 +1,6 @@
 /*******************************************************************************************************
  *
- * IKeywordIrit.java, in plugin irit.gama.switch, is part of the source code of the GAMA modeling and simulation
+ * IKeywordIrit.java, in plugin irit.gama.switchproject, is part of the source code of the GAMA modeling and simulation
  * platform (v. 1.8.1)
  *
  * (c) 2007-2020 UMI 209 UMMISCO IRD/SU & Partners
@@ -61,4 +61,19 @@ public interface IKeywordIrit {
 	public static final String X = "x";
 	public static final String Y = "y";
 
+	/**
+	 * IDM
+	 */
+	public static final String IDM = "idm";
+	public static final String IDM_VEHICLE_LENGHT = "lenght";
+	public static final String IDM_DESIRED_SPEED = "desired_speed";
+	public static final String IDM_SPACING = "spacing";
+	public static final String IDM_REACTION_TIME = "reaction_time";
+	public static final String IDM_MAX_ACCELERATION = "max_acceleration";
+	public static final String IDM_DESIRED_DECELERATION = "desired_deceleration";
+
+	public static final String IDM_ACCELERATION = "acceleration";
+	public static final String IDM_DELTA_SPEED = "delta_speed";
+	public static final String IDM_ACTUAL_GAP = "actual_gap";
+	public static final String IDM_DESIRED_MINIMUM_GAP = "desired_minimum_gap";
 }

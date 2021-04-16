@@ -1,6 +1,6 @@
 /*******************************************************************************************************
  *
- * EventManagerArchitecture.java, in plugin msi.irit.switch, is part of the source code
+ * EventManagerArchitecture.java, in plugin irit.gaml.switchproject, is part of the source code
  * of the GAMA modeling and simulation platform (v. 1.8.1)
  *
  * (c) 2007-2020 UMI 209 UMMISCO IRD/SU & Partners
