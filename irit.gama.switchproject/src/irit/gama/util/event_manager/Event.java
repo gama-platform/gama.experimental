@@ -1,6 +1,6 @@
 /*******************************************************************************************************
  *
- * Event.java, in plugin irit.gama.switch, is part of the source code of the GAMA modeling and simulation
+ * Event.java, in plugin irit.gama.switchproject, is part of the source code of the GAMA modeling and simulation
  * platform (v. 1.8.1)
  *
  * (c) 2007-2020 UMI 209 UMMISCO IRD/SU & Partners
@@ -158,7 +158,7 @@ public class Event {
 		// Get action
 		action = species.getAction(actionName);
 		if (action == null) {
-			throw GamaRuntimeException.error("Impossible to find action " + action.getName() + " in " + species, scope);
+			throw GamaRuntimeException.error("Impossible to find action " + actionName + " in " + species, scope);
 		}
 	}
 
