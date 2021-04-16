@@ -276,9 +276,7 @@ public class IdmSkill extends MovingSkill {
 		// Computation		
 		double deltaSpeed = followedSpeed - speed;
 		double actualGap = distanceBetween - ((length / 2.0) + (followedLength / 2.0));
-		
-		double accFactor = maxAcceleration * desiredDeceleration;
-		double desiredMinimumGap = spacing + (reactionTime * speed) - ((speed * deltaSpeed) / (2.0 * accFactor * accFactor));
+		double desiredMinimumGap = spacing + (reactionTime * speed) - ((speed * deltaSpeed) / (2.0 * Math.sqrt(maxAcceleration * desiredDeceleration)));
 		
 		double speedFactor = speed / desiredSpeed;
 		double gapFactor = desiredMinimumGap / actualGap;
