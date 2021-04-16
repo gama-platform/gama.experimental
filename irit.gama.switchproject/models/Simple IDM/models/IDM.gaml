@@ -99,7 +99,7 @@ global {
 }
 
 // Experiment
-experiment "IDM using moving" {
+experiment "IDM using moving skill" {
 	output {
 		display "IDM moving skill" type: opengl {
 			species road;

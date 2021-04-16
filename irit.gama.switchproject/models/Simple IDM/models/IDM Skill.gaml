@@ -76,7 +76,7 @@ global {
 }
 
 // Experiment
-experiment "IDM using IDM" {
+experiment "IDM using IDM skill" {
 	output {
 		display "IDM skill" type: opengl {
 			species road;
