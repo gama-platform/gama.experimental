@@ -327,7 +327,8 @@ public class IdmSkill extends MovingSkill {
 	 * @return computed speed
 	 */
 	protected double computeAsLeader(final IScope scope, final IAgent agent, final double desiredDeceleration, final double maxAcceleration, final double speed, final double desiredSpeed) {
-		double acceleration = maxAcceleration * (1.0 - Math.pow((speed / desiredSpeed), 4.0));
+		double speedFactor = speed / desiredSpeed;
+		double acceleration = maxAcceleration * (1.0 - (speedFactor * speedFactor * speedFactor * speedFactor));
 		return setValues(scope, agent, acceleration, desiredDeceleration, maxAcceleration, speed, 0.0, 0.0, 0.0);
 	}
 
