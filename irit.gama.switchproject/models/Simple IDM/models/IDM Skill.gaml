@@ -32,7 +32,6 @@ species car skills: [idm] {
 
 // Simple road species
 species road {
-	//geometry shape <- line([{0.0, 100.0},{3000.0, 100.0}]); 
 	aspect default {
 		draw shape color: #grey;
 	}
@@ -42,7 +41,7 @@ species road {
 // The world
 global {
 	// Generator frequency in cycle
-	int generate_frequency <- rnd(20, 20);
+	int generate_frequency <- 20;
 	// Time step
 	float step <- 0.1;
 	// Last created car
@@ -65,10 +64,10 @@ global {
 
 	// Car generator
 	reflex generate when: (cycle mod generate_frequency) = 0 {
-		// Create car from the begining of the road to the end
+		// Create car start from the begining of the road and the target is the end of the road
 		create car {
-			location <- road[0].shape.points[0];
-			the_target <- road[0].shape.points[length(road[0].shape.points) - 1];
+			location <- first(road[0].shape.points);
+			the_target <- last(road[0].shape.points);
 			next_car <- last_car;
 			last_car <- self;
 		}
@@ -77,14 +76,12 @@ global {
 }
 
 // Experiment
-experiment "IDM using idm" {
-	bool idm <- true;
+experiment "IDM using IDM" {
 	output {
-		display main_window type: opengl {
+		display "IDM skill" type: opengl {
 			species road;
 			species car;
 		}
 
 	}
 }
-
