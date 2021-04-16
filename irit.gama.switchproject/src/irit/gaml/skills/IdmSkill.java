@@ -238,7 +238,7 @@ public class IdmSkill extends MovingSkill {
 	}
 
 	/**
-	 * IDM one step
+	 * IDM one step compute acceleration and speed
 	 * 
 	 * @param scope  the scope
 	 * @param follow the follow
