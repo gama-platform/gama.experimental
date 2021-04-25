@@ -12,13 +12,7 @@
 package cict.gama.extensions.websocket;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 
 import ummisco.gama.ui.views.displays.SWTDisplayView;
 
@@ -28,42 +22,17 @@ public class WebDisplayView extends SWTDisplayView {
 
 	@Override
 	protected Composite createSurfaceComposite(Composite parent) {
+		if (getOutput() == null) { return null; }
 
-		surfaceComposite = new Browser(parent, SWT.NONE);
-	    GridData layoutData = new GridData(GridData.FILL_BOTH);
-	    layoutData.horizontalSpan = 2;
-	    layoutData.verticalSpan = 2;
-	    surfaceComposite.setLayoutData(layoutData);
-	    ((Browser) surfaceComposite).setText("<!-- message form -->\r\n"
-	    		+ "<form name=\"publish\">\r\n"
-	    		+ "  <input type=\"text\" name=\"message\">\r\n"
-	    		+ "  <input type=\"submit\" value=\"Send\">\r\n"
-	    		+ "</form>\r\n"
-	    		+ "\r\n"
-	    		+ "<!-- div with messages -->\r\n"
-	    		+ "<div id=\"messages\"></div>\r\n"
-	    		+ "<script>\r\n"
-	    		+ "let socket = new WebSocket(\"ws://localhost:8887\");\r\n"
-	    		+ "\r\n"
-	    		+ "\r\n"
-	    		+ "// send message from the form\r\n"
-	    		+ "document.forms.publish.onsubmit = function() {\r\n"
-	    		+ "  let outgoingMessage = this.message.value;\r\n"
-	    		+ "\r\n"
-	    		+ "  socket.send(outgoingMessage);\r\n"
-	    		+ "  return false;\r\n"
-	    		+ "};\r\n"
-	    		+ "\r\n"
-	    		+ "// message received - show the message in div#messages\r\n"
-	    		+ "socket.onmessage = function(event) {\r\n"
-	    		+ "  let message = event.data;\r\n"
-	    		+ "\r\n"
-	    		+ "  let messageElem = document.createElement('div');\r\n"
-	    		+ "  messageElem.textContent = message;\r\n"
-	    		+ "  document.getElementById('messages').prepend(messageElem);\r\n"
-	    		+ "}\r\n"
-	    		+ "</script>", true);
-  
+		surfaceComposite = new WebSwingControl(parent, SWT.NO_FOCUS) {
+
+			@Override
+			protected WebDisplaySurface createSwingComponent() {
+				return (WebDisplaySurface) getDisplaySurface();
+			}
+
+		};
+		surfaceComposite.setEnabled(false);
 		return surfaceComposite;
 	}
 
