@@ -3,12 +3,13 @@
   <input type="text" name="message">
   <input type="submit" value="Send">
 </form>
-
+          <img id="image"></<img> 
 <!-- div with messages -->
 <div id="messages"></div>
 <script>
 let socket = new WebSocket("ws://localhost:8887");
 
+		socket.binaryType = 'arraybuffer';
 
 // send message from the form
 document.forms.publish.onsubmit = function() {
@@ -21,9 +22,15 @@ document.forms.publish.onsubmit = function() {
 // message received - show the message in div#messages
 socket.onmessage = function(event) {
   let message = event.data;
-
-  let messageElem = document.createElement('div');
-  messageElem.textContent = message;
-  document.getElementById('messages').prepend(messageElem);
+      var bytes = new Uint8Array(event.data);
+      var data = "";
+      var len = bytes.byteLength;
+      for (var i = 0; i < len; ++i) {
+      	data += String.fromCharCode(bytes[i]);
+      }
+      var img = document.getElementById("image");
+      img.src = "data:image/png;base64,"+window.btoa(data);
 }
+ 
+
 </script>
