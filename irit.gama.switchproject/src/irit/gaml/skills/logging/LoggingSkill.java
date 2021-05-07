@@ -9,7 +9,7 @@
 * 
 ********************************************************************************************************/
 
-package irit.gaml.skills;
+package irit.gaml.skills.logging;
 
 import java.io.FileWriter;
 import java.io.IOException;

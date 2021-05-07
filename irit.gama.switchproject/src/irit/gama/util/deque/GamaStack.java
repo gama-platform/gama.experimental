@@ -1,6 +1,6 @@
 /*******************************************************************************************************
  *
- * GamaQueue.java, in plugin irit.gama.switchproject, is part of the source code of the GAMA modeling and simulation
+ * GamaStack.java, in plugin irit.gama.switchproject, is part of the source code of the GAMA modeling and simulation
  * platform (v. 1.8.1)
  *
  * (c) 2007-2020 UMI 209 UMMISCO IRD/SU & Partners
@@ -9,22 +9,21 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.util;
+package irit.gama.util.deque;
 
 import java.util.Collection;
 
 import msi.gama.runtime.IScope;
 import msi.gaml.types.IType;
-import irit.gama.util.deque.GamaDeque;
-import irit.gama.util.deque.IDequeOperator;
+import irit.gaml.operators.IDequeOperator;
 import irit.gaml.types.TypesIrit;
 
 /**
- * Queue type used by GAML type
+ * Stack type used by GAML type
  * 
  * @author Jean-François Erdelyi
  */
-public class GamaQueue<T> extends GamaDeque<T> implements IDequeOperator<Object> {
+public class GamaStack<T> extends GamaDeque<T> implements IDequeOperator<T> {
 
 	// ############################################
 	// Attributes
@@ -41,32 +40,32 @@ public class GamaQueue<T> extends GamaDeque<T> implements IDequeOperator<Object>
 	/**
 	 * Constructor
 	 */
-	public GamaQueue(IType<?> contentsType) {
-		super(TypesIrit.QUEUE.of(contentsType));
+	public GamaStack(IType<?> contentsType) {
+		super(TypesIrit.STACK.of(contentsType));
 	}
 
 	/**
 	 * Constructor with data
 	 */
-	public GamaQueue(IType<?> contentsType, T[] values) {
-		super(TypesIrit.QUEUE.of(contentsType), values);
+	public GamaStack(IType<?> contentsType, T[] values) {
+		super(TypesIrit.STACK.of(contentsType), values);
 	}
 
 	/**
 	 * Constructor with data
 	 */
-	public GamaQueue(IType<?> contentsType, Collection<T> values) {
-		super(TypesIrit.QUEUE.of(contentsType), values);
+	public GamaStack(IType<?> contentsType, Collection<T> values) {
+		super(TypesIrit.STACK.of(contentsType), values);
 	}
 
 	// ############################################
 	// Override : IDequeOperator
 
 	/**
-	 * Pop data from queue (FIFO)
+	 * Pop data from queue (LIFO)
 	 */
 	@Override
 	public T pop(IScope scope) {
-		return pollFirst();
+		return pollLast();
 	}
 }

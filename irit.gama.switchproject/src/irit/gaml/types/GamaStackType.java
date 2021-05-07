@@ -15,9 +15,7 @@ import java.awt.Color;
 import java.util.Collection;
 
 import irit.gama.common.interfaces.IKeywordIrit;
-import irit.gama.precompiler.IConceptIrit;
-import irit.gama.precompiler.ITypeIrit;
-import irit.gama.util.GamaStack;
+import irit.gama.util.deque.GamaStack;
 import msi.gama.common.util.StringUtils;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -39,9 +37,9 @@ import msi.gaml.types.Types;
  * @author Jean-François Erdelyi
  */
 @SuppressWarnings("rawtypes")
-@type(name = IKeywordIrit.STACK, id = ITypeIrit.STACK, wraps = {
+@type(name = IKeywordIrit.STACK, id = IKeywordIrit.STACK_TYPE, wraps = {
 		GamaStack.class }, kind = ISymbolKind.Variable.CONTAINER, doc = {
-				@doc("Stack") }, concept = { IConcept.TYPE, IConcept.CONTAINER, IConceptIrit.STACK })
+				@doc("Stack") }, concept = { IConcept.TYPE, IConcept.CONTAINER, IKeywordIrit.STACK })
 public class GamaStackType extends GamaContainerType<GamaStack> {
 
 	// ############################################
@@ -51,11 +49,11 @@ public class GamaStackType extends GamaContainerType<GamaStack> {
 	 * TEMPORY CONSTRUCTOR TODO REMOVE THIS
 	 */
 	public GamaStackType() {
-		id = ITypeIrit.STACK;
+		id = IKeywordIrit.STACK_TYPE;
 		name = IKeywordIrit.STACK;
 		parent = null;
 		parented = false;
-		plugin = "irit.gama.switch";
+		plugin = "irit.gama.switchproject";
 		support = GamaStack.class;
 		varKind = ISymbolKind.Variable.CONTAINER;
 	}

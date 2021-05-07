@@ -9,10 +9,9 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.util.deque;
+package irit.gaml.operators;
 
-import irit.gama.precompiler.IConceptIrit;
-import irit.gama.precompiler.IOperatorCategoryIrit;
+import irit.gama.common.interfaces.IKeywordIrit;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.operator;
@@ -30,9 +29,9 @@ public interface IDequeOperator<T> {
 	/**
 	 * Pop operator must be redefined in queue and stack classes
 	 */
-	@operator(value = "pop", can_be_const = true, category = { IOperatorCategoryIrit.QUEUE,
-			IOperatorCategoryIrit.STACK }, type = ITypeProvider.CONTENT_TYPE_AT_INDEX
-					+ 1, concept = { IConceptIrit.QUEUE, IConceptIrit.STACK })
+	@operator(value = "pop", can_be_const = true, category = { IKeywordIrit.QUEUE_OPERATOR,
+			IKeywordIrit.STACK_OPERATOR }, type = ITypeProvider.CONTENT_TYPE_AT_INDEX
+					+ 1, concept = { IKeywordIrit.QUEUE, IKeywordIrit.STACK })
 	@doc(value = "retrieves and removes the first available element of this container, or returns null if this container is empty", masterDoc = true, comment = "the pop operator behavior depends on the nature of the operand", usages = {
 			@usage(value = "pop return and remove the first object of the container", examples = {
 					@example(value = "pop(stack([1, 2]))", equals = "2"),

@@ -14,6 +14,8 @@ package irit.gaml.types;
 import java.awt.Color;
 import java.util.Collection;
 
+import irit.gama.common.interfaces.IKeywordIrit;
+import irit.gama.util.deque.GamaQueue;
 import msi.gama.common.util.StringUtils;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -29,20 +31,15 @@ import msi.gaml.types.GamaContainerType;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
-import irit.gama.common.interfaces.IKeywordIrit;
-import irit.gama.precompiler.IConceptIrit;
-import irit.gama.precompiler.ITypeIrit;
-import irit.gama.util.GamaQueue;
-
 /**
  * Queue type in GAML
  * 
  * @author Jean-François Erdelyi
  */
 @SuppressWarnings("rawtypes")
-@type(name = IKeywordIrit.QUEUE, id = ITypeIrit.QUEUE, wraps = {
+@type(name = IKeywordIrit.QUEUE, id = IKeywordIrit.QUEUE_TYPE, wraps = {
 		GamaQueue.class }, kind = ISymbolKind.Variable.CONTAINER, doc = {
-				@doc("Queue") }, concept = { IConcept.TYPE, IConcept.CONTAINER, IConceptIrit.QUEUE })
+				@doc("Queue") }, concept = { IConcept.TYPE, IConcept.CONTAINER, IKeywordIrit.QUEUE })
 public class GamaQueueType extends GamaContainerType<GamaQueue> {
 
 	// ############################################
@@ -52,11 +49,11 @@ public class GamaQueueType extends GamaContainerType<GamaQueue> {
 	 * TEMPORY CONSTRUCTOR TODO REMOVE THIS
 	 */
 	public GamaQueueType() {
-		id = ITypeIrit.QUEUE;
+		id = IKeywordIrit.QUEUE_TYPE;
 		name = IKeywordIrit.QUEUE;
 		parent = null;
 		parented = false;
-		plugin = "irit.gama.switch";
+		plugin = "irit.gama.switchproject";
 		support = GamaQueue.class;
 		varKind = ISymbolKind.Variable.CONTAINER;
 	}
