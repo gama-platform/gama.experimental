@@ -13,7 +13,7 @@ package irit.gaml.architecure.event_manager;
 
 import irit.gama.common.interfaces.IKeywordIrit;
 import irit.gama.util.event_manager.Event;
-import irit.gama.util.event_manager.EventManagerFast;
+import irit.gama.util.event_manager.EventManager;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -69,7 +69,7 @@ public class EventManagerArchitecture extends ReflexArchitecture {
 	@Override
 	public boolean init(final IScope scope) throws GamaRuntimeException {
 		final IAgent agent = getCurrentAgent(scope);
-		final EventManagerFast manager = new EventManagerFast(scope);
+		final EventManager manager = new EventManager(scope);
 
 		agent.setAttribute(IKeywordIrit.EVENT_MANAGER, manager);
 		return true;
@@ -90,15 +90,15 @@ public class EventManagerArchitecture extends ReflexArchitecture {
 	/**
 	 * Get current manager by agent
 	 */
-	protected EventManagerFast getCurrentManager(final IAgent agent) throws GamaRuntimeException {
-		return (EventManagerFast) agent.getAttribute(IKeywordIrit.EVENT_MANAGER);
+	protected EventManager getCurrentManager(final IAgent agent) throws GamaRuntimeException {
+		return (EventManager) agent.getAttribute(IKeywordIrit.EVENT_MANAGER);
 	}
 
 	/**
 	 * Get current manager by agent. throw exception if does not exists
 	 */
-	protected EventManagerFast getCurrentManagerIfExists(final IAgent agent) throws GamaRuntimeException {
-		EventManagerFast manager = getCurrentManager(agent);
+	protected EventManager getCurrentManagerIfExists(final IAgent agent) throws GamaRuntimeException {
+		EventManager manager = getCurrentManager(agent);
 		if (manager == null) {
 			throw GamaRuntimeException.error("No event manager agent was detected", agent.getScope());
 		}

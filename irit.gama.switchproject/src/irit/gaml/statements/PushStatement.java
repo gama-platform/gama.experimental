@@ -11,9 +11,9 @@
 
 package irit.gaml.statements;
 
+import irit.gama.common.interfaces.IKeywordIrit;
+import irit.gama.util.deque.GamaDeque;
 import msi.gama.common.interfaces.IKeyword;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.IShape;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.facet;
@@ -24,20 +24,10 @@ import msi.gama.precompiler.GamlAnnotations.usage;
 import msi.gama.precompiler.ISymbolKind;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.IContainer;
-import msi.gama.util.graph.IGraph;
 import msi.gaml.descriptions.IDescription;
 import msi.gaml.expressions.IExpression;
-import msi.gaml.operators.Cast;
 import msi.gaml.statements.AbstractStatement;
 import msi.gaml.types.IType;
-
-import irit.gama.common.interfaces.IKeywordIrit;
-import irit.gama.precompiler.IConceptIrit;
-import irit.gama.precompiler.ITypeIrit;
-import irit.gama.util.GamaQueue;
-import irit.gama.util.deque.GamaDeque;
-import irit.gama.util.deque.IDequeOperator;
 
 /**
  * Push statement used by Queue and Stack types
@@ -45,7 +35,7 @@ import irit.gama.util.deque.IDequeOperator;
  * @author Jean-François Erdelyi
  */
 @symbol(name = IKeywordIrit.PUSH, kind = ISymbolKind.SINGLE_STATEMENT, with_sequence = false, concept = {
-		IConceptIrit.STACK, IConceptIrit.QUEUE })
+		IKeywordIrit.STACK, IKeywordIrit.QUEUE })
 @inside(kinds = { ISymbolKind.BEHAVIOR, ISymbolKind.SEQUENCE_STATEMENT, ISymbolKind.LAYER }, symbols = IKeyword.CHART)
 @doc(value = "Allows to add, i.e. to insert, a new element in a deque", usages = {
 		@usage(value = "The new element can be added either at the end of the deque", examples = {
@@ -54,9 +44,10 @@ import irit.gama.util.deque.IDequeOperator;
 @facets(value = {
 		@facet(name = IKeyword.ITEM, type = IType.NONE, optional = false, doc = {
 				@doc("any expression to add in the deque") }),
-		@facet(name = IKeyword.TO, type = { ITypeIrit.STACK, ITypeIrit.QUEUE }, optional = false, doc = {
-				@doc("the stack or queue") }), }, omissible = IKeyword.ITEM)
-@SuppressWarnings({ "rawtypes", "unused", "unchecked" })
+		@facet(name = IKeyword.TO, type = { IKeywordIrit.STACK_TYPE,
+				IKeywordIrit.QUEUE_TYPE }, optional = false, doc = {
+						@doc("the stack or queue") }), }, omissible = IKeyword.ITEM)
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class PushStatement extends AbstractStatement {
 
 	// ############################################

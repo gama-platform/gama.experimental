@@ -9,7 +9,7 @@
  * 
  ********************************************************************************************************/
 
-package irit.gaml.skills;
+package irit.gaml.skills.scheduling;
 
 import irit.gama.common.interfaces.IKeywordIrit;
 import irit.gaml.architecure.event_manager.EventManagerArchitecture;

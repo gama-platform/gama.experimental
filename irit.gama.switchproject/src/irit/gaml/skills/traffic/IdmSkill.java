@@ -9,9 +9,10 @@
 * 
 ********************************************************************************************************/
 
-package irit.gaml.skills;
+package irit.gaml.skills.traffic;
 
 import irit.gama.common.interfaces.IKeywordIrit;
+import irit.gaml.skills.traffic.generic.RoadMovingEntitySkill;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.topology.ITopology;
@@ -29,7 +30,6 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.path.IPath;
 import msi.gaml.operators.Cast;
-import msi.gaml.skills.MovingSkill;
 import msi.gaml.types.IType;
 
 /**
@@ -37,10 +37,8 @@ import msi.gaml.types.IType;
  * 
  * @author Jean-François Erdelyi
  */
-@vars({ @variable(name = IKeywordIrit.IDM_VEHICLE_LENGHT, type = IType.FLOAT, init = "5.0", doc = {
-		@doc("The length of the vehicle") }),
-		@variable(name = IKeywordIrit.IDM_DESIRED_SPEED, type = IType.FLOAT, init = "30.0", doc = {
-				@doc("The desired speed of the vehicle") }),
+@vars({ @variable(name = IKeywordIrit.IDM_DESIRED_SPEED, type = IType.FLOAT, init = "30.0", doc = {
+		@doc("The desired speed of the vehicle") }),
 		@variable(name = IKeywordIrit.IDM_SPACING, type = IType.FLOAT, init = "1.0", doc = {
 				@doc("The jam distance") }),
 		@variable(name = IKeywordIrit.IDM_REACTION_TIME, type = IType.FLOAT, init = "1.5", doc = {
@@ -58,18 +56,10 @@ import msi.gaml.types.IType;
 		@variable(name = IKeywordIrit.IDM_DESIRED_MINIMUM_GAP, type = IType.FLOAT, init = "0.0", doc = {
 				@doc("The acceleration of the vehicle") }) })
 @skill(name = IKeywordIrit.IDM, concept = { IKeywordIrit.IDM, IConcept.SKILL }, internal = true)
-public class IdmSkill extends MovingSkill {
+public class IdmSkill extends RoadMovingEntitySkill {
 
 	// ############################################
 	// Getter
-
-	@getter(IKeywordIrit.IDM_VEHICLE_LENGHT)
-	public double getLength(final IAgent agent) {
-		if (agent == null) {
-			return 0.0;
-		}
-		return (double) agent.getAttribute(IKeywordIrit.IDM_VEHICLE_LENGHT);
-	}
 
 	@getter(IKeywordIrit.IDM_DESIRED_SPEED)
 	public double getDesiredSpeed(final IAgent agent) {
@@ -145,14 +135,6 @@ public class IdmSkill extends MovingSkill {
 
 	// ############################################
 	// Setter
-
-	@setter(IKeywordIrit.IDM_VEHICLE_LENGHT)
-	public void setLength(final IAgent agent, final double value) {
-		if (agent == null) {
-			return;
-		}
-		agent.setAttribute(IKeywordIrit.IDM_VEHICLE_LENGHT, value);
-	}
 
 	@setter(IKeywordIrit.IDM_DESIRED_SPEED)
 	public void setDesiredSpeed(final IAgent agent, final double value) {
@@ -246,61 +228,71 @@ public class IdmSkill extends MovingSkill {
 	 * @return computed speed
 	 */
 	protected double idmOneStep(final IScope scope, final IAgent agent, final IAgent follow, final ITopology on) {
-		
+
 		// Get current agent data
 		double maxAcceleration = (double) agent.getAttribute(IKeywordIrit.IDM_MAX_ACCELERATION);
 		double desiredDeceleration = (double) agent.getAttribute(IKeywordIrit.IDM_DESIRED_DECELERATION);
 		double speed = (double) agent.getAttribute(IKeyword.SPEED);
 		double desiredSpeed = (double) agent.getAttribute(IKeywordIrit.IDM_DESIRED_SPEED);
 		if (follow == null || follow.dead()) {
-			// If the followed agent is dead or nil then this agent is supposed as the platoon leader
+			// If the followed agent is dead or nil then this agent is supposed as the
+			// platoon leader
 			return computeAsLeader(scope, agent, desiredDeceleration, maxAcceleration, speed, desiredSpeed);
 		}
-		
+
 		// Check distance
 		double distanceBetween = on.distanceBetween(scope, agent, follow);
 		if (on.distanceBetween(scope, agent, follow) == Double.MAX_VALUE) {
-			// TODO MAX_VALUE = unreachable, maybe change computeAsLeader by euclidean distance ?
+			// TODO MAX_VALUE = unreachable, maybe change computeAsLeader by euclidean
+			// distance ?
 			return computeAsLeader(scope, agent, desiredDeceleration, maxAcceleration, speed, desiredSpeed);
 		}
-		
+
 		// Get current agent data
 		double spacing = (double) agent.getAttribute(IKeywordIrit.IDM_SPACING);
 		double reactionTime = (double) agent.getAttribute(IKeywordIrit.IDM_REACTION_TIME);
-		double length = (double) agent.getAttribute(IKeywordIrit.IDM_VEHICLE_LENGHT);
+		double length = (double) agent.getAttribute(IKeywordIrit.VEHICLE_LENGTH);
 
 		// Get followed data
 		double followedSpeed = (double) follow.getAttribute(IKeyword.SPEED);
-		double followedLength = (double) follow.getAttribute(IKeywordIrit.IDM_VEHICLE_LENGHT);
+		double followedLength = (double) follow.getAttribute(IKeywordIrit.VEHICLE_LENGTH);
 
-		// Computation		
+		// Computation
 		double deltaSpeed = followedSpeed - speed;
 		double actualGap = distanceBetween - ((length / 2.0) + (followedLength / 2.0));
-		double desiredMinimumGap = spacing + (reactionTime * speed) - ((speed * deltaSpeed) / (2.0 * Math.sqrt(maxAcceleration * desiredDeceleration)));
-		
+		double desiredMinimumGap = spacing + (reactionTime * speed)
+				- ((speed * deltaSpeed) / (2.0 * Math.sqrt(maxAcceleration * desiredDeceleration)));
+
 		double speedFactor = speed / desiredSpeed;
 		double gapFactor = desiredMinimumGap / actualGap;
-		double acceleration = maxAcceleration * (1.0 - (speedFactor * speedFactor * speedFactor * speedFactor) - (gapFactor * gapFactor));
+		double acceleration = maxAcceleration
+				* (1.0 - (speedFactor * speedFactor * speedFactor * speedFactor) - (gapFactor * gapFactor));
 
 		// Set values and return speed
-		return setValuesAndComputeSpeed(scope, agent, acceleration, desiredDeceleration, maxAcceleration, speed, deltaSpeed, actualGap, desiredMinimumGap);
+		return setValuesAndComputeSpeed(scope, agent, acceleration, desiredDeceleration, maxAcceleration, speed,
+				deltaSpeed, actualGap, desiredMinimumGap);
 	}
 
 	/**
 	 * Set values and compute speed
 	 * 
-	 * @param scope                the scope
-	 * @param agent                the agent
-	 * @param acceleration         computed acceleration
-	 * @param desiredDeceleration  max deceleration
-	 * @param maxAcceleration      max acceleration
-	 * @param speed                actual speed
-	 * @param deltaSpeed           delta speed between the current agent and the followed one
-	 * @param actualGap            delta location between the current agent and the followed one
-	 * @param desiredMinimumGap    desired minimum gap between the current agent and the followed one
+	 * @param scope               the scope
+	 * @param agent               the agent
+	 * @param acceleration        computed acceleration
+	 * @param desiredDeceleration max deceleration
+	 * @param maxAcceleration     max acceleration
+	 * @param speed               actual speed
+	 * @param deltaSpeed          delta speed between the current agent and the
+	 *                            followed one
+	 * @param actualGap           delta location between the current agent and the
+	 *                            followed one
+	 * @param desiredMinimumGap   desired minimum gap between the current agent and
+	 *                            the followed one
 	 * @return computed speed
 	 */
-	protected double setValuesAndComputeSpeed(final IScope scope, final IAgent agent, double acceleration, final double desiredDeceleration, final double maxAcceleration, final double speed, final double deltaSpeed, final double actualGap, final double desiredMinimumGap) {
+	protected double setValuesAndComputeSpeed(final IScope scope, final IAgent agent, double acceleration,
+			final double desiredDeceleration, final double maxAcceleration, final double speed, final double deltaSpeed,
+			final double actualGap, final double desiredMinimumGap) {
 		if (acceleration < -desiredDeceleration) {
 			acceleration = -desiredDeceleration;
 		} else if (acceleration > maxAcceleration) {
@@ -316,18 +308,20 @@ public class IdmSkill extends MovingSkill {
 	/**
 	 * Compute acceleration as leader
 	 * 
-	 * @param scope                the scope
-	 * @param agent                the agent
-	 * @param desiredDeceleration  max deceleration
-	 * @param maxAcceleration      max acceleration
-	 * @param speed                actual speed
-	 * @param desiredSpeed         desired speed
+	 * @param scope               the scope
+	 * @param agent               the agent
+	 * @param desiredDeceleration max deceleration
+	 * @param maxAcceleration     max acceleration
+	 * @param speed               actual speed
+	 * @param desiredSpeed        desired speed
 	 * @return computed speed
 	 */
-	protected double computeAsLeader(final IScope scope, final IAgent agent, final double desiredDeceleration, final double maxAcceleration, final double speed, final double desiredSpeed) {
+	protected double computeAsLeader(final IScope scope, final IAgent agent, final double desiredDeceleration,
+			final double maxAcceleration, final double speed, final double desiredSpeed) {
 		double speedFactor = speed / desiredSpeed;
 		double acceleration = maxAcceleration * (1.0 - (speedFactor * speedFactor * speedFactor * speedFactor));
-		return setValuesAndComputeSpeed(scope, agent, acceleration, desiredDeceleration, maxAcceleration, speed, 0.0, 0.0, 0.0);
+		return setValuesAndComputeSpeed(scope, agent, acceleration, desiredDeceleration, maxAcceleration, speed, 0.0,
+				0.0, 0.0);
 	}
 
 }
