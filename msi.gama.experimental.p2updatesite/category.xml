@@ -4,11 +4,14 @@
       Site containing updates to the GAMA platform software (see http://gama-platform.org)
    </description> 
  
+ <feature url="features/cict.feature.geotiff_1.0.0.qualifier.jar" id="cict.feature.geotiff" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/cict.feature.netcdf_1.0.0.qualifier.jar" id="cict.feature.netcdf" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/cict.feature.VR_1.0.0.qualifier.jar" id="cict.feature.VR" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/escape.gaml.feature.pedestrian_1.0.0.qualifier.jar" id="escape.gaml.feature.pedestrian" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/femto.st.gama.feature.mpi_1.0.0.qualifier.jar" id="femto.st.gama.feature.mpi" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/femto_st.gama.feature.mpi_1.0.0.qualifier.jar" id="femto_st.gama.feature.mpi" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/idees.gama.features.weka_1.7.0.qualifier.jar" id="idees.gama.features.weka" version="1.7.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/irit.gama.feature.switchproject_1.0.0.qualifier.jar" id="irit.gama.feature.switchproject" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/miat.gama.feature.ifcfile_1.0.0.qualifier.jar" id="miat.gama.feature.ifcfile" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/miat.gaml.extension.bayesiannetwork.feature_1.0.0.qualifier.jar" id="miat.gaml.extension.bayesiannetwork.feature" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/miat.gaml.extensions.argumentation.feature_1.0.0.qualifier.jar" id="miat.gaml.extensions.argumentation.feature" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 

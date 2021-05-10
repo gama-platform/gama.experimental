@@ -2,6 +2,7 @@ package femto_st.gama.mpi;
 
 import mpi.MPI;
 import mpi.MPIException;
+import msi.gama.metamodel.agent.IAgent;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -29,7 +30,7 @@ import ummisco.gama.serializer.factory.StreamConverter;
 		concept = { IConcept.GUI, IConcept.COMMUNICATION, IConcept.SKILL })
 		
 public class MPISkill extends Skill {
-	
+	boolean isMPIInit = false;
 
 	private void initialize(final IScope scope) {
 		isMPIInit = true;
@@ -73,7 +74,7 @@ public class MPISkill extends Skill {
 	public void mpiFinalize(final IScope scope) {
 	    
 	    final IAgent agt = scope.getAgent();
-	    boolean isMPIInit == (boolean) scope.getArg(IMPISkill.MPI_INIT_DONE, IType.BOOL);
+	    boolean isMPIInit = (boolean) scope.getArg(IMPISkill.MPI_INIT_DONE, IType.BOOL);
 	    
 	    if (!isMPIInit) { return; }
 	    

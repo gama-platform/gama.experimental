@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="gama.display">
+      <implementation
+            class="cict.gama.extensions.websocket.WebDisplaySurface"
+            keyword="web">
+      </implementation>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="true"
+            category="msi.gama.gui.category.gama"
+            class="cict.gama.extensions.websocket.WebDisplayView"
+            icon="platform:/plugin/ummisco.gama.ui.shared/icons/view.display2.png"
+            id="msi.gama.application.view.WebDisplayView"
+            name="WebDisplay"
+            restorable="false">
+      </view>
+   </extension>
+   <extension
+         point="gaml.extension">
+   </extension>
+   <extension
+         point="gama.models">
+      <path
+            name="models">
+      </path>
+   </extension>
+</plugin>

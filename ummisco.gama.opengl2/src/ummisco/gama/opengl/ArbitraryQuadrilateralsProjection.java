@@ -5,8 +5,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-import com.jogamp.opengl.GL3;
-import com.mysql.jdbc.StringUtils;
+import com.jogamp.opengl.GL3; 
 
 import msi.gama.metamodel.shape.GamaPoint;
 
@@ -180,7 +179,7 @@ public class ArbitraryQuadrilateralsProjection {
 
 			gl.glDeleteProgram(id);
 
-			throw new RuntimeException("Shader error:" + StringUtils.toAsciiString(chars));
+			throw new RuntimeException("Shader error:" +  (chars));
 		}
 
 		return id;
