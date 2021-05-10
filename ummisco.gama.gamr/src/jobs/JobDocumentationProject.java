@@ -8,27 +8,18 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
 
-import msi.gama.precompiler.GamlAnnotations.file;
 import msi.gama.runtime.GAMA;
-import ummisco.gama.ui.navigator.contents.WrappedResource;
-import ummisco.gama.ui.utils.SwtGui;
  
 public class JobDocumentationProject extends JobDocumentation {
 

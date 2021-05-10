@@ -9,84 +9,84 @@
 	<packaging>pom</packaging>
 	<dependencies>
 		<dependency>
-			<groupId>msi.gama</groupId>
+			<groupId>ummisco.gama.annotations</groupId>
 			<artifactId>ummisco.gama.annotations</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>msi.gama</groupId>
+			<groupId>msi.gama.processor</groupId>
 			<artifactId>msi.gama.processor</artifactId>
 			<version>1.4.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.core</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.ext</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.headless</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.application</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gama.ui.navigator</groupId>
 			<artifactId>ummisco.gama.ui.navigator</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gama.ui.experiment</groupId>
 			<artifactId>ummisco.gama.ui.experiment</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>ummisco.gama.ui.modeling</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>ummisco.gama.ui.shared</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.lang.gaml</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>simtools.gaml.extensions.traffic</groupId>
 			<artifactId>simtools.gaml.extensions.traffic</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gaml.extensions.maths</groupId>
 			<artifactId>ummisco.gaml.extensions.maths</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>irit.gaml.extensions.database</groupId>
 			<artifactId>irit.gaml.extensions.database</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gama.network</groupId>
 			<artifactId>ummisco.gama.network</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gama.serialize</groupId>
 			<artifactId>ummisco.gama.serialize</artifactId>
-			<version>1.7.0-SNAPSHOT</version>
+			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies> 
 
@@ -126,6 +126,7 @@
 
 
 	<repositories>
+		
 		<repository> 
 			<releases>
 				<enabled>true</enabled>
@@ -137,70 +138,9 @@
 			<url>http://51.255.46.42/updates</url>
 		</repository>
 		<repository>
-			<id>portfolio-non-maven-dependencies</id>
-			<url>http://buchen.github.io/maven-repo</url>
-		</repository>
-		<repository>
-			<id>eclipse-2019-03</id>
-			<url>http://download.eclipse.org/releases/2019-03</url>
+			<id>eclipse-2021-03</id>
+			<url>http://download.eclipse.org/releases/2021-03</url>
 			<layout>p2</layout>
 		</repository>
-		<repository>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>osgeo</id>
-			<name>Open Source Geospatial Foundation Repository</name>
-			<url>http://download.osgeo.org/webdav/geotools/</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<id>imageio-ext-repository</id>
-			<name>imageio-ext Repository</name>
-			<url>http://maven.geo-solutions.it/</url>
-		</repository>
 
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<id>codehaus-snapshots</id>
-			<name>codehaus-snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/codehaus-snapshots/</url>
-		</repository>
-		<repository>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<id>sourceforge-repository</id>
-			<name>sourceforge-repository</name>
-			<url>http://logicaldoc.sourceforge.net/maven/</url>
-		</repository>
-		<!-- 
-		
-		<repository>
-			<id>pentaho-releases</id>
-			<url>http://repository.pentaho.org/artifactory/repo/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		-->
 	</repositories>

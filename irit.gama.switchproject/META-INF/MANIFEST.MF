@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Switch Project
+Bundle-SymbolicName: irit.gama.switchproject;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Export-Package: irit.gama.common.interfaces,
+ irit.gama.precompiler,
+ irit.gama.util,
+ irit.gama.util.deque,
+ irit.gama.util.event_manager,
+ irit.gaml.architecure.event_manager,
+ irit.gaml.skills,
+ irit.gaml.statements,
+ irit.gaml.types
+Require-Bundle: msi.gama.core;bundle-version="1.8.1",
+ msi.gama.ext;bundle-version="1.8.1",
+ ummisco.gama.annotations
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: irit.gama.switchproject.singleton.true
