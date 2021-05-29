@@ -2,12 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="gama.models">
-      <path
-            name="models">
-      </path>
-   </extension>
-   <extension
          point="gaml.extension">
    </extension>
 
