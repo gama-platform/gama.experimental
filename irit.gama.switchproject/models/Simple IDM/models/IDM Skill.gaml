@@ -3,7 +3,7 @@ model IDM
 // Car species using IDM skill
 species car skills: [idm] {
 	// Default shape, length is an IDM parameter
-	geometry default_shape <- rectangle(lenght, 1.5);
+	geometry default_shape <- rectangle(length, 1.5);
 	// The car target
 	point the_target;
 	// The next car

@@ -132,7 +132,7 @@ public class IdmSkill extends RoadMovingEntitySkill {
 		}
 		return (double) agent.getAttribute(IKeywordIrit.IDM_DESIRED_MINIMUM_GAP);
 	}
-
+	
 	// ############################################
 	// Setter
 
@@ -175,7 +175,7 @@ public class IdmSkill extends RoadMovingEntitySkill {
 		}
 		agent.setAttribute(IKeywordIrit.IDM_DESIRED_DECELERATION, value);
 	}
-
+	
 	// ############################################
 	// Actions
 
