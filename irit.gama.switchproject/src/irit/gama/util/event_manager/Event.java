@@ -11,6 +11,7 @@
 
 package irit.gama.util.event_manager;
 
+import java.time.ZoneOffset;
 import java.util.Comparator;
 
 import irit.gama.common.interfaces.IKeywordIrit;
@@ -50,12 +51,25 @@ public class Event {
 			this.scope = scope;
 		}
 
+		/*
 		@Override
 		public int compare(Event x, Event y) {
 			if (x.getDate().isSmallerThan(y.getDate(), true)) {
 				return -1;
 			}
 			if (x.getDate().isGreaterThan(y.getDate(), true)) {
+				return 1;
+			}
+			// In order to randomize if the event A and B are equals
+			return ((int) scope.getRandom().between(0, 1) < 1) ? -1 : 1;
+		}
+		*/
+		
+		public int compare(Event x, Event y) {
+			if (x.milli < y.milli) {
+				return -1;
+			}
+			if (x.milli > y.milli) {
 				return 1;
 			}
 			// In order to randomize if the event A and B are equals
@@ -70,6 +84,12 @@ public class Event {
 	 * The execution date
 	 */
 	private GamaDate date;
+	
+	/**
+	 * The execution date (milli)
+	 */
+	private long milli;
+	
 
 	/**
 	 * Simulation scope
@@ -140,8 +160,10 @@ public class Event {
 	private void setDate(GamaDate date) throws GamaRuntimeException {
 		if (date != null) {
 			this.date = date.copy(scope);
+			this.milli = date.getLocalDateTime().atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
 		} else {
 			this.date = null;
+			this.milli = 0;
 		}
 	}
 
@@ -192,6 +214,13 @@ public class Event {
 	public IScope getScope() {
 		return scope;
 	}
+	
+	/**
+	 * Get date
+	 */
+	public long getMilli() {
+		return milli;
+	}
 
 	/**
 	 * Get caller
@@ -204,7 +233,7 @@ public class Event {
 	 * Is greater than the event e
 	 */
 	public boolean isGreaterThan(Event e) {
-		return date.isGreaterThan(e.getDate(), false);
+		return milli > e.milli;
 	}
 
 	/**
@@ -241,7 +270,7 @@ public class Event {
 		// facet but the hash of the list
 		sb.append(arguments.toString());
 		sb.append(" at ");
-		sb.append(date);
+		sb.append(milli);
 
 		return sb.toString();
 	}

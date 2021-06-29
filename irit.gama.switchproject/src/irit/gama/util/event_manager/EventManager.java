@@ -27,8 +27,7 @@ public class EventManager extends EventQueue implements IEventManager {
 	// Attributes
 
 	/**
-	 * The serializable class EventQueues does not declare a static final
-	 * serialVersionUID field of type long
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -66,15 +65,15 @@ public class EventManager extends EventQueue implements IEventManager {
 		} else {
 			if (executeActive) {
 				// Causality check
-				if (lastEvent.getDate().isGreaterThan(event.getDate(), true)) {
+				if (lastEvent.isGreaterThan(event)) {
 					throw GamaRuntimeException
-							.warning("Past is not allowed " + lastEvent.getDate() + " vs " + event.getDate(), scope);
+							.warning("Past is not allowed " + lastEvent.getMilli() + " vs " + event.getMilli(), scope);
 				}
 			} else {
 				// Causality check
-				GamaDate simDate = scope.getSimulation().getClock().getCurrentDate();
-				if (simDate.isGreaterThan(event.getDate(), true)) {
-					throw GamaRuntimeException.warning("Past is not allowed " + simDate + " vs " + event.getDate(), scope);
+				long simDate = scope.getSimulation().getClock().getStepInMillis();
+				if (simDate > event.getMilli()) {
+					throw GamaRuntimeException.warning("Past is not allowed " + simDate + " vs " + event.getMilli(), scope);
 				}
 			}
 
