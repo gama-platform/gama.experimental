@@ -11,7 +11,9 @@
 
 package irit.gama.util.event_manager;
 
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
 import irit.gama.common.interfaces.IKeywordIrit;
@@ -247,11 +249,20 @@ public class Event {
 	 * Execute the action
 	 */
 	public Object execute() {
+		/*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss.SSS");
+
+		LocalDateTime dateTime = LocalDateTime.now();
+		System.out.println("EXEC START " + dateTime.format(formatter));*/
 		if (date == null) {
 			date = scope.getClock().getCurrentDate();
 		}
 		scope.getAgent().setAttribute(IKeywordIrit.EVENT_DATE, date);
 		scope.getAgent().setAttribute(IKeywordIrit.REFER_TO, referredAgent);
+		/*Object res = scope.execute(action, getRuntimeArgs()).getValue();
+		dateTime = LocalDateTime.now();
+		System.out.println("EXEC END " + dateTime.format(formatter));
+		
+		return res;*/
 		return scope.execute(action, getRuntimeArgs()).getValue();
 	}
 
@@ -264,13 +275,13 @@ public class Event {
 
 		sb.append(action.getName());
 		sb.append(" of ");
-		sb.append(getSpecies());
+		sb.append(getAgent());
 		sb.append(" with ");
 		// Bug in GAMA core -> Arguments toString() does not return the toString of each
 		// facet but the hash of the list
 		sb.append(arguments.toString());
 		sb.append(" at ");
-		sb.append(milli);
+		sb.append(date);
 
 		return sb.toString();
 	}
