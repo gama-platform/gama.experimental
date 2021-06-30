@@ -38,6 +38,7 @@ public interface IKeywordIrit {
 	public static final String EVENT_MANAGER = "event_manager";
 
 	public static final String EVENT = "event";
+	public static final String EVENTS = "events";
 
 	public static final String EVENT_DATE = "event_date";
 

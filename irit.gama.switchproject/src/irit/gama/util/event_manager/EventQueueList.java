@@ -54,29 +54,11 @@ public class EventQueueList {
 	 * Add data
 	 */
 	public void add(Event e) {
-		Event[] array = (Event[]) eventList.toArray();
-		/*for (int i = 1; i < array.length; i++) {
-			Event current = array[i];
-	        int j = i - 1;
-	        while(j >= 0 && eventComparator.compare(current, array[j]) < 0) {
-	            array[j+1] = array[j];
-	            j--;
-	        }
-	        // at this point we've exited, so j is either -1
-	        // or it's at the first element where current >= a[j]
-	        array[j+1] = current;
-	    }*/
-		
-		Event current = e;
-        int j = array.length - 1;
-        while(j >= 0 && eventComparator.compare(current, array[j]) < 0) {
-            array[j+1] = array[j];
-            j--;
+		int i = 0;
+        while(i < eventList.size() && eventComparator.compare(e, eventList.get(i)) > 0) {   
+            i++;
         }
-        // at this point we've exited, so j is either -1
-        // or it's at the first element where current >= a[j]
-        array[j+1] = current;
-	    
+        eventList.add(i, e);
 	}
 	
 	/**
@@ -100,5 +82,12 @@ public class EventQueueList {
 	 */
 	public int size() {
 		return eventList.size();
+	}
+	
+	/**
+	 * Get size
+	 */
+	public ArrayList<Event> data() {
+		return eventList;
 	}
 }

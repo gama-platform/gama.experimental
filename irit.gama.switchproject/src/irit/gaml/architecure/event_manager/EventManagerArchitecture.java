@@ -11,6 +11,8 @@
 
 package irit.gaml.architecure.event_manager;
 
+import java.util.ArrayList;
+
 import irit.gama.common.interfaces.IKeywordIrit;
 import irit.gama.util.event_manager.Event;
 import irit.gama.util.event_manager.EventManager;
@@ -35,7 +37,8 @@ import msi.gaml.types.IType;
  * 
  * @author Jean-François Erdelyi
  */
-@vars({ @variable(name = IKeyword.SIZE, type = IType.INT, doc = @doc("Return the size of the all queues")) })
+@vars({ @variable(name = IKeyword.SIZE, type = IType.INT, doc = @doc("Return the size of the all queues"))
+	})
 @skill(name = IKeywordIrit.EVENT_MANAGER, concept = { IConcept.BEHAVIOR,
 		IConcept.ARCHITECTURE }, doc = @doc("Event manager behavior"))
 public class EventManagerArchitecture extends ReflexArchitecture {
@@ -59,7 +62,7 @@ public class EventManagerArchitecture extends ReflexArchitecture {
 	 */
 	@Override
 	public Object executeOn(final IScope scope) throws GamaRuntimeException {
-		super.executeOn(scope);
+		super.executeOn(scope);		
 		return executeCurrentManager(scope);
 	}
 
@@ -83,6 +86,15 @@ public class EventManagerArchitecture extends ReflexArchitecture {
 		if (scope.interrupted() || agent == null) {
 			return null;
 		}
+				
+		/*ArrayList<Event> data = getCurrentManagerIfExists(agent).data();
+		for (int i = 0; i < data.size(); ++i) {
+			for (int j = 0; j < data.size(); ++j) {
+				if(i != j && data.get(i).getAgent() == data.get(j).getAgent()) {
+					System.err.println("EQUALS");
+				}
+			}	
+		}*/
 
 		return getCurrentManagerIfExists(agent).execute(scope);
 	}
