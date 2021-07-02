@@ -20,7 +20,7 @@ import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 
-import org.locationtech.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Envelope;
  
 @vars({ @variable(name = IUILocatedSkill.AGENT_LOCATION, type = IType.POINT, doc = @doc("locked location")),
 	@variable(name = IUILocatedSkill.AGENT_LOCKED_WIDTH, type = IType.FLOAT, doc = @doc("locked width")),

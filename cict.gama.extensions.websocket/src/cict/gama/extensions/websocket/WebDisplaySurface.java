@@ -37,7 +37,7 @@ import javax.swing.JPanel;
 
 import org.eclipse.swt.SWT;
 
-import org.locationtech.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Envelope;
 
 import msi.gama.common.interfaces.IDisplaySurface;
 import msi.gama.common.interfaces.IGraphics;

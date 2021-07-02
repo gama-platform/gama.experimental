@@ -17,7 +17,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import org.locationtech.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Coordinate;
 
 import ifc2x3javatoolbox.ifc2x3tc1.IfcArbitraryClosedProfileDef;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcAxis2Placement;

@@ -15,7 +15,7 @@ Require-Bundle: msi.gama.ext,
  ummisco.gama.annotations,
  simtools.gaml.extensions.physics;bundle-version="1.8.1"
 Bundle-ActivationPolicy: lazy
-Import-Package: org.locationtech.jts.geom,
+Import-Package: com.vividsolutions.jts.geom,
  org.apache.commons.lang;version="2.6.0",
  org.jfree.chart
 Export-Package: 

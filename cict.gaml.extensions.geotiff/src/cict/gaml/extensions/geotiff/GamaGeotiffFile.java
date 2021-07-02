@@ -25,8 +25,8 @@ import org.geotools.gce.arcgrid.ArcGridReader;
 import org.geotools.gce.geotiff.GeoTiffReader;
 import org.geotools.geometry.DirectPosition2D;
 import org.geotools.geometry.GeneralEnvelope;
-import org.geotools.util.factory.Hints;
-import org.locationtech.jts.geom.Envelope;
+import org.geotools.factory.Hints;
+import com.vividsolutions.jts.geom.Envelope;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 

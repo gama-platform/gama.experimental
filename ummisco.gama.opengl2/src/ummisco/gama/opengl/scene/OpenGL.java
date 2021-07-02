@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import org.locationtech.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.Polygon;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
