@@ -25,9 +25,6 @@ jobs:
         run: |
           echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.defaultLogLevel=error -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmx2048m'" >> ~/.mavenrc
           sudo chmod +x $GITHUB_WORKSPACE/*.sh 
-          search='</settings>'
-          replace='<mirror><id>insecure-repo</id><mirrorOf>external:http:*</mirrorOf><url>http://51.255.46.42/updates</url><blocked>false</blocked></mirror></settings>'
-          sed -i "s/$search/$replace/" ~/.m2/settings.xml
 
       - name: Cache local Maven repository
         uses: actions/cache@v2
