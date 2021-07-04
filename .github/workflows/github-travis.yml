@@ -26,8 +26,7 @@ jobs:
           echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.defaultLogLevel=error -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmx2048m'" >> ~/.mavenrc
           sudo chmod +x $GITHUB_WORKSPACE/*.sh 
           bash custom_mvn.sh
-          cat ~/.m2/settings.xml
-          cat /opt/maven/conf/settings.xml
+          cat ~/.m2/settings.xml 
  
 
       - name: Cache local Maven repository
