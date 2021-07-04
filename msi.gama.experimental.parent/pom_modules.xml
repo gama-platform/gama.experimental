@@ -7,10 +7,7 @@
  <module>../cict.gaml.extensions.netcdf</module> 
  <module>../cict.gaml.extensions.VR</module> 
  <module>../escape.gaml.feature.pedestrian</module> 
- <module>../escape.gaml.pedestrian</module> 
- <module>../femto.st.gama.feature.mpi</module> 
- <module>../femto.st.gama.hpc</module> 
- <module>../femto.st.gama.mpi</module> 
+ <module>../escape.gaml.pedestrian</module>  
  <module>../femto_st.gama.feature.mpi</module> 
  <module>../femto_st.gama.mpi</module> 
  <module>../idees.gama.features.weka</module> 
@@ -52,4 +49,3 @@
  <module>../ummisco.gaml.feature.hydro</module> 
  <module>../ummisco.gaml.feature.rjava</module> 
  </modules>
-
