@@ -27,6 +27,7 @@ jobs:
           sudo chmod +x $GITHUB_WORKSPACE/*.sh 
           bash custom_mvn.sh
           cat ~/.m2/settings.xml
+          cat /opt/maven/conf/settings.xml
  
 
       - name: Cache local Maven repository
