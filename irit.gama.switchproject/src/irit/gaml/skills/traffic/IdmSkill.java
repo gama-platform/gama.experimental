@@ -12,7 +12,6 @@
 package irit.gaml.skills.traffic;
 
 import irit.gama.common.interfaces.IKeywordIrit;
-import irit.gaml.skills.traffic.generic.RoadMovingEntitySkill;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.topology.ITopology;
@@ -30,6 +29,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.path.IPath;
 import msi.gaml.operators.Cast;
+import msi.gaml.skills.MovingSkill;
 import msi.gaml.types.IType;
 
 /**
@@ -54,9 +54,11 @@ import msi.gaml.types.IType;
 		@variable(name = IKeywordIrit.IDM_ACTUAL_GAP, type = IType.FLOAT, init = "0.0", doc = {
 				@doc("The acceleration of the vehicle") }),
 		@variable(name = IKeywordIrit.IDM_DESIRED_MINIMUM_GAP, type = IType.FLOAT, init = "0.0", doc = {
-				@doc("The acceleration of the vehicle") }) })
+				@doc("The acceleration of the vehicle") }),
+		@variable(name = IKeywordIrit.VEHICLE_LENGTH, type = IType.FLOAT, init = "5.0", doc = {
+				@doc("The length of the vehicle") })})
 @skill(name = IKeywordIrit.IDM, concept = { IKeywordIrit.IDM, IConcept.SKILL }, internal = true)
-public class IdmSkill extends RoadMovingEntitySkill {
+public class IdmSkill extends MovingSkill {
 
 	// ############################################
 	// Getter
@@ -133,6 +135,14 @@ public class IdmSkill extends RoadMovingEntitySkill {
 		return (double) agent.getAttribute(IKeywordIrit.IDM_DESIRED_MINIMUM_GAP);
 	}
 	
+	@getter(IKeywordIrit.VEHICLE_LENGTH)
+	public double getLength(final IAgent agent) {
+		if (agent == null) {
+			return 0.0;
+		}
+		return (double) agent.getAttribute(IKeywordIrit.VEHICLE_LENGTH);
+	}
+	
 	// ############################################
 	// Setter
 
@@ -175,6 +185,15 @@ public class IdmSkill extends RoadMovingEntitySkill {
 		}
 		agent.setAttribute(IKeywordIrit.IDM_DESIRED_DECELERATION, value);
 	}
+	
+	@setter(IKeywordIrit.VEHICLE_LENGTH)
+	public void setLength(final IAgent agent, final double value) {
+		if (agent == null) {
+			return;
+		}
+		agent.setAttribute(IKeywordIrit.VEHICLE_LENGTH, value);
+	}
+	
 	
 	// ############################################
 	// Actions
