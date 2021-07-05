@@ -17,6 +17,9 @@ package irit.gama.common.interfaces;
  * @author Jean-François Erdelyi
  */
 public interface IKeywordIrit {
+	
+	public static final String ID = "id";
+	
 	/**
 	 * Queue and stack keywords
 	 */
@@ -40,6 +43,7 @@ public interface IKeywordIrit {
 	public static final String EVENT = "event";
 	public static final String EVENTS = "events";
 	public static final String EVENT_DATE = "event_date";
+
 	public static final String THE_ACTION = "the_action";
 	public static final String WITH_ARGUMENTS = "with_arguments";
 	public static final String AT = "at";
