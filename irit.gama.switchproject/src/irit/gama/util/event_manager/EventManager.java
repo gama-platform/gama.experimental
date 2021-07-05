@@ -11,10 +11,9 @@
 
 package irit.gama.util.event_manager;
 
-import java.util.Iterator;
+import java.util.UUID;
 
 import irit.gama.util.event_manager.Event.EventComparator;
-import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaDate;
@@ -22,15 +21,15 @@ import msi.gama.util.GamaDate;
 /**
  * Fast event manager
  */
-public class EventManager extends EventQueueList implements IEventManager {
+public class EventManager extends EventQueue {
 
 	// ############################################
 	// Attributes
 
 	/**
-	 * 
+	 * Serial
 	 */
-	//private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * If true execution is active
@@ -42,6 +41,11 @@ public class EventManager extends EventQueueList implements IEventManager {
 	 */
 	private Event lastEvent = null;
 
+	/**
+	 * The last event executed
+	 */
+	private int queueSize = 0;
+
 	// ############################################
 	// Methods
 
@@ -49,72 +53,85 @@ public class EventManager extends EventQueueList implements IEventManager {
 		super(new EventComparator(scope));
 	}
 
-	// ############################################
-	// Register, execute and clear
+	/**
+	 * Get queue size
+	 */
+	public int getQueueSize() {
+		return queueSize;
+	}
 
 	/**
-	 * Register with action and arguments as map
+	 * Register with action and arguments as map (return event ID)
 	 */
-	@Override
-	public Object register(IScope scope, Event event) throws GamaRuntimeException {
+	public String register(IScope scope, Event event) throws GamaRuntimeException {
 		if (event.getAgent().dead()) {
-			return false;
+			return null;
 		}
 
 		if (event.getDate() == null) {
-			return event.execute();
+			event.execute();
+			return null;
 		} else {
 			if (executeActive) {
 				// Causality check
 				if (lastEvent.isGreaterThan(event)) {
-					throw GamaRuntimeException
-							.warning("Exec: Past is not allowed " + lastEvent.getDate() + " vs " + event.getDate(), scope);
+					throw GamaRuntimeException.warning(
+							"Exec: Past is not allowed " + lastEvent.getDate() + " vs " + event.getDate(), scope);
 				}
 			} else {
 				// Causality check
 				GamaDate simDate = scope.getSimulation().getClock().getCurrentDate();
 				if (simDate.isGreaterThan(event.getDate(), true)) {
-					throw GamaRuntimeException.warning("Past is not allowed " + scope.getSimulation().getClock().getCurrentDate() + " vs " + event.getDate(), scope);
+					throw GamaRuntimeException.warning("Past is not allowed "
+							+ scope.getSimulation().getClock().getCurrentDate() + " vs " + event.getDate(), scope);
 				}
 			}
 
 			// Add event
 			add(event);
+			eventMap.put(event.getId(), event);
+			queueSize++;
 
-			return true;
+			return event.getId().toString();
 		}
 	}
 
 	/**
 	 * Execute the next events
 	 */
-	@Override
 	public Object execute(IScope scope) throws GamaRuntimeException {
 		executeActive = true;
-		//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss.SSS");
+		// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy
+		// HH:mm:ss.SSS");
 
-		//System.out.println("EXECUTE " + scope.getAgent().getName());
-		//LocalDateTime dateTime = LocalDateTime.now();
-		//System.out.println("EVENT START " + dateTime.format(formatter));
-		
-		//int nbEvent = 0;
+		// System.out.println("EXECUTE " + scope.getAgent().getName());
+		// LocalDateTime dateTime = LocalDateTime.now();
+		// System.out.println("EVENT START " + dateTime.format(formatter));
+
+		// int nbEvent = 0;
 		while ((size() > 0) && isTimeReached()) {
+			// Remove event
 			lastEvent = poll();
-
-			// If the caller is dead so do not execute the event
+			eventMap.remove(lastEvent.getId());
 			if (!lastEvent.getAgent().dead()) {
-				lastEvent.execute();
+				if (lastEvent.execute() == true) {
+					queueSize--;
+				}
+			} else {
+				queueSize--;
 			}
-			//nbEvent++;
-			//LocalDateTime dateTimeEv = LocalDateTime.now();
-			//System.out.println("EVENT " + lastEvent + " : " + dateTimeEv.format(formatter));
+
+			// nbEvent++;
+			// LocalDateTime dateTimeEv = LocalDateTime.now();
+			// System.out.println("EVENT " + lastEvent + " : " +
+			// dateTimeEv.format(formatter));
 		}
-		//dateTime = LocalDateTime.now();
-		/*if (nbEvent > 0) {
-			long diff = ChronoUnit.MILLIS.between(dateTime, LocalDateTime.now());
-			System.out.println("EVENT END " + nbEvent + " : " + (diff / 1000.0));
-			System.out.println();
-		}*/
+		// dateTime = LocalDateTime.now();
+		/*
+		 * if (nbEvent > 0) { long diff = ChronoUnit.MILLIS.between(dateTime,
+		 * LocalDateTime.now()); System.out.println("EVENT END " + nbEvent + " : " +
+		 * (diff / 1000.0)); System.out.println(); }
+		 */
 		executeActive = false;
 		return true;
 	}
@@ -122,14 +139,12 @@ public class EventManager extends EventQueueList implements IEventManager {
 	/**
 	 * Clear
 	 */
-	@Override
-	public void clear(IScope scope, IAgent caller) {
-		Iterator<Event> value = iterator();
-
-		while (value.hasNext()) {
-			if (value.next().getAgent() == caller) {
-				value.remove();
-			}
+	public void kill(IScope scope, String id) {
+		// Get event by ID
+		Event e = eventMap.get(UUID.fromString(id));
+		if(e != null) {
+			e.kill();
 		}
+		queueSize--;
 	}
 }

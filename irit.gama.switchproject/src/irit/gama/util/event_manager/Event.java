@@ -11,10 +11,9 @@
 
 package irit.gama.util.event_manager;
 
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.UUID;
 
 import irit.gama.common.interfaces.IKeywordIrit;
 import msi.gama.metamodel.agent.IAgent;
@@ -81,6 +80,11 @@ public class Event {
 
 	// ############################################
 	// Attributes
+	
+	/**
+	 * Message ID
+	 */
+	UUID id = null;
 
 	/**
 	 * The execution date
@@ -92,7 +96,6 @@ public class Event {
 	 */
 	private long milli;
 	
-
 	/**
 	 * Simulation scope
 	 */
@@ -122,6 +125,11 @@ public class Event {
 	 * Caller agent
 	 */
 	private IAgent agent;
+	
+	/**
+	 * Is alive
+	 */
+	private boolean isAlive;
 
 	// ############################################
 	// Constructor
@@ -136,6 +144,8 @@ public class Event {
 		this.species = caller.getSpeciesName();
 		this.agent = caller;
 		this.referredAgent = referredAgent;
+		this.isAlive = true;
+		this.id = UUID.randomUUID();
 
 		// Get arguments
 		arguments = action.createCompiledArgs().resolveAgainst(scope);
@@ -230,6 +240,13 @@ public class Event {
 	public IAgent getAgent() {
 		return agent;
 	}
+	
+	/**
+	 * Get id
+	 */
+	public UUID getId() {
+		return id;
+	}
 
 	/**
 	 * Is greater than the event e
@@ -248,7 +265,10 @@ public class Event {
 	/**
 	 * Execute the action
 	 */
-	public Object execute() {
+	public boolean execute() {
+		if (!this.isAlive) {
+			return false;
+		}
 		/*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss.SSS");
 
 		LocalDateTime dateTime = LocalDateTime.now();
@@ -263,7 +283,15 @@ public class Event {
 		System.out.println("EXEC END " + dateTime.format(formatter));
 		
 		return res;*/
-		return scope.execute(action, getRuntimeArgs()).getValue();
+		scope.execute(action, getRuntimeArgs()).getValue();
+		return true;
+	}
+	
+	/**
+	 * Kill event
+	 */
+	public void kill() {
+		this.isAlive = false;
 	}
 
 	/**
