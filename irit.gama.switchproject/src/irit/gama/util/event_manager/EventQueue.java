@@ -11,7 +11,9 @@
 
 package irit.gama.util.event_manager;
 
+import java.util.HashMap;
 import java.util.PriorityQueue;
+import java.util.UUID;
 
 import irit.gama.util.event_manager.Event.EventComparator;
 
@@ -30,6 +32,11 @@ public class EventQueue extends PriorityQueue<Event> {
 	 * serialVersionUID field of type long
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Event map
+	 */
+	HashMap<UUID, Event> eventMap = new HashMap<>();
 
 	// ############################################
 	// Methods

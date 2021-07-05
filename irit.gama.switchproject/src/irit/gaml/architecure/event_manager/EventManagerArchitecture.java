@@ -11,8 +11,6 @@
 
 package irit.gaml.architecure.event_manager;
 
-import java.util.ArrayList;
-
 import irit.gama.common.interfaces.IKeywordIrit;
 import irit.gama.util.event_manager.Event;
 import irit.gama.util.event_manager.EventManager;
@@ -51,7 +49,7 @@ public class EventManagerArchitecture extends ReflexArchitecture {
 	 */
 	@getter(IKeyword.SIZE)
 	public int getQueueSize(final IAgent agent) {
-		return getCurrentManagerIfExists(agent).size();
+		return getCurrentManagerIfExists(agent).getQueueSize();
 	}
 
 	// ############################################
@@ -86,15 +84,6 @@ public class EventManagerArchitecture extends ReflexArchitecture {
 		if (scope.interrupted() || agent == null) {
 			return null;
 		}
-				
-		/*ArrayList<Event> data = getCurrentManagerIfExists(agent).data();
-		for (int i = 0; i < data.size(); ++i) {
-			for (int j = 0; j < data.size(); ++j) {
-				if(i != j && data.get(i).getAgent() == data.get(j).getAgent()) {
-					System.err.println("EQUALS");
-				}
-			}	
-		}*/
 
 		return getCurrentManagerIfExists(agent).execute(scope);
 	}
@@ -120,7 +109,7 @@ public class EventManagerArchitecture extends ReflexArchitecture {
 	/**
 	 * Internal register (used by "scheduling" skill)
 	 */
-	public Object register(final IScope scope, final IAgent caller, final ActionDescription action,
+	public String register(final IScope scope, final IAgent caller, final ActionDescription action,
 			final GamaMap<String, Object> args, final GamaDate date, final IAgent referredAgent)
 			throws GamaRuntimeException {
 
@@ -132,18 +121,18 @@ public class EventManagerArchitecture extends ReflexArchitecture {
 		return getCurrentManagerIfExists(agent).register(scope,
 				new Event(scope, caller, action, args, date, referredAgent));
 	}
-
+	
 	/**
-	 * Internal clear (used by "scheduling" skill)
+	 * Internal kill (used by "scheduling" skill)
 	 */
-	public Object clear(final IScope scope, final IAgent caller) throws GamaRuntimeException {
+	public Object kill(final IScope scope, final String id) throws GamaRuntimeException {
 
 		IAgent agent = (IAgent) getCurrentAgent(scope).getAttribute(IKeywordIrit.EVENT_MANAGER);
 		if (scope.interrupted() || agent == null) {
 			return false;
 		}
 
-		getCurrentManagerIfExists(agent).clear(scope, caller);
+		getCurrentManagerIfExists(agent).kill(scope, id);
 		return true;
 	}
 }

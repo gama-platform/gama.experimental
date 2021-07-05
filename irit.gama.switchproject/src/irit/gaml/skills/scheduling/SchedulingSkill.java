@@ -90,7 +90,7 @@ public class SchedulingSkill extends Skill {
 			@arg(name = IKeywordIrit.REFER_TO, type = IType.AGENT, optional = true, doc = @doc("The agent to refer")) }, doc = @doc(examples = {
 					@example("do later execute: my_action arguments: map((\"test\"::2)) date: starting_date") }, value = "Do action when the date is reached."))
 	@SuppressWarnings("unchecked")
-	public Object register(final IScope scope) throws GamaRuntimeException {
+	public String register(final IScope scope) throws GamaRuntimeException {
 		// Get date
 		GamaDate date = (GamaDate) scope.getArg(IKeywordIrit.AT, IType.DATE);
 		// Get caller
@@ -119,13 +119,16 @@ public class SchedulingSkill extends Skill {
 		return eventSkill.register(scope, caller, action, args, date, referredAgent);
 	}
 
-	@action(name = "clear_events", doc = @doc(examples = { @example("do clear_events") }, value = "Clear all events."))
-	public Object clear(final IScope scope) throws GamaRuntimeException {
-		// Get caller
-		IAgent caller = scope.getAgent();
 
+	@action(name = "kill_event", args = {
+			@arg(name = IKeywordIrit.ID, type = IType.STRING, optional = false, doc = @doc("The event ID")) }, doc = @doc(examples = {
+					@example("do kill_event(\"123e4567-e89b-12d3-a456-426655440000\")") }, value = "Kill event."))
+	public Object kill(final IScope scope) throws GamaRuntimeException {
 		// Get manager
 		IAgent manager = (IAgent) scope.getAgent().getAttribute(IKeywordIrit.EVENT_MANAGER);
+
+		// Get arg
+		String id = (String) scope.getArg(IKeywordIrit.ID, IType.STRING);
 
 		if (manager == null) {
 			throw GamaRuntimeException.error("The manager must be defined if you have to use the action \"later\"",
@@ -138,6 +141,7 @@ public class SchedulingSkill extends Skill {
 			throw GamaRuntimeException
 					.error("The manager must use the control \"event_manager\" to execute the action \"later\"", scope);
 		}
-		return eventSkill.clear(scope, caller);
+		return eventSkill.kill(scope, id);
 	}
+
 }
