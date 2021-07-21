@@ -15,7 +15,5 @@ Export-Package: irit.gama.common.interfaces,
  irit.gaml.skills.logging,
  irit.gaml.skills.scheduling,
  irit.gaml.skills.traffic,
- irit.gaml.skills.traffic.generic,
- irit.gaml.skills.traffic.interfaces,
  irit.gaml.statements,
  irit.gaml.types
