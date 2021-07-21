@@ -6,8 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: irit.gama.jdeqsim
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: msi.gama.core;bundle-version="1.8.1",
- msi.gama.ext;bundle-version="1.8.1"
+ msi.gama.ext;bundle-version="1.8.1",
+ ummisco.gama.annotations
 Export-Package: gaml.additions.jdeqsim,
- irit.gama.common.interfaces,
- irit.gaml.skills.traffic.road,
- irit.gaml.skills.traffic.vehicle
+ irit.gama.common,
+ irit.gaml.skill
