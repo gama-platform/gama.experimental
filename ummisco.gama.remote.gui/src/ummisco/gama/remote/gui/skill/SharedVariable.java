@@ -104,7 +104,8 @@ public class SharedVariable {
 		final Object data = connection.getLastData(exposedName);
 		if (data != null) {
 			this.value = data;
-			this.agent.setAttribute(attributeName.get(0), data);
+			//this.agent.setAttribute(attributeName.get(0), data);
+			this.agent.setAttribute(attributeName.get(0),  ((Map<String, Object>) data).get(attributeName.get(0)));
 		}
 	}
 
