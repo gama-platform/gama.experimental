@@ -13,9 +13,14 @@ package irit.gama.common;
 
 import java.time.temporal.ChronoUnit;
 
-import irit.gama.core.Activity;
+import irit.gama.core.plan.Activity;
 import msi.gama.util.GamaDate;
 
+/**
+ * Tools of the JDEQSIM simulation
+ * 
+ * @author Jean-François Erdelyi
+ */
 public interface ITool {
 	public enum ActivityDurationInterpretation {
 		minOfDurationAndEndTime, tryEndTimeThenDuration
@@ -29,8 +34,8 @@ public interface ITool {
 		case tryEndTimeThenDuration:
 			if (act.getEndTime() != null) {
 				return act.getEndTime();
-			} else if (act.getMaximumDuration() >= 0.0) {
-				return now.plus(act.getMaximumDuration(), ChronoUnit.SECONDS);
+			} else if (act.getMaximumDuration() > 0.0) {
+				return now.plus(act.getMaximumDuration() * 1000.0, ChronoUnit.MILLIS);
 			} else {
 				return null;
 			}
@@ -38,12 +43,12 @@ public interface ITool {
 		case minOfDurationAndEndTime:
 			if (act.getEndTime() == null && act.getMaximumDuration() < 0.0) {
 				return null;
-			} else if (act.getMaximumDuration() < 0.0) {
+			} else if (act.getMaximumDuration() <= 0.0) {
 				return act.getEndTime();
 			} else if (act.getEndTime() == null) {
-				return now.plus(act.getMaximumDuration(), ChronoUnit.SECONDS);
+				return now.plus(act.getMaximumDuration() * 1000.0, ChronoUnit.MILLIS);
 			} else {
-				GamaDate durationBasedEndTime = now.plus(act.getMaximumDuration(), ChronoUnit.SECONDS);
+				GamaDate durationBasedEndTime = now.plus(act.getMaximumDuration() * 1000.0, ChronoUnit.MILLIS);
 				return act.getEndTime().isSmallerThan(durationBasedEndTime, false) ? act.getEndTime()
 						: durationBasedEndTime;
 			}

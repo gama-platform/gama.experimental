@@ -11,8 +11,8 @@
 
 package jdeqsim.irit.gama.test.jdeqsim;
 
-import irit.gama.core.scheduler.MessageQueue;
-import irit.gama.core.scheduler.message.Message;
+import irit.gama.core.message.MessageQueue;
+import irit.gama.core.message.Message;
 import irit.gama.test.jdeqsim.util.DummyMessage;
 import msi.gama.runtime.GAMA;
 import msi.gama.util.GamaDate;
@@ -32,10 +32,10 @@ public class TestMessageQueue {
 
 	public static void testPutMessage1() {
 		MessageQueue mq = new MessageQueue();
-		Message m1 = new DummyMessage();
+		Message m1 = new DummyMessage(null, null);
 		m1.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 1000));
 
-		Message m2 = new DummyMessage();
+		Message m2 = new DummyMessage(null, null);
 		m2.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 2000));
 
 		mq.putMessage(m1);
@@ -46,10 +46,10 @@ public class TestMessageQueue {
 
 	public static void testPutMessage2() {
 		MessageQueue mq = new MessageQueue();
-		Message m1 = new DummyMessage();
+		Message m1 = new DummyMessage(null, null);
 		m1.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 2000));
 
-		Message m2 = new DummyMessage();
+		Message m2 = new DummyMessage(null, null);
 		m2.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 1000));
 
 		mq.putMessage(m1);
@@ -62,28 +62,28 @@ public class TestMessageQueue {
 		GamaDate date1 = new GamaDate(GAMA.getRuntimeScope(), 1000);
 
 		MessageQueue mq = new MessageQueue();
-		Message m1 = new DummyMessage();
+		Message m1 = new DummyMessage(null, null);
 		m1.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 2000));
 
-		Message m2 = new DummyMessage();
+		Message m2 = new DummyMessage(null, null);
 		m2.setMessageArrivalTime(date1);
 
-		Message m3 = new DummyMessage();
+		Message m3 = new DummyMessage(null, null);
 		m3.setMessageArrivalTime(date1);
 
 		mq.putMessage(m1);
 		mq.putMessage(m2);
 		mq.putMessage(m3);
 		assert (3 == mq.getQueueSize());
-		assert (mq.getNextMessage().getMessageArrivalTime() == date1);
+		assert (mq.getNextMessage().getMessageArrivalTime().equals(date1));
 	}
 
 	public static void testRemoveMessage1() {
 		MessageQueue mq = new MessageQueue();
-		Message m1 = new DummyMessage();
+		Message m1 = new DummyMessage(null, null);
 		m1.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 1000));
 
-		Message m2 = new DummyMessage();
+		Message m2 = new DummyMessage(null, null);
 		m2.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 2000));
 
 		mq.putMessage(m1);
@@ -96,10 +96,10 @@ public class TestMessageQueue {
 
 	public static void testRemoveMessage2() {
 		MessageQueue mq = new MessageQueue();
-		Message m1 = new DummyMessage();
+		Message m1 = new DummyMessage(null, null);
 		m1.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 1000));
 
-		Message m2 = new DummyMessage();
+		Message m2 = new DummyMessage(null, null);
 		m2.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 2000));
 
 		mq.putMessage(m1);
@@ -112,10 +112,10 @@ public class TestMessageQueue {
 
 	public static void testRemoveMessage3() {
 		MessageQueue mq = new MessageQueue();
-		Message m1 = new DummyMessage();
+		Message m1 = new DummyMessage(null, null);
 		m1.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 1000));
 
-		Message m2 = new DummyMessage();
+		Message m2 = new DummyMessage(null, null);
 		m2.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 1000));
 
 		mq.putMessage(m1);
@@ -132,15 +132,15 @@ public class TestMessageQueue {
 	// several messages with same time
 	public static void testMessagePriority() {
 		MessageQueue mq = new MessageQueue();
-		Message m1 = new DummyMessage();
+		Message m1 = new DummyMessage(null, null);
 		m1.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 1000));
 		m1.setPriority(10);
 
-		Message m2 = new DummyMessage();
+		Message m2 = new DummyMessage(null, null);
 		m2.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 1000));
 		m2.setPriority(5);
 
-		Message m3 = new DummyMessage();
+		Message m3 = new DummyMessage(null, null);
 		m3.setMessageArrivalTime(new GamaDate(GAMA.getRuntimeScope(), 1000));
 		m3.setPriority(20);
 

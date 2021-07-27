@@ -12,8 +12,8 @@
 package irit.gaml.skill;
 
 import irit.gama.common.IKeyword;
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.sim_unit.Road;
+import irit.gama.core.unit.Road;
+import irit.gama.core.unit.Scheduler;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
@@ -42,10 +42,8 @@ public class JDEQSIMRoadSkill extends JDEQSIMSimUnitSkill {
 
 		agent.setAttribute(IKeyword.SCHEDULER, schedulerAgent);
 
-		Scheduler scheduler = (Scheduler) schedulerAgent.getAttribute(IKeyword.SCHEDULER);
-		Road innerRoad = new Road(scope, scheduler);
-
-		agent.setAttribute(IKeyword.CORE_DEFINITION, innerRoad);
+		Scheduler scheduler = (Scheduler) schedulerAgent.getAttribute(IKeyword.CORE_DEFINITION);
+		agent.setAttribute(IKeyword.CORE_DEFINITION, new Road(scope, agent, scheduler, 27.78, 36000, 1, 10000.0));
 		return true;
 	}
 }

@@ -9,20 +9,31 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core.sim_unit;
+package irit.gama.core.unit;
 
-import irit.gama.core.Activity;
-import irit.gama.core.Leg;
-import irit.gama.core.Plan;
-import irit.gama.core.scheduler.Scheduler;
+import irit.gama.core.SkillUnit;
+import irit.gama.core.plan.Activity;
+import irit.gama.core.plan.Leg;
+import irit.gama.core.plan.Plan;
+import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
 
-public class Person extends SimUnit {
+/**
+ * Person implementation this is the internal object using in the skill
+ * JDEQSIMPersonSkill
+ * 
+ * @author Jean-François Erdelyi
+ */
+public class Person extends SkillUnit {
 
 	private Plan selectedPlan = null;
 
-	public Person(IScope scope, Scheduler scheduler) {
-		super(scope, scheduler);
+	public Person() {
+		super(null, null);
+	}
+
+	public Person(IScope scope, IAgent relativeAgent) {
+		super(scope, relativeAgent);
 	}
 
 	public void addActivity(Activity activity) {

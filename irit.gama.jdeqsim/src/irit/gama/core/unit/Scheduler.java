@@ -9,9 +9,12 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core.scheduler;
+package irit.gama.core.unit;
 
-import irit.gama.core.scheduler.message.Message;
+import irit.gama.core.message.MessageQueue;
+import irit.gama.core.SkillUnit;
+import irit.gama.core.message.Message;
+import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaDate;
@@ -21,7 +24,7 @@ import msi.gama.util.GamaDate;
  *
  * @author rashid_waraich
  */
-public class Scheduler {
+public class Scheduler extends SkillUnit {
 
 	private GamaDate lastEventTime = null;
 	protected final MessageQueue queue;
@@ -36,12 +39,13 @@ public class Scheduler {
 	 */
 	private Message lastMessage = null;
 
-	public Scheduler(GamaDate startingDate) {
+	public Scheduler(IScope scope, IAgent agent, GamaDate startingDate) {
+		super(scope, agent);
 		this.queue = new MessageQueue();
 		lastEventTime = startingDate;
 	}
 
-	public void schedule(IScope scope, Message m) throws GamaRuntimeException {
+	public Message schedule(Message m) throws GamaRuntimeException {
 
 		// Causality check
 		if (executeActive) {
@@ -56,6 +60,7 @@ public class Scheduler {
 		}
 
 		queue.putMessage(m);
+		return m;
 	}
 
 	public void unschedule(Message m) {

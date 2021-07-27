@@ -9,12 +9,16 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core.scheduler.message;
+package irit.gama.core.message.def;
 
 import irit.gama.common.IConst;
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.sim_unit.Road;
-import irit.gama.core.sim_unit.Vehicle;
+import irit.gama.common.logger.Logger;
+import irit.gama.core.SchedulingUnit;
+import irit.gama.core.message.Message;
+import irit.gama.core.unit.Road;
+import irit.gama.core.unit.Scheduler;
+import irit.gama.core.unit.Vehicle;
+import msi.gama.util.GamaDate;
 
 /**
  * The micro-simulation internal handler for leaving a road.
@@ -22,16 +26,16 @@ import irit.gama.core.sim_unit.Vehicle;
  * @author rashid_waraich
  */
 public class LeaveRoadMessage extends Message {
-
-	@Override
-	public void handleMessage() {
-		Road road = (Road) this.getReceivingUnit();
-		road.leaveRoad(vehicle, getMessageArrivalTime());
-	}
-
-	public LeaveRoadMessage(Scheduler scheduler, Vehicle vehicle) {
-		super(scheduler, vehicle);
+	public LeaveRoadMessage(SchedulingUnit receivingUnit, Scheduler scheduler, Vehicle vehicle, GamaDate scheduleTime) {
+		super(receivingUnit, scheduler, vehicle, scheduleTime);
 		priority = IConst.PRIORITY_LEAVE_ROAD_MESSAGE;
 	}
 
+	@Override
+	public void handleMessage() {
+		Logger.addMessage(this);
+
+		Road road = (Road) this.getReceivingUnit();
+		road.leaveRoad(vehicle, getMessageArrivalTime());
+	}
 }

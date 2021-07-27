@@ -9,11 +9,15 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core.scheduler.message;
+package irit.gama.core.message.def;
 
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.sim_unit.Road;
-import irit.gama.core.sim_unit.Vehicle;
+import irit.gama.common.logger.Logger;
+import irit.gama.core.SchedulingUnit;
+import irit.gama.core.message.Message;
+import irit.gama.core.unit.Road;
+import irit.gama.core.unit.Scheduler;
+import irit.gama.core.unit.Vehicle;
+import msi.gama.util.GamaDate;
 
 /**
  * The micro-simulation internal handler, when the end of a road is reached.
@@ -22,8 +26,14 @@ import irit.gama.core.sim_unit.Vehicle;
  */
 public class EndRoadMessage extends Message {
 
+	public EndRoadMessage(SchedulingUnit receivingUnit, Scheduler scheduler, Vehicle vehicle, GamaDate scheduleTime) {
+		super(receivingUnit, scheduler, vehicle, scheduleTime);
+	}
+
 	@Override
 	public void handleMessage() {
+		Logger.addMessage(this);
+
 		if (vehicle.isCurrentLegFinished()) {
 			/*
 			 * the leg is completed, try to enter the last link but do not enter it (just
@@ -33,18 +43,16 @@ public class EndRoadMessage extends Message {
 			vehicle.initiateEndingLegMode();
 			vehicle.moveToFirstLinkInNextLeg();
 			Road road = vehicle.getCurrentRoad();
+
 			road.enterRequest(vehicle, getMessageArrivalTime());
+			Logger.addMessage(this, "current leg finished");
 		} else if (!vehicle.isCurrentLegFinished()) {
 			// if leg is not finished yet
 			vehicle.moveToNextLinkInLeg();
 
 			Road nextRoad = vehicle.getCurrentRoad();
 			nextRoad.enterRequest(vehicle, getMessageArrivalTime());
+			Logger.addMessage(this, "current leg not finished");
 		}
 	}
-
-	public EndRoadMessage(Scheduler scheduler, Vehicle vehicle) {
-		super(scheduler, vehicle);
-	}
-
 }

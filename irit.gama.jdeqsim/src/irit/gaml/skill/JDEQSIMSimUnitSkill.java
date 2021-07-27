@@ -33,7 +33,7 @@ import msi.gaml.types.IType;
 		@variable(name = IKeyword.CORE_DEFINITION, type = IType.NONE, doc = {
 				@doc("The Scheduler, must be defined in another species with \"control: event_manager\"") }) })
 @skill(name = IKeyword.JDQSIM_SIMUNIT, concept = { IKeyword.JDQSIM_SIMUNIT, IConcept.SKILL }, internal = true)
-public class JDEQSIMSimUnitSkill extends Skill {
+public abstract class JDEQSIMSimUnitSkill extends Skill {
 	// ############################################
 	// Getter and setter of skill
 

@@ -9,12 +9,15 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core.scheduler.message;
+package irit.gama.core.message.def;
 
 import irit.gama.common.IConst;
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.sim_unit.Road;
-import irit.gama.core.sim_unit.Vehicle;
+import irit.gama.common.logger.Logger;
+import irit.gama.core.SchedulingUnit;
+import irit.gama.core.message.Message;
+import irit.gama.core.unit.Road;
+import irit.gama.core.unit.Scheduler;
+import irit.gama.core.unit.Vehicle;
 import msi.gama.util.GamaDate;
 
 /**
@@ -24,27 +27,31 @@ import msi.gama.util.GamaDate;
  */
 public class StartingLegMessage extends Message {
 
-	public StartingLegMessage(Scheduler scheduler, Vehicle vehicle) {
-		super(scheduler, vehicle);
+	public StartingLegMessage(SchedulingUnit receivingUnit, Scheduler scheduler, Vehicle vehicle,
+			GamaDate scheduleTime) {
+		super(receivingUnit, scheduler, vehicle, scheduleTime);
 		priority = IConst.PRIORITY_DEPARTUARE_MESSAGE;
 	}
 
 	@Override
 	public void handleMessage() {
+		Logger.addMessage(this);
+
 		// if current leg is in car mode, then enter request in first road
 		// if (vehicle.getCurrentLeg().getMode().equals(TransportMode.car)) {
 
 		// if empty leg, then end leg, else simulate leg
 		if (vehicle.getCurrentLinkRouteLength() == 0) {
-			// move to first link in next leg and schedule an end leg
-			// message
+			// move to first link in next leg and schedule an end leg message
 			// duration of leg = 0 (departure and arrival time is the same)
 			scheduleEndLegMessage(getMessageArrivalTime());
+			Logger.addMessage(this, "empty leg");
 
 		} else {
 			// start the new leg
 			Road road = vehicle.getCurrentRoad();
 			road.enterRequest(vehicle, getMessageArrivalTime());
+			Logger.addMessage(this, "new leg");
 		}
 
 		// } else {
@@ -57,6 +64,6 @@ public class StartingLegMessage extends Message {
 		// move to first link in next leg and schedule an end leg message
 		vehicle.moveToFirstLinkInNextLeg();
 		Road road = vehicle.getCurrentRoad();
-		vehicle.scheduleEndLegMessage(time, road);
+		vehicle.scheduleEndLegMessage(this, time, road);
 	}
 }

@@ -12,9 +12,9 @@
 package irit.gaml.skill;
 
 import irit.gama.common.IKeyword;
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.sim_unit.Person;
-import irit.gama.core.sim_unit.Vehicle;
+import irit.gama.core.unit.Person;
+import irit.gama.core.unit.Scheduler;
+import irit.gama.core.unit.Vehicle;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
@@ -43,12 +43,11 @@ public class JDEQSIMVehicleSkill extends JDEQSIMSimUnitSkill {
 		IAgent ownerAgent = (IAgent) scope.getArg(IKeyword.OWNER, IType.AGENT);
 		IAgent agent = scope.getAgent();
 
-		Scheduler scheduler = (Scheduler) schedulerAgent.getAttribute(IKeyword.SCHEDULER);
+		Scheduler scheduler = (Scheduler) schedulerAgent.getAttribute(IKeyword.CORE_DEFINITION);
 		Person owner = (Person) ownerAgent.getAttribute(IKeyword.CORE_DEFINITION);
-		Vehicle innerVehicle = new Vehicle(scope, scheduler, owner);
 
 		agent.setAttribute(IKeyword.SCHEDULER, schedulerAgent);
-		agent.setAttribute(IKeyword.CORE_DEFINITION, innerVehicle);
+		agent.setAttribute(IKeyword.CORE_DEFINITION, new Vehicle(scope, agent, scheduler, owner));
 		return true;
 	}
 }

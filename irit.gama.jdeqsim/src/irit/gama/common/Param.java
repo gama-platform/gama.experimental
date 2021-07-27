@@ -11,6 +11,11 @@
 
 package irit.gama.common;
 
+/**
+ * Parameters of the JDEQSIM simulation TODO must be accessible in GAMA
+ * 
+ * @author Jean-François Erdelyi
+ */
 public class Param {
 
 	/**
@@ -46,4 +51,14 @@ public class Param {
 
 	// Garbage collector ON/OFF for messages
 	public static boolean GC_MESSAGES = false;
+
+	// DEBUG ON/OFF
+	public static boolean DEBUG_ON = true;
+
+	// DEBUG level
+	public enum LogLevel {
+		scheduleOnly, traceOnly, all
+	}
+
+	public static LogLevel DEBUG_LEVEL = LogLevel.all;
 }

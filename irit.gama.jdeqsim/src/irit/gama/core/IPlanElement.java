@@ -11,5 +11,10 @@
 
 package irit.gama.core;
 
+/**
+ * Plan interface for Activity or Leg
+ * 
+ * @author Jean-François Erdelyi
+ */
 public interface IPlanElement {
 }

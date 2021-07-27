@@ -11,15 +11,15 @@
 
 package irit.gama.test.jdeqsim.util;
 
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.scheduler.message.Message;
-import irit.gama.core.sim_unit.SimUnit;
+import irit.gama.core.SchedulingUnit;
+import irit.gama.core.message.Message;
+import irit.gama.core.unit.Scheduler;
 import msi.gama.runtime.IScope;
 
-public class DummySimUnit extends SimUnit {
+public class DummySimUnit extends SchedulingUnit {
 
 	public DummySimUnit(IScope scope, Scheduler scheduler) {
-		super(scope, scheduler);
+		super(scope, null, scheduler);
 	}
 
 	public void handleMessage(Message m) {

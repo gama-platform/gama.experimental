@@ -11,9 +11,9 @@
 
 package jdeqsim.irit.gama.test.jdeqsim;
 
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.scheduler.message.Message;
-import irit.gama.core.sim_unit.SimUnit;
+import irit.gama.core.SchedulingUnit;
+import irit.gama.core.message.Message;
+import irit.gama.core.unit.Scheduler;
 import irit.gama.test.jdeqsim.util.DummyMessage;
 import irit.gama.test.jdeqsim.util.DummyMessage1;
 import irit.gama.test.jdeqsim.util.DummySimUnit;
@@ -36,15 +36,15 @@ public class TestScheduler extends GenericTest {
 		GamaDate date10000 = new GamaDate(GAMA.getRuntimeScope(), 10000000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
 
-		Scheduler scheduler = new Scheduler(DATE_0);
-		SimUnit sm1 = new DummySimUnit(GAMA.getRuntimeScope(), scheduler);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		SchedulingUnit sm1 = new DummySimUnit(GAMA.getRuntimeScope(), scheduler);
 
-		Message m1 = new DummyMessage();
-		sm1.sendMessage(m1, sm1, date9000);
+		Message m1 = new DummyMessage(sm1, date9000);
+		sm1.sendMessage(m1);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date10000);
 		scheduler.execute(GAMA.getRuntimeScope());
-		assert (date9000 == scheduler.getLastEventTime());
+		assert (date9000.equals(scheduler.getLastEventTime()));
 	}
 
 	// a message is scheduled and unscheduled before starting the simulation
@@ -54,16 +54,16 @@ public class TestScheduler extends GenericTest {
 		GamaDate date2 = new GamaDate(GAMA.getRuntimeScope(), 2000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
 
-		Scheduler scheduler = new Scheduler(DATE_0);
-		SimUnit sm1 = new DummySimUnit(GAMA.getRuntimeScope(), scheduler);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		SchedulingUnit sm1 = new DummySimUnit(GAMA.getRuntimeScope(), scheduler);
 
-		Message m1 = new DummyMessage();
-		sm1.sendMessage(m1, sm1, date1);
+		Message m1 = new DummyMessage(sm1, date1);
+		sm1.sendMessage(m1);
 		scheduler.unschedule(m1);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date2);
 		scheduler.execute(GAMA.getRuntimeScope());
-		assert (DATE_0 == scheduler.getLastEventTime());
+		assert (DATE_0.equals(scheduler.getLastEventTime()));
 	}
 
 	// We shedule two messages, but the first message deletes upon handling the
@@ -76,19 +76,19 @@ public class TestScheduler extends GenericTest {
 		GamaDate date20 = new GamaDate(GAMA.getRuntimeScope(), 20000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
 
-		Scheduler scheduler = new Scheduler(DATE_0);
-		SimUnit sm1 = new DummySimUnit(GAMA.getRuntimeScope(), scheduler);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		SchedulingUnit sm1 = new DummySimUnit(GAMA.getRuntimeScope(), scheduler);
 
-		Message m1 = new DummyMessage();
-		sm1.sendMessage(m1, sm1, date10);
+		Message m1 = new DummyMessage(sm1, date10);
+		sm1.sendMessage(m1);
 
-		DummyMessage1 m2 = new DummyMessage1();
+		DummyMessage1 m2 = new DummyMessage1(sm1, date1);
 		m2.messageToUnschedule = m1;
-		sm1.sendMessage(m2, sm1, date1);
+		sm1.sendMessage(m2);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date20);
 		scheduler.execute(GAMA.getRuntimeScope());
-		assert (date1 == scheduler.getLastEventTime());
+		assert (date1.equals(scheduler.getLastEventTime()));
 	}
 
 }

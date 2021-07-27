@@ -9,12 +9,16 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core.scheduler.message;
+package irit.gama.core.message.def;
 
 import irit.gama.common.IConst;
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.sim_unit.Road;
-import irit.gama.core.sim_unit.Vehicle;
+import irit.gama.common.logger.Logger;
+import irit.gama.core.SchedulingUnit;
+import irit.gama.core.message.Message;
+import irit.gama.core.unit.Road;
+import irit.gama.core.unit.Scheduler;
+import irit.gama.core.unit.Vehicle;
+import msi.gama.util.GamaDate;
 
 /**
  * The micro-simulation internal handler for entering a road.
@@ -23,15 +27,17 @@ import irit.gama.core.sim_unit.Vehicle;
  */
 public class EnterRoadMessage extends Message {
 
+	public EnterRoadMessage(SchedulingUnit receivingUnit, Scheduler scheduler, Vehicle vehicle, GamaDate scheduleTime) {
+		super(receivingUnit, scheduler, vehicle, scheduleTime);
+		priority = IConst.PRIORITY_ENTER_ROAD_MESSAGE;
+	}
+
 	@Override
 	public void handleMessage() {
+		Logger.addMessage(this);
+
 		// enter the next road
 		Road road = vehicle.getCurrentRoad();
 		road.enterRoad(vehicle, getMessageArrivalTime());
-	}
-
-	public EnterRoadMessage(Scheduler scheduler, Vehicle vehicle) {
-		super(scheduler, vehicle);
-		priority = IConst.PRIORITY_ENTER_ROAD_MESSAGE;
 	}
 }
