@@ -9,11 +9,15 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core.scheduler.message;
+package irit.gama.core.message.def;
 
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.sim_unit.Road;
-import irit.gama.core.sim_unit.Vehicle;
+import irit.gama.common.logger.Logger;
+import irit.gama.core.SchedulingUnit;
+import irit.gama.core.message.Message;
+import irit.gama.core.unit.Road;
+import irit.gama.core.unit.Scheduler;
+import irit.gama.core.unit.Vehicle;
+import msi.gama.util.GamaDate;
 
 /**
  * The micro-simulation internal handler for preventig deadlocks.
@@ -22,9 +26,15 @@ import irit.gama.core.sim_unit.Vehicle;
  */
 public class DeadlockPreventionMessage extends Message {
 
+	public DeadlockPreventionMessage(SchedulingUnit receivingUnit, Scheduler scheduler, Vehicle vehicle,
+			GamaDate scheduleTime) {
+		super(receivingUnit, scheduler, vehicle, scheduleTime);
+	}
+
 	@Override
 	// let enter the car into the road immediatly
 	public void handleMessage() {
+		Logger.addMessage(this);
 
 		Road road = (Road) this.getReceivingUnit();
 
@@ -33,10 +43,6 @@ public class DeadlockPreventionMessage extends Message {
 		road.removeFirstDeadlockPreventionMessage(this);
 		road.removeFromInterestedInEnteringRoad();
 
-		vehicle.scheduleEnterRoadMessage(getMessageArrivalTime(), road);
-	}
-
-	public DeadlockPreventionMessage(Scheduler scheduler, Vehicle vehicle) {
-		super(scheduler, vehicle);
+		vehicle.scheduleEnterRoadMessage(this, getMessageArrivalTime(), road);
 	}
 }

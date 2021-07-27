@@ -9,9 +9,10 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core;
+package irit.gama.core.plan;
 
-import irit.gama.core.sim_unit.Road;
+import irit.gama.core.IPlanElement;
+import irit.gama.core.unit.Road;
 import msi.gama.util.GamaDate;
 
 /**
@@ -33,12 +34,9 @@ public class Activity implements IPlanElement {
 
 	public Activity(GamaDate endTime, double duration, Road road) {
 		super();
+		this.endTime = endTime;
 		this.duration = duration;
 		this.road = road;
-	}
-
-	public void setFirstRoad(Road firstRoad) {
-		this.road = firstRoad;
 	}
 
 	public void setMaximumDuration(double duration) {

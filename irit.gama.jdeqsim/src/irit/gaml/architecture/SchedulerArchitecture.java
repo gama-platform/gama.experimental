@@ -12,7 +12,7 @@
 package irit.gaml.architecture;
 
 import irit.gama.common.IKeyword;
-import irit.gama.core.scheduler.Scheduler;
+import irit.gama.core.unit.Scheduler;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.skill;
@@ -36,9 +36,7 @@ public class SchedulerArchitecture extends ReflexArchitecture {
 	@Override
 	public boolean init(final IScope scope) throws GamaRuntimeException {
 		final IAgent agent = getCurrentAgent(scope);
-		final Scheduler scheduler = new Scheduler(scope.getClock().getCurrentDate());
-
-		agent.setAttribute(IKeyword.SCHEDULER, scheduler);
+		agent.setAttribute(IKeyword.CORE_DEFINITION, new Scheduler(scope, agent, scope.getClock().getCurrentDate()));
 		return true;
 	}
 

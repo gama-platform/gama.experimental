@@ -9,17 +9,19 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core.sim_unit;
+package irit.gama.core.unit;
 
 import java.util.List;
 
-import irit.gama.core.Activity;
-import irit.gama.core.Leg;
-import irit.gama.core.Plan;
 import irit.gama.core.IPlanElement;
-import irit.gama.core.scheduler.MessageFactory;
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.scheduler.message.DeadlockPreventionMessage;
+import irit.gama.core.INamable;
+import irit.gama.core.SchedulingUnit;
+import irit.gama.core.message.MessageFactory;
+import irit.gama.core.message.def.DeadlockPreventionMessage;
+import irit.gama.core.plan.Activity;
+import irit.gama.core.plan.Leg;
+import irit.gama.core.plan.Plan;
+import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaDate;
 
@@ -28,8 +30,7 @@ import msi.gama.util.GamaDate;
  *
  * @author rashid_waraich
  */
-public class Vehicle extends SimUnit {
-
+public class Vehicle extends SchedulingUnit {
 	private Person ownerPerson = null;
 	private Leg currentLeg = null;
 	private int legIndex;
@@ -37,8 +38,8 @@ public class Vehicle extends SimUnit {
 	private int linkIndex;
 	private Road[] currentRoute = null;
 
-	public Vehicle(IScope scope, Scheduler scheduler, Person ownerPerson) {
-		super(scope, scheduler);
+	public Vehicle(IScope scope, IAgent agent, Scheduler scheduler, Person ownerPerson) {
+		super(scope, agent, scheduler);
 		this.ownerPerson = ownerPerson;
 		initialize();
 	}
@@ -86,7 +87,7 @@ public class Vehicle extends SimUnit {
 
 		Road road = getCurrentRoad();
 		// schedule start leg message
-		scheduleStartingLegMessage(departureTime, road);
+		scheduleStartingLegMessage(this, departureTime, road);
 	}
 
 	/**
@@ -128,7 +129,7 @@ public class Vehicle extends SimUnit {
 	public void setCurrentLeg(Leg currentLeg) {
 		this.currentLeg = currentLeg;
 		List<Road> roads = currentLeg.getRoads();
-		currentRoute = (Road[]) roads.toArray();
+		currentRoute = roads.toArray(new Road[roads.size()]);
 	}
 
 	protected Road[] getCurrentLinkRoute() {
@@ -177,8 +178,7 @@ public class Vehicle extends SimUnit {
 	 * isCurrentLegFinished==false
 	 */
 	public void moveToNextLinkInLeg() {
-		setLinkIndex(getLinkIndex() + 1);
-		setCurrentRoad(getCurrentLinkRoute()[getLinkIndex()]);
+		currentRoad = currentRoute[++linkIndex];
 	}
 
 	// note: does not affect the link index
@@ -204,13 +204,13 @@ public class Vehicle extends SimUnit {
 		linkIndex = getCurrentLinkRoute().length;
 	}
 
-	public void scheduleEnterRoadMessage(GamaDate scheduleTime, Road road) {
+	public void scheduleEnterRoadMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
 		/*
 		 * before entering the new road, we must leave the previous road (if there is a
 		 * previous road) the first link does not need to be left (which has index -1)
 		 */
 		if (this.getLinkIndex() >= 0) {
-			scheduleLeavePreviousRoadMessage(scheduleTime);
+			scheduleLeavePreviousRoadMessage(emitterUnit, scheduleTime);
 		}
 
 		if (isEndingLegMode()) {
@@ -220,13 +220,13 @@ public class Vehicle extends SimUnit {
 			 * be correct any more (which involves the noOfCarsPromisedToEnterRoad variable)
 			 */
 			road.giveBackPromisedSpaceToRoad(); // next road
-			scheduleEndLegMessage(scheduleTime, road);
+			scheduleEndLegMessage(emitterUnit, scheduleTime, road);
 		} else {
-			_scheduleEnterRoadMessage(scheduleTime, road);
+			_scheduleEnterRoadMessage(emitterUnit, scheduleTime, road);
 		}
 	}
 
-	public void scheduleLeavePreviousRoadMessage(GamaDate scheduleTime) {
+	public void scheduleLeavePreviousRoadMessage(INamable emitterUnit, GamaDate scheduleTime) {
 		Road previousRoad = null;
 
 		/*
@@ -243,33 +243,33 @@ public class Vehicle extends SimUnit {
 			System.err.println("Some thing is wrong with the simulation: Why is this.getLinkIndex() negative");
 		}
 
-		scheduleLeaveRoadMessage(scheduleTime, previousRoad);
+		scheduleLeaveRoadMessage(emitterUnit, scheduleTime, previousRoad);
 	}
 
-	protected void _scheduleEnterRoadMessage(GamaDate scheduleTime, Road road) {
-		sendMessage(MessageFactory.getEnterRoadMessage(road.scheduler, this), road, scheduleTime);
+	protected void _scheduleEnterRoadMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
+		sendMessage(MessageFactory.getEnterRoadMessage(emitterUnit, road, road.getScheduler(), this, scheduleTime));
 	}
 
-	public void scheduleEndRoadMessage(GamaDate scheduleTime, Road road) {
-		sendMessage(MessageFactory.getEndRoadMessage(road.scheduler, this), road, scheduleTime);
+	public void scheduleEndRoadMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
+		sendMessage(MessageFactory.getEndRoadMessage(emitterUnit, road, road.getScheduler(), this, scheduleTime));
 	}
 
-	public void scheduleLeaveRoadMessage(GamaDate scheduleTime, Road road) {
-		sendMessage(MessageFactory.getLeaveRoadMessage(road.scheduler, this), road, scheduleTime);
+	public void scheduleLeaveRoadMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
+		sendMessage(MessageFactory.getLeaveRoadMessage(emitterUnit, road, road.getScheduler(), this, scheduleTime));
 	}
 
-	public void scheduleEndLegMessage(GamaDate scheduleTime, Road road) {
-		sendMessage(MessageFactory.getEndLegMessage(road.scheduler, this), road, scheduleTime);
+	public void scheduleEndLegMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
+		sendMessage(MessageFactory.getEndLegMessage(emitterUnit, road, road.getScheduler(), this, scheduleTime));
 	}
 
-	public void scheduleStartingLegMessage(GamaDate scheduleTime, Road road) {
-		sendMessage(MessageFactory.getStartingLegMessage(road.scheduler, this), road, scheduleTime);
+	public void scheduleStartingLegMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
+		sendMessage(MessageFactory.getStartingLegMessage(emitterUnit, road, road.getScheduler(), this, scheduleTime));
 	}
 
-	public DeadlockPreventionMessage scheduleDeadlockPreventionMessage(GamaDate scheduleTime, Road road) {
-		DeadlockPreventionMessage dpMessage = MessageFactory.getDeadlockPreventionMessage(road.scheduler, this);
-		sendMessage(dpMessage, road, scheduleTime);
-		return dpMessage;
+	public DeadlockPreventionMessage scheduleDeadlockPreventionMessage(INamable emitterUnit, GamaDate scheduleTime,
+			Road road) {
+		return (DeadlockPreventionMessage) sendMessage(MessageFactory.getDeadlockPreventionMessage(emitterUnit, road,
+				road.getScheduler(), this, scheduleTime));
 	}
 
 	public int getCurrentLinkRouteLength() {

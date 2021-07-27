@@ -12,16 +12,17 @@
 package jdeqsim.irit.gama.test.jdeqsim;
 
 import irit.gama.common.Param;
-import irit.gama.core.scheduler.MessageFactory;
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.scheduler.message.DeadlockPreventionMessage;
-import irit.gama.core.scheduler.message.EndLegMessage;
-import irit.gama.core.scheduler.message.EndRoadMessage;
-import irit.gama.core.scheduler.message.EnterRoadMessage;
-import irit.gama.core.scheduler.message.LeaveRoadMessage;
-import irit.gama.core.scheduler.message.StartingLegMessage;
-import irit.gama.core.sim_unit.Person;
-import irit.gama.core.sim_unit.Vehicle;
+import irit.gama.core.message.MessageFactory;
+import irit.gama.core.message.def.DeadlockPreventionMessage;
+import irit.gama.core.message.def.EndLegMessage;
+import irit.gama.core.message.def.EndRoadMessage;
+import irit.gama.core.message.def.EnterRoadMessage;
+import irit.gama.core.message.def.LeaveRoadMessage;
+import irit.gama.core.message.def.StartingLegMessage;
+import irit.gama.core.unit.Person;
+import irit.gama.core.unit.Scheduler;
+import irit.gama.core.unit.Vehicle;
+import msi.gama.runtime.GAMA;
 
 public class TestMessageFactory extends GenericTest {
 
@@ -37,12 +38,13 @@ public class TestMessageFactory extends GenericTest {
 	public static void testMessageFactory1() {
 		MessageFactory.GC_ALL_MESSAGES();
 		Param.GC_MESSAGES = true;
-		MessageFactory.disposeEndLegMessage(new EndLegMessage(null, null));
-		MessageFactory.disposeEnterRoadMessage(new EnterRoadMessage(null, null));
-		MessageFactory.disposeStartingLegMessage(new StartingLegMessage(null, null));
-		MessageFactory.disposeLeaveRoadMessage(new LeaveRoadMessage(null, null));
-		MessageFactory.disposeEndRoadMessage(new EndRoadMessage(null, null));
-		MessageFactory.disposeDeadlockPreventionMessage(new DeadlockPreventionMessage(null, null));
+
+		MessageFactory.disposeEndLegMessage(new EndLegMessage(null, null, null, null));
+		MessageFactory.disposeEnterRoadMessage(new EnterRoadMessage(null, null, null, null));
+		MessageFactory.disposeStartingLegMessage(new StartingLegMessage(null, null, null, null));
+		MessageFactory.disposeLeaveRoadMessage(new LeaveRoadMessage(null, null, null, null));
+		MessageFactory.disposeEndRoadMessage(new EndRoadMessage(null, null, null, null));
+		MessageFactory.disposeDeadlockPreventionMessage(new DeadlockPreventionMessage(null, null, null, null));
 
 		assert (0 == MessageFactory.getEndLegMessageQueue().size());
 		assert (0 == MessageFactory.getEnterRoadMessageQueue().size());
@@ -56,12 +58,13 @@ public class TestMessageFactory extends GenericTest {
 	public static void testMessageFactory2() {
 		MessageFactory.GC_ALL_MESSAGES();
 		Param.GC_MESSAGES = false;
-		MessageFactory.disposeEndLegMessage(new EndLegMessage(null, null));
-		MessageFactory.disposeEnterRoadMessage(new EnterRoadMessage(null, null));
-		MessageFactory.disposeStartingLegMessage(new StartingLegMessage(null, null));
-		MessageFactory.disposeLeaveRoadMessage(new LeaveRoadMessage(null, null));
-		MessageFactory.disposeEndRoadMessage(new EndRoadMessage(null, null));
-		MessageFactory.disposeDeadlockPreventionMessage(new DeadlockPreventionMessage(null, null));
+
+		MessageFactory.disposeEndLegMessage(new EndLegMessage(null, null, null, null));
+		MessageFactory.disposeEnterRoadMessage(new EnterRoadMessage(null, null, null, null));
+		MessageFactory.disposeStartingLegMessage(new StartingLegMessage(null, null, null, null));
+		MessageFactory.disposeLeaveRoadMessage(new LeaveRoadMessage(null, null, null, null));
+		MessageFactory.disposeEndRoadMessage(new EndRoadMessage(null, null, null, null));
+		MessageFactory.disposeDeadlockPreventionMessage(new DeadlockPreventionMessage(null, null, null, null));
 
 		assert (1 == MessageFactory.getEndLegMessageQueue().size());
 		assert (1 == MessageFactory.getEnterRoadMessageQueue().size());
@@ -75,19 +78,20 @@ public class TestMessageFactory extends GenericTest {
 	public static void testMessageFactory3() {
 		MessageFactory.GC_ALL_MESSAGES();
 		Param.GC_MESSAGES = false;
-		MessageFactory.disposeEndLegMessage(new EndLegMessage(null, null));
-		MessageFactory.disposeEnterRoadMessage(new EnterRoadMessage(null, null));
-		MessageFactory.disposeStartingLegMessage(new StartingLegMessage(null, null));
-		MessageFactory.disposeLeaveRoadMessage(new LeaveRoadMessage(null, null));
-		MessageFactory.disposeEndRoadMessage(new EndRoadMessage(null, null));
-		MessageFactory.disposeDeadlockPreventionMessage(new DeadlockPreventionMessage(null, null));
 
-		MessageFactory.getEndLegMessage(null, null);
-		MessageFactory.getEnterRoadMessage(null, null);
-		MessageFactory.getStartingLegMessage(null, null);
-		MessageFactory.getLeaveRoadMessage(null, null);
-		MessageFactory.getEndRoadMessage(null, null);
-		MessageFactory.getDeadlockPreventionMessage(null, null);
+		MessageFactory.disposeEndLegMessage(new EndLegMessage(null, null, null, null));
+		MessageFactory.disposeEnterRoadMessage(new EnterRoadMessage(null, null, null, null));
+		MessageFactory.disposeStartingLegMessage(new StartingLegMessage(null, null, null, null));
+		MessageFactory.disposeLeaveRoadMessage(new LeaveRoadMessage(null, null, null, null));
+		MessageFactory.disposeEndRoadMessage(new EndRoadMessage(null, null, null, null));
+		MessageFactory.disposeDeadlockPreventionMessage(new DeadlockPreventionMessage(null, null, null, null));
+
+		MessageFactory.getEndLegMessage(null, null, null, null, null);
+		MessageFactory.getEnterRoadMessage(null, null, null, null, null);
+		MessageFactory.getStartingLegMessage(null, null, null, null, null);
+		MessageFactory.getLeaveRoadMessage(null, null, null, null, null);
+		MessageFactory.getEndRoadMessage(null, null, null, null, null);
+		MessageFactory.getDeadlockPreventionMessage(null, null, null, null, null);
 
 		assert (0 == MessageFactory.getEndLegMessageQueue().size());
 		assert (0 == MessageFactory.getEnterRoadMessageQueue().size());
@@ -101,46 +105,50 @@ public class TestMessageFactory extends GenericTest {
 	public static void testMessageFactory5() {
 		MessageFactory.GC_ALL_MESSAGES();
 		Param.GC_MESSAGES = true;
-		Scheduler scheduler = new Scheduler(DATE_0);
-		Person person = new Person(null, scheduler);
-		Vehicle vehicle = new Vehicle(null, scheduler, person);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Person person = new Person();
+		Vehicle vehicle = new Vehicle(null, null, scheduler, person);
 
-		assert (MessageFactory.getEndLegMessage(scheduler, vehicle).scheduler == scheduler);
-		assert (MessageFactory.getEnterRoadMessage(scheduler, vehicle).scheduler == scheduler);
-		assert (MessageFactory.getStartingLegMessage(scheduler, vehicle).scheduler == scheduler);
-		assert (MessageFactory.getLeaveRoadMessage(scheduler, vehicle).scheduler == scheduler);
-		assert (MessageFactory.getEndRoadMessage(scheduler, vehicle).scheduler == scheduler);
-		assert (MessageFactory.getDeadlockPreventionMessage(scheduler, vehicle).scheduler == scheduler);
+		assert (MessageFactory.getEndLegMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
+		assert (MessageFactory.getEnterRoadMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
+		assert (MessageFactory.getStartingLegMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
+		assert (MessageFactory.getLeaveRoadMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
+		assert (MessageFactory.getEndRoadMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
+		assert (MessageFactory.getDeadlockPreventionMessage(null, null, scheduler, vehicle, null)
+				.getScheduler() == scheduler);
 
-		assert (MessageFactory.getEndLegMessage(scheduler, vehicle).vehicle == vehicle);
-		assert (MessageFactory.getEnterRoadMessage(scheduler, vehicle).vehicle == vehicle);
-		assert (MessageFactory.getStartingLegMessage(scheduler, vehicle).vehicle == vehicle);
-		assert (MessageFactory.getLeaveRoadMessage(scheduler, vehicle).vehicle == vehicle);
-		assert (MessageFactory.getEndRoadMessage(scheduler, vehicle).vehicle == vehicle);
-		assert (MessageFactory.getDeadlockPreventionMessage(scheduler, vehicle).vehicle == vehicle);
+		assert (MessageFactory.getEndLegMessage(null, null, scheduler, vehicle, null).getVehicle() == vehicle);
+		assert (MessageFactory.getEnterRoadMessage(null, null, scheduler, vehicle, null).getVehicle() == vehicle);
+		assert (MessageFactory.getStartingLegMessage(null, null, scheduler, vehicle, null).getVehicle() == vehicle);
+		assert (MessageFactory.getLeaveRoadMessage(null, null, scheduler, vehicle, null).getVehicle() == vehicle);
+		assert (MessageFactory.getEndRoadMessage(null, null, scheduler, vehicle, null).getVehicle() == vehicle);
+		assert (MessageFactory.getDeadlockPreventionMessage(null, null, scheduler, vehicle, null)
+				.getVehicle() == vehicle);
 	}
 
 	// check initialization using rest
 	public static void testMessageFactory6() {
 		MessageFactory.GC_ALL_MESSAGES();
 		Param.GC_MESSAGES = false;
-		Scheduler scheduler = new Scheduler(DATE_0);
-		Person person = new Person(null, scheduler);
-		Vehicle vehicle = new Vehicle(null, scheduler, person);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Person person = new Person();
+		Vehicle vehicle = new Vehicle(null, null, scheduler, person);
 
-		assert (MessageFactory.getEndLegMessage(scheduler, vehicle).scheduler == scheduler);
-		assert (MessageFactory.getEnterRoadMessage(scheduler, vehicle).scheduler == scheduler);
-		assert (MessageFactory.getStartingLegMessage(scheduler, vehicle).scheduler == scheduler);
-		assert (MessageFactory.getLeaveRoadMessage(scheduler, vehicle).scheduler == scheduler);
-		assert (MessageFactory.getEndRoadMessage(scheduler, vehicle).scheduler == scheduler);
-		assert (MessageFactory.getDeadlockPreventionMessage(scheduler, vehicle).scheduler == scheduler);
+		assert (MessageFactory.getEndLegMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
+		assert (MessageFactory.getEnterRoadMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
+		assert (MessageFactory.getStartingLegMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
+		assert (MessageFactory.getLeaveRoadMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
+		assert (MessageFactory.getEndRoadMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
+		assert (MessageFactory.getDeadlockPreventionMessage(null, null, scheduler, vehicle, null)
+				.getScheduler() == scheduler);
 
-		assert (MessageFactory.getEndLegMessage(scheduler, vehicle).vehicle == vehicle);
-		assert (MessageFactory.getEnterRoadMessage(scheduler, vehicle).vehicle == vehicle);
-		assert (MessageFactory.getStartingLegMessage(scheduler, vehicle).vehicle == vehicle);
-		assert (MessageFactory.getLeaveRoadMessage(scheduler, vehicle).vehicle == vehicle);
-		assert (MessageFactory.getEndRoadMessage(scheduler, vehicle).vehicle == vehicle);
-		assert (MessageFactory.getDeadlockPreventionMessage(scheduler, vehicle).vehicle == vehicle);
+		assert (MessageFactory.getEndLegMessage(null, null, scheduler, vehicle, null).getVehicle() == vehicle);
+		assert (MessageFactory.getEnterRoadMessage(null, null, scheduler, vehicle, null).getVehicle() == vehicle);
+		assert (MessageFactory.getStartingLegMessage(null, null, scheduler, vehicle, null).getVehicle() == vehicle);
+		assert (MessageFactory.getLeaveRoadMessage(null, null, scheduler, vehicle, null).getVehicle() == vehicle);
+		assert (MessageFactory.getEndRoadMessage(null, null, scheduler, vehicle, null).getVehicle() == vehicle);
+		assert (MessageFactory.getDeadlockPreventionMessage(null, null, scheduler, vehicle, null)
+				.getVehicle() == vehicle);
 	}
 
 }

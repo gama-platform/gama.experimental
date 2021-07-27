@@ -12,8 +12,7 @@
 package irit.gaml.skill;
 
 import irit.gama.common.IKeyword;
-import irit.gama.core.scheduler.Scheduler;
-import irit.gama.core.sim_unit.Person;
+import irit.gama.core.unit.Person;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
@@ -41,11 +40,23 @@ public class JDEQSIMPersonSkill extends JDEQSIMSimUnitSkill {
 		IAgent agent = scope.getAgent();
 
 		agent.setAttribute(IKeyword.SCHEDULER, schedulerAgent);
+		agent.setAttribute(IKeyword.CORE_DEFINITION, new Person(scope, agent));
+		return true;
+	}
 
-		Scheduler scheduler = (Scheduler) schedulerAgent.getAttribute(IKeyword.SCHEDULER);
-		Person innerPerson = new Person(scope, scheduler);
+	@SuppressWarnings("unchecked")
+	@action(name = "set_route", args = {
+			@arg(name = IKeyword.ROUTE, type = IType.LIST, optional = false, doc = @doc("The route.")) })
+	public Object setPlan(final IScope scope) throws GamaRuntimeException {
+		/*
+		 * List<IAgent> roads = (List<IAgent>) scope.getArg(IKeyword.ROUTE, IType.LIST);
+		 * Person innerPerson = (Person)
+		 * scope.getAgent().getAttribute(IKeyword.CORE_DEFINITION);
+		 * 
+		 * innerPerson.addActivity(new Activity(endTime, 0.0, roads.get(0)));
+		 * innerPerson.addLeg(new Leg(roads));
+		 */
 
-		agent.setAttribute(IKeyword.CORE_DEFINITION, innerPerson);
 		return true;
 	}
 }

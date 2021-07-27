@@ -12,7 +12,7 @@
 package irit.gama.common;
 
 /**
- * Keywords JDEQSIM IRIT
+ * GAMA keywords JDEQSIM
  * 
  * @author Jean-François Erdelyi
  */
@@ -23,9 +23,11 @@ public interface IKeyword {
 	public static final String JDQSIM_VEHICLE = "jdeqsimvehicle";
 	public static final String JDQSIM_PERSON = "jdeqsimperson";
 	public static final String JDQSIM_SCHEDULER = "jdeqsimscheduler";
-	
+
 	public static final String SCHEDULER = "scheduler";
 	public static final String SCHEDULING = "scheduling";
 	public static final String OWNER = "owner";
 	public static final String CORE_DEFINITION = "core_definition";
+
+	public static final String ROUTE = "route";
 }

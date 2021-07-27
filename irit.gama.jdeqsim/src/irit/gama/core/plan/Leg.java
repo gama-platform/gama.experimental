@@ -9,16 +9,26 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core;
+package irit.gama.core.plan;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import irit.gama.core.sim_unit.Road;
+import irit.gama.core.IPlanElement;
+import irit.gama.core.unit.Road;
 
+/**
+ * Leg implementation
+ * 
+ * @author Jean-François Erdelyi
+ */
 public class Leg implements IPlanElement {
 
 	List<Road> route = new ArrayList<>();
+
+	public Leg(List<Road> roads) {
+		route = roads;
+	}
 
 	public void addRoad(Road road) {
 		this.route.add(road);
@@ -28,4 +38,7 @@ public class Leg implements IPlanElement {
 		return route;
 	}
 
+	public Road getFirstRoad() {
+		return route.get(0);
+	}
 }

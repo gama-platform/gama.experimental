@@ -9,11 +9,9 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core.scheduler;
+package irit.gama.core.message;
 
 import java.util.PriorityQueue;
-
-import irit.gama.core.scheduler.message.Message;
 
 /**
  * The message queue of the micro-simulation. <br/>

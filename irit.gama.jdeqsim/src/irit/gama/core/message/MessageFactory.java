@@ -9,18 +9,23 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core.scheduler;
+package irit.gama.core.message;
 
 import java.util.LinkedList;
 
 import irit.gama.common.Param;
-import irit.gama.core.scheduler.message.DeadlockPreventionMessage;
-import irit.gama.core.scheduler.message.EndLegMessage;
-import irit.gama.core.scheduler.message.EndRoadMessage;
-import irit.gama.core.scheduler.message.EnterRoadMessage;
-import irit.gama.core.scheduler.message.LeaveRoadMessage;
-import irit.gama.core.scheduler.message.StartingLegMessage;
-import irit.gama.core.sim_unit.Vehicle;
+import irit.gama.common.logger.Logger;
+import irit.gama.core.INamable;
+import irit.gama.core.SchedulingUnit;
+import irit.gama.core.message.def.DeadlockPreventionMessage;
+import irit.gama.core.message.def.EndLegMessage;
+import irit.gama.core.message.def.EndRoadMessage;
+import irit.gama.core.message.def.EnterRoadMessage;
+import irit.gama.core.message.def.LeaveRoadMessage;
+import irit.gama.core.message.def.StartingLegMessage;
+import irit.gama.core.unit.Scheduler;
+import irit.gama.core.unit.Vehicle;
+import msi.gama.util.GamaDate;
 
 /**
  * The message factory is used for creating and disposing messages - mainly for
@@ -73,64 +78,87 @@ public class MessageFactory {
 		}
 	}
 
-	public static EndLegMessage getEndLegMessage(Scheduler scheduler, Vehicle vehicle) {
+	public static EndLegMessage getEndLegMessage(INamable emitter, SchedulingUnit receiver, Scheduler scheduler,
+			Vehicle vehicle, GamaDate scheduleTime) {
+		EndLegMessage message;
 		if (endLegMessageQueue.size() == 0) {
-			return new EndLegMessage(scheduler, vehicle);
+			message = new EndLegMessage(receiver, scheduler, vehicle, scheduleTime);
 		} else {
-			EndLegMessage message = endLegMessageQueue.poll();
-			message.resetMessage(scheduler, vehicle);
-			return message;
+			message = endLegMessageQueue.poll();
+			message.resetMessage(receiver, scheduler, vehicle, scheduleTime);
 		}
+		Logger.addMessage(emitter, receiver, message);
+		return message;
 	}
 
-	public static EnterRoadMessage getEnterRoadMessage(Scheduler scheduler, Vehicle vehicle) {
+	public static EnterRoadMessage getEnterRoadMessage(INamable emitter, SchedulingUnit receiver, Scheduler scheduler,
+			Vehicle vehicle, GamaDate scheduleTime) {
+		EnterRoadMessage message;
 		if (enterRoadMessageQueue.size() == 0) {
-			return new EnterRoadMessage(scheduler, vehicle);
+			message = new EnterRoadMessage(receiver, scheduler, vehicle, scheduleTime);
 		} else {
-			EnterRoadMessage message = enterRoadMessageQueue.poll();
-			message.resetMessage(scheduler, vehicle);
-			return message;
+			message = enterRoadMessageQueue.poll();
+			message.resetMessage(receiver, scheduler, vehicle, scheduleTime);
 		}
+		Logger.addMessage(emitter, receiver, message);
+		return message;
 	}
 
-	public static StartingLegMessage getStartingLegMessage(Scheduler scheduler, Vehicle vehicle) {
+	public static StartingLegMessage getStartingLegMessage(INamable emitter, SchedulingUnit receiver,
+			Scheduler scheduler, Vehicle vehicle, GamaDate scheduleTime) {
+		StartingLegMessage message;
 		if (startingLegMessageQueue.size() == 0) {
-			return new StartingLegMessage(scheduler, vehicle);
+			message = new StartingLegMessage(receiver, scheduler, vehicle, scheduleTime);
 		} else {
-			StartingLegMessage message = startingLegMessageQueue.poll();
-			message.resetMessage(scheduler, vehicle);
+			message = startingLegMessageQueue.poll();
+			message.resetMessage(receiver, scheduler, vehicle, scheduleTime);
 			return message;
 		}
+		Logger.addMessage(emitter, receiver, message);
+		return message;
 	}
 
-	public static LeaveRoadMessage getLeaveRoadMessage(Scheduler scheduler, Vehicle vehicle) {
+	public static LeaveRoadMessage getLeaveRoadMessage(INamable emitter, SchedulingUnit receiver, Scheduler scheduler,
+			Vehicle vehicle, GamaDate scheduleTime) {
+		LeaveRoadMessage message;
 		if (leaveRoadMessageQueue.size() == 0) {
-			return new LeaveRoadMessage(scheduler, vehicle);
+			message = new LeaveRoadMessage(receiver, scheduler, vehicle, scheduleTime);
 		} else {
-			LeaveRoadMessage message = leaveRoadMessageQueue.poll();
-			message.resetMessage(scheduler, vehicle);
+			message = leaveRoadMessageQueue.poll();
+			message.resetMessage(receiver, scheduler, vehicle, scheduleTime);
 			return message;
 		}
+		Logger.addMessage(emitter, receiver, message);
+
+		return message;
 	}
 
-	public static EndRoadMessage getEndRoadMessage(Scheduler scheduler, Vehicle vehicle) {
+	public static EndRoadMessage getEndRoadMessage(INamable emitter, SchedulingUnit receiver, Scheduler scheduler,
+			Vehicle vehicle, GamaDate scheduleTime) {
+		EndRoadMessage message;
 		if (endRoadMessageQueue.size() == 0) {
-			return new EndRoadMessage(scheduler, vehicle);
+			message = new EndRoadMessage(receiver, scheduler, vehicle, scheduleTime);
 		} else {
-			EndRoadMessage message = endRoadMessageQueue.poll();
-			message.resetMessage(scheduler, vehicle);
+			message = endRoadMessageQueue.poll();
+			message.resetMessage(receiver, scheduler, vehicle, scheduleTime);
 			return message;
 		}
+		Logger.addMessage(emitter, receiver, message);
+		return message;
 	}
 
-	public static DeadlockPreventionMessage getDeadlockPreventionMessage(Scheduler scheduler, Vehicle vehicle) {
+	public static DeadlockPreventionMessage getDeadlockPreventionMessage(INamable emitter, SchedulingUnit receiver,
+			Scheduler scheduler, Vehicle vehicle, GamaDate scheduleTime) {
+		DeadlockPreventionMessage message;
 		if (deadlockPreventionMessageQueue.size() == 0) {
-			return new DeadlockPreventionMessage(scheduler, vehicle);
+			message = new DeadlockPreventionMessage(receiver, scheduler, vehicle, scheduleTime);
 		} else {
-			DeadlockPreventionMessage message = deadlockPreventionMessageQueue.poll();
-			message.resetMessage(scheduler, vehicle);
+			message = deadlockPreventionMessageQueue.poll();
+			message.resetMessage(receiver, scheduler, vehicle, scheduleTime);
 			return message;
 		}
+		Logger.addMessage(emitter, receiver, message);
+		return message;
 	}
 
 	public static void GC_ALL_MESSAGES() {

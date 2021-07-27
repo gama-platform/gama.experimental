@@ -9,11 +9,18 @@
  *
  ********************************************************************************************************/
 
-package irit.gama.core;
+package irit.gama.core.plan;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import irit.gama.core.IPlanElement;
+
+/**
+ * Plan implementation
+ * 
+ * @author Jean-François Erdelyi
+ */
 public class Plan {
 
 	private ArrayList<IPlanElement> plan = new ArrayList<>();
