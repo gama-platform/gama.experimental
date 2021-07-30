@@ -16,6 +16,7 @@ import irit.gama.core.plan.Activity;
 import irit.gama.core.plan.Leg;
 import irit.gama.core.plan.Plan;
 import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.runtime.IScope;
 
 /**
@@ -36,18 +37,18 @@ public class Person extends SkillUnit {
 		super(scope, relativeAgent);
 	}
 
-	public void addActivity(Activity activity) {
+	public boolean addActivity(Activity activity) {
 		if (selectedPlan == null) {
 			selectedPlan = new Plan();
 		}
-		selectedPlan.addActivity(activity);
+		return selectedPlan.addActivity(activity);
 	}
 
-	public void addLeg(Leg leg) {
+	public boolean addLeg(Leg leg) {
 		if (selectedPlan == null) {
 			selectedPlan = new Plan();
 		}
-		selectedPlan.addLeg(leg);
+		return selectedPlan.addLeg(leg);
 	}
 
 	public void removePlan() {
@@ -56,6 +57,12 @@ public class Person extends SkillUnit {
 
 	public Plan getSelectedPlan() {
 		return selectedPlan;
+	}
+
+	public void setToLocation(GamaPoint iLocation) {
+		if (relativeAgent != null) {
+			relativeAgent.setLocation(iLocation);
+		}
 	}
 
 }

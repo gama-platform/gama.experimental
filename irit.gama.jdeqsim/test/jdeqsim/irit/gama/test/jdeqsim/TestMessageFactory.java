@@ -105,7 +105,7 @@ public class TestMessageFactory extends GenericTest {
 	public static void testMessageFactory5() {
 		MessageFactory.GC_ALL_MESSAGES();
 		Param.GC_MESSAGES = true;
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 		Person person = new Person();
 		Vehicle vehicle = new Vehicle(null, null, scheduler, person);
 
@@ -130,7 +130,7 @@ public class TestMessageFactory extends GenericTest {
 	public static void testMessageFactory6() {
 		MessageFactory.GC_ALL_MESSAGES();
 		Param.GC_MESSAGES = false;
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 		Person person = new Person();
 		Vehicle vehicle = new Vehicle(null, null, scheduler, person);
 

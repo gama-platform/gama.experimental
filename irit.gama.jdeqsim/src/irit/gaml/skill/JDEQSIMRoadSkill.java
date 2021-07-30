@@ -35,15 +35,27 @@ public class JDEQSIMRoadSkill extends JDEQSIMSimUnitSkill {
 	// Actions
 
 	@action(name = "init", args = {
-			@arg(name = IKeyword.SCHEDULER, type = IType.AGENT, optional = false, doc = @doc("The scheduler.")) })
+			@arg(name = IKeyword.SCHEDULER, type = IType.AGENT, optional = false, doc = @doc("The scheduler.")),
+			@arg(name = IKeyword.FREESPEED, type = IType.FLOAT, optional = false, doc = @doc("Freespeed (m/s).")),
+			@arg(name = IKeyword.CAPACITY, type = IType.FLOAT, optional = true, doc = @doc("Capacity (s).")),
+			@arg(name = IKeyword.LANES, type = IType.INT, optional = false, doc = @doc("Number of lane.")),
+			@arg(name = IKeyword.LENGTH, type = IType.FLOAT, optional = false, doc = @doc("length (m).")) })
 	public Object init(final IScope scope) throws GamaRuntimeException {
 		IAgent schedulerAgent = (IAgent) scope.getArg(IKeyword.SCHEDULER, IType.AGENT);
-		IAgent agent = scope.getAgent();
-
-		agent.setAttribute(IKeyword.SCHEDULER, schedulerAgent);
-
+		double freespeed = (double) scope.getArg(IKeyword.FREESPEED, IType.FLOAT);
+		double capacity = (double) scope.getArg(IKeyword.CAPACITY, IType.FLOAT);
+		int lanes = (int) scope.getArg(IKeyword.LANES, IType.INT);
+		double length = (double) scope.getArg(IKeyword.LENGTH, IType.FLOAT);
 		Scheduler scheduler = (Scheduler) schedulerAgent.getAttribute(IKeyword.CORE_DEFINITION);
-		agent.setAttribute(IKeyword.CORE_DEFINITION, new Road(scope, agent, scheduler, 27.78, 36000, 1, 10000.0));
+
+		if (capacity <= 0) {
+			capacity = 3600.0;
+		}
+
+		IAgent agent = scope.getAgent();
+		agent.setAttribute(IKeyword.SCHEDULER, schedulerAgent);
+		agent.setAttribute(IKeyword.CORE_DEFINITION,
+				new Road(scope, agent, scheduler, freespeed, capacity, lanes, length));
 		return true;
 	}
 }

@@ -11,9 +11,9 @@
 
 package irit.gama.core.unit;
 
-import irit.gama.core.message.MessageQueue;
 import irit.gama.core.SkillUnit;
 import irit.gama.core.message.Message;
+import irit.gama.core.message.MessageQueue;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
@@ -39,10 +39,10 @@ public class Scheduler extends SkillUnit {
 	 */
 	private Message lastMessage = null;
 
-	public Scheduler(IScope scope, IAgent agent, GamaDate startingDate) {
-		super(scope, agent);
+	public Scheduler(IScope scope, IAgent relativeAgent) {
+		super(scope, relativeAgent);
 		this.queue = new MessageQueue();
-		lastEventTime = startingDate;
+		lastEventTime = scope.getSimulation().getClock().getCurrentDate();
 	}
 
 	public Message schedule(Message m) throws GamaRuntimeException {

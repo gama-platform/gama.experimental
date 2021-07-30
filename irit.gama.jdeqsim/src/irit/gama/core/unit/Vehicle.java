@@ -13,14 +13,15 @@ package irit.gama.core.unit;
 
 import java.util.List;
 
-import irit.gama.core.IPlanElement;
 import irit.gama.core.INamable;
+import irit.gama.core.IPlanElement;
 import irit.gama.core.SchedulingUnit;
 import irit.gama.core.message.MessageFactory;
 import irit.gama.core.message.def.DeadlockPreventionMessage;
 import irit.gama.core.plan.Activity;
 import irit.gama.core.plan.Leg;
 import irit.gama.core.plan.Plan;
+import msi.gama.metamodel.agent.AbstractAgent;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaDate;
@@ -247,33 +248,41 @@ public class Vehicle extends SchedulingUnit {
 	}
 
 	protected void _scheduleEnterRoadMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
-		sendMessage(MessageFactory.getEnterRoadMessage(emitterUnit, road, road.getScheduler(), this, scheduleTime));
+		sendMessage(MessageFactory.getEnterRoadMessage(emitterUnit, road, getScheduler(), this, scheduleTime));
 	}
 
 	public void scheduleEndRoadMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
-		sendMessage(MessageFactory.getEndRoadMessage(emitterUnit, road, road.getScheduler(), this, scheduleTime));
+		sendMessage(MessageFactory.getEndRoadMessage(emitterUnit, road, getScheduler(), this, scheduleTime));
 	}
 
 	public void scheduleLeaveRoadMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
-		sendMessage(MessageFactory.getLeaveRoadMessage(emitterUnit, road, road.getScheduler(), this, scheduleTime));
+		sendMessage(MessageFactory.getLeaveRoadMessage(emitterUnit, road, getScheduler(), this, scheduleTime));
 	}
 
 	public void scheduleEndLegMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
-		sendMessage(MessageFactory.getEndLegMessage(emitterUnit, road, road.getScheduler(), this, scheduleTime));
+		sendMessage(MessageFactory.getEndLegMessage(emitterUnit, road, getScheduler(), this, scheduleTime));
 	}
 
 	public void scheduleStartingLegMessage(INamable emitterUnit, GamaDate scheduleTime, Road road) {
-		sendMessage(MessageFactory.getStartingLegMessage(emitterUnit, road, road.getScheduler(), this, scheduleTime));
+		sendMessage(MessageFactory.getStartingLegMessage(emitterUnit, road, getScheduler(), this, scheduleTime));
 	}
 
 	public DeadlockPreventionMessage scheduleDeadlockPreventionMessage(INamable emitterUnit, GamaDate scheduleTime,
 			Road road) {
-		return (DeadlockPreventionMessage) sendMessage(MessageFactory.getDeadlockPreventionMessage(emitterUnit, road,
-				road.getScheduler(), this, scheduleTime));
+		return (DeadlockPreventionMessage) sendMessage(
+				MessageFactory.getDeadlockPreventionMessage(emitterUnit, road, getScheduler(), this, scheduleTime));
 	}
 
 	public int getCurrentLinkRouteLength() {
 		return currentRoute.length;
+	}
+
+	public Object die() {
+		if (relativeAgent != null) {
+			AbstractAgent aa = (AbstractAgent) relativeAgent;
+			return aa.primDie(getScope());
+		}
+		return null;
 	}
 
 	/*

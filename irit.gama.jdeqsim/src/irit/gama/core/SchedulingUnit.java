@@ -22,18 +22,18 @@ import msi.gama.runtime.IScope;
  * @author Jean-François Erdelyi
  */
 public abstract class SchedulingUnit extends SkillUnit {
-	protected Scheduler scheduler = null;
+	private Scheduler scheduler;
 
 	public SchedulingUnit(IScope scope, IAgent relativeAgent, Scheduler scheduler) {
 		super(scope, relativeAgent);
 		this.scheduler = scheduler;
 	}
 
-	public Scheduler getScheduler() {
-		return scheduler;
-	}
-
 	public Message sendMessage(Message m) {
 		return scheduler.schedule(m);
+	}
+
+	public Scheduler getScheduler() {
+		return scheduler;
 	}
 }

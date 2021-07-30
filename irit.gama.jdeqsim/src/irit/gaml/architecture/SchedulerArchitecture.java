@@ -26,6 +26,7 @@ import msi.gaml.architecture.reflex.ReflexArchitecture;
  * 
  * @author Jean-François Erdelyi
  */
+
 @skill(name = IKeyword.JDQSIM_SCHEDULER, concept = { IConcept.BEHAVIOR,
 		IConcept.ARCHITECTURE }, doc = @doc("Scheduler behavior"))
 public class SchedulerArchitecture extends ReflexArchitecture {
@@ -36,7 +37,7 @@ public class SchedulerArchitecture extends ReflexArchitecture {
 	@Override
 	public boolean init(final IScope scope) throws GamaRuntimeException {
 		final IAgent agent = getCurrentAgent(scope);
-		agent.setAttribute(IKeyword.CORE_DEFINITION, new Scheduler(scope, agent, scope.getClock().getCurrentDate()));
+		agent.setAttribute(IKeyword.CORE_DEFINITION, new Scheduler(scope, agent));
 		return true;
 	}
 
@@ -65,7 +66,7 @@ public class SchedulerArchitecture extends ReflexArchitecture {
 	 * Get current scheduler by agent
 	 */
 	protected Scheduler getCurrentScheduler(final IAgent agent) throws GamaRuntimeException {
-		return (Scheduler) agent.getAttribute(IKeyword.SCHEDULER);
+		return (Scheduler) agent.getAttribute(IKeyword.CORE_DEFINITION);
 	}
 
 	/**

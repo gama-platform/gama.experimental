@@ -158,7 +158,7 @@ public class Road extends SchedulingUnit {
 			Vehicle nextVehicle = this.interestedInEnteringRoad.removeFirst();
 			DeadlockPreventionMessage m = this.deadlockPreventionMessages.removeFirst();
 			assert (m.getVehicle() == nextVehicle);
-			this.scheduler.unschedule(m);
+			getScheduler().unschedule(m);
 
 			GamaDate nextAvailableTimeForLeavingStreetWithInflow = this.timeOfLastEnteringVehicle
 					.plus(inverseInFlowCapacity * 1000.0, ChronoUnit.MILLIS);
@@ -227,6 +227,17 @@ public class Road extends SchedulingUnit {
 
 	public void enterRoad(Vehicle vehicle, GamaDate simTime) {
 		Logger.addMessage(this, "enterRoad");
+
+		// Set agents locations
+		IAgent vehicleAgent = vehicle.getRelativeAgent();
+		IAgent roadAgent = getRelativeAgent();
+		if (vehicleAgent != null && roadAgent != null) {
+			vehicleAgent.setLocation(roadAgent.getLocation());
+			IAgent ownerAgent = vehicle.getOwnerPerson().getRelativeAgent();
+			if (ownerAgent != null) {
+				ownerAgent.setLocation(roadAgent.getLocation());
+			}
+		}
 
 		// calculate time, when the car reaches the end of the road
 		GamaDate nextAvailableTimeForLeavingStreet = simTime.plus(length / freespeed * 1000.0, ChronoUnit.MILLIS);

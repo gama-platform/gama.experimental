@@ -25,9 +25,19 @@ public interface IKeyword {
 	public static final String JDQSIM_SCHEDULER = "jdeqsimscheduler";
 
 	public static final String SCHEDULER = "scheduler";
+	public static final String FREESPEED = "freespeed";
+	public static final String CAPACITY = "capacity";
+	public static final String LANES = "lanes";
+	public static final String LENGTH = "length";
 	public static final String SCHEDULING = "scheduling";
 	public static final String OWNER = "owner";
 	public static final String CORE_DEFINITION = "core_definition";
 
-	public static final String ROUTE = "route";
+	public static final String ACTIVITY_DATE = "activity_date";
+	public static final String ACTIVITY_DURATION = "activity_duration";
+	public static final String ACTIVITY_ROAD = "activity_road";
+	public static final String ACTIVITY_BUILDING = "activity_building";
+	public static final String LEG = "leg";
+	public static final String ADD_ACTIVITY = "add_activity";
+	public static final String ADD_LEG = "add_leg";
 }
