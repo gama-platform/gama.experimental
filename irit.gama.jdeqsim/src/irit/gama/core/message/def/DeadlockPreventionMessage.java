@@ -38,7 +38,7 @@ public class DeadlockPreventionMessage extends Message {
 
 		Road road = (Road) this.getReceivingUnit();
 
-		road.incrementPromisedToEnterRoad(); // this will be decremented in enter road
+		road.incrementPromisedToEnterRoad(vehicle); // this will be decremented in enter road
 		road.setTimeOfLastEnteringVehicle(getMessageArrivalTime());
 		road.removeFirstDeadlockPreventionMessage(this);
 		road.removeFromInterestedInEnteringRoad();

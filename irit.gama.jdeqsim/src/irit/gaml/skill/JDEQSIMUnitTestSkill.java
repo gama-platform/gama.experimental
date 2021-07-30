@@ -16,6 +16,7 @@ import jdeqsim.irit.gama.test.jdeqsim.TestMessageFactory;
 import jdeqsim.irit.gama.test.jdeqsim.TestMessageQueue;
 import jdeqsim.irit.gama.test.jdeqsim.TestMessages;
 import jdeqsim.irit.gama.test.jdeqsim.TestScheduler;
+import jdeqsim.irit.gama.test.jdeqsim.TestVehicle;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.IConcept;
@@ -36,6 +37,7 @@ public class JDEQSIMUnitTestSkill extends Skill {
 		TestMessageQueue.test();
 		TestScheduler.test();
 		TestMessages.test();
+		TestVehicle.test();
 		return true;
 	}
 }
