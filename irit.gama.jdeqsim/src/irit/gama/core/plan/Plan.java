@@ -25,12 +25,12 @@ public class Plan {
 
 	private ArrayList<IPlanElement> plan = new ArrayList<>();
 
-	public void addActivity(Activity activity) {
-		plan.add(activity);
+	public boolean addActivity(Activity activity) {
+		return plan.add(activity);
 	}
 
-	public void addLeg(Leg leg) {
-		plan.add(leg);
+	public boolean addLeg(Leg leg) {
+		return plan.add(leg);
 	}
 
 	public List<? extends IPlanElement> getPlanElements() {

@@ -31,12 +31,10 @@ public class TestMessages extends GenericTest {
 
 	// Start all tests
 	public static void test() {
-		Param.DEBUG_ON = false;
 		Logger.flush();
 		TestMessages.testOneCar();
 		TestMessages.testTwoCars();
 		TestMessages.testTwoLegs();
-		TestMessages.testEmptyLegs();
 		TestMessages.testFullRoad();
 		TestMessages.testMultiRoad();
 	}
@@ -47,18 +45,18 @@ public class TestMessages extends GenericTest {
 		GamaDate date1000 = new GamaDate(GAMA.getRuntimeScope(), 1000);
 		GamaDate date10000 = new GamaDate(GAMA.getRuntimeScope(), 10000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 
 		ArrayList<Road> roads = new ArrayList<>();
 		Road r1 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 10000.0);
 		Road r2 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 10000.0);
-		// roads.add(r1);
+		Road r3 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 10000.0);
 		roads.add(r2);
 
 		Person p = new Person();
-		p.addActivity(new Activity(date500, 0, r1));
+		p.addActivity(new Activity(date500, 0, r1, null));
 		p.addLeg(new Leg(roads));
-		p.addActivity(new Activity(date1000, 0, r2));
+		p.addActivity(new Activity(date1000, 0, r3, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date10000);
@@ -67,7 +65,6 @@ public class TestMessages extends GenericTest {
 		double expectedTime = (20000.0 / 27.78) * 1000.0;
 		GamaDate expectedDate = date500.plus(expectedTime, ChronoUnit.MILLIS);
 		GamaDate lastEvent = scheduler.getLastEventTime();
-		Logger.print();
 
 		// The last event time should be equals 20km of road at 100km/h
 		assert (expectedDate.equals(lastEvent));
@@ -81,32 +78,36 @@ public class TestMessages extends GenericTest {
 		GamaDate date1000 = new GamaDate(GAMA.getRuntimeScope(), 1000);
 		GamaDate date10000 = new GamaDate(GAMA.getRuntimeScope(), 10000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 
 		ArrayList<Road> roads = new ArrayList<>();
 		Road r1 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 10000.0);
 		Road r2 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 10000.0);
-		roads.add(r2);
+		// roads.add(r2);
 
 		Person p1 = new Person();
-		p1.addActivity(new Activity(date499, 0, r1));
+		p1.addActivity(new Activity(date499, 0, r1, null));
 		p1.addLeg(new Leg(roads));
-		p1.addActivity(new Activity(date999, 0, r2));
+		p1.addActivity(new Activity(date999, 0, r2, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p1);
 
 		Person p2 = new Person();
-		p2.addActivity(new Activity(date500, 0, r1));
+		p2.addActivity(new Activity(date500, 0, r1, null));
 		p2.addLeg(new Leg(roads));
-		p2.addActivity(new Activity(date1000, 0, r2));
+		p2.addActivity(new Activity(date1000, 0, r2, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p2);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date10000);
 		scheduler.execute(GAMA.getRuntimeScope());
 
-		double expectedTime = (20000.0 / 27.78) * 1000.0;
+		double expectedTime = (10000.0 / 27.78) * 1000.0;
 		GamaDate expectedDate = date500.plus(expectedTime, ChronoUnit.MILLIS);
 		GamaDate lastEvent = scheduler.getLastEventTime();
+
 		Logger.print();
+		Logger.printByVehicle();
+		Logger.flush();
+		Param.DEBUG_ON = false;
 
 		// The last event time should be equals 20km of road at 100km/h
 		assert (expectedDate.equals(lastEvent));
@@ -114,12 +115,15 @@ public class TestMessages extends GenericTest {
 
 	// Test one car with two legs (to check end leg message with another leg)
 	public static void testTwoLegs() {
+		Param.DEBUG_ON = true;
+		Param.DEBUG_LEVEL = Param.LogLevel.scheduleOnly;
+
 		GamaDate date500 = new GamaDate(GAMA.getRuntimeScope(), 500);
 		GamaDate date1500 = new GamaDate(GAMA.getRuntimeScope(), 1500);
 		GamaDate date2500 = new GamaDate(GAMA.getRuntimeScope(), 2500);
 		GamaDate date10000 = new GamaDate(GAMA.getRuntimeScope(), 10000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 
 		ArrayList<Road> roads1 = new ArrayList<>();
 		ArrayList<Road> roads2 = new ArrayList<>();
@@ -127,53 +131,16 @@ public class TestMessages extends GenericTest {
 		Road r2 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 10000.0);
 		Road r3 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 5000.0);
 		Road r4 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 1000.0);
-		roads1.add(r2);
+		// roads1.add(r2);
 		roads2.add(r3);
-		roads2.add(r4);
+		// roads2.add(r4);
 
 		Person p = new Person();
-		p.addActivity(new Activity(date500, 0, r1));
+		p.addActivity(new Activity(date500, 0, r1, null));
 		p.addLeg(new Leg(roads1));
-		p.addActivity(new Activity(date1500, 0, r2));
+		p.addActivity(new Activity(date1500, 0, r2, null));
 		p.addLeg(new Leg(roads2));
-		p.addActivity(new Activity(date2500, 0, r4));
-
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p);
-
-		GAMA.getRuntimeScope().getClock().setStartingDate(date10000);
-		scheduler.execute(GAMA.getRuntimeScope());
-
-		double expectedTime = (16000.0 / 27.78) * 1000.0;
-		GamaDate expectedDate = date1500.plus(expectedTime, ChronoUnit.MILLIS);
-		GamaDate lastEvent = scheduler.getLastEventTime();
-		Logger.print();
-
-		// The last event time should be equals 15km of road at 100km/h (R2 + R3)
-		assert (expectedDate.equals(lastEvent));
-	}
-
-	// Check empty leg (check the case in enter leg message when a leg is empty)
-	public static void testEmptyLegs() {
-		GamaDate date500 = new GamaDate(GAMA.getRuntimeScope(), 500);
-		GamaDate date1500 = new GamaDate(GAMA.getRuntimeScope(), 1500);
-		GamaDate date2500 = new GamaDate(GAMA.getRuntimeScope(), 2500);
-		GamaDate date10000 = new GamaDate(GAMA.getRuntimeScope(), 10000);
-		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
-
-		ArrayList<Road> roads1 = new ArrayList<>();
-		ArrayList<Road> roads2 = new ArrayList<>();
-		Road r1 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 10000.0);
-		Road r2 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 10000.0);
-		Road r3 = new Road(GAMA.getRuntimeScope(), null, scheduler, 27.78, 36000, 1, 5000.0);
-		roads2.add(r3);
-
-		Person p = new Person();
-		p.addActivity(new Activity(date500, 0, r1));
-		p.addLeg(new Leg(roads1)); // Empty
-		p.addActivity(new Activity(date1500, 0, r2));
-		p.addLeg(new Leg(roads2));
-		p.addActivity(new Activity(date2500, 0, r3));
+		p.addActivity(new Activity(date2500, 0, r4, null));
 
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p);
 
@@ -186,7 +153,6 @@ public class TestMessages extends GenericTest {
 		Logger.print();
 
 		// The last event time should be equals 15km of road at 100km/h (R2 + R3)
-		// The first leg is empty so is ignored
 		assert (expectedDate.equals(lastEvent));
 	}
 
@@ -196,7 +162,7 @@ public class TestMessages extends GenericTest {
 		GamaDate date1000 = new GamaDate(GAMA.getRuntimeScope(), 1000);
 		GamaDate date1000000 = new GamaDate(GAMA.getRuntimeScope(), 1000000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 
 		ArrayList<Road> roads = new ArrayList<>();
 		Road r1 = new Road(GAMA.getRuntimeScope(), null, scheduler, 10.00, 36000, 1, 20.0);
@@ -211,37 +177,28 @@ public class TestMessages extends GenericTest {
 		roads.add(r5);
 
 		Person p1 = new Person();
-		p1.addActivity(new Activity(date500, 0, r1));
+		p1.addActivity(new Activity(date500, 0, r1, null));
 		p1.addLeg(new Leg(roads));
-		p1.addActivity(new Activity(date1000, 0, r5));
+		p1.addActivity(new Activity(date1000, 0, r5, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p1);
 
 		Person p2 = new Person();
-		p2.addActivity(new Activity(date500, 0, r1));
+		p2.addActivity(new Activity(date500, 0, r1, null));
 		p2.addLeg(new Leg(roads));
-		p2.addActivity(new Activity(date1000, 0, r5));
+		p2.addActivity(new Activity(date1000, 0, r5, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p2);
 
 		Person p3 = new Person();
-		p3.addActivity(new Activity(date500, 0, r1));
+		p3.addActivity(new Activity(date500, 0, r1, null));
 		p3.addLeg(new Leg(roads));
-		p3.addActivity(new Activity(date1000, 0, r5));
+		p3.addActivity(new Activity(date1000, 0, r5, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p3);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date1000000);
 		scheduler.execute(GAMA.getRuntimeScope());
 
-		/*
-		 * double expectedTime = (15000.0 / 27.78) * 1000.0; GamaDate expectedDate =
-		 * date1500.plus(expectedTime, ChronoUnit.MILLIS); GamaDate lastEvent =
-		 * scheduler.getLastEventTime();
-		 */
 		Logger.print();
 		Logger.printByVehicle();
-
-		// The last event time should be equals 15km of road at 100km/h (R2 + R3)
-		// The first leg is empty so is ignored
-		// assert (expectedDate.equals(lastEvent));
 	}
 
 	// Check the behavior if road is full (dead lock message)
@@ -252,7 +209,7 @@ public class TestMessages extends GenericTest {
 		GamaDate date1000 = new GamaDate(GAMA.getRuntimeScope(), 1000);
 		GamaDate date1000000 = new GamaDate(GAMA.getRuntimeScope(), 1000000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 
 		ArrayList<Road> roads = new ArrayList<>();
 		Road r10 = new Road(GAMA.getRuntimeScope(), null, scheduler, 10.00, 36000, 1, 21.0);
@@ -263,49 +220,40 @@ public class TestMessages extends GenericTest {
 		roads.add(r3);
 
 		Person p1 = new Person();
-		p1.addActivity(new Activity(date500, 0, r10));
+		p1.addActivity(new Activity(date500, 0, r10, null));
 		p1.addLeg(new Leg(roads));
-		p1.addActivity(new Activity(date1000, 0, r3));
+		p1.addActivity(new Activity(date1000, 0, r3, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p1);
 
 		Person p11 = new Person();
-		p11.addActivity(new Activity(date500, 0, r10));
+		p11.addActivity(new Activity(date500, 0, r10, null));
 		p11.addLeg(new Leg(roads));
-		p11.addActivity(new Activity(date1000, 0, r3));
+		p11.addActivity(new Activity(date1000, 0, r3, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p11);
 
 		Person p2 = new Person();
-		p2.addActivity(new Activity(date501, 0, r10));
+		p2.addActivity(new Activity(date501, 0, r10, null));
 		p2.addLeg(new Leg(roads));
-		p2.addActivity(new Activity(date1000, 0, r3));
+		p2.addActivity(new Activity(date1000, 0, r3, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p2);
 
 		Person p3 = new Person();
-		p3.addActivity(new Activity(date502, 0, r10));
+		p3.addActivity(new Activity(date502, 0, r10, null));
 		p3.addLeg(new Leg(roads));
-		p3.addActivity(new Activity(date1000, 0, r3));
+		p3.addActivity(new Activity(date1000, 0, r3, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p3);
 
 		Person p4 = new Person();
-		p4.addActivity(new Activity(date502, 0, r11));
+		p4.addActivity(new Activity(date502, 0, r11, null));
 		p4.addLeg(new Leg(roads));
-		p4.addActivity(new Activity(date1000, 0, r3));
+		p4.addActivity(new Activity(date1000, 0, r3, null));
 		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p4);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date1000000);
 		scheduler.execute(GAMA.getRuntimeScope());
 
-		/*
-		 * double expectedTime = (15000.0 / 27.78) * 1000.0; GamaDate expectedDate =
-		 * date1500.plus(expectedTime, ChronoUnit.MILLIS); GamaDate lastEvent =
-		 * scheduler.getLastEventTime();
-		 */
 		Logger.print();
 		Logger.printByVehicle();
-
-		// The last event time should be equals 15km of road at 100km/h (R2 + R3)
-		// The first leg is empty so is ignored
-		// assert (expectedDate.equals(lastEvent));
 	}
 
 }

@@ -52,8 +52,22 @@ public class Param {
 	// Garbage collector ON/OFF for messages
 	public static boolean GC_MESSAGES = false;
 
+	/**
+	 * Time param
+	 */
+
+	public enum ActivityDurationInterpretation {
+		minOfDurationAndEndTime, tryEndTimeThenDuration
+	}
+
+	public static ActivityDurationInterpretation ACTIVITY_DURATION_INTERPRETATION = ActivityDurationInterpretation.minOfDurationAndEndTime;
+
+	/**
+	 * Debug
+	 */
+
 	// DEBUG ON/OFF
-	public static boolean DEBUG_ON = true;
+	public static boolean DEBUG_ON = false;
 
 	// DEBUG level
 	public enum LogLevel {

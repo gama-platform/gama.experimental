@@ -27,6 +27,7 @@ public class LogData implements Comparable<LogData> {
 	private INamable emitter;
 	private INamable receiver;
 	private Message message;
+	private String vehicle;
 	private String comment;
 	private String date;
 
@@ -35,6 +36,10 @@ public class LogData implements Comparable<LogData> {
 		this.receiver = receiver;
 		this.message = message;
 		this.comment = comment;
+
+		if (message != null) {
+			this.vehicle = message.getVehicle().getName();
+		}
 
 		// Conversion to ISO time
 		SimpleDateFormat sdf;
@@ -74,7 +79,7 @@ public class LogData implements Comparable<LogData> {
 		if (message != null) {
 			sb.append(message.getName());
 			sb.append(" (");
-			sb.append(message.getVehicle().getName());
+			sb.append(vehicle);
 			sb.append(") at ");
 			sb.append(message.getMessageArrivalTime().toISOString());
 			sb.append(" ");

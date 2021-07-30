@@ -11,8 +11,8 @@
 
 package jdeqsim.irit.gama.test.jdeqsim;
 
-import irit.gama.core.message.MessageQueue;
 import irit.gama.core.message.Message;
+import irit.gama.core.message.MessageQueue;
 import irit.gama.test.jdeqsim.util.DummyMessage;
 import msi.gama.runtime.GAMA;
 import msi.gama.util.GamaDate;

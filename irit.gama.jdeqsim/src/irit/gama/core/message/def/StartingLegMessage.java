@@ -41,18 +41,18 @@ public class StartingLegMessage extends Message {
 		// if (vehicle.getCurrentLeg().getMode().equals(TransportMode.car)) {
 
 		// if empty leg, then end leg, else simulate leg
-		if (vehicle.getCurrentLinkRouteLength() == 0) {
-			// move to first link in next leg and schedule an end leg message
-			// duration of leg = 0 (departure and arrival time is the same)
-			scheduleEndLegMessage(getMessageArrivalTime());
-			Logger.addMessage(this, "empty leg");
+		// if (vehicle.getCurrentLinkRouteLength() == 0) {
+		// move to first link in next leg and schedule an end leg message
+		// duration of leg = 0 (departure and arrival time is the same)
+		// scheduleEndLegMessage(getMessageArrivalTime());
+		// Logger.addMessage(this, "empty leg");
 
-		} else {
-			// start the new leg
-			Road road = vehicle.getCurrentRoad();
-			road.enterRequest(vehicle, getMessageArrivalTime());
-			Logger.addMessage(this, "new leg");
-		}
+		// } else {
+		// start the new leg
+		Road road = vehicle.getCurrentRoad();
+		road.enterRequest(vehicle, getMessageArrivalTime());
+		Logger.addMessage(this, "new leg");
+		// }
 
 		// } else {
 		// scheduleEndLegMessage(getMessageArrivalTime() +
@@ -60,10 +60,10 @@ public class StartingLegMessage extends Message {
 		// }
 	}
 
-	private void scheduleEndLegMessage(GamaDate time) {
-		// move to first link in next leg and schedule an end leg message
-		vehicle.moveToFirstLinkInNextLeg();
-		Road road = vehicle.getCurrentRoad();
-		vehicle.scheduleEndLegMessage(this, time, road);
-	}
+	/*
+	 * private void scheduleEndLegMessage(GamaDate time) { // move to first link in
+	 * next leg and schedule an end leg message vehicle.moveToFirstLinkInNextLeg();
+	 * Road road = vehicle.getCurrentRoad(); vehicle.scheduleEndLegMessage(this,
+	 * time, road); }
+	 */
 }

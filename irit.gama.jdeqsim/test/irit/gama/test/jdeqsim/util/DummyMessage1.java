@@ -13,19 +13,21 @@ package irit.gama.test.jdeqsim.util;
 
 import irit.gama.core.SchedulingUnit;
 import irit.gama.core.message.Message;
+import irit.gama.core.unit.Scheduler;
 import msi.gama.util.GamaDate;
 
 public class DummyMessage1 extends Message {
 
 	public Message messageToUnschedule = null;
 
-	public DummyMessage1(SchedulingUnit receivingUnit, GamaDate messageArrivalTime) {
+	public DummyMessage1(SchedulingUnit receivingUnit, Scheduler scheduler, GamaDate messageArrivalTime) {
 		this.receivingUnit = receivingUnit;
 		this.messageArrivalTime = messageArrivalTime;
+		this.scheduler = scheduler;
 	}
 
 	@Override
 	public void handleMessage() {
-		this.getReceivingUnit().getScheduler().unschedule(messageToUnschedule);
+		scheduler.unschedule(messageToUnschedule);
 	}
 }

@@ -16,9 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import msi.gama.common.util.StringUtils;
-import msi.gama.metamodel.shape.ILocation;
+import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
@@ -67,6 +68,15 @@ public class GamaDeque<T> extends ArrayDeque<T> implements IContainer<Integer, O
 	}
 
 	/**
+	 * Constructor with values and type (List)
+	 */
+	public GamaDeque(IContainerType<?> contentsType, List<T> values) {
+		super();
+		type = contentsType;
+		addAll(values);
+	}
+
+	/**
 	 * Constructor with values and type (array)
 	 */
 	public GamaDeque(IContainerType<?> contentsType, T[] values) {
@@ -96,7 +106,16 @@ public class GamaDeque<T> extends ArrayDeque<T> implements IContainer<Integer, O
 	// Methods
 
 	/**
-	 * Add all values
+	 * Add all values (List)
+	 */
+	private void addAll(List<T> values) {
+		for (T v : values) {
+			add(v);
+		}
+	}
+
+	/**
+	 * Add all values (array)
 	 */
 	private void addAll(T[] values) {
 		for (T v : values) {
@@ -241,8 +260,10 @@ public class GamaDeque<T> extends ArrayDeque<T> implements IContainer<Integer, O
 	 * Get the list of values (is "equivalent" to toArray())
 	 */
 	@Override
-	public IList listValue(IScope scope, IType<?> contentType, boolean copy) {
-		return GamaListFactory.wrap(contentType, toArray());
+	public IList<Object> listValue(IScope scope, IType contentType, boolean copy) {
+		// return GamaListFactory.wrap(contentType, toArray());
+		ArrayList<? extends T> list = (ArrayList<? extends T>) Arrays.asList(toArray());
+		return GamaListFactory.wrap(contentType, list);
 	}
 
 	/**
@@ -250,7 +271,7 @@ public class GamaDeque<T> extends ArrayDeque<T> implements IContainer<Integer, O
 	 */
 	@Override
 	public Iterable<? extends T> iterable(IScope scope) {
-		return listValue(scope, Types.NO_TYPE, false);
+		return (Iterable<? extends T>) listValue(scope, Types.NO_TYPE, false);
 	}
 
 	/**
@@ -260,7 +281,7 @@ public class GamaDeque<T> extends ArrayDeque<T> implements IContainer<Integer, O
 	public IContainer<?, ?> reverse(IScope scope) throws GamaRuntimeException {
 		ArrayList<T> list = (ArrayList<T>) Arrays.asList(toArray());
 		Collections.reverse(list);
-		return new GamaDeque(type, list.toArray());
+		return new GamaDeque(type, list);
 	}
 
 	/**
@@ -285,7 +306,8 @@ public class GamaDeque<T> extends ArrayDeque<T> implements IContainer<Integer, O
 	 * Return matrix from values with prefered size
 	 */
 	@Override
-	public IMatrix<?> matrixValue(IScope scope, IType<?> contentType, ILocation size, boolean copy) {
+	public IMatrix<?> matrixValue(IScope scope, IType<?> contentType, GamaPoint size, boolean copy) {
 		return GamaMatrixType.from(scope, listValue(scope, contentType, copy), contentType, size);
+
 	}
 }

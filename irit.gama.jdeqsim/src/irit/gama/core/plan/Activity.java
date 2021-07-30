@@ -13,6 +13,7 @@ package irit.gama.core.plan;
 
 import irit.gama.core.IPlanElement;
 import irit.gama.core.unit.Road;
+import msi.gama.metamodel.agent.IAgent;
 import msi.gama.util.GamaDate;
 
 /**
@@ -31,12 +32,14 @@ public class Activity implements IPlanElement {
 	private double duration;
 	private GamaDate endTime; // We use only end time
 	private Road road; // The road where the activity took place
+	private IAgent buildingAgent;
 
-	public Activity(GamaDate endTime, double duration, Road road) {
+	public Activity(GamaDate endTime, double duration, Road road, IAgent buildingAgent) {
 		super();
 		this.endTime = endTime;
 		this.duration = duration;
 		this.road = road;
+		this.buildingAgent = buildingAgent;
 	}
 
 	public void setMaximumDuration(double duration) {
@@ -57,6 +60,10 @@ public class Activity implements IPlanElement {
 
 	public GamaDate getEndTime() {
 		return endTime;
+	}
+
+	public IAgent getBuildingAgent() {
+		return buildingAgent;
 	}
 
 }

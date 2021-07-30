@@ -36,7 +36,7 @@ public class TestScheduler extends GenericTest {
 		GamaDate date10000 = new GamaDate(GAMA.getRuntimeScope(), 10000000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
 
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 		SchedulingUnit sm1 = new DummySimUnit(GAMA.getRuntimeScope(), scheduler);
 
 		Message m1 = new DummyMessage(sm1, date9000);
@@ -54,7 +54,7 @@ public class TestScheduler extends GenericTest {
 		GamaDate date2 = new GamaDate(GAMA.getRuntimeScope(), 2000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
 
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 		SchedulingUnit sm1 = new DummySimUnit(GAMA.getRuntimeScope(), scheduler);
 
 		Message m1 = new DummyMessage(sm1, date1);
@@ -76,13 +76,13 @@ public class TestScheduler extends GenericTest {
 		GamaDate date20 = new GamaDate(GAMA.getRuntimeScope(), 20000);
 		GAMA.getRuntimeScope().getClock().setStartingDate(DATE_0);
 
-		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null, DATE_0);
+		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 		SchedulingUnit sm1 = new DummySimUnit(GAMA.getRuntimeScope(), scheduler);
 
 		Message m1 = new DummyMessage(sm1, date10);
 		sm1.sendMessage(m1);
 
-		DummyMessage1 m2 = new DummyMessage1(sm1, date1);
+		DummyMessage1 m2 = new DummyMessage1(sm1, scheduler, date1);
 		m2.messageToUnschedule = m1;
 		sm1.sendMessage(m2);
 

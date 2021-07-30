@@ -11,10 +11,11 @@
 
 package irit.gama.core.message.def;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import irit.gama.common.IConst;
-import irit.gama.common.ITool;
+import irit.gama.common.Param;
 import irit.gama.common.logger.Logger;
 import irit.gama.core.IPlanElement;
 import irit.gama.core.SchedulingUnit;
@@ -22,9 +23,11 @@ import irit.gama.core.message.Message;
 import irit.gama.core.plan.Activity;
 import irit.gama.core.plan.Leg;
 import irit.gama.core.plan.Plan;
+import irit.gama.core.unit.Person;
 import irit.gama.core.unit.Road;
 import irit.gama.core.unit.Scheduler;
 import irit.gama.core.unit.Vehicle;
+import msi.gama.metamodel.agent.IAgent;
 import msi.gama.util.GamaDate;
 
 /**
@@ -83,15 +86,29 @@ public class EndLegMessage extends Message {
 
 			// schedule a departure from the current link in future
 			this.vehicle.scheduleStartingLegMessage(this, departureTime, road);
+			moveToBuilding(actsLegs);
 
 			Logger.addMessage(this, "another leg");
+		} else {
+			// Move owner to building then kill vehicle
+			moveToBuilding(actsLegs);
+			this.vehicle = (Vehicle) this.vehicle.die();
 		}
 
 	}
 
+	private void moveToBuilding(List<? extends IPlanElement> actsLegs) {
+		// Move owner to building then kill vehicle
+		Activity currentAct = (Activity) actsLegs.get(this.vehicle.getLegIndex() - 1);
+		Person owner = this.vehicle.getOwnerPerson();
+		IAgent building = currentAct.getBuildingAgent();
+		if (owner != null && building != null) {
+			owner.setToLocation(building.getLocation());
+		}
+	}
+
 	private GamaDate calculateDepartureTime(Activity act, GamaDate now) {
-		GamaDate endTime = ITool.decideOnActivityEndTime(act, now,
-				ITool.ActivityDurationInterpretation.tryEndTimeThenDuration);
+		GamaDate endTime = decideOnActivityEndTime(act, now);
 		if (endTime == null) {
 			return null;
 		} else {
@@ -104,6 +121,38 @@ public class EndLegMessage extends Message {
 				return endTime;
 			}
 			return now;
+		}
+	}
+
+	// TODO : It is not clear, see Activity
+	public GamaDate decideOnActivityEndTime(Activity act, GamaDate now) {
+
+		switch (Param.ACTIVITY_DURATION_INTERPRETATION) {
+		case tryEndTimeThenDuration:
+			if (act.getEndTime() != null) {
+				return act.getEndTime();
+			} else if (act.getMaximumDuration() > 0.0) {
+				return now.plus(act.getMaximumDuration() * 1000.0, ChronoUnit.MILLIS);
+			} else {
+				return null;
+			}
+
+		case minOfDurationAndEndTime:
+			if (act.getEndTime() == null && act.getMaximumDuration() < 0.0) {
+				return null;
+			} else if (act.getMaximumDuration() <= 0.0) {
+				return act.getEndTime();
+			} else if (act.getEndTime() == null) {
+				return now.plus(act.getMaximumDuration() * 1000.0, ChronoUnit.MILLIS);
+			} else {
+				GamaDate durationBasedEndTime = now.plus(act.getMaximumDuration() * 1000.0, ChronoUnit.MILLIS);
+				return act.getEndTime().isSmallerThan(durationBasedEndTime, false) ? act.getEndTime()
+						: durationBasedEndTime;
+			}
+
+		default:
+			throw new IllegalArgumentException("Unsupported 'activityDurationInterpretation' enum type: "
+					+ Param.ACTIVITY_DURATION_INTERPRETATION);
 		}
 	}
 }
