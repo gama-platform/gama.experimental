@@ -57,7 +57,7 @@ public class TestMessages extends GenericTest {
 		p.addActivity(new Activity(date500, 0, r1, null));
 		p.addLeg(new Leg(roads));
 		p.addActivity(new Activity(date1000, 0, r3, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p, 27.78, 7.0);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date10000);
 		scheduler.execute(GAMA.getRuntimeScope());
@@ -89,13 +89,13 @@ public class TestMessages extends GenericTest {
 		p1.addActivity(new Activity(date499, 0, r1, null));
 		p1.addLeg(new Leg(roads));
 		p1.addActivity(new Activity(date999, 0, r2, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p1);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p1, 27.78, 7.0);
 
 		Person p2 = new Person();
 		p2.addActivity(new Activity(date500, 0, r1, null));
 		p2.addLeg(new Leg(roads));
 		p2.addActivity(new Activity(date1000, 0, r2, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p2);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p2, 27.78, 7.0);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date10000);
 		scheduler.execute(GAMA.getRuntimeScope());
@@ -142,7 +142,7 @@ public class TestMessages extends GenericTest {
 		p.addLeg(new Leg(roads2));
 		p.addActivity(new Activity(date2500, 0, r4, null));
 
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p, 27.78, 7.0);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date10000);
 		scheduler.execute(GAMA.getRuntimeScope());
@@ -170,7 +170,7 @@ public class TestMessages extends GenericTest {
 		Road r3 = new Road(GAMA.getRuntimeScope(), null, scheduler, 10.00, 36000, 1, 10.0);
 		Road r4 = new Road(GAMA.getRuntimeScope(), null, scheduler, 10.00, 36000, 1, 10000000.0);
 		Road r5 = new Road(GAMA.getRuntimeScope(), null, scheduler, 10.00, 36000, 1, 10000.0);
-		r4.setMaxNumberOfCarsOnRoad(1);
+		r4.setMaxCapacityOnRoad(7.0);
 		roads.add(r2);
 		roads.add(r3);
 		roads.add(r4);
@@ -180,19 +180,19 @@ public class TestMessages extends GenericTest {
 		p1.addActivity(new Activity(date500, 0, r1, null));
 		p1.addLeg(new Leg(roads));
 		p1.addActivity(new Activity(date1000, 0, r5, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p1);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p1, 27.78, 7.0);
 
 		Person p2 = new Person();
 		p2.addActivity(new Activity(date500, 0, r1, null));
 		p2.addLeg(new Leg(roads));
 		p2.addActivity(new Activity(date1000, 0, r5, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p2);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p2, 27.78, 7.0);
 
 		Person p3 = new Person();
 		p3.addActivity(new Activity(date500, 0, r1, null));
 		p3.addLeg(new Leg(roads));
 		p3.addActivity(new Activity(date1000, 0, r5, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p3);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p3, 27.78, 7.0);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date1000000);
 		scheduler.execute(GAMA.getRuntimeScope());
@@ -223,31 +223,31 @@ public class TestMessages extends GenericTest {
 		p1.addActivity(new Activity(date500, 0, r10, null));
 		p1.addLeg(new Leg(roads));
 		p1.addActivity(new Activity(date1000, 0, r3, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p1);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p1, 27.78, 7.0);
 
 		Person p11 = new Person();
 		p11.addActivity(new Activity(date500, 0, r10, null));
 		p11.addLeg(new Leg(roads));
 		p11.addActivity(new Activity(date1000, 0, r3, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p11);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p11, 27.78, 7.0);
 
 		Person p2 = new Person();
 		p2.addActivity(new Activity(date501, 0, r10, null));
 		p2.addLeg(new Leg(roads));
 		p2.addActivity(new Activity(date1000, 0, r3, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p2);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p2, 27.78, 7.0);
 
 		Person p3 = new Person();
 		p3.addActivity(new Activity(date502, 0, r10, null));
 		p3.addLeg(new Leg(roads));
 		p3.addActivity(new Activity(date1000, 0, r3, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p3);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p3, 27.78, 7.0);
 
 		Person p4 = new Person();
 		p4.addActivity(new Activity(date502, 0, r11, null));
 		p4.addLeg(new Leg(roads));
 		p4.addActivity(new Activity(date1000, 0, r3, null));
-		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p4);
+		new Vehicle(GAMA.getRuntimeScope(), null, scheduler, p4, 27.78, 7.0);
 
 		GAMA.getRuntimeScope().getClock().setStartingDate(date1000000);
 		scheduler.execute(GAMA.getRuntimeScope());

@@ -28,26 +28,11 @@ import msi.gama.util.GamaDate;
  * @author rashid_waraich
  */
 public class Road extends SchedulingUnit {
-	/**
-	 * this must be initialized before starting the simulation! mapping: key=linkId
-	 * used to find a road corresponding to a link
-	 */
-	// static HashMap<Id<Link>, Road> allRoads = null;
-
-	// public static HashMap<Id<Link>, Road> getAllRoads() {
-	// return allRoads;
-	// }
-
-	// public static void setAllRoads(HashMap<Id<Link>, Road> allRoads) {
-	// Road.allRoads = allRoads;
-	// }
-
-	// protected Link link;
 
 	// From link data
 	private double length = Double.NaN;
 	private double freespeed;
-	private double capacity;
+	private double flowCapacity;
 	private int nofLanes;
 
 	// see method enterRequest for a detailed description of variable 'gap'
@@ -74,10 +59,11 @@ public class Road extends SchedulingUnit {
 	 * but which have been promised to enter the road (given a time in future, when
 	 * they can enter the road)
 	 */
-	protected int noOfCarsPromisedToEnterRoad = 0;
 
-	// maximum number of cars on the road at one time
-	private long maxNumberOfCarsOnRoad = 0;
+	// maximum capacity in m
+	private double maxCapacityOnRoad = 0.0;
+	private double currentCapacity = 0.0;
+	private double currentCapacityPromisedToEnterRoad = 0.0;
 
 	// the time it takes for a gap to get to the back of the road
 	private double gapTravelTime = 0;
@@ -100,7 +86,7 @@ public class Road extends SchedulingUnit {
 		super(scope, agent, scheduler);
 
 		this.freespeed = freespeed;
-		this.capacity = capacity;
+		this.flowCapacity = capacity;
 		this.nofLanes = nbLanes;
 		this.length = length;
 		this.timeOfLastEnteringVehicle = scope.getClock().getCurrentDate();
@@ -110,13 +96,13 @@ public class Road extends SchedulingUnit {
 		 * calculate the maximum number of cars, which can be on the road at the same
 		 * time
 		 */
-		this.maxNumberOfCarsOnRoad = Math.round(length * nofLanes * Param.STORAGE_CAPACITY_FACTOR / Param.CAR_SIZE);
+		this.maxCapacityOnRoad = length * nofLanes * Param.STORAGE_CAPACITY_FACTOR;
 
 		/**
 		 * it is assured here, that a road must have the space of at least one car
 		 */
-		if (this.maxNumberOfCarsOnRoad == 0) {
-			this.maxNumberOfCarsOnRoad = 1;
+		if (this.maxCapacityOnRoad < Param.MIN_CAPACITY) {
+			this.maxCapacityOnRoad = Param.MIN_CAPACITY;
 		}
 
 		double maxInverseInFlowCapacity = 3600
@@ -136,8 +122,20 @@ public class Road extends SchedulingUnit {
 		this.gap = null;
 	}
 
+	public int getNofLanes() {
+		return nofLanes;
+	}
+
+	public double getFreespeed() {
+		return freespeed;
+	}
+
 	private double getFlowCapacityPerSec() {
-		return capacity / Param.CAPACITY_PERIOD;
+		return flowCapacity / Param.CAPACITY_PERIOD;
+	}
+
+	public double getFlowCapacity() {
+		return flowCapacity;
 	}
 
 	public void leaveRoad(Vehicle vehicle, GamaDate simTime) {
@@ -146,7 +144,8 @@ public class Road extends SchedulingUnit {
 		assert (this.carsOnTheRoad.getFirst() == vehicle);
 		assert (this.interestedInEnteringRoad.size() == this.deadlockPreventionMessages.size());
 
-		this.carsOnTheRoad.removeFirst();
+		Vehicle currentVehicle = this.carsOnTheRoad.removeFirst();
+		this.currentCapacity -= currentVehicle.getSize();
 		this.earliestDepartureTimeOfCar.removeFirst();
 		this.timeOfLastLeavingVehicle = simTime;
 
@@ -154,7 +153,8 @@ public class Road extends SchedulingUnit {
 		 * the next car waiting for entering the road should now be alloted a time for
 		 * entering the road
 		 */
-		if (this.interestedInEnteringRoad.size() > 0) {
+		if (this.interestedInEnteringRoad.size() > 0 && (this.currentCapacity
+				+ this.interestedInEnteringRoad.getFirst().getSize() < this.maxCapacityOnRoad)) {
 			Vehicle nextVehicle = this.interestedInEnteringRoad.removeFirst();
 			DeadlockPreventionMessage m = this.deadlockPreventionMessages.removeFirst();
 			assert (m.getVehicle() == nextVehicle);
@@ -173,7 +173,7 @@ public class Road extends SchedulingUnit {
 			// Math.max(this.timeOfLastEnteringVehicle + this.inverseInFlowCapacity, simTime
 			// + this.gapTravelTime);
 
-			this.noOfCarsPromisedToEnterRoad++;
+			this.currentCapacityPromisedToEnterRoad += currentVehicle.getSize();
 
 			nextVehicle.scheduleEnterRoadMessage(this, nextAvailableTimeForEnteringStreet, this);
 			Logger.addMessage(this, "leaveRoad (if interested to mutch)");
@@ -240,10 +240,12 @@ public class Road extends SchedulingUnit {
 		}
 
 		// calculate time, when the car reaches the end of the road
-		GamaDate nextAvailableTimeForLeavingStreet = simTime.plus(length / freespeed * 1000.0, ChronoUnit.MILLIS);
+		double minFreespeed = Math.min(freespeed, vehicle.getMaxSpeed());
+		GamaDate nextAvailableTimeForLeavingStreet = simTime.plus(length / minFreespeed * 1000.0, ChronoUnit.MILLIS);
 
-		this.noOfCarsPromisedToEnterRoad--;
+		this.currentCapacityPromisedToEnterRoad -= vehicle.getSize();
 		this.carsOnTheRoad.add(vehicle);
+		this.currentCapacity += vehicle.getSize();
 
 		/*
 		 * needed to remove the following assertion because for deadlock prevention
@@ -265,9 +267,6 @@ public class Road extends SchedulingUnit {
 				nextAvailableTimeForLeavingStreet = nextAvailableTimeForLeavingStreetWithOutflow;
 			}
 
-			// nextAvailableTimeForLeavingStreet =
-			// Math.max(nextAvailableTimeForLeavingStreet, this.timeOfLastLeavingVehicle +
-			// this.inverseOutFlowCapacity);
 			vehicle.scheduleEndRoadMessage(this, nextAvailableTimeForLeavingStreet, this);
 //		} else { // empty else clause
 			/*
@@ -294,7 +293,9 @@ public class Road extends SchedulingUnit {
 		 */
 
 		// is there any space on the road (including promised entries?)
-		if (this.carsOnTheRoad.size() + this.noOfCarsPromisedToEnterRoad < this.maxNumberOfCarsOnRoad) {
+		// if (this.carsOnTheRoad.size() + this.noOfCarsPromisedToEnterRoad <
+		// this.maxNumberOfCarsOnRoad) {
+		if (this.currentCapacity + this.currentCapacityPromisedToEnterRoad < this.maxCapacityOnRoad) {
 			/*
 			 * - check, if the gap needs to be considered for entering the road - we can
 			 * find out, the time since when we have a free road for entrance for sure:
@@ -309,7 +310,7 @@ public class Road extends SchedulingUnit {
 				Logger.addMessage(this, "enterRequest (full recently)");
 			}
 
-			this.noOfCarsPromisedToEnterRoad++;
+			this.currentCapacityPromisedToEnterRoad += vehicle.getSize();
 
 			// Get the max date
 			GamaDate timeOfLastEnteringVehicleWithInflow = this.timeOfLastEnteringVehicle
@@ -378,25 +379,25 @@ public class Road extends SchedulingUnit {
 		}
 	}
 
-	public void giveBackPromisedSpaceToRoad() {
-		this.noOfCarsPromisedToEnterRoad--;
+	public void giveBackPromisedSpaceToRoad(Vehicle vehicle) {
+		this.currentCapacityPromisedToEnterRoad -= vehicle.getSize();
 	}
 
-	public void incrementPromisedToEnterRoad() {
-		this.noOfCarsPromisedToEnterRoad++;
+	public void incrementPromisedToEnterRoad(Vehicle vehicle) {
+		this.currentCapacityPromisedToEnterRoad += vehicle.getSize();
 	}
 
 	public void setTimeOfLastEnteringVehicle(GamaDate timeOfLastEnteringVehicle) {
 		this.timeOfLastEnteringVehicle = timeOfLastEnteringVehicle;
 	}
 
-	public long getMaxNumberOfCarsOnRoad() {
-		return maxNumberOfCarsOnRoad;
+	public double getMaxCapacityOnRoad() {
+		return maxCapacityOnRoad;
 	}
 
 	// !! Use for debug only !!
-	public void setMaxNumberOfCarsOnRoad(long maxNumberOfCarsOnRoad) {
-		this.maxNumberOfCarsOnRoad = maxNumberOfCarsOnRoad;
+	public void setMaxCapacityOnRoad(double maxCapacityOnRoad) {
+		this.maxCapacityOnRoad = maxCapacityOnRoad;
 	}
 
 	public void removeFirstDeadlockPreventionMessage(DeadlockPreventionMessage dpMessage) {
@@ -411,8 +412,23 @@ public class Road extends SchedulingUnit {
 		assert (this.interestedInEnteringRoad.size() == this.deadlockPreventionMessages.size());
 	}
 
-	// public static Road getRoad(Id<Link> linkId) {
-	// return getAllRoads().get(linkId);
-	// }
+	public double getCurrentCapacity() {
+		return currentCapacity;
+	}
 
+	public double getCurrentCapacityPromisedToEnterRoad() {
+		return currentCapacityPromisedToEnterRoad;
+	}
+
+	public double getLength() {
+		return length;
+	}
+
+	public void setFreespeed(double value) {
+		this.freespeed = value;
+	}
+
+	public void setNofLanes(int value) {
+		this.nofLanes = value;
+	}
 }

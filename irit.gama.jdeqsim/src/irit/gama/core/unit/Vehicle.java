@@ -34,14 +34,18 @@ import msi.gama.util.GamaDate;
 public class Vehicle extends SchedulingUnit {
 	private Person ownerPerson = null;
 	private Leg currentLeg = null;
-	private int legIndex;
 	private Road currentRoad = null;
-	private int linkIndex;
 	private Road[] currentRoute = null;
+	private int legIndex;
+	private int linkIndex;
+	private double maxSpeed = -1.0;
+	private double size;
 
-	public Vehicle(IScope scope, IAgent agent, Scheduler scheduler, Person ownerPerson) {
+	public Vehicle(IScope scope, IAgent agent, Scheduler scheduler, Person ownerPerson, double maxspeed, double size) {
 		super(scope, agent, scheduler);
 		this.ownerPerson = ownerPerson;
+		this.maxSpeed = maxspeed;
+		this.size = size;
 		initialize();
 	}
 
@@ -220,7 +224,7 @@ public class Vehicle extends SchedulingUnit {
 			 * promised space to the road else a precondition of the enterRequest would not
 			 * be correct any more (which involves the noOfCarsPromisedToEnterRoad variable)
 			 */
-			road.giveBackPromisedSpaceToRoad(); // next road
+			road.giveBackPromisedSpaceToRoad(this); // next road
 			scheduleEndLegMessage(emitterUnit, scheduleTime, road);
 		} else {
 			_scheduleEnterRoadMessage(emitterUnit, scheduleTime, road);
@@ -283,6 +287,18 @@ public class Vehicle extends SchedulingUnit {
 			return aa.primDie(getScope());
 		}
 		return null;
+	}
+
+	public double getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	public void setMaxSpeed(double maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+
+	public double getSize() {
+		return size;
 	}
 
 	/*

@@ -32,7 +32,8 @@ public class Param {
 	public static double MINIMUM_IN_FLOW_CAPACITY = 1800.0;
 
 	// In m
-	public static double CAR_SIZE = 7.5;
+	public static double MIN_CAPACITY = 15.0;
+
 
 	// In m/s
 	public static double GAP_TRAVEL_SPEED = 15.0;

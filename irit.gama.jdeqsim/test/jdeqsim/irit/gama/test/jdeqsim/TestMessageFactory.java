@@ -107,7 +107,7 @@ public class TestMessageFactory extends GenericTest {
 		Param.GC_MESSAGES = true;
 		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 		Person person = new Person();
-		Vehicle vehicle = new Vehicle(null, null, scheduler, person);
+		Vehicle vehicle = new Vehicle(null, null, scheduler, person, 50.0, 7.0);
 
 		assert (MessageFactory.getEndLegMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
 		assert (MessageFactory.getEnterRoadMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
@@ -132,7 +132,7 @@ public class TestMessageFactory extends GenericTest {
 		Param.GC_MESSAGES = false;
 		Scheduler scheduler = new Scheduler(GAMA.getRuntimeScope(), null);
 		Person person = new Person();
-		Vehicle vehicle = new Vehicle(null, null, scheduler, person);
+		Vehicle vehicle = new Vehicle(null, null, scheduler, person, 50.0, 7.0);
 
 		assert (MessageFactory.getEndLegMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
 		assert (MessageFactory.getEnterRoadMessage(null, null, scheduler, vehicle, null).getScheduler() == scheduler);
