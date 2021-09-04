@@ -138,11 +138,9 @@
 		</repository>
 	</repositories>
   
-<modules>
- <module>../cict.feature.geotiff</module> 
+<modules> 
  <module>../cict.feature.netcdf</module> 
- <module>../cict.feature.VR</module> 
- <module>../cict.gaml.extensions.geotiff</module> 
+ <module>../cict.feature.VR</module>  
  <module>../cict.gaml.extensions.netcdf</module> 
  <module>../cict.gaml.extensions.VR</module> 
  <module>../escape.gaml.feature.pedestrian</module> 
