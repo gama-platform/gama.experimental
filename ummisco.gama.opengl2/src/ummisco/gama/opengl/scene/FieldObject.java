@@ -14,35 +14,35 @@ import java.util.List;
 
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.util.file.GamaImageFile;
-import msi.gaml.statements.draw.FieldDrawingAttributes;
+import msi.gaml.statements.draw.DrawingAttributes; 
 
 public class FieldObject extends AbstractObject {
 
 	final double[] values;
 
-	public FieldObject(final double[] dem, final FieldDrawingAttributes attributes) {
+	public FieldObject(final double[] dem, final DrawingAttributes attributes) {
 		super(attributes);
 		this.values = dem;
 	}
 
 	public GamaPoint getCellSize() {
-		return ((FieldDrawingAttributes) attributes).getCellSize();
+		return ((DrawingAttributes) attributes).getLocation();
 	}
 
 	public boolean isGrayScaled() {
-		return ((FieldDrawingAttributes) attributes).grayScaled;
+		return ((DrawingAttributes) attributes).isLighting();
 	}
 
 	public boolean isTriangulated() {
-		return ((FieldDrawingAttributes) attributes).triangulated;
+		return ((DrawingAttributes) attributes).isLighting();
 	}
 
 	public boolean isShowText() {
-		return ((FieldDrawingAttributes) attributes).withText;
+		return ((DrawingAttributes) attributes).isAnimated();
 	}
 
 	public BufferedImage getDirectImage(final int order) {
-		final FieldDrawingAttributes a = (FieldDrawingAttributes) attributes;
+		final DrawingAttributes a = (DrawingAttributes) attributes;
 		final List<?> textures = a.getTextures();
 		if (textures == null || textures.size() > order + 1) { return null; }
 		final Object t = textures.get(order);

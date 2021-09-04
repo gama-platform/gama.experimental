@@ -192,7 +192,7 @@ public class LaunchPadEventLayer implements ILayer, IEventLayerDelegate {
 		if (!g.is2D() && !getData().isDynamic() && hasBeenDrawnOnce) { return; }
 		if (g.isNotReadyToUpdate() && hasBeenDrawnOnce) { return; }
 		getData().compute(scope, g);
-		g.setOpacity(getData().getTransparency(scope));
+		g.setAlpha(getData().getTransparency(scope));
 		g.beginDrawingLayer(this); 
 		g.endDrawingLayer(this);
 		hasBeenDrawnOnce = true;

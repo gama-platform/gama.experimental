@@ -17,14 +17,7 @@ import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
-
-import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.DecompositionSolver;
-import org.apache.commons.math3.linear.LUDecomposition;
-import org.apache.commons.math3.linear.RealMatrix;
-import org.apache.commons.math3.linear.RealVector;
+import javax.vecmath.Vector3f; 
 
 import org.locationtech.jts.geom.Coordinate;
 
@@ -805,35 +798,35 @@ public class GeomMathUtils {
 		final double dx4 = dstPoints[3][0];
 		final double dy4 = dstPoints[3][1];
 
-		final RealMatrix coefficients = new Array2DRowRealMatrix(new double[][] {
-				{ -sx1, -sy1, -1, 0, 0, 0, sx1 * dx1, sy1 * dx1 }, { 0, 0, 0, -dx1, -dy1, -1, sx1 * dy1, sy1 * dy1 },
-				{ -sx2, -sy2, -1, 0, 0, 0, sx2 * dx2, sy2 * dx2 }, { 0, 0, 0, -dx2, -dy2, -1, sx2 * dy2, sy2 * dy2 },
-				{ -sx3, -sy3, -1, 0, 0, 0, sx3 * dx3, sy3 * dx3 }, { 0, 0, 0, -dx3, -dy3, -1, sx3 * dy3, sy3 * dy3 },
-				{ -sx4, -sy4, -1, 0, 0, 0, sx4 * dx4, sy4 * dx4 }, { 0, 0, 0, -dx4, -dy4, -1, sx4 * dy4, sy4 * dy4 } },
-				false);
-		final DecompositionSolver solver = new LUDecomposition(coefficients).getSolver();
-
-		final RealVector constants = new ArrayRealVector(new double[] { dx1, dy1, dx2, dy2, dx3, dy3, dx4, dy4 },
-				false);
-		final RealVector solution = solver.solve(constants);
+//		final RealMatrix coefficients = new Array2DRowRealMatrix(new double[][] {
+//				{ -sx1, -sy1, -1, 0, 0, 0, sx1 * dx1, sy1 * dx1 }, { 0, 0, 0, -dx1, -dy1, -1, sx1 * dy1, sy1 * dy1 },
+//				{ -sx2, -sy2, -1, 0, 0, 0, sx2 * dx2, sy2 * dx2 }, { 0, 0, 0, -dx2, -dy2, -1, sx2 * dy2, sy2 * dy2 },
+//				{ -sx3, -sy3, -1, 0, 0, 0, sx3 * dx3, sy3 * dx3 }, { 0, 0, 0, -dx3, -dy3, -1, sx3 * dy3, sy3 * dy3 },
+//				{ -sx4, -sy4, -1, 0, 0, 0, sx4 * dx4, sy4 * dx4 }, { 0, 0, 0, -dx4, -dy4, -1, sx4 * dy4, sy4 * dy4 } },
+//				false);
+//		final DecompositionSolver solver = new LUDecomposition(coefficients).getSolver();
+//
+//		final RealVector constants = new ArrayRealVector(new double[] { dx1, dy1, dx2, dy2, dx3, dy3, dx4, dy4 },
+//				false);
+//		final RealVector solution = solver.solve(constants);
 
 		final Matrix4d Result = new Matrix4d();
-		Result.m00 = solution.getEntry(0);
-		Result.m01 = solution.getEntry(1);
-		Result.m02 = 0;
-		Result.m03 = solution.getEntry(2);
-		Result.m10 = solution.getEntry(3);
-		Result.m11 = solution.getEntry(4);
-		Result.m12 = 0;
-		Result.m13 = solution.getEntry(5);
-		Result.m20 = 0;
-		Result.m21 = 0;
-		Result.m22 = 1;
-		Result.m23 = 0;
-		Result.m30 = solution.getEntry(6);
-		Result.m31 = solution.getEntry(7);
-		Result.m32 = 0;
-		Result.m33 = 1;
+//		Result.m00 = solution.getEntry(0);
+//		Result.m01 = solution.getEntry(1);
+//		Result.m02 = 0;
+//		Result.m03 = solution.getEntry(2);
+//		Result.m10 = solution.getEntry(3);
+//		Result.m11 = solution.getEntry(4);
+//		Result.m12 = 0;
+//		Result.m13 = solution.getEntry(5);
+//		Result.m20 = 0;
+//		Result.m21 = 0;
+//		Result.m22 = 1;
+//		Result.m23 = 0;
+//		Result.m30 = solution.getEntry(6);
+//		Result.m31 = solution.getEntry(7);
+//		Result.m32 = 0;
+//		Result.m33 = 1;
 
 		return Result;
 

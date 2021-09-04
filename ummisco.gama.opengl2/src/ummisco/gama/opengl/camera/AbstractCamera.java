@@ -141,12 +141,12 @@ public abstract class AbstractCamera implements ICamera {
 
 	@Override
 	public void updateTarget() {
-		target.setLocation(renderer.data.getCameraLookPos());
+		target.setLocation(renderer.data.getCameraPos());
 	}
 
 	@Override
 	public void updateOrientation() {
-		upVector.setLocation(renderer.data.getCameraUpVector());
+		upVector.setLocation(renderer.data.getCameraPos());
 	}
 
 	@Override
@@ -184,7 +184,7 @@ public abstract class AbstractCamera implements ICamera {
 	@Override
 	public void setUpVector(final double xPos, final double yPos, final double zPos) {
 		upVector.setLocation(xPos, yPos, zPos);
-		getRenderer().data.setCameraUpVector(upVector.clone());
+		getRenderer().data.setCameraPos(upVector.clone());
 	}
 
 	/* -------Get commands--------- */

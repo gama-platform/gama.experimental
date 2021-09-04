@@ -30,8 +30,7 @@ import msi.gama.runtime.IScope;
 import msi.gama.util.file.GamaGeometryFile;
 import msi.gaml.expressions.IExpression;
 import msi.gaml.operators.Cast;
-import msi.gaml.statements.draw.DrawingAttributes;
-import msi.gaml.statements.draw.FieldDrawingAttributes;
+import msi.gaml.statements.draw.DrawingAttributes; 
 import msi.gaml.types.GamaGeometryType;
 import ummisco.gama.modernOpenGL.DrawingEntity;
 import ummisco.gama.opengl.Abstract3DRenderer;
@@ -323,7 +322,7 @@ public class LayerObject {
 		return addGeometry(geometry, attributes);
 	}
 
-	public FieldObject addField(final double[] fieldValues, final FieldDrawingAttributes attributes) {
+	public FieldObject addField(final double[] fieldValues, final DrawingAttributes attributes) {
 		final FieldObject field = new FieldObject(fieldValues, attributes);
 		currentList.add(field);
 		return field;

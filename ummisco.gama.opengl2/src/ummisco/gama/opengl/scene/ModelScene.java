@@ -20,8 +20,7 @@ import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IMap;
 import msi.gama.util.file.GamaGeometryFile;
 import msi.gama.util.file.GamaImageFile;
-import msi.gaml.statements.draw.DrawingAttributes;
-import msi.gaml.statements.draw.FieldDrawingAttributes;
+import msi.gaml.statements.draw.DrawingAttributes; 
 import msi.gaml.statements.draw.DrawingAttributes;
 import ummisco.gama.opengl.Abstract3DRenderer;
 
@@ -165,7 +164,7 @@ public class ModelScene {
 		return configure(currentLayer.addGeometry(geometry, attributes));
 	}
 
-	public FieldObject addField(final double[] fieldValues, final FieldDrawingAttributes attributes) {
+	public FieldObject addField(final double[] fieldValues, final DrawingAttributes attributes) {
 		if (cannotAdd()) { return null; }
 		return configure(currentLayer.addField(fieldValues, attributes));
 	}

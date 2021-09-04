@@ -10,8 +10,7 @@
 package ummisco.gama.opengl.camera;
 
 import java.awt.Point;
-
-import org.apache.commons.math3.util.FastMath;
+ 
 import org.eclipse.swt.SWT;
 
 import com.jogamp.opengl.glu.GLU;
@@ -46,8 +45,8 @@ public class FreeFlyCamera extends AbstractCamera {
 		}
 		final double factorP = phi * Maths.toRad;
 		final double factorT = theta * Maths.toRad;
-		final double r_temp = FastMath.cos(factorP);
-		forward.setLocation(r_temp * FastMath.cos(factorT), r_temp * FastMath.sin(factorT), FastMath.sin(factorP));
+		final double r_temp = Math.cos(factorP);
+		forward.setLocation(r_temp * Math.cos(factorT), r_temp * Math.sin(factorT), Math.sin(factorP));
 		left.setLocation(new GamaPoint(up.y * forward.z - up.z * forward.y, up.z * forward.x - up.x * forward.z,
 				up.x * forward.y - up.y * forward.x).normalized());
 		setTarget(forward.plus(position));
@@ -137,7 +136,7 @@ public class FreeFlyCamera extends AbstractCamera {
 
 	@Override
 	public void zoom(final boolean in) {
-		final float step = FastMath.abs(getPosition().getZ() != 0 ? (float) position.getZ() / 10 : 0.1f);
+		final float step = Math.abs(getPosition().getZ() != 0 ? (float) position.getZ() / 10 : 0.1f);
 		final GamaPoint vector = forward.times(speed * 800 + step);
 		setPosition(getPosition().plus(in ? vector : vector.negated()));
 		setTarget(forward.plus(getPosition()));

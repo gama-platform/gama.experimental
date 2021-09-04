@@ -66,7 +66,7 @@ public class AxesLayerObject extends StaticLayerObject.World {
 				// build labels
 				final GamaFont font = new GamaFont("Helvetica", 0, 18); // 0 for plain, 18 for text size.
 				final TextDrawingAttributes textDrawingAttr = new TextDrawingAttributes(Scaling3D.of(1, 1, 1), null,
-						p.times(1.2).yNegated(), p, COLORS[i], font, false);
+						p.times(1.2).yNegated(), COLORS[i]);
 				final StringObject strObj = new StringObject(LABELS[i], textDrawingAttr);
 				list.add(strObj);
 
@@ -87,7 +87,7 @@ public class AxesLayerObject extends StaticLayerObject.World {
 				// build labels
 				final GamaFont font = new GamaFont("Helvetica", 0, 18); // 0 for plain, 18 for text size.
 				final TextDrawingAttributes textDrawingAttr = new TextDrawingAttributes(Scaling3D.of(1), null,
-						p.times(1.3).yNegated(), p, COLORS[i], font, false);
+						p.times(1.3).yNegated(), COLORS[i]);
 				final StringObject strObj = new StringObject(LABELS[i], textDrawingAttr);
 				list.add(strObj);
 

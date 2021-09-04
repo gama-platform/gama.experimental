@@ -916,10 +916,8 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 						// SEND my data
 					}
 				}
-
-				final IList<?> nl1 =
-						GamaMatrix.getLine(scope, mydata.metadatahistory, mydata.metadatahistory.numRows - 1);
-				final GamaObjectMatrix nm1 = new GamaObjectMatrix(scope, nl1,
+ 
+				final GamaObjectMatrix nm1 = new GamaObjectMatrix(scope,  mydata.metadatahistory.getRowsList(),
 						new GamaPoint(mydata.metadatahistory.numCols, 1), Types.NO_TYPE);
 				multidata.metadatahistory =
 						(GamaObjectMatrix) multidata.metadatahistory._opAppendVertically(scope, nm1);
@@ -927,38 +925,29 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 				final GamaObjectMatrix matrice2 =
 						GamaObjectMatrix.from(nbAttributes + 1, nbAgents, mydata.lastdetailedvarvalues);
 				multidata.lastdetailedvarvalues = matrice2;
-
-				final IList<?> nl2 = GamaMatrix.getLine(scope, mydata.minhistory, mydata.minhistory.numRows - 1);
+ 
 				final GamaFloatMatrix nm2 =
-						new GamaFloatMatrix(scope, nl2, new GamaPoint(mydata.minhistory.numCols, 1));
+						new GamaFloatMatrix(scope, mydata.minhistory.getRowsList(), new GamaPoint(mydata.minhistory.numCols, 1));
 				multidata.minhistory = multidata.minhistory._opAppendVertically(scope, nm2);
-
-				final IList<?> nl3 = GamaMatrix.getLine(scope, mydata.maxhistory, mydata.maxhistory.numRows - 1);
+ 
 				final GamaFloatMatrix nm3 =
-						new GamaFloatMatrix(scope, nl3, new GamaPoint(mydata.maxhistory.numCols, 1));
+						new GamaFloatMatrix(scope, mydata.maxhistory.getRowsList(), new GamaPoint(mydata.maxhistory.numCols, 1));
 				multidata.maxhistory = multidata.maxhistory._opAppendVertically(scope, nm3);
-
-				final IList<?> nl4 =
-						GamaMatrix.getLine(scope, mydata.averagehistory, mydata.averagehistory.numRows - 1);
+ 
 				final GamaFloatMatrix nm4 =
-						new GamaFloatMatrix(scope, nl4, new GamaPoint(mydata.averagehistory.numCols, 1));
+						new GamaFloatMatrix(scope, mydata.averagehistory.getRowsList(), new GamaPoint(mydata.averagehistory.numCols, 1));
 				multidata.averagehistory = multidata.averagehistory._opAppendVertically(scope, nm4);
-
-				final IList<?> nl5 = GamaMatrix.getLine(scope, mydata.stdevhistory, mydata.stdevhistory.numRows - 1);
+ 
 				final GamaFloatMatrix nm5 =
-						new GamaFloatMatrix(scope, nl5, new GamaPoint(mydata.stdevhistory.numCols, 1));
+						new GamaFloatMatrix(scope, mydata.stdevhistory.getRowsList(), new GamaPoint(mydata.stdevhistory.numCols, 1));
 				multidata.stdevhistory = multidata.stdevhistory._opAppendVertically(scope, nm5);
-
-				final IList<?> nl6 =
-						GamaMatrix.getLine(scope, mydata.distribhistoryparams, mydata.distribhistoryparams.numRows - 1);
-				final GamaObjectMatrix nm6 = new GamaObjectMatrix(scope, nl6,
+ 
+				final GamaObjectMatrix nm6 = new GamaObjectMatrix(scope, mydata.distribhistoryparams.getRowsList(),
 						new GamaPoint(mydata.distribhistoryparams.numCols, 1), Types.NO_TYPE);
 				multidata.distribhistoryparams =
 						(GamaObjectMatrix) multidata.distribhistoryparams._opAppendVertically(scope, nm6);
-
-				final IList<?> nl7 =
-						GamaMatrix.getLine(scope, mydata.distribhistory, mydata.distribhistory.numRows - 1);
-				final GamaObjectMatrix nm7 = new GamaObjectMatrix(scope, nl7,
+ 
+				final GamaObjectMatrix nm7 = new GamaObjectMatrix(scope,  mydata.distribhistory.getRowsList(),
 						new GamaPoint(mydata.distribhistory.numCols, 1), Types.NO_TYPE);
 				multidata.distribhistory = (GamaObjectMatrix) multidata.distribhistory._opAppendVertically(scope, nm7);
 
@@ -1231,15 +1220,15 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 				if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
 					// System.out.println("on est à l'agent group follower: " +
 					// manager.agentGroupFollowerList.get(i).toString());
-					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 							.length(scope); j++) {
-						if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j)
+						if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j)
 								.toString()) == step) {
 							// System.out.println("valeur du step: " +
-							// manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j));
+							// manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j));
 							for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 								if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
-									objvaleur = manager.storableDataList.get(i).minhistory.getColumn(scope, k).get(j);
+									objvaleur = manager.storableDataList.get(i).minhistory.getColumn(k).get(j);
 									// System.out.println("objvaleur: " + objvaleur);
 									at_cycle_manager.add(objvaleur);
 								}
@@ -1252,13 +1241,13 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 			at_cycle_manager = new ArrayList<>();
 			for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
 				if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
-					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 							.length(scope); j++) {
-						if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j)
+						if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j)
 								.toString()) == step) {
 							for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 								if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
-									objvaleur = manager.storableDataList.get(i).maxhistory.getColumn(scope, k).get(j);
+									objvaleur = manager.storableDataList.get(i).maxhistory.getColumn(k).get(j);
 									at_cycle_manager.add(objvaleur);
 								}
 							}
@@ -1270,14 +1259,14 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 			at_cycle_manager = new ArrayList<>();
 			for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
 				if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
-					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 							.length(scope); j++) {
-						if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j)
+						if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j)
 								.toString()) == step) {
 							for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 								if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
 									objvaleur =
-											manager.storableDataList.get(i).averagehistory.getColumn(scope, k).get(j);
+											manager.storableDataList.get(i).averagehistory.getColumn(k).get(j);
 									at_cycle_manager.add(objvaleur);
 								}
 							}
@@ -1289,13 +1278,13 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 			at_cycle_manager = new ArrayList<>();
 			for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
 				if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
-					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 							.length(scope); j++) {
-						if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j)
+						if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j)
 								.toString()) == step) {
 							for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 								if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
-									objvaleur = manager.storableDataList.get(i).stdevhistory.getColumn(scope, k).get(j);
+									objvaleur = manager.storableDataList.get(i).stdevhistory.getColumn(k).get(j);
 									at_cycle_manager.add(objvaleur);
 								}
 							}
@@ -1307,14 +1296,14 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 			at_cycle_manager = new ArrayList<>();
 			for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
 				if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
-					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 							.length(scope); j++) {
-						if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j)
+						if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j)
 								.toString()) == step) {
 							for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 								if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
 									objvaleur =
-											manager.storableDataList.get(i).distribhistory.getColumn(scope, k).get(j);
+											manager.storableDataList.get(i).distribhistory.getColumn(k).get(j);
 									at_cycle_manager.add(objvaleur);
 								}
 							}
@@ -1359,15 +1348,15 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 		if ("multi_minhistory".equals(my_matrix)) {
 			for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
 				if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
-					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 							.length(scope); j++) {
 						final int st = Integer.parseInt(
-								manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString());
+								manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j).toString());
 						final String idsim =
-								manager.storableDataList.get(i).metadatahistory.getColumn(scope, 2).get(j).toString();
+								manager.storableDataList.get(i).metadatahistory.getColumn(2).get(j).toString();
 						for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 							if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
-								objvaleur = manager.storableDataList.get(i).minhistory.getColumn(scope, k).get(j);
+								objvaleur = manager.storableDataList.get(i).minhistory.getColumn(k).get(j);
 								if (my_very_big_list.size() <= manager.idSimList.indexOf(idsim)) {
 									for (int l = my_very_big_list.size(); l <= manager.idSimList.indexOf(idsim); l++) {
 										final List<Double> my_big_list2 = new ArrayList<>();
@@ -1384,16 +1373,16 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 		} else if ("multi_maxhistory".equals(my_matrix)) {
 			for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
 				if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
-					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 							.length(scope); j++) {
 						final int st = Integer.parseInt(
-								manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString());
+								manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j).toString());
 						final String idsim =
-								manager.storableDataList.get(i).metadatahistory.getColumn(scope, 2).get(j).toString();
+								manager.storableDataList.get(i).metadatahistory.getColumn(2).get(j).toString();
 						{
 							for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 								if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
-									objvaleur = manager.storableDataList.get(i).maxhistory.getColumn(scope, k).get(j);
+									objvaleur = manager.storableDataList.get(i).maxhistory.getColumn(k).get(j);
 									if (my_very_big_list.size() <= manager.idSimList.indexOf(idsim)) {
 										for (int l = my_very_big_list.size(); l <= manager.idSimList
 												.indexOf(idsim); l++) {
@@ -1412,17 +1401,17 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 		} else if ("multi_averagehistory".equals(my_matrix)) {
 			for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
 				if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
-					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 							.length(scope); j++) {
 						final int st = Integer.parseInt(
-								manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString());
+								manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j).toString());
 						final String idsim =
-								manager.storableDataList.get(i).metadatahistory.getColumn(scope, 2).get(j).toString();
+								manager.storableDataList.get(i).metadatahistory.getColumn(2).get(j).toString();
 						{
 							for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 								if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
 									objvaleur =
-											manager.storableDataList.get(i).averagehistory.getColumn(scope, k).get(j);
+											manager.storableDataList.get(i).averagehistory.getColumn(k).get(j);
 									if (my_very_big_list.size() <= manager.idSimList.indexOf(idsim)) {
 										for (int l = my_very_big_list.size(); l <= manager.idSimList
 												.indexOf(idsim); l++) {
@@ -1441,18 +1430,18 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 		} else if ("multi_stdevhistory".equals(my_matrix)) {
 			for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
 				if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
-					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 							.length(scope); j++) {
 						final int st = Integer.parseInt(
-								manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString());
+								manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j).toString());
 						final String idsim =
-								manager.storableDataList.get(i).metadatahistory.getColumn(scope, 2).get(j).toString();
+								manager.storableDataList.get(i).metadatahistory.getColumn(2).get(j).toString();
 						// if(Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope,
 						// 1).get(j).toString())== step)
 						{
 							for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 								if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
-									objvaleur = manager.storableDataList.get(i).stdevhistory.getColumn(scope, k).get(j);
+									objvaleur = manager.storableDataList.get(i).stdevhistory.getColumn(k).get(j);
 									if (my_very_big_list.size() <= manager.idSimList.indexOf(idsim)) {
 										for (int l = my_very_big_list.size(); l <= manager.idSimList
 												.indexOf(idsim); l++) {
@@ -1472,17 +1461,17 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 		} else if ("multi_distribhistory".equals(my_matrix)) {
 			for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
 				if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
-					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+					for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 							.length(scope); j++) {
 						final int st = Integer.parseInt(
-								manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j).toString());
+								manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j).toString());
 						final String idsim =
-								manager.storableDataList.get(i).metadatahistory.getColumn(scope, 2).get(j).toString();
+								manager.storableDataList.get(i).metadatahistory.getColumn(2).get(j).toString();
 						{
 							for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 								if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
 									objvaleur =
-											manager.storableDataList.get(i).distribhistory.getColumn(scope, k).get(j);
+											manager.storableDataList.get(i).distribhistory.getColumn(k).get(j);
 									if (my_very_big_list.size() <= manager.idSimList.indexOf(idsim)) {
 										for (int l = my_very_big_list.size(); l <= manager.idSimList
 												.indexOf(idsim); l++) {
@@ -1536,14 +1525,14 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 
 		for (int i = 0; i < manager.agentGroupFollowerList.length(scope); i++) {
 			if (manager.agentGroupFollowerList.get(i).toString().contains(scope.getAgent().getName().toString())) {
-				for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1)
+				for (int j = 0; j < manager.storableDataList.get(i).metadatahistory.getColumn(1)
 						.length(scope); j++) {
-					if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(scope, 1).get(j)
+					if (Float.parseFloat(manager.storableDataList.get(i).metadatahistory.getColumn(1).get(j)
 							.toString()) == step) {
 						for (int k = 0; k < mydata.numvarmap.getValues().length(scope); k++) {
 							if (mydata.numvarmap.getValues().get(k).equals(my_variable)) {
 								if (legende.size() >= 10) { legende.clear(); }
-								obj = (List<?>) manager.storableDataList.get(i).distribhistoryparams.getColumn(scope, k)
+								obj = (List<?>) manager.storableDataList.get(i).distribhistoryparams.getColumn(k)
 										.get(j);
 								System.out.println("obj= " + obj);
 								if (obj.size() == 1) {
@@ -1629,10 +1618,8 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 						final StorableData newdata = (StorableData) content.get("value");
 
 						System.out.println("new data " + this.getNetName() + " is " + newdata);
-
-						final IList<?> nl1 =
-								GamaMatrix.getLine(scope, newdata.metadatahistory, newdata.metadatahistory.numRows - 1);
-						final GamaObjectMatrix nm1 = new GamaObjectMatrix(scope, nl1,
+ 
+						final GamaObjectMatrix nm1 = new GamaObjectMatrix(scope, newdata.metadatahistory.getRowsList(),
 								new GamaPoint(mydata.metadatahistory.numCols, 1), Types.NO_TYPE);
 						multidata.metadatahistory =
 								(GamaObjectMatrix) multidata.metadatahistory._opAppendVertically(scope, nm1);
@@ -1643,50 +1630,38 @@ public class AgentGroupFollower extends ClusterBuilder // implements MessageList
 									._opAppendVertically(scope, matrice2);
 							multidata.lastdetailedvarvalues = matrice2;
 						}
-
-						final IList<?> nl2 =
-								GamaMatrix.getLine(scope, mydata.minhistory, mydata.minhistory.numRows - 1);
+ 
 						final GamaFloatMatrix nm2 =
-								new GamaFloatMatrix(scope, nl2, new GamaPoint(mydata.minhistory.numCols, 1));
+								new GamaFloatMatrix(scope, mydata.minhistory.getRowsList(), new GamaPoint(mydata.minhistory.numCols, 1));
 						multidata.minhistory = multidata.minhistory._opAppendVertically(scope, nm2);
-
-						final IList<?> nl3 =
-								GamaMatrix.getLine(scope, mydata.maxhistory, mydata.maxhistory.numRows - 1);
+ 
 						final GamaFloatMatrix nm3 =
-								new GamaFloatMatrix(scope, nl3, new GamaPoint(mydata.maxhistory.numCols, 1));
+								new GamaFloatMatrix(scope,  mydata.maxhistory.getRowsList(), new GamaPoint(mydata.maxhistory.numCols, 1));
 						multidata.maxhistory = multidata.maxhistory._opAppendVertically(scope, nm3); // .opAppendVertically(scope,
 																										// multidata.maxhistory,
 																										// nm3);
-
-						final IList<?> nl4 =
-								GamaMatrix.getLine(scope, mydata.averagehistory, mydata.averagehistory.numRows - 1);
+ 
 						final GamaFloatMatrix nm4 =
-								new GamaFloatMatrix(scope, nl4, new GamaPoint(mydata.averagehistory.numCols, 1));
+								new GamaFloatMatrix(scope, mydata.averagehistory.getRowsList(), new GamaPoint(mydata.averagehistory.numCols, 1));
 						multidata.averagehistory =
 								(GamaFloatMatrix) multidata.averagehistory._opAppendHorizontally(scope, nm4); // .opAppendVertically(scope,
 																												// multidata.averagehistory,
 																												// nm4);
-
-						final IList<?> nl5 =
-								GamaMatrix.getLine(scope, mydata.stdevhistory, mydata.stdevhistory.numRows - 1);
+ 
 						final GamaFloatMatrix nm5 =
-								new GamaFloatMatrix(scope, nl5, new GamaPoint(mydata.stdevhistory.numCols, 1));
+								new GamaFloatMatrix(scope, mydata.stdevhistory.getRowsList(), new GamaPoint(mydata.stdevhistory.numCols, 1));
 						multidata.stdevhistory = multidata.stdevhistory._opAppendVertically(scope, nm5); // .opAppendVertically(scope,
 																											// multidata.stdevhistory,
 																											// nm5);
-
-						final IList<?> nl6 = GamaMatrix.getLine(scope, mydata.distribhistoryparams,
-								mydata.distribhistoryparams.numRows - 1);
-						final GamaObjectMatrix nm6 = new GamaObjectMatrix(scope, nl6,
+ 
+						final GamaObjectMatrix nm6 = new GamaObjectMatrix(scope, mydata.distribhistoryparams.getRowsList(),
 								new GamaPoint(mydata.distribhistoryparams.numCols, 1), Types.NO_TYPE);
 						multidata.distribhistoryparams =
 								(GamaObjectMatrix) multidata.distribhistoryparams._opAppendVertically(scope, nm6); // .opAppendVertically(scope,
 																													// multidata.distribhistoryparams,
 																													// nm6);
-
-						final IList<?> nl7 =
-								GamaMatrix.getLine(scope, mydata.distribhistory, mydata.distribhistory.numRows - 1);
-						final GamaObjectMatrix nm7 = new GamaObjectMatrix(scope, nl7,
+ 
+						final GamaObjectMatrix nm7 = new GamaObjectMatrix(scope, mydata.distribhistory.getRowsList(),
 								new GamaPoint(mydata.distribhistory.numCols, 1), Types.NO_TYPE);
 						multidata.distribhistory = multidata.distribhistory._opAppendHorizontally(scope, nm7); // .opAppendVertically(scope,
 																												// multidata.distribhistory,
