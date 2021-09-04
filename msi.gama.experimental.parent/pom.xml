@@ -114,7 +114,7 @@
 			</snapshots>
 			<id>p2Repo</id>
 			<name>p2Repo</name>
-			<url>http://51.255.46.42/updates</url>
+			<url>http://51.255.46.42/updates/v1.8.2</url>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -129,7 +129,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 			<id>p2Repo</id> 
-			<url>http://51.255.46.42/updates</url>
+			<url>http://51.255.46.42/updates/v1.8.2</url>
 		</repository>
 		<repository>
 			<id>eclipse-2019-03</id>
