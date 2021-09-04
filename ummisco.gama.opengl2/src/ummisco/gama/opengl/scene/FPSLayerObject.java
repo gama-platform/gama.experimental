@@ -86,7 +86,7 @@ public class FPSLayerObject extends LayerObject {
 																// 18 for text
 																// size.
 		final TextDrawingAttributes textDrawingAttr = new TextDrawingAttributes(Scaling3D.of(0.0015), null,
-				new GamaPoint(0.005, -0.03, 0), offset, new GamaColor(0, 0, 0, 1), font, true);
+				new GamaPoint(0.005, -0.03, 0), new GamaColor(0, 0, 0, 1));
 		final StringObject strObj = new StringObject("fps : " + fps, textDrawingAttr);
 		newElem.add(strObj);
 

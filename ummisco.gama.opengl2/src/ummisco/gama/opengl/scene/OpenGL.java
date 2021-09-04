@@ -141,7 +141,7 @@ public class OpenGL {
 	final GamaPoint textureCoords = new GamaPoint();
 	private double currentZIncrement, currentZTranslation, maxZ, savedZTranslation;
 	private volatile boolean ZTranslationSuspended;
-	private final boolean useJTSTriangulation = !GamaPreferences.Displays.OPENGL_TRIANGULATOR.getValue();
+	private final boolean useJTSTriangulation = !GamaPreferences.Displays.OPENGL_CAP_FPS.getValue();
 	// private final Rotation3D tempRotation = Rotation3D.identity();
 	// private GLUquadricImpl quadric;
 	private int originalViewHeight;

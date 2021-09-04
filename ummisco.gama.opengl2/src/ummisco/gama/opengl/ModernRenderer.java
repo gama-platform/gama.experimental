@@ -28,8 +28,9 @@ import msi.gama.outputs.layers.charts.ChartOutput;
 import msi.gama.util.file.GamaFile;
 import msi.gama.util.file.GamaGeometryFile;
 import msi.gama.util.file.GamaImageFile;
-import msi.gaml.statements.draw.DrawingAttributes;
-import msi.gaml.statements.draw.FieldDrawingAttributes;
+import msi.gama.util.matrix.IField;
+import msi.gaml.statements.draw.DrawingAttributes; 
+import msi.gaml.statements.draw.MeshDrawingAttributes;
 import ummisco.gama.modernOpenGL.ModernDrawer;
 import ummisco.gama.opengl.utils.LightHelper;
 import ummisco.gama.opengl.vaoGenerator.DrawingEntityGenerator;
@@ -332,13 +333,7 @@ public class ModernRenderer extends Abstract3DRenderer {
 		}
 		return rect;
 	}
-
-	@Override
-	public Rectangle2D drawField(final double[] fieldValues, final FieldDrawingAttributes attributes) {
-		// TODO
-		return null;
-	}
-
+ 
 	@Override
 	public GamaPoint getRealWorldPointFromWindowPoint(final Point windowPoint) {
 		// TODO
@@ -380,6 +375,18 @@ public class ModernRenderer extends Abstract3DRenderer {
 	public Rectangle2D drawChart(final ChartOutput chart) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Rectangle2D drawField(IField values, MeshDrawingAttributes attributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void fillBackground(Color bgColor) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

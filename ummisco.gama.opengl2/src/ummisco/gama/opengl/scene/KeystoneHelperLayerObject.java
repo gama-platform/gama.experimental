@@ -119,7 +119,7 @@ public class KeystoneHelperLayerObject extends LayerObject {
 		// 0 for plain, 18 for text size
 		final GamaFont font = new GamaFont("Helvetica", 0, 18);
 		final TextDrawingAttributes textDrawingAttr =
-				new TextDrawingAttributes(Scaling3D.of(size), null, location, location, color, font, true);
+				new TextDrawingAttributes(Scaling3D.of(size), null, location, color);
 		final StringObject strObj = new StringObject(content, textDrawingAttr);
 		return strObj;
 	}

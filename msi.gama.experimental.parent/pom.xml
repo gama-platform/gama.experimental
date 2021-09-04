@@ -9,12 +9,12 @@
 	<packaging>pom</packaging>
 	<dependencies>
 		<dependency>
-			<groupId>ummisco.gama.annotations</groupId>
+			<groupId>msi.gama</groupId>
 			<artifactId>ummisco.gama.annotations</artifactId>
 			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>msi.gama.processor</groupId>
+			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.processor</artifactId>
 			<version>1.4.0-SNAPSHOT</version>
 		</dependency>
@@ -109,7 +109,7 @@
 			</snapshots>
 			<id>p2Repo</id>
 			<name>p2Repo</name>
-			<url>http://51.255.46.42/updates</url>
+			<url>http://51.255.46.42/updates/v1.8.2</url>
 		</pluginRepository>
 		<pluginRepository>
 			<id>orbit</id>
@@ -135,7 +135,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 			<id>p2Repo</id> 
-			<url>http://51.255.46.42/updates</url>
+			<url>http://51.255.46.42/updates/v1.8.2</url>
 		</repository>
 		<repository>
 			<id>eclipse-2021-03</id>
@@ -154,15 +154,10 @@
  <module>../cict.gaml.extensions.VR</module> 
  <module>../escape.gaml.feature.pedestrian</module> 
  <module>../escape.gaml.pedestrian</module> 
- <module>../femto.st.gama.feature.mpi</module> 
- <module>../femto.st.gama.hpc</module> 
- <module>../femto.st.gama.mpi</module> 
  <module>../femto_st.gama.feature.mpi</module> 
  <module>../femto_st.gama.mpi</module> 
  <module>../idees.gama.features.weka</module> 
  <module>../idees.gama.weka</module> 
- <module>../irit.gama.feature.switchproject</module> 
- <module>../irit.gama.switchproject</module> 
  <module>../miat.gama.extension.ifcfile</module> 
  <module>../miat.gama.feature.ifcfile</module> 
  <module>../miat.gaml.extension.bayesiannetwork</module> 

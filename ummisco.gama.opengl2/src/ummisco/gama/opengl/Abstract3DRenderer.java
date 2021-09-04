@@ -293,10 +293,10 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 
 	protected abstract void updatePerspective();
 
-	@Override
-	public void fillBackground(final Color bgColor, final double opacity) {
-		openGL.setCurrentObjectAlpha(opacity);
-	}
+//	@Override
+//	public void fillBackground(final Color bgColor, final double opacity) {
+//		openGL.setCurrentObjectAlpha(opacity);
+//	}
 
 	/**
 	 * Method getDisplayWidthInPixels()
@@ -473,7 +473,7 @@ public abstract class Abstract3DRenderer extends AbstractDisplayGraphics impleme
 		if (string.contains("\n")) {
 			for (final String s : string.split("\n")) {
 				attributes.getLocation().setY(attributes.getLocation().getY()
-						+ attributes.font.getSize() * this.getyRatioBetweenPixelsAndModelUnits());
+						+ attributes.getFont().getSize() * this.getyRatioBetweenPixelsAndModelUnits());
 				drawString(s, attributes);
 			}
 			return null;

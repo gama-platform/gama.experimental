@@ -129,7 +129,7 @@ public abstract class AbstractObject {
 	}
 
 	public Double getHeight() {
-		return attributes.getHeight();
+		return attributes.getSize().getY();
 	}
 
 	public AxisAngle getRotation() {

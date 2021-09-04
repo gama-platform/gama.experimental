@@ -11,8 +11,7 @@ package ummisco.gama.opengl.vaoGenerator;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
-
-import org.apache.commons.math3.util.FastMath;
+ 
 
 import ummisco.gama.opengl.camera.ICamera;
 
@@ -35,10 +34,10 @@ public class TransformationMatrix {
 		final double frustum_length = zFar - zNear;
 		double fW, fH;
 		if (aspect > 1.0) {
-			fH = FastMath.tan(fov / 360 * Math.PI) * zNear;
+			fH = Math.tan(fov / 360 * Math.PI) * zNear;
 			fW = fH * aspect;
 		} else {
-			fW = FastMath.tan(fov / 360 * Math.PI) * zNear;
+			fW = Math.tan(fov / 360 * Math.PI) * zNear;
 			fH = fW / aspect;
 		}
 		if (!ortho) {

@@ -28,7 +28,7 @@ public class StringObject extends AbstractObject {
 
 	public Font getFont() {
 		if (!(attributes instanceof TextDrawingAttributes)) { return null; }
-		return ((TextDrawingAttributes) attributes).font;
+		return ((TextDrawingAttributes) attributes).getFont();
 	}
 
 	public boolean iisInPerspective() {
