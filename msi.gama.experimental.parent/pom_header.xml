@@ -114,7 +114,7 @@
 			</snapshots>
 			<id>p2Repo</id>
 			<name>p2Repo</name>
-			<url>http://51.255.46.42/./var/www/gama_updates/v1.8.2</url>
+			<url>http://51.255.46.42/updates/v1.8.2</url>
 		</pluginRepository>
 		<pluginRepository>
 			<id>orbit</id>
@@ -140,7 +140,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 			<id>p2Repo</id> 
-			<url>http://51.255.46.42/./var/www/gama_updates/v1.8.2</url>
+			<url>http://51.255.46.42/updates/v1.8.2</url>
 		</repository>
 		<repository>
 			<id>eclipse-2021-03</id>
