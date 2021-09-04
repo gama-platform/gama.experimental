@@ -84,8 +84,13 @@
 			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>ummisco.gama.serialize</groupId>
+			<groupId>msi.gama</groupId>
 			<artifactId>ummisco.gama.serialize</artifactId>
+			<version>1.8.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>simtools.gaml.extensions.physics</groupId>
+			<artifactId>simtools.gaml.extensions.physics</artifactId>
 			<version>1.8.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies> 
