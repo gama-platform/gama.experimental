@@ -5,8 +5,8 @@ Bundle-SymbolicName: irit.gama.jdeqsim;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: irit.gama.jdeqsim
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: msi.gama.core;bundle-version="1.8.1",
- msi.gama.ext;bundle-version="1.8.1",
+Require-Bundle: msi.gama.core,
+ msi.gama.ext,
  ummisco.gama.annotations
 Export-Package: gaml.additions.jdeqsim,
  irit.gama.common,
