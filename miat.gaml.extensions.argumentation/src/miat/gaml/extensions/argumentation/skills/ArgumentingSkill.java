@@ -99,19 +99,8 @@ public class ArgumentingSkill extends Skill {
 			@arg(name = "argument", type = GamaArgumentType.id, optional = false, doc = @doc("the argument to evaluate")) }, doc = @doc(value = "evaluate the strength  of an argument for the agent", returns = "the strength of argument", examples = {
 					@example("float val <- evaluate_argument(one_argument);") }))
 	public Double primEvaluateArg(final IScope scope) throws GamaRuntimeException {
-		final GamaArgument a = scope.hasArg("argument") ? (GamaArgument) scope.getArg("argument", GamaArgumentType.id)
-				: null;
-		double val = 0;
-		IAgent ag = scope.getAgent();
-		Map<String, Double> agVal = getCritImp(ag);
-		for (String c : a.getCriteria().keySet()) {
-			val += a.getCriteria().get(c) * (agVal.containsKey(c) ? agVal.get(c) : 1.0);
-		}
-		Map<String,Double> sourceEval = getSourceConf(ag);
-		if (sourceEval.containsKey(a.getSourceType())) {
-			val *= sourceEval.get(a.getSourceType());
-		}
-		return val;
+		final GamaArgument a = scope.hasArg("argument") ? (GamaArgument) scope.getArg("argument", GamaArgumentType.id): null;
+		return evaluate_arg(scope,a);
 	}
 
 	private DungAF toDungAF(IGraph graph) {
@@ -404,5 +393,57 @@ public class ArgumentingSkill extends Skill {
 			resultMap.addValueAtIndex(scope, ext, (Double) valExtension.executeOn(scope));
 		}
 		return resultMap;
+	}
+	
+	@action(name = "get_arguments_acceptabilities", doc = @doc(value = "compute acceptability values for all known arguments using the Amgoud and al. acceptability semantics for weighted argumentation graphs", returns = "a map with arguments as key and acceptability as their respectives values", examples = {
+			@example("map<argument,float> acceptability_values <- get_arg_acceptability();") }))
+	public IMap<GamaArgument, Double> primGetArgumentsAcceptabilities(final IScope scope) throws GamaRuntimeException {
+		
+		IGraph<GamaArgument, Object> graph = (IGraph<GamaArgument, Object>) getArgGraph(scope.getAgent());
+		
+		IMap<GamaArgument,Double> basic_strength = GamaMapFactory.create();
+		IMap<GamaArgument,Double> acceptability_values = GamaMapFactory.create();
+		
+		for (GamaArgument v : graph.getVertices()) {
+			basic_strength.addValueAtIndex(scope, v, evaluate_arg(scope, v));
+			acceptability_values.addValueAtIndex(scope,  v, evaluate_arg(scope, v));
+		}
+		
+		double threshold_acceptability_delta = 0.01f;
+		double max_acceptability_delta = 0f;
+		Set incoming_edges ;
+		
+		while (max_acceptability_delta > threshold_acceptability_delta) {
+			max_acceptability_delta = 0f;
+			for (GamaArgument v : graph.getVertices()) {
+				double max_attacking_acceptability = 0;
+				incoming_edges = graph.incomingEdgesOf(v);
+				if (incoming_edges.size()>0) {
+					for(Object e : incoming_edges){
+						max_attacking_acceptability = acceptability_values.get(graph.getEdgeSource(e)) > max_attacking_acceptability ? acceptability_values.get(graph.getEdgeSource(e)) : max_attacking_acceptability;
+					}
+				}
+				double acceptability = basic_strength.get(v) / (1 + max_attacking_acceptability);
+				//The news acceptabilities values are smaller or equal to the previous one so the delta between those 2 values can be computed without using the absolute function
+				max_acceptability_delta = (acceptability_values.get(v) - acceptability) > max_acceptability_delta ? (acceptability_values.get(v) - acceptability) : max_acceptability_delta;
+				acceptability_values.addValueAtIndex(scope, v, acceptability);
+			}
+		}
+		return acceptability_values;
+	}
+		
+	// return the strength of a given argument for a specific agent
+	private double evaluate_arg(IScope scope, GamaArgument arg) {
+		double val = 0;
+		IAgent ag = scope.getAgent();
+		Map<String, Double> agVal = getCritImp(ag);
+		for (String c : arg.getCriteria().keySet()) {
+			val += arg.getCriteria().get(c) * (agVal.containsKey(c) ? agVal.get(c) : 1.0);
+		}
+		Map<String,Double> sourceEval = getSourceConf(ag);
+		if (sourceEval.containsKey(arg.getSourceType())) {
+			val *= sourceEval.get(arg.getSourceType());
+		}
+		return val;
 	}
 }
