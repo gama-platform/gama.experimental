@@ -15,8 +15,7 @@ import "Utility/Scheduler.gaml"
 
 global {
 	date starting_date <- date([1970, 1, 1, 0, 0, 0]);
-	float step <- 0.1 #seconds;
-	//string dataset_path <- "../includes/Castanet/Infrastructure/CASTANET-TOLOSAN/";
+	float step <- 10 #seconds;
 	string dataset_path <- "../includes/CASTANET-TOLOSAN-CROPPED/";
 	shape_file shape_roads <- shape_file(dataset_path + "roads.shp");
 	shape_file shape_nodes <- shape_file(dataset_path + "nodes.shp");
@@ -54,16 +53,16 @@ global {
 		init_date <- now;
 		now <- (starting_date + (machine_time / 1000));
 		write "done in " + milliseconds_between(init_date, now) + "ms";
-		write "Get working building...";
-		list<Building> workingBuldings <- Building where (each.type = "working");
+		write "Get buildings...";
+		list<Building> working_buildings <- Building where (each.type = "working");
+		list<Building> home_buildings <- Building where (each.type != "working");
 		init_date <- now;
 		now <- (starting_date + (machine_time / 1000));
 		write "done in " + milliseconds_between(init_date, now) + "ms";
 		write "Person...";
 		create Person from: shape_individuals {
-			do set_data(one_of(workingBuldings), full_network);
+			do set_data(one_of(working_buildings), one_of(home_buildings), full_network);
 		}
-
 		init_date <- now;
 		now <- (starting_date + (machine_time / 1000));
 		write "done in " + milliseconds_between(init_date, now) + "ms";
@@ -74,9 +73,9 @@ global {
 experiment "JDEQSIM demo" type: gui {
 	output {
 		display main_window type: opengl {
-			species Building;
 			species Road;
 			species Node;
+			species Building;
 			species Person;
 			species Bike;
 			species Car;
