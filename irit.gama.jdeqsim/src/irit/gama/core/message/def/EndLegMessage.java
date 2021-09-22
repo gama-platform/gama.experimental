@@ -86,25 +86,35 @@ public class EndLegMessage extends Message {
 
 			// schedule a departure from the current link in future
 			this.vehicle.scheduleStartingLegMessage(this, departureTime, road);
-			moveToBuilding(actsLegs);
+			setAgentsLocation(actsLegs);
 
 			Logger.addMessage(this, "another leg");
 		} else {
 			// Move owner to building then kill vehicle
-			moveToBuilding(actsLegs);
+			setAgentsLocation(actsLegs);
 			this.vehicle = (Vehicle) this.vehicle.die();
 		}
 
 	}
 
-	private void moveToBuilding(List<? extends IPlanElement> actsLegs) {
+	private void setAgentsLocation(List<? extends IPlanElement> actsLegs) {
 		// Move owner to building then kill vehicle
 		Activity currentAct = (Activity) actsLegs.get(this.vehicle.getLegIndex() - 1);
 		Person owner = this.vehicle.getOwnerPerson();
 		IAgent building = currentAct.getBuildingAgent();
+		IAgent vehicleAgent = vehicle.getRelativeAgent();
+		IAgent roadAgent = vehicle.getCurrentRoad().getRelativeAgent();
+
+		// Person
 		if (owner != null && building != null) {
 			owner.setToLocation(building.getLocation());
 		}
+		
+		// Vehicle
+		if (vehicleAgent != null && roadAgent != null) {
+			vehicleAgent.setLocation(roadAgent.getLocation());
+		}
+
 	}
 
 	private GamaDate calculateDepartureTime(Activity act, GamaDate now) {

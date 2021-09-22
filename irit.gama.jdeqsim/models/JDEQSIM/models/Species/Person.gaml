@@ -19,16 +19,16 @@ species Person skills: [jdeqsimperson] {
 		do init(Scheduler[0]);
 	}
 
-	action set_plan (date endDate, list<Road> roads, Building end, int random <- 0) {
+	action set_plan (date end_date, list<Road> roads, Building end, int random <- 0) {
 		do add_leg(roads);
-		do add_activity(endDate, 0.0, last(roads), end);
+		do add_activity(end_date + random, 0.0, last(roads), end);
 	}
 
-	action set_data (Building workBuilding, graph full_network) {
-		int random <- rnd(0, 0);
-		home <- one_of(Building);
+	action set_data (Building work_building, Building home_building, graph full_network) {
+		int random <- rnd(0, 6000);
+		home <- home_building;
 		location <- home.location;
-		work <- workBuilding;
+		work <- work_building;
 		Road homeRoad <- Road closest_to home;
 		do add_activity(date([1970, 1, 1, 0, 0, 0]) + random, 0.0, homeRoad, home);
 		path the_path <- path_between(full_network, home, work);
