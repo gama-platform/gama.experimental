@@ -408,11 +408,9 @@ public class ArgumentingSkill extends Skill {
 			basic_strength.addValueAtIndex(scope, v, evaluate_arg(scope, v));
 			acceptability_values.addValueAtIndex(scope,  v, evaluate_arg(scope, v));
 		}
-		
 		double threshold_acceptability_delta = 0.01f;
 		double max_acceptability_delta = 0f;
 		Set incoming_edges ;
-		
 		while (max_acceptability_delta > threshold_acceptability_delta) {
 			max_acceptability_delta = 0f;
 			for (GamaArgument v : graph.getVertices()) {
