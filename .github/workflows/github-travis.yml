@@ -19,17 +19,25 @@ jobs:
       - name: Set up JDK 15
         uses: actions/setup-java@v2 
         with:
-          distribution: 'adopt'
+          distribution: 'adopt-openj9'
           java-version: '15'
           java-package: jdk  
-
+      
       - name: Prepare build
         run: |
           echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.defaultLogLevel=error -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmx2048m'" >> ~/.mavenrc
           sudo chmod +x $GITHUB_WORKSPACE/*.sh 
           bash custom_mvn.sh
           cat ~/.m2/settings.xml 
- 
+        env:
+          MSG: ${ github.event.head_commit.message } 
+          SSH_USER_PWD: ${{ secrets.USER_PWD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          GITHUB_TOKEN: ${{ github.token }}
+          SSHPASS: ${{ secrets.USER_PWD }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          TRAVIS_COMMIT: ${ GITHUB_SHA }
+          TRAVIS_EVENT_TYPE: ${{ github.event_name }}
 
       - name: Cache local Maven repository
         uses: actions/cache@v2
@@ -39,11 +47,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Build with Maven
-        shell: bash
-        run: $GITHUB_WORKSPACE/travis_build.sh 
+      - name: Build with Maven 
+        run: |
+            bash decrypt_secret.sh
+            bash $GITHUB_WORKSPACE/travis_build.sh 
         env:
-          MSG: ${ github.event.head_commit.message }
+          MSG: ${ github.event.head_commit.message } 
+          SSH_USER_PWD: ${{ secrets.USER_PWD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          GITHUB_TOKEN: ${{ github.token }}
+          SSHPASS: ${{ secrets.USER_PWD }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          TRAVIS_COMMIT: ${ GITHUB_SHA }
+          TRAVIS_EVENT_TYPE: ${{ github.event_name }}
               
       - name: Publish to Github
         shell: bash

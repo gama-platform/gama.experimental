@@ -379,7 +379,7 @@
 											tycho-packaging-plugin
 										</artifactId>
 										<versionRange>
-											[0.25.0,)
+											[2.2.0,)
 										</versionRange>
 										<goals>
 											<goal>

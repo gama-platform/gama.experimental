@@ -18,7 +18,7 @@ import msi.gaml.types.IType;
 		type = IType.STRING,
 		doc = @doc ("String ...")),
 	})
-@skill(name = "ExtendSkill", concept = {IConcept.COMMUNICATION, IConcept.SKILL })
+//@skill(name = "ExtendSkill", concept = {IConcept.COMMUNICATION, IConcept.SKILL })
 public class ExtendUnitySkill extends UnitySkill {
 	
 	public ExtendUnitySkill() {

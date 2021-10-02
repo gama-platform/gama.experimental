@@ -1,21 +1,20 @@
 
 <modules>
- <module>../cict.feature.geotiff</module> 
  <module>../cict.feature.netcdf</module> 
  <module>../cict.feature.VR</module> 
- <module>../cict.gaml.extensions.geotiff</module> 
+ <module>../cict.gama.extensions.websocket</module> 
+ <module>../cict.gama.feature.websocket</module> 
  <module>../cict.gaml.extensions.netcdf</module> 
  <module>../cict.gaml.extensions.VR</module> 
  <module>../escape.gaml.feature.pedestrian</module> 
  <module>../escape.gaml.pedestrian</module> 
- <module>../femto.st.gama.feature.mpi</module> 
- <module>../femto.st.gama.hpc</module> 
- <module>../femto.st.gama.mpi</module> 
  <module>../femto_st.gama.feature.mpi</module> 
  <module>../femto_st.gama.mpi</module> 
  <module>../idees.gama.features.weka</module> 
  <module>../idees.gama.weka</module> 
+ <module>../irit.gama.feature.jdeqsim</module> 
  <module>../irit.gama.feature.switchproject</module> 
+ <module>../irit.gama.jdeqsim</module> 
  <module>../irit.gama.switchproject</module> 
  <module>../miat.gama.extension.ifcfile</module> 
  <module>../miat.gama.feature.ifcfile</module> 
