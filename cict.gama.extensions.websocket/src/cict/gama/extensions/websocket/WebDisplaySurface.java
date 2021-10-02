@@ -11,8 +11,6 @@
  **********************************************************************************************/
 package cict.gama.extensions.websocket;
 
-import ummisco.gama.ui.utils.PlatformHelper;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -61,10 +59,10 @@ import msi.gama.precompiler.GamlAnnotations.display;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
+import msi.gama.runtime.PlatformHelper;
 import msi.gaml.expressions.IExpression;
 import msi.gaml.operators.Cast;
 import ummisco.gama.dev.utils.DEBUG;
-import ummisco.gama.ui.utils.PlatformHelper;
 import ummisco.gama.ui.utils.WorkbenchHelper;
 import ummisco.gama.ui.views.displays.DisplaySurfaceMenu;
 
@@ -213,27 +211,27 @@ public class WebDisplaySurface extends JPanel implements IDisplaySurface {
 		}
 	}
 
-	@Override
-	public void setMousePosition(final int xm, final int ym) {
-		final int x = PlatformHelper.autoScaleUp(xm);
-		final int y = PlatformHelper.autoScaleUp(ym);
-		if (mousePosition == null) {
-			mousePosition = new Point(x, y);
-		} else {
-			mousePosition.setLocation(x, y);
-		}
-	}
-
-	@Override
-	public void draggedTo(final int x, final int y) {
-		final Point origin = getOrigin();
-		setOrigin(origin.x + PlatformHelper.autoScaleUp(x) - getMousePosition().x, origin.y + PlatformHelper.autoScaleUp(y) - getMousePosition().y);
-		DEBUG.OUT("Translation on X : " + (PlatformHelper.autoScaleUp(x) - getMousePosition().x) + " | on Y : "
-				+ (PlatformHelper.autoScaleUp(y) - getMousePosition().y));
-		DEBUG.OUT("Old Origin = " + origin + " | New Origin = " + getOrigin());
-		setMousePosition(x, y);
-		updateDisplay(true);
-	}
+//	@Override
+//	public void setMousePosition(final int xm, final int ym) {
+//		final int x = PlatformHelper.autoScaleUp(xm);
+//		final int y = PlatformHelper.autoScaleUp(ym);
+//		if (mousePosition == null) {
+//			mousePosition = new Point(x, y);
+//		} else {
+//			mousePosition.setLocation(x, y);
+//		}
+//	}
+//
+//	@Override
+//	public void draggedTo(final int x, final int y) {
+//		final Point origin = getOrigin();
+//		setOrigin(origin.x + PlatformHelper.autoScaleUp(x) - getMousePosition().x, origin.y + PlatformHelper.autoScaleUp(y) - getMousePosition().y);
+//		DEBUG.OUT("Translation on X : " + (PlatformHelper.autoScaleUp(x) - getMousePosition().x) + " | on Y : "
+//				+ (PlatformHelper.autoScaleUp(y) - getMousePosition().y));
+//		DEBUG.OUT("Old Origin = " + origin + " | New Origin = " + getOrigin());
+//		setMousePosition(x, y);
+//		updateDisplay(true);
+//	}
 
 	public void setMousePosition(final Point point) {
 		mousePosition = point;
@@ -800,14 +798,26 @@ public class WebDisplaySurface extends JPanel implements IDisplaySurface {
 		return disposed;
 	}
 
-	@Override
-	public Font computeFont(final Font f) {
-		if (f == null) { return null; }
-		if (PlatformHelper.isWindows() && PlatformHelper.isHiDPI()) {
-			return f.deriveFont((float) PlatformHelper.autoScaleUp(f.getSize2D()));
-		}
-		return f;
+//	@Override
+//	public Font computeFont(final Font f) {
+//		if (f == null) { return null; }
+//		if (PlatformHelper.isWindows() && PlatformHelper.isHiDPI()) {
+//			return f.deriveFont((float) PlatformHelper.autoScaleUp(f.getSize2D()));
+//		}
+//		return f;
+//
+//	}
 
+	@Override
+	public void setMousePosition(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void draggedTo(int x, int y) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

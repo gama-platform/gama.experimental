@@ -15,6 +15,7 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Frame; 
 
+import msi.gama.runtime.PlatformHelper;
 import javax.swing.JApplet;
 import javax.swing.LayoutFocusTraversalPolicy;
 
@@ -27,8 +28,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import ummisco.gama.dev.utils.DEBUG;
-import ummisco.gama.ui.utils.PlatformHelper;
+import ummisco.gama.dev.utils.DEBUG; 
 import ummisco.gama.ui.utils.WorkbenchHelper;
 
 public abstract class WebSwingControl extends Composite {
