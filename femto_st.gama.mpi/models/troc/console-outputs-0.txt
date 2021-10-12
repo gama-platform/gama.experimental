@@ -1,0 +1,6 @@
+/home/philippe/recherche/git/gama.experimental/femto_st.gama.mpi/models/first/first_mpi.gaml model is being compiled...
+Model compiled with following indications: 
+Action MPI_INIT does not exist in firstmpi_model
+Unknown operator or action: MPI_RANK
+Unknown operator or action: MPI_SIZE
+The variable my_rank is not defined or accessible in this context. Check its name or declare it
