@@ -20,7 +20,7 @@
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
-			<artifactId>msi.gama.core</artifactId>
+			<artifactId>msi.gama.core</artifactId> 
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -115,6 +115,17 @@
 			<id>p2Repo</id>
 			<name>p2Repo</name>
 			<url>http://updates.gama-platform.org/1.8.2</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>orbit</id>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
 
@@ -277,7 +288,8 @@
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
 					<compilerArgument>-warn:+discouraged,forbidden</compilerArgument>
-					<useProjectSettings>false</useProjectSettings> 
+					<useProjectSettings>false</useProjectSettings>
+					<generatedSourcesDirectory>${project.build.directory}</generatedSourcesDirectory>
 					<optimize>true</optimize>
 				</configuration>
 			</plugin>
@@ -495,13 +507,12 @@
 				<artifactId>tycho-p2-director-plugin</artifactId>
 				<version>${tycho.version}</version>
 			</plugin>
-<!-- 
+
 			<plugin>
 				<groupId>name.abuchen</groupId>
 				<artifactId>fix-info-plist-maven-plugin</artifactId>
 				<version>1.0</version>
 			</plugin>
- -->
 
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>

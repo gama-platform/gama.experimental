@@ -243,33 +243,33 @@ public class WebDisplaySurface extends JPanel implements IDisplaySurface {
 		return mousePosition;
 	}
 
-	@Override
-	public void dispatchMouseEvent(final int swtMouseEvent) {
-		final int x = mousePosition.x;
-		final int y = mousePosition.y;
-		for (final IEventLayerListener gl : listeners) {
-			switch (swtMouseEvent) {
-				case SWT.MouseDown:
-					gl.mouseDown(x, y, 1);
-					break;
-				case SWT.MouseUp:
-					gl.mouseUp(x, y, 1);
-					break;
-				case SWT.MouseMove:
-					gl.mouseMove(x, y);
-					break;
-				case SWT.MouseEnter:
-					gl.mouseEnter(x, y);
-					break;
-				case SWT.MouseExit:
-					gl.mouseExit(x, y);
-					break;
-				case SWT.MenuDetect:
-					gl.mouseMenu(x, y);
-					break;
-			}
-		}
-	}
+//	@Override
+//	public void dispatchMouseEvent(final int swtMouseEvent) {
+//		final int x = mousePosition.x;
+//		final int y = mousePosition.y;
+//		for (final IEventLayerListener gl : listeners) {
+//			switch (swtMouseEvent) {
+//				case SWT.MouseDown:
+//					gl.mouseDown(x, y, 1);
+//					break;
+//				case SWT.MouseUp:
+//					gl.mouseUp(x, y, 1);
+//					break;
+//				case SWT.MouseMove:
+//					gl.mouseMove(x, y);
+//					break;
+//				case SWT.MouseEnter:
+//					gl.mouseEnter(x, y);
+//					break;
+//				case SWT.MouseExit:
+//					gl.mouseExit(x, y);
+//					break;
+//				case SWT.MenuDetect:
+//					gl.mouseMenu(x, y);
+//					break;
+//			}
+//		}
+//	}
 
 	@Override
 	public void outputReloaded() {
@@ -816,6 +816,12 @@ public class WebDisplaySurface extends JPanel implements IDisplaySurface {
 
 	@Override
 	public void draggedTo(int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dispatchMouseEvent(int swtEventType, int x, int y) {
 		// TODO Auto-generated method stub
 		
 	}
