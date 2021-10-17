@@ -696,7 +696,7 @@ public class OpenGL {
 		if (file == null) { return null; }
 		Texture texture = null;
 		if (isAnimated || !useCache) {
-			final BufferedImage image = ImageUtils.getInstance().getImageFromFile(file, useCache, useCache);
+			final BufferedImage image = ImageUtils.getInstance().getImageFromFile(file, useCache, useCache, null);
 			texture = getTexture(image);
 
 		} else {
@@ -711,7 +711,7 @@ public class OpenGL {
 
 	private static Texture buildTexture(final GL gl, final File file) {
 		try {
-			final BufferedImage im = ImageUtils.getInstance().getImageFromFile(file, true, true);
+			final BufferedImage im = ImageUtils.getInstance().getImageFromFile(file, true, true, null);
 			return buildTexture(gl, im);
 		} catch (final GLException e) {
 			e.printStackTrace();

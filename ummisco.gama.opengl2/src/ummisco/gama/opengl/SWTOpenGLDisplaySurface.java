@@ -734,30 +734,30 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 		}
 	}
 
-	@Override
-	public void dispatchMouseEvent(final int swtMouseEvent) {
-		final Point p = renderer.camera.getMousePosition();
-		final int x = p.x;
-		final int y = p.y;
-		for (final IEventLayerListener gl : listeners)
-			switch (swtMouseEvent) {
-				case SWT.MouseDown:
-					gl.mouseDown(x, y, 1);
-					break;
-				case SWT.MouseUp:
-					gl.mouseUp(x, y, 1);
-					break;
-				case SWT.MouseMove:
-					gl.mouseMove(x, y);
-					break;
-				case SWT.MouseEnter:
-					gl.mouseEnter(x, y);
-					break;
-				case SWT.MouseExit:
-					gl.mouseExit(x, y);
-					break;
-			}
-	}
+//	@Override
+//	public void dispatchMouseEvent(final int swtMouseEvent) {
+//		final Point p = renderer.camera.getMousePosition();
+//		final int x = p.x;
+//		final int y = p.y;
+//		for (final IEventLayerListener gl : listeners)
+//			switch (swtMouseEvent) {
+//				case SWT.MouseDown:
+//					gl.mouseDown(x, y, 1);
+//					break;
+//				case SWT.MouseUp:
+//					gl.mouseUp(x, y, 1);
+//					break;
+//				case SWT.MouseMove:
+//					gl.mouseMove(x, y);
+//					break;
+//				case SWT.MouseEnter:
+//					gl.mouseEnter(x, y);
+//					break;
+//				case SWT.MouseExit:
+//					gl.mouseExit(x, y);
+//					break;
+//			}
+//	}
 
 	@Override
 	public void setMousePosition(final int x, final int y) {
@@ -774,6 +774,12 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	public void draggedTo(final int x, final int y) {
 		// Nothing to do (taken in charge by the camera
 
+	}
+
+	@Override
+	public void dispatchMouseEvent(int swtEventType, int x, int y) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

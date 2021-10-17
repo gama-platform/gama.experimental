@@ -15,7 +15,7 @@ import java.util.List;
 import org.eclipse.swt.widgets.Composite;
 
 import msi.gama.common.interfaces.IGui;
-import ummisco.gama.ui.views.displays.SWTDisplayView;
+import ummisco.gama.ui.views.displays.LayeredDisplayView;
 
 /**
  * Class OpenGLLayeredDisplayView.
@@ -24,7 +24,7 @@ import ummisco.gama.ui.views.displays.SWTDisplayView;
  * @since 25 mars 2015
  *
  */
-public class OpenGLDisplayView2 extends SWTDisplayView {
+public class OpenGLDisplayView2 extends LayeredDisplayView {
 
 	public static String ID = IGui.GL_LAYER_VIEW_ID2;//"msi.gama.application.view.OpenGLDisplayView";
 

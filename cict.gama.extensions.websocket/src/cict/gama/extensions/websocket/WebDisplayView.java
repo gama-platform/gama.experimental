@@ -14,9 +14,9 @@ package cict.gama.extensions.websocket;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import ummisco.gama.ui.views.displays.SWTDisplayView;
+import ummisco.gama.ui.views.displays.LayeredDisplayView; 
 
-public class WebDisplayView extends SWTDisplayView {
+public class WebDisplayView extends LayeredDisplayView {
 
 	public static String ID = "msi.gama.application.view.WebDisplayView"; 
 
