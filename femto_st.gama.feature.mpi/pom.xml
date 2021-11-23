@@ -3,7 +3,7 @@
   <groupId>femto_st.gama</groupId>
   <artifactId>femto_st.gama.feature.mpi</artifactId>
   <packaging>eclipse-feature</packaging>
-  <version>1.8.2-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <parent>
   	<groupId>msi.gama</groupId>
   	<artifactId>msi.gama.parent</artifactId>

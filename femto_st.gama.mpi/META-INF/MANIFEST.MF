@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MPI addition
 Bundle-SymbolicName: femto_st.gama.mpi;singleton:=true
-Bundle-Version: 1.8.2.qualifier
+Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: femto.st.gama.mpi
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: msi.gama.core,
