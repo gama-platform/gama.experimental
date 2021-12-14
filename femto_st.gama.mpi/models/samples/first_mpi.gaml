@@ -20,6 +20,8 @@ global skills:[MPI_Network]
 
 		mpi_size <- MPI_SIZE();
 		write "la size est " + mpi_size;
+
+		do MPI_FINALIZE();
 	}
 }
 
@@ -27,7 +29,7 @@ experiment test_mpi
 {
 	output
 	{
-		monitor "rank" value:my_rank;		
+		monitor "rank" value:mpi_rank;		
 	}
 
 }
