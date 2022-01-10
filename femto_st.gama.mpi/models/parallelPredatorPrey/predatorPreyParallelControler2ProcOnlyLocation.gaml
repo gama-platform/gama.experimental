@@ -1,6 +1,6 @@
 /**
 * Name: mpi controler
-* Author:
+* Author: NM / LP
 * Description: 
 * Tags: inheritance
 */
@@ -18,37 +18,37 @@ global skills:[MPI_Network] {
 		
         do MPI_INIT;
 		
-		my_rank <- MPI_RANK();
-		write "mon rank est " + my_rank ;
+	    my_rank <- MPI_RANK();
+	    write ("mon rank est " + my_rank) ;
 		
-		/* Attention ici le nom de l'expe doit etre le meme que celui donne dans le gaml */	
-		agent exp <- load_sub_model("prey_predatorExp","/home/philippe/recherche/git/gama.experimental/femto.st.gama.mpi/models/parallelPredatorPrey/predatorPrey.gaml"); 
+	    /* Attention ici le nom de l'expe doit etre le meme que celui donne dans le gaml */	
+	    agent exp <- load_sub_model("prey_predatorExp","/home/philippe/recherche/git/gama.experimental/femto_st.gama.mpi/models/parallelPredatorPrey/predatorPrey.gaml"); 
 		
-		netSize <- MPI_SIZE ();
+	    netSize <- MPI_SIZE ();
 		
-		if (my_rank = 0){	
+	    if (my_rank = 0){	
 			
-			int l <-  0;
-			int destinataire <- 1;	
-			int emet <- 1;
+	        int l <-  0;
+		int destinataire <- 1;	
+		int emet <- 1;
 	   		
-		    loop while: l < nbLoop {
+		loop while: l < nbLoop {
 		    		    	
-				/*  First: kill agents that or not on our environment part */
-		    	int p <- evaluate_sub_model(exp,"ask prey where (each.location.x > 100){remove self from: scheduled_preys; do die;}");	
-		   		p <- evaluate_sub_model(exp,"ask predator where (each.location.x > 100){remove self from: scheduled_predators; do die;}");
+		    /*  First: kill agents that or not on our environment part */
+		    int p <- evaluate_sub_model(exp,"ask prey where (each.location.x > 100){remove self from: scheduled_preys; do die;}");	
+		   p <- evaluate_sub_model(exp,"ask predator where (each.location.x > 100){remove self from: scheduled_predators; do die;}");
 			
-				/* Get agents in the overlap zone  and send them to neighbor */
-				list<point> preyList <- evaluate_sub_model(exp,"(prey where (each.location.x > 90 and each.location.x < 100)) collect (each.location)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
-				list<point> predatorList <- evaluate_sub_model(exp,"(predator where (each.location.x > 90 and each.location.x < 100)) collect (each.location)"); //([each.location,each.max_energy,each.max_transfert,each.energy_consum])");
+		    /* Get agents in the overlap zone  and send them to neighbor */
+		    list<point> preyList <- evaluate_sub_model(exp,"(prey where (each.location.x > 90 and each.location.x < 100)) collect (each.location)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
+		    list<point> predatorList <- evaluate_sub_model(exp,"(predator where (each.location.x > 90 and each.location.x < 100)) collect (each.location)"); //([each.location,each.max_energy,each.max_transfert,each.energy_consum])");
 	    	    do MPI_SEND mesg: preyList dest: destinataire stag: 50;
 	    	    do MPI_SEND mesg: predatorList dest: destinataire stag: 50;
-				write("*** 0 sends overlap, loop " + l);
+		    write("*** 0 sends overlap, loop " + l);
 				
-				/* Receive overlap zone from neighbor  */
-				list<point> lpreys <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
-		        list<point> lpreds <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
-		        write("*** 0 receive overlap. received = " + lpreys + " loop " + lpreds);
+		    /* Receive overlap zone from neighbor  */
+		    list<point> lpreys <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
+		    list<point> lpreds <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
+		    write("*** 0 receive overlap. received = " + lpreys + " loop " + lpreds);
 		        		        
 		        int nbCreatePrey <- evaluate_sub_model(exp,"create_preys(" + lpreys + ", false)");
 		        int nbCreatePred <- evaluate_sub_model(exp,"create_predators(" + lpreds + ", false)");

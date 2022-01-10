@@ -22,7 +22,7 @@ global skills:[MPI_Network] {
 	write "mon rank est " + my_rank ;
 		
 	/* Attention ici le nom de l'expe doit etre le meme que celui donne dans le gaml */	
-	agent exp <- load_sub_model("prey_predatorExp","/home/philippe/recherche/git/gama.experimental/femto.st.gama.mpi/models/parallelPredatorPrey/predatorPrey.gaml"); 
+	agent exp <- load_sub_model("prey_predatorExp","/home/philippe/recherche/git/gama.experimental/femto_st.gama.mpi/models/parallelPredatorPrey/predatorPrey.gaml"); 
 		
 	netSize <- MPI_SIZE ();
 		
@@ -89,8 +89,8 @@ global skills:[MPI_Network] {
 	      p <- evaluate_sub_model(exp,"ask predator where (each.location.x <= 100){remove self from: scheduled_predators; do die;}");
 
 	      /* Get agents in the overlap zone  and send them to neighbor */
-	      list<point> preyList <- evaluate_sub_model(exp,"(prey where (each.location.x > 100 and each.location.x < 110)) collect (each.location)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
-	      list<point> predatorList <- evaluate_sub_model(exp,"(predator where (each.location.x > 100 and each.location.x < 110)) collect (each.location)"); //each.max_energy,each.max_transfert,each.energy_consum])");
+	      list<point> preyList <- evaluate_sub_model(exp,"(prey where (each.location.x > 100 and each.location.x < 110)) collect (each)"); //,each.max_energy,each.max_transfert,each.energy_consum])");
+	      list<point> predatorList <- evaluate_sub_model(exp,"(predator where (each.location.x > 100 and each.location.x < 110)) collect (each)"); //each.max_energy,each.max_transfert,each.energy_consum])");
 	      do MPI_SEND mesg: preyList dest: destinataire stag: 50;
 	      do MPI_SEND mesg: predatorList dest: destinataire stag: 50;
 	      write("*** 1 sends overlap, loop " + l + " size " + length(preyList));
