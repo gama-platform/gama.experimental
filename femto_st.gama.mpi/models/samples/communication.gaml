@@ -1,11 +1,11 @@
 /**
-* Name: firstmpi
+* Name: communication
 * Author: nicolas
 * Description: 
 * Tags: Tag1, Tag2, TagN
 */
 
-model firstmpi
+model communication
 
 
 global skills:[MPI_Network]
@@ -24,13 +24,13 @@ global skills:[MPI_Network]
 	if (mpi_rank = 0){
 
 	    int dst <- 1;
-	    list<int> msg <- [10];
+	    list<int> msg <- [10,20];
 	    do MPI_SEND mesg: msg dest: dst stag: 50;
 	    write "MPI_SEND done";
 	    
 	} else {
 	    int emet <- 0;
-	    list l <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
+	    list<int> l <- self MPI_RECV [rcvsize:: 2, source:: emet, rtag:: 50];
 	    write ("------------- recv " + l);
 	}
     }
