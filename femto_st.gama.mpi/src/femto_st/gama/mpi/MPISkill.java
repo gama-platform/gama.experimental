@@ -144,10 +144,15 @@ public class MPISkill extends Skill {
 					returns = "",
 					examples = { @example ("") }))
 	public void send(final IScope scope) {
+
 		System.out.println("xxxxxHHHHxxxxxx ");
 		final IList mesg = (IList) scope.getArg(IMPISkill.MESG, IType.LIST);
 		final int dest = ((Integer) scope.getArg(IMPISkill.DEST, IType.INT)).intValue();
 		final int stag = ((Integer) scope.getArg(IMPISkill.STAG, IType.INT)).intValue();
+
+		System.out.println("mesg = " + mesg);
+		System.out.println("dest = " + dest);
+		System.out.println("stag = " + stag);
 
 		System.out.println("xxxxxxxxxxx " + StreamConverter.convertNetworkObjectToStream(scope, mesg));
 		final byte[] message = StreamConverter.convertNetworkObjectToStream(scope, mesg).getBytes();
@@ -197,7 +202,11 @@ public class MPISkill extends Skill {
 			System.out.println("MPI send Error" + mpiex);
 		}
 
+		
+		System.out.println("Before rcvMesg");
+
 		final IList rcvMesg = (IList) StreamConverter.convertNetworkStreamToObject(scope, new String(message));
+		System.out.println("rcvMesg "+rcvMesg);
 
 		return rcvMesg;
 	}
