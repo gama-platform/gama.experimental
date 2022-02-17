@@ -118,6 +118,11 @@
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>ummisco.gama.opengl</groupId>
+			<artifactId>ummisco.gama.opengl</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>ummisco.gaml.extensions.maths</groupId>
 			<artifactId>ummisco.gaml.extensions.maths</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
