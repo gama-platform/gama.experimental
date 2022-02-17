@@ -1,13 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>msi.gama</groupId>
 	<artifactId>msi.gama.experimental.parent</artifactId>
 	<version>1.7.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<dependencies> 
+
+	<!-- 
+	<pluginRepositories>
+		<pluginRepository>
+			<id>buchen-maven-repo</id>
+			<url>http://buchen.github.io/maven-repo</url>
+			<layout>default</layout>
+		</pluginRepository>
+		<pluginRepository>
+			<layout>p2</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>p2Repo</id>
+			<name>p2Repo</name>
+			<url>http://updates.gama-platform.org/1.8.2</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>orbit</id>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+		 -->
+
+
+	<repositories>
+
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+			<id>p2Repo</id>
+			<url>http://updates.gama-platform.org/1.8.2</url>
+		</repository>
+		<repository>
+			<id>eclipse-2021-12</id>
+			<url>https://download.eclipse.org/releases/2021-12</url>
+			<layout>p2</layout>
+		</repository>
+	</repositories>
+
+	<dependencies>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>ummisco.gama.annotations</artifactId>
@@ -16,11 +70,11 @@
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.processor</artifactId>
-			<version>1.4.0-SNAPSHOT</version>
+			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
-			<artifactId>msi.gama.core</artifactId> 
+			<artifactId>msi.gama.core</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -30,12 +84,12 @@
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
-			<artifactId>msi.gama.headless</artifactId>
+			<artifactId>msi.gama.application</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
-			<artifactId>msi.gama.application</artifactId>
+			<artifactId>msi.gama.headless</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -64,13 +118,13 @@
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>simtools.gaml.extensions.traffic</groupId>
-			<artifactId>simtools.gaml.extensions.traffic</artifactId>
+			<groupId>ummisco.gaml.extensions.maths</groupId>
+			<artifactId>ummisco.gaml.extensions.maths</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>ummisco.gaml.extensions.maths</groupId>
-			<artifactId>ummisco.gaml.extensions.maths</artifactId>
+			<groupId>msi.gaml.architecture.simplebdi</groupId>
+			<artifactId>msi.gaml.architecture.simplebdi</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -93,59 +147,9 @@
 			<artifactId>simtools.gaml.extensions.physics</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
-	</dependencies> 
-
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>buchen-maven-repo</id>
-			<url>http://buchen.github.io/maven-repo</url>
-			<layout>default</layout>
-		</pluginRepository>
-		<!-- 
-		 -->
-		<pluginRepository>
-			<layout>p2</layout>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>p2Repo</id>
-			<name>p2Repo</name>
-			<url>http://updates.gama-platform.org/1.8.2</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>orbit</id>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
-
-	<repositories>
-		
-		<repository> 
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>p2Repo</id> 
-			<url>http://updates.gama-platform.org/1.8.2</url>
-		</repository>
-		<repository>
-			<id>eclipse-2021-03</id>
-			<url>http://download.eclipse.org/releases/2021-03</url>
-			<layout>p2</layout>
-		</repository>
-
-	</repositories>
+		<dependency>
+			<groupId>simtools.gaml.extensions.traffic</groupId>
+			<artifactId>simtools.gaml.extensions.traffic</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
