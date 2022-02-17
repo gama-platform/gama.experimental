@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.core.runtime;bundle-version="3.11.1",
  ummisco.gama.ui.shared,
  ummisco.gama.ui.experiment,
- msi.gama.application
+ msi.gama.application,
+ ummisco.gama.opengl
 Bundle-ClassPath: .,
  lib/Java-WebSocket-1.5.2.jar,
  lib/slf4j-api-2.0.0-alpha1.jar

@@ -153,7 +153,7 @@ public class MarkdownModelDocumentor {
 	public void loadImports() {
 		final IPath pathModel = modelFile.getResource().getRawLocation();
 		Iterator<URI> importedUris =
-				GamlResourceIndexer.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString()));
+				(Iterator<URI>) GamlResourceIndexer.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString()));
 
 		while (importedUris.hasNext()) {
 			final URI tmpUri = importedUris.next();

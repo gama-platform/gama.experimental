@@ -59,6 +59,7 @@ import msi.gama.precompiler.GamlAnnotations.display;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
+import msi.gama.runtime.IScope.IGraphicsScope;
 import msi.gama.runtime.PlatformHelper;
 import msi.gaml.expressions.IExpression;
 import msi.gaml.operators.Cast;
@@ -85,7 +86,7 @@ public class WebDisplaySurface extends JPanel implements IDisplaySurface {
 	protected boolean zoomFit = true;
 	protected volatile boolean disposed;
 
-	private IScope scope;
+	private IGraphicsScope scope;
 	int frames;
 	private volatile boolean realized = false;
 	private volatile boolean rendered = false;
@@ -134,7 +135,7 @@ public class WebDisplaySurface extends JPanel implements IDisplaySurface {
 	public WebDisplaySurface(final Object... args) {
 		output = (LayeredDisplayOutput) args[0];
 		output.setSurface(this);
-		setDisplayScope(output.getScope().copy("in java2D display"));
+		setDisplayScope(output.getScope().copyForGraphics("in web display"));
 		output.getData().addListener(this);
 		temp_focus = output.getFacet(IKeyword.FOCUS);
 		setDoubleBuffered(true);
@@ -274,7 +275,7 @@ public class WebDisplaySurface extends JPanel implements IDisplaySurface {
 	@Override
 	public void outputReloaded() {
 		// We first copy the scope
-		setDisplayScope(output.getScope().copy("in java2D display "));
+		setDisplayScope(output.getScope().copyForGraphics("in web display "));
 		// We disable error reporting
 		if (!GamaPreferences.Runtime.ERRORS_IN_DISPLAYS.getValue()) {
 			getScope().disableErrorReporting();
@@ -290,7 +291,7 @@ public class WebDisplaySurface extends JPanel implements IDisplaySurface {
 	}
 
 	@Override
-	public IScope getScope() {
+	public IGraphicsScope getScope() {
 		return scope;
 	}
 
@@ -628,14 +629,12 @@ public class WebDisplaySurface extends JPanel implements IDisplaySurface {
 		e.expandToInclude((GamaPoint) currentLayer.getModelCoordinatesFrom(xc, yc, this));
 		return e;
 	}
-
-	protected void setDisplayScope(final IScope scope) {
-		if (this.scope != null) {
-			GAMA.releaseScope(this.scope);
-		}
+	
+	protected void setDisplayScope(final IGraphicsScope scope) {
+		if (this.scope != null) { GAMA.releaseScope(this.scope); }
 		this.scope = scope;
 	}
-
+	
 	@Override
 	public void runAndUpdate(final Runnable r) {
 		new Thread(() -> {

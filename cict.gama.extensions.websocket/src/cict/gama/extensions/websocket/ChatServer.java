@@ -86,7 +86,7 @@ public class ChatServer extends WebSocketServer {
 	@Override
 	public void onMessage(WebSocket conn, String message) {
 //    broadcast(message);
-		System.out.println(conn + ": " + message);
+//		System.out.println(conn + ": " + message);
 		try {
 //				File f = new File("D:\\Downloads\\splash.jpg");
 				BufferedImage bi = mysurface.getImage(-1,-1);//ImageIO.read(f);
@@ -115,7 +115,7 @@ public class ChatServer extends WebSocketServer {
 			port = Integer.parseInt(args[0]);
 		} catch (Exception ex) {
 		}
-		ChatServer s = new ChatServer(port,new WebDisplaySurface());
+		ChatServer s = new ChatServer(new InetSocketAddress(port));
 		s.start();
 		System.out.println("ChatServer started on port: " + s.getPort());
 

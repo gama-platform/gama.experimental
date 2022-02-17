@@ -52,15 +52,4 @@ public class OpenGLDisplayView2 extends LayeredDisplayView {
 		return new ArrayList<String>(getDisplaySurface().renderer.camera.PRESETS.keySet());
 	}
 
-	@Override
-	public void hideToolbar() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void showToolbar() {
-		// TODO Auto-generated method stub
-		
-	}
 }

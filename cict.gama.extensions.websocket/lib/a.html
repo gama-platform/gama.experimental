@@ -10,12 +10,13 @@
 let socket = new WebSocket("ws://localhost:8887");
 
 		socket.binaryType = 'arraybuffer';
-
 // send message from the form
 document.forms.publish.onsubmit = function() {
-  let outgoingMessage = this.message.value;
+setInterval(function(){ 
+  socket.send(""); }, 100);
+//  let outgoingMessage = this.message.value;
 
-  socket.send(outgoingMessage);
+//  socket.send(outgoingMessage);
   return false;
 };
 

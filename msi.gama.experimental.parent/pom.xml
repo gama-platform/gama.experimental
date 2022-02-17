@@ -1,13 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>msi.gama</groupId>
 	<artifactId>msi.gama.experimental.parent</artifactId>
 	<version>1.7.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<dependencies> 
+
+	<!-- 
+	<pluginRepositories>
+		<pluginRepository>
+			<id>buchen-maven-repo</id>
+			<url>http://buchen.github.io/maven-repo</url>
+			<layout>default</layout>
+		</pluginRepository>
+		<pluginRepository>
+			<layout>p2</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>p2Repo</id>
+			<name>p2Repo</name>
+			<url>http://updates.gama-platform.org/1.8.2</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>orbit</id>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+		 -->
+
+
+	<repositories>
+
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+			<id>p2Repo</id>
+			<url>http://updates.gama-platform.org/1.8.2</url>
+		</repository>
+		<repository>
+			<id>eclipse-2021-12</id>
+			<url>https://download.eclipse.org/releases/2021-12</url>
+			<layout>p2</layout>
+		</repository>
+	</repositories>
+
+	<dependencies>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>ummisco.gama.annotations</artifactId>
@@ -16,11 +70,11 @@
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.processor</artifactId>
-			<version>1.4.0-SNAPSHOT</version>
+			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
-			<artifactId>msi.gama.core</artifactId> 
+			<artifactId>msi.gama.core</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -30,12 +84,12 @@
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
-			<artifactId>msi.gama.headless</artifactId>
+			<artifactId>msi.gama.application</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
-			<artifactId>msi.gama.application</artifactId>
+			<artifactId>msi.gama.headless</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -64,13 +118,13 @@
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>simtools.gaml.extensions.traffic</groupId>
-			<artifactId>simtools.gaml.extensions.traffic</artifactId>
+			<groupId>ummisco.gaml.extensions.maths</groupId>
+			<artifactId>ummisco.gaml.extensions.maths</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>ummisco.gaml.extensions.maths</groupId>
-			<artifactId>ummisco.gaml.extensions.maths</artifactId>
+			<groupId>msi.gaml.architecture.simplebdi</groupId>
+			<artifactId>msi.gaml.architecture.simplebdi</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -93,179 +147,71 @@
 			<artifactId>simtools.gaml.extensions.physics</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
-	</dependencies> 
+		<dependency>
+			<groupId>simtools.gaml.extensions.traffic</groupId>
+			<artifactId>simtools.gaml.extensions.traffic</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>buchen-maven-repo</id>
-			<url>http://buchen.github.io/maven-repo</url>
-			<layout>default</layout>
-		</pluginRepository>
-		<!-- 
-		 -->
-		<pluginRepository>
-			<layout>p2</layout>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>p2Repo</id>
-			<name>p2Repo</name>
-			<url>http://updates.gama-platform.org/1.8.2</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>orbit</id>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
-
-	<repositories>
-		
-		<repository> 
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>p2Repo</id> 
-			<url>http://updates.gama-platform.org/1.8.2</url>
-		</repository>
-		<repository>
-			<id>eclipse-2021-03</id>
-			<url>http://download.eclipse.org/releases/2021-03</url>
-			<layout>p2</layout>
-		</repository>
-
-	</repositories> 
-<modules>
- <module>../cict.feature.netcdf</module> 
- <module>../cict.feature.VR</module> 
- <module>../cict.gama.extensions.websocket</module> 
- <module>../cict.gama.feature.websocket</module> 
- <module>../cict.gaml.extensions.netcdf</module> 
- <module>../cict.gaml.extensions.VR</module> 
- <module>../escape.gaml.feature.pedestrian</module> 
- <module>../escape.gaml.pedestrian</module> 
- <module>../femto_st.gama.feature.mpi</module> 
- <module>../femto_st.gama.mpi</module> 
- <module>../idees.gama.features.weka</module> 
- <module>../idees.gama.weka</module> 
- <module>../irit.gama.feature.jdeqsim</module> 
- <module>../irit.gama.feature.switchproject</module> 
- <module>../irit.gama.jdeqsim</module> 
- <module>../irit.gama.switchproject</module> 
- <module>../miat.gama.extension.ifcfile</module> 
- <module>../miat.gama.feature.ifcfile</module> 
- <module>../miat.gaml.extension.bayesiannetwork</module> 
- <module>../miat.gaml.extension.bayesiannetwork.feature</module> 
- <module>../miat.gaml.extensions.argumentation</module> 
- <module>../miat.gaml.extensions.argumentation.feature</module> 
- <module>../mit.feature.launchpad</module> 
- <module>../mit.gaml.extension.launchpad</module> 
- <module>../msi.gama.experimental.p2updatesite</module> 
- <module>../simtools.gama.feature.gamanalyzer</module> 
- <module>../simtools.gamanalyzer.fr</module> 
- <module>../ummisco.gama.camisole</module> 
- <module>../ummisco.gama.extension.hecras</module> 
- <module>../ummisco.gama.extension.unity</module> 
- <module>../ummisco.gama.extensions.matlab</module> 
- <module>../ummisco.gama.feature.camisole</module> 
- <module>../ummisco.gama.feature.gaming</module> 
- <module>../ummisco.gama.feature.gamr</module> 
- <module>../ummisco.gama.feature.markdown.documentation</module> 
- <module>../ummisco.gama.feature.matlab</module> 
- <module>../ummisco.gama.feature.opengl2</module> 
- <module>../ummisco.gama.feature.remote.gui</module> 
- <module>../ummisco.gama.feature.unity</module> 
- <module>../ummisco.gama.gaming</module> 
- <module>../ummisco.gama.gamr</module> 
- <module>../ummisco.gama.markdown.documentation</module> 
- <module>../ummisco.gama.opengl2</module> 
- <module>../ummisco.gama.remote.gui</module> 
- <module>../ummisco.gaml.extensions.fuzzylogic</module> 
- <module>../ummisco.gaml.extensions.mike</module> 
- <module>../ummisco.gaml.extensions.rjava</module> 
- <module>../ummisco.gaml.feature.fuzzylogic</module> 
- <module>../ummisco.gaml.feature.hydro</module> 
- <module>../ummisco.gaml.feature.rjava</module> 
- </modules>
- 
- 	<properties>
-		<batik.version>1.7</batik.version>
-		<p2-maven.version>1.2.0-SNAPSHOT</p2-maven.version>
-		<jetty-maven.version>8.1.5.v20120716</jetty-maven.version>
-		<tycho.version>2.2.0</tycho.version>
-		<jdk.version>15</jdk.version>
-		<project.version>1.7.0-SNAPSHOT</project.version>
+	<modules>
+		<module>../cict.feature.netcdf</module>
+		<module>../cict.feature.VR</module>
+		<module>../cict.gama.extensions.websocket</module>
+		<module>../cict.gama.feature.websocket</module>
+		<module>../cict.gaml.extensions.netcdf</module>
+		<module>../cict.gaml.extensions.VR</module>
+		<module>../escape.gaml.feature.pedestrian</module>
+		<module>../escape.gaml.pedestrian</module>
+		<module>../femto_st.gama.feature.mpi</module>
+		<module>../femto_st.gama.mpi</module>
+		<module>../idees.gama.features.weka</module>
+		<module>../idees.gama.weka</module>
+		<module>../irit.gama.feature.jdeqsim</module>
+		<module>../irit.gama.feature.switchproject</module>
+		<module>../irit.gama.jdeqsim</module>
+		<module>../irit.gama.switchproject</module>
+		<module>../miat.gama.extension.ifcfile</module>
+		<module>../miat.gama.feature.ifcfile</module>
+		<module>../miat.gaml.extension.bayesiannetwork</module>
+		<module>../miat.gaml.extension.bayesiannetwork.feature</module>
+		<module>../miat.gaml.extensions.argumentation</module>
+		<module>../miat.gaml.extensions.argumentation.feature</module>
+		<module>../mit.feature.launchpad</module>
+		<module>../mit.gaml.extension.launchpad</module>
+		<module>../msi.gama.experimental.p2updatesite</module>
+		<module>../simtools.gama.feature.gamanalyzer</module>
+		<module>../simtools.gamanalyzer.fr</module>
+		<module>../ummisco.gama.camisole</module>
+		<module>../ummisco.gama.extension.hecras</module>
+		<module>../ummisco.gama.extension.unity</module>
+		<module>../ummisco.gama.extensions.matlab</module>
+		<module>../ummisco.gama.feature.camisole</module>
+		<module>../ummisco.gama.feature.gaming</module>
+		<module>../ummisco.gama.feature.gamr</module>
+		<module>../ummisco.gama.feature.markdown.documentation</module>
+		<module>../ummisco.gama.feature.matlab</module>
+		<module>../ummisco.gama.feature.opengl2</module>
+		<module>../ummisco.gama.feature.remote.gui</module>
+		<module>../ummisco.gama.feature.unity</module>
+		<module>../ummisco.gama.gaming</module>
+		<module>../ummisco.gama.gamr</module>
+		<module>../ummisco.gama.markdown.documentation</module>
+		<module>../ummisco.gama.opengl2</module>
+		<module>../ummisco.gama.remote.gui</module>
+		<module>../ummisco.gaml.extensions.fuzzylogic</module>
+		<module>../ummisco.gaml.extensions.mike</module>
+		<module>../ummisco.gaml.extensions.rjava</module>
+		<module>../ummisco.gaml.feature.fuzzylogic</module>
+		<module>../ummisco.gaml.feature.hydro</module>
+		<module>../ummisco.gaml.feature.rjava</module>
+	</modules>
+	<properties>
+		<tycho.version>2.6.0</tycho.version>
+		<jdk.version>17</jdk.version>
+		<project.version>1.8.2-SNAPSHOT</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<geotools.version>14.5</geotools.version>
-		<math3.version>3.1.1</math3.version>
-		<guava.version>15.0</guava.version>
-		<imageio.version>1.1.11</imageio.version>
-		<jai.version>1.1.3</jai.version>
-		<jt.version>1.3.1</jt.version>
-		<graphstream.version>1.3</graphstream.version>
-		<jfreechart.version>1.0.19</jfreechart.version>
-		<jcommon.version>1.0.23</jcommon.version>
-		<jgrapht.version>0.9.1</jgrapht.version>
-		<streamex.version>0.6.1</streamex.version>
-		<kabeja.version>0.4</kabeja.version>
-		<olap4j.version>1.2.0</olap4j.version>
-		<osmosis.version>0.45</osmosis.version>
-		<spring.version>3.1.2.RELEASE</spring.version>
-		<prefuse.version>beta-20071021</prefuse.version>
-		<!-- <RCaller.version>2.5</RCaller.version> this version is not on maven -->
-		<RCaller.version>2.7</RCaller.version>
-		<svgsalamander.version>1.0</svgsalamander.version>
-		<trove4j.version>3.0.3</trove4j.version>
-		<vecmath.version>1.5.2</vecmath.version>
-		<jts.version>1.14.0</jts.version>
-		<jaimageio.version>1.1</jaimageio.version>
-		<org.eclipse.emf.ecore.version>2.11.0-v20150123-0347</org.eclipse.emf.ecore.version>
-		<com.google.inject.version>3.0</com.google.inject.version>
-		<common-lang.version>2.6</common-lang.version>
-		<org.eclipse.emf.common.version>2.11.0-v20150123-0347</org.eclipse.emf.common.version>
-		<org.eclipse.core.runtime.version>3.11.0.v20150405-1723</org.eclipse.core.runtime.version>
-		<com.ibm.icu.version>54.1.1</com.ibm.icu.version>
-		<javax.annotation.version>1.2</javax.annotation.version>
-		<javax.inject.version>1</javax.inject.version>
-		<xml-apis.version>1.3.04</xml-apis.version>
-		<antlr-runtime.version>3.2</antlr-runtime.version>
-		<batik.version>1.6-1</batik.version>
-		<commons-cli.version>1.2</commons-cli.version>
-		<commons-codec.version>1.6</commons-codec.version>
-		<commons-io.version>2.2</commons-io.version>
-		<commons-jxpath.version>1.3</commons-jxpath.version>
-		<commons-lang.version>2.6</commons-lang.version>
-		<commons-logging.version>1.1.1</commons-logging.version>
-		<org.apache.felix.gogo.command.version>0.10.0</org.apache.felix.gogo.command.version>
-		<org.apache.felix.gogo.runtime.version>0.10.0</org.apache.felix.gogo.runtime.version>
-		<org.apache.felix.gogo.shell.version>0.10.0</org.apache.felix.gogo.shell.version>
-		<httpclient.version>4.3.6</httpclient.version>
-		<httpcore.version>4.3.3</httpcore.version>
-		<log4j.version>1.2.15</log4j.version>
-		<org.mod4j.org.eclipse.compare.version>3.5.0</org.mod4j.org.eclipse.compare.version>
-		<org.eclipse.core.commands.version>3.3.0-I20070605-0010</org.eclipse.core.commands.version>
-		<org.eclipse.core.contenttype.version>3.4.200-v20140207-1251</org.eclipse.core.contenttype.version>
-		<org.eclipse.core.databinding.version>1.0.0-I20070606-0010</org.eclipse.core.databinding.version>
-		<org.eclipse.core.databinding.beans.version>1.0.0-I20070606-0010</org.eclipse.core.databinding.beans.version>
-		<org.mod4j.org.eclipse.core.databinding.property.version>1.2.0</org.mod4j.org.eclipse.core.databinding.property.version>
-		<org.mod4j.org.eclipse.core.databinding.observable.version>1.2.0</org.mod4j.org.eclipse.core.databinding.observable.version>
-		<org.eclipse.core.expressions.version>3.3.0-v20070606-0010</org.eclipse.core.expressions.version>
-		<org.eclipse.core.filebuffers.version>3.3.0-v20070606-0010</org.eclipse.core.filebuffers.version>
-		<addjars.version>1.0.5</addjars.version>
+
 	</properties>
 
 	<build>
@@ -283,7 +229,7 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-compiler-plugin</artifactId>
 				<version>${tycho.version}</version>
-				<configuration> 
+				<configuration>
 					<debug>false</debug>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
@@ -291,6 +237,15 @@
 					<useProjectSettings>false</useProjectSettings>
 					<generatedSourcesDirectory>${project.build.directory}</generatedSourcesDirectory>
 					<optimize>true</optimize>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -305,6 +260,7 @@
 					<annotationProcessors>
 						<annotationProcessor>msi.gama.precompiler.GamaProcessor</annotationProcessor>
 					</annotationProcessors>
+					<executionEnvironment>JavaSE-${jdk.version}</executionEnvironment>
 				</configuration>
 				<dependencies>
 					<!--dependency containing the annotation processor specified in the 
@@ -461,25 +417,23 @@
 					<resolver>p2</resolver>
 					<pomDependencies>consider</pomDependencies>
 					<environments>
-						<!--  obsolete on 1812 
+						<!-- 
 						<environment>
 							<os>linux</os>
 							<ws>gtk</ws>
 							<arch>x86</arch>
 						</environment>
-						-->
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<!--  obsolete on 1812 
 						<environment>
 							<os>win32</os>
 							<ws>win32</ws>
 							<arch>x86</arch>
 						</environment>
-						-->
+					 -->
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
 						<environment>
 							<os>win32</os>
 							<ws>win32</ws>
@@ -491,27 +445,13 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
+					<executionEnvironment>JavaSE-${jdk.version}</executionEnvironment>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
 				<version>${tycho.version}</version>
-			</plugin>
-
-			<plugin>
-				<groupId>name.abuchen</groupId>
-				<artifactId>fix-info-plist-maven-plugin</artifactId>
-				<version>1.0</version>
 			</plugin>
 
 			<plugin>
@@ -526,98 +466,5 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>			
-				<plugin>
-		            <groupId>org.apache.maven.plugins</groupId>
-		            <artifactId>maven-dependency-plugin</artifactId>
-		        </plugin>
-		
-		        <plugin>
-		            <groupId>org.apache.maven.plugins</groupId>
-		            <artifactId>maven-compiler-plugin</artifactId>
-		            <version>3.7.0</version>
-		            <configuration>
-		                <compilerId>eclipse</compilerId>
-						<source>${jdk.version}</source>
-						<target>${jdk.version}</target>
-		                <!-- Passing arguments is a trainwreck, see https://issues.apache.org/jira/browse/MCOMPILER-123 -->
-		                <compilerArguments>
-		                    <properties>${project.basedir}/.settings/org.eclipse.jdt.core.prefs</properties>
-		                </compilerArguments>
-						<encoding>${project.build.sourceEncoding}</encoding>
-		                <showWarnings>true</showWarnings>
-		                <showDeprecation>true</showDeprecation>
-		            </configuration>
-		
-		            <dependencies>
-		                <dependency>
-		                    <groupId>org.codehaus.plexus</groupId>
-		                    <artifactId>plexus-compiler-eclipse</artifactId>
-		                    <version>2.8.3</version>
-		                </dependency>
-		
-		                <dependency>
-		                    <groupId>org.eclipse.jdt</groupId>
-		                    <artifactId>ecj</artifactId>
-						<version>3.23.0</version>
-		                </dependency>
-		            </dependencies>
-		        </plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.eclipse.tycho
-										</groupId>
-										<artifactId>
-											tycho-packaging-plugin
-										</artifactId>
-										<versionRange>
-											[2.2.0,)
-										</versionRange>
-										<goals>
-											<goal>
-												build-qualifier-aggregator
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-clean-plugin
-										</artifactId>
-										<versionRange>
-											[3.0.0,)
-										</versionRange>
-										<goals>
-											<goal>clean</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 </project>
