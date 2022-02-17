@@ -168,7 +168,7 @@ public class ApilandTerritorySkill extends Skill {
 			}
 			
 			final boolean useNoSpecific = GamaPreferences.External.LIB_USE_DEFAULT.getValue();
-			String code;
+			String code = "";
 			IProjection gis = null;
 			if (!useNoSpecific) {
 				code = "EPSG:" + GamaPreferences.External.LIB_OUTPUT_CRS.getValue();
@@ -197,7 +197,7 @@ public class ApilandTerritorySkill extends Skill {
 				}
 			}
 			// }
-			SaveStatement.saveShapeFile(scope, newFile, shapes, specs.toString(), attributes, gis);
+			SaveStatement.saveShapeFile(scope, newFile, shapes, specs.toString(), code, attributes, gis);
 			
 		} catch (final GamaRuntimeException e) {
 			throw e;
@@ -234,7 +234,7 @@ public class ApilandTerritorySkill extends Skill {
 		String farmId = (String) scope.getArg("farm_id", IType.STRING);
 		if (farms == null) 
 			farms = new Hashtable();
-		// création d'une ferme
+		// crï¿½ation d'une ferme
 		Farm farm = new Farm(farmId);
 		if (territory == null)
 			buildTerritory(scope,Instant.get(2020),GamaListFactory.EMPTY_LIST );
@@ -286,7 +286,7 @@ public class ApilandTerritorySkill extends Skill {
 		}
 		sm.setSuccess(1);
 
-		// définition des sorties
+		// dï¿½finition des sorties
 		GamaOutput out = new GamaOutput();
 		
 		//sm.addOutput(new ConsoleOutput());
@@ -294,7 +294,7 @@ public class ApilandTerritorySkill extends Skill {
 		sm.addOutput(out);
 		
 		
-		// création et lancement du simulateur
+		// crï¿½ation et lancement du simulateur
 		CfmFarmSimulator s = new CfmFarmSimulator(sm);
 		s.allRun();
 		return out.getRes();
@@ -332,8 +332,8 @@ public class ApilandTerritorySkill extends Skill {
 		String farmId = (String) scope.getArg("farm_id", IType.STRING);
 		String group = FileUtils.constructAbsoluteFilePath(scope, scope.getStringArg("group_path"), true);
 		String cover = FileUtils.constructAbsoluteFilePath(scope, scope.getStringArg("cover_path"), true);
-		// création d'un type de système
-		CoverFactory.init(farms.get(farmId), cover, group); // intégration des couverts
+		// crï¿½ation d'un type de systï¿½me
+		CoverFactory.init(farms.get(farmId), cover, group); // intï¿½gration des couverts
 	}
 	
 	@action(name = "set_system_file", args = {
@@ -347,7 +347,7 @@ public class ApilandTerritorySkill extends Skill {
 		String farmId = (String) scope.getArg("farm_id", IType.STRING);
 		String systemFile = FileUtils.constructAbsoluteFilePath(scope, scope.getStringArg("system_path"), true);
 		
-		// création d'un type de système
+		// crï¿½ation d'un type de systï¿½me
 		GenericConstraintSystem system = new GenericConstraintSystem(new File(systemFile).getName().replace(".csv", ""));	
 		ConstraintSystemFactory.importSystem(system, systemFile);
 		new ConstraintBuilder(farms.get(farmId)).build(system);

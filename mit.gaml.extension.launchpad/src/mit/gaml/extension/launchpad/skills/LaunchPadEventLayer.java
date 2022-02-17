@@ -26,6 +26,7 @@ import msi.gama.outputs.layers.ILayerData;
 import msi.gama.outputs.layers.ILayerStatement;
 import msi.gama.outputs.layers.LayerData;
 import msi.gama.runtime.IScope;
+import msi.gama.runtime.IScope.IGraphicsScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gaml.descriptions.StatementDescription;
 import msi.gaml.statements.IExecutable;
@@ -188,7 +189,7 @@ public class LaunchPadEventLayer implements ILayer, IEventLayerDelegate {
 	}
 
 	@Override
-	public void draw(final IScope scope, final IGraphics g) throws GamaRuntimeException {
+	public void draw(final IGraphicsScope scope, final IGraphics g) throws GamaRuntimeException {
 		if (!g.is2D() && !getData().isDynamic() && hasBeenDrawnOnce) { return; }
 		if (g.isNotReadyToUpdate() && hasBeenDrawnOnce) { return; }
 		getData().compute(scope, g);

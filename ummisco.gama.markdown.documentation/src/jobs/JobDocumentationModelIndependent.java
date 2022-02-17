@@ -89,7 +89,7 @@ public class JobDocumentationModelIndependent extends JobDocumentation {
 		
 		//Generate the documentation for the imported models
 		
-		Iterator<URI> importedUris = GamlResourceIndexer.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
+		Iterator<URI> importedUris = (Iterator<URI>) GamlResourceIndexer.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
 		while(importedUris.hasNext())
 		{
 			URI tmpUri = importedUris.next();

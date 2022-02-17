@@ -50,6 +50,7 @@ import msi.gama.outputs.layers.IEventLayerListener;
 import msi.gama.outputs.layers.OverlayLayer;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
+import msi.gama.runtime.IScope.IGraphicsScope;
 import msi.gaml.expressions.IExpression;
 import msi.gaml.operators.Cast;
 import msi.gaml.statements.draw.DrawingAttributes;
@@ -78,7 +79,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	final LayerManager layerManager;
 	protected DisplaySurfaceMenu menuManager;
 	protected IExpression temp_focus;
-	IScope scope;
+	IGraphicsScope scope;
 	final Composite parent;
 	volatile boolean disposed;
 	private volatile boolean alreadyUpdating;
@@ -101,7 +102,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 		this.parent = parent;
 		output.getData().addListener(this);
 		output.setSurface(this);
-		setDisplayScope(output.getScope().copy("in OpenGLDisplaySuface"));
+		setDisplayScope(output.getScope().copyForGraphics("in OpenGLDisplaySuface"));
 //		if (getOutput().getData().useShader()) {
 			renderer = new ModernRenderer();
 
@@ -318,7 +319,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	 */
 	@Override
 	public void outputReloaded() {
-		setDisplayScope(output.getScope().copy("in OpenGLDisplaySurface"));
+		setDisplayScope(output.getScope().copyForGraphics("in OpenGLDisplaySurface"));
 		if (!GamaPreferences.Runtime.ERRORS_IN_DISPLAYS.getValue())
 			getScope().disableErrorReporting();
 		renderer.initScene();
@@ -488,7 +489,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 	 * @see msi.gama.common.interfaces.IDisplaySurface#getDisplayScope()
 	 */
 	@Override
-	public IScope getScope() {
+	public IGraphicsScope getScope() {
 		return scope;
 	}
 
@@ -591,7 +592,7 @@ public class SWTOpenGLDisplaySurface implements IDisplaySurface.OpenGL {
 
 	}
 
-	protected void setDisplayScope(final IScope scope) {
+	protected void setDisplayScope(final IGraphicsScope scope) {
 		if (this.scope != null) {
 			GAMA.releaseScope(this.scope);
 		}

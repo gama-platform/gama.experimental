@@ -189,7 +189,7 @@ public abstract class JobDocumentation extends WorkspaceJob {
 
 		// Loop trough the imported models of the file and build the links between their species and the documentation
 		Iterator<URI> importedUris =
-				GamlResourceIndexer.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
+				(Iterator<URI>) GamlResourceIndexer.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
 		while (importedUris.hasNext()) {
 			final URI tmpUri = importedUris.next();
 			if (modelsDone.contains(tmpUri.toString()) == false) {
