@@ -6,39 +6,6 @@
 	<version>1.7.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<!-- 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>buchen-maven-repo</id>
-			<url>http://buchen.github.io/maven-repo</url>
-			<layout>default</layout>
-		</pluginRepository>
-		<pluginRepository>
-			<layout>p2</layout>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<id>p2Repo</id>
-			<name>p2Repo</name>
-			<url>http://updates.gama-platform.org/1.8.2</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>orbit</id>
-			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-		 -->
-
 
 	<repositories>
 
@@ -115,6 +82,11 @@
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.lang.gaml</artifactId>
+			<version>1.8.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ummisco.gama.opengl</groupId>
+			<artifactId>ummisco.gama.opengl</artifactId>
 			<version>1.8.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
