@@ -33,3 +33,5 @@ msi.gama.ext/lib/
 *shx
 *shp
 *dbf
+stderr
+stdout
