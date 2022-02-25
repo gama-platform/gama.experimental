@@ -16,6 +16,7 @@ import msi.gama.util.IList;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.serializer.factory.StreamConverter;
+import java.util.Arrays;
 
 @vars ({ @variable (
 		name = IMPISkill.MPI_RANK,
@@ -154,18 +155,28 @@ public class MPISkill extends Skill {
 		System.out.println("dest = " + dest);
 		System.out.println("stag = " + stag);
 
-		System.out.println("xxxxxxxxxxx " + StreamConverter.convertNetworkObjectToStream(scope, mesg));
+
+		String conversion = StreamConverter.convertNetworkObjectToStream(scope, mesg);
+		System.out.println("xxxxxxxxxxx " +conversion);
+		
 		final byte[] message = StreamConverter.convertNetworkObjectToStream(scope, mesg).getBytes();
 		final int[] size = new int[1];
 		size[0] = message.length;
 
+		
+		System.out.println("size of message : "+size[0]);
 		try {
+			System.out.println("send size: "+Arrays.toString(size));
 			MPI.COMM_WORLD.send(size, 1, MPI.INT, dest, stag);
+			System.out.println("send message: "+message.length);
 			MPI.COMM_WORLD.send(message, message.length, MPI.BYTE, dest, stag);
+			System.out.println("end try");
 
 		} catch (final MPIException mpiex) {
 			System.out.println("MPI send Error" + mpiex);
 		}
+
+		System.out.println("End send ");
 	}
 
 	@action (
@@ -187,13 +198,15 @@ public class MPISkill extends Skill {
 					returns = "",
 					examples = { @example ("") }))
 	public IList recv(final IScope scope) {
-		final int rcvSize = ((Integer) scope.getArg(IMPISkill.RCVSIZE, IType.INT)).intValue();
+		//final int rcvSize = ((Integer) scope.getArg(IMPISkill.RCVSIZE, IType.INT)).intValue();
 		final int source = ((Integer) scope.getArg(IMPISkill.SOURCE, IType.INT)).intValue();
 		final int rtag = ((Integer) scope.getArg(IMPISkill.RTAG, IType.INT)).intValue();
 
 		final int size[] = new int[1];
 		byte[] message = null;
 
+
+		System.out.println("Before MPI.COMM_WORLD.recv");
 		try {
 			MPI.COMM_WORLD.recv(size, 1, MPI.INT, source, rtag);
 			message = new byte[size[0]];
@@ -201,6 +214,7 @@ public class MPISkill extends Skill {
 		} catch (final MPIException mpiex) {
 			System.out.println("MPI send Error" + mpiex);
 		}
+		System.out.println("after MPI.COMM_WORLD.recv");
 
 		
 		System.out.println("Before rcvMesg");

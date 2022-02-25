@@ -12,9 +12,12 @@ global skills:[MPI_Network]
 		
     int mpiRank <- 0;
     int netSize <- 0;
+    
+    int nb_agent_total <- 100;
+    int nb_agent_per_proc;
 	
     int current_step <- 0;
-    int nbLoop <- 10;
+    int nbLoop <- 20;
 	
 	// Rank of neighbor
     int leftNeighbor; 
@@ -52,9 +55,14 @@ global skills:[MPI_Network]
 		
 	    mpiRank <- MPI_RANK();
 	     
-	    netSize <- MPI_SIZE ();
+	    netSize <- MPI_SIZE();
 	    
     	do init_sub_simulation;
+    	
+    
+    	nb_agent_per_proc <- nb_agent_total / netSize;
+    	write("nb_agent_per_proc : "+nb_agent_per_proc+"\n");
+    	p <- pp.movingExp[0].create_species(nb_agent_per_proc);
     	
 	    modelSize <- pp.movingExp[0].get_size_model();
 		modelStripSize <- modelSize / netSize;
@@ -107,35 +115,23 @@ global skills:[MPI_Network]
     	write(""+mpiRank+" leftInnerOLZBound = "+leftInnerOLZBound+"\n");
     	write(""+mpiRank+" rightInnerOLZBound = "+rightInnerOLZBound+"\n");
     	write(""+mpiRank+" rightOuterOLZBound = "+rightOuterOLZBound+"\n");
-	
+    	
     	loop times: nbLoop {
+		
 			write("------------------------------------------------------------------------"+mpiRank+" loop : "+current_step+" \n");
-    		do runMpi;
+    		if(even(mpiRank))
+    		{
+    			do runMpi_even;
+    		}else
+    		{
+    			do runMpi_odd;
+    		}
     		current_step <- current_step + 1;
 		}
 		
-		/*if(mpiRank = 0)
-		{
-			create pp.movingExp;
-			list<generic_species> xd <- pp.movingExp[0].get_generic_species_list_in_area(0, 200);
-			
-			write("1-----------------------------------------\n");
-	   		do MPI_SEND mesg: xd dest: 1 stag: 50;   
-			write("2-----------------------------------------\n");
-	   		
-		}else
-		{		
-	   		
-			unknown unk <- self MPI_RECV [rcvsize:: 1, source:: 0, rtag:: 50];
-			
-			loop tmp over: unk
-			{
-				map<string,unknown> map_unk <- map(tmp);
-				write(map_unk);
-				generic_species gen <- pp.movingExp[0].create_generic_species(map_unk);
-				write("gen ind = "+gen.index+"\n");
-			}	
-		}*/
+		list<generic_species> generic_in_band <- pp.movingExp[0].get_generic_species_list_in_area(stripStart,stripEnd);
+		write(""+mpiRank+" generic_in_band: "+ generic_in_band +"\n");
+		write(""+mpiRank+" b agent : "+ length(generic_in_band) +"\n");
 		
     	do finalize;
     }
@@ -153,19 +149,34 @@ global skills:[MPI_Network]
 	    }
     }
     
-    action runMpi 
+    action runMpi_even
+    { 	
+    	write(""+mpiRank+" cleanOuterOLZ ****\n");
+    	do cleanOuterOLZ;
+    	
+    	write(""+mpiRank+" updateOuterOLZ_even ****\n");
+    	do updateOuterOLZ_even;
+    	
+    	write(""+mpiRank+" runModel****\n");
+    	do runModel;
+    	
+    	write(""+mpiRank+" updateInnerOLZ_even ****\n");
+    	do updateInnerOLZ_even;
+    }
+    
+    action runMpi_odd
     { 	
     	write(""+mpiRank+" cleanOuterOLZ ****\n");
     	do cleanOuterOLZ;
     	
     	write(""+mpiRank+" updateOuterOLZ ****\n");
-    	do updateOuterOLZ;
+    	do updateOuterOLZ_odd;
     	
     	write(""+mpiRank+" runModel****\n");
     	do runModel;
     	
     	write(""+mpiRank+" updateInnerOLZ ****\n");
-    	do updateInnerOLZ;
+    	do updateInnerOLZ_odd;
     }
     
     action cleanOuterOLZ
@@ -175,27 +186,19 @@ global skills:[MPI_Network]
    		write(""+mpiRank+" nb deleted "+deleted_agents+"\n");
     }
     
-    action updateOuterOLZ
+    action updateOuterOLZ_even
     { 
 		if (leftNeighbor != mpiRank) // Only nodes with a left part of the env
 		{ 
 		   	list<generic_species> generic_species_list <- pp.movingExp[0].get_generic_species_list_in_area(stripStart, leftInnerOLZBound); 
-			
-			if(generic_species_list != nil)
-			{
-		   		do MPI_SEND mesg: generic_species_list dest: leftNeighbor stag: 50;      
-			}
+	   		do MPI_SEND mesg: generic_species_list dest: leftNeighbor stag: 50;      	
 		}
 	
 		// Right inner overlap zone
 		if (rightNeighbor != mpiRank) // Only nodes with a right part of the env
 		{ 	
 		   	list<generic_species> generic_species_list <- pp.movingExp[0].get_generic_species_list_in_area(rightInnerOLZBound, stripEnd); 
-			
-			if(generic_species_list != nil)
-			{
-		   		do MPI_SEND mesg: generic_species_list dest: rightNeighbor stag: 50;      
-			}
+	   		do MPI_SEND mesg: generic_species_list dest: rightNeighbor stag: 50;      
     	}
 		   
 		
@@ -203,22 +206,19 @@ global skills:[MPI_Network]
 		// Left outer overlap zone 
 		if (leftNeighbor != mpiRank)
 		{
-		   	unknown generic_species_list <- self MPI_RECV [rcvsize:: 20000, source:: leftNeighbor, rtag:: 50];
-		   	
-		   	list<generic_species> generic_species_list_created <- pp.movingExp[0].create_generic_species_from_list(generic_species_list);
-		        
+		   	unknown generic_species_list <- self MPI_RECV [source:: leftNeighbor, rtag:: 50];		   	
+		   	list<generic_species> generic_species_list_created <- pp.movingExp[0].create_generic_species_from_list(generic_species_list);   
         }
 	
 		// Right outer overlap zone
         if ( rightNeighbor != mpiRank)
         {
-		   	unknown generic_species_list <- self MPI_RECV [rcvsize:: 20000, source:: rightNeighbor, rtag:: 50];
-		        
+		   	unknown generic_species_list <- self MPI_RECV [source:: rightNeighbor, rtag:: 50];
 	        list<generic_species> generic_species_list_created <- pp.movingExp[0].create_generic_species_from_list(generic_species_list);
         }
     }
     
-	action updateInnerOLZ
+	action updateInnerOLZ_even
     {
     
 	 	// Gather agents that have moved in the OLZ and send then to the neighbors	
@@ -226,22 +226,14 @@ global skills:[MPI_Network]
 		if (leftNeighbor != mpiRank) 
 		{
 		   	list<generic_species> generic_species_list <- pp.movingExp[0].get_generic_species_list_in_area(leftOuterOLZBound, stripStart); 
-		   	
-		   	if(generic_species_list != nil)
-			{
-		   		do MPI_SEND mesg: generic_species_list dest: leftNeighbor stag: 50;      
-			}
+		   	do MPI_SEND mesg: generic_species_list dest: leftNeighbor stag: 50;      
     	}
 		
     	// Right outer overlap zone
     	if (rightNeighbor != mpiRank)
 		{
 		   	list<generic_species> generic_species_list <- pp.movingExp[0].get_generic_species_list_in_area(stripEnd, rightOuterOLZBound); 
-			
-		   	if(generic_species_list != nil)
-			{
-		   		do MPI_SEND mesg: generic_species_list dest: rightNeighbor stag: 50;      
-			}
+			do MPI_SEND mesg: generic_species_list dest: rightNeighbor stag: 50;      
     	}
 			
     	
@@ -249,18 +241,82 @@ global skills:[MPI_Network]
 		// Left outer overlap zone
     	if (leftNeighbor != mpiRank) 
     	{
-		   	unknown generic_species_list <- self MPI_RECV [rcvsize:: 20000, source:: leftNeighbor, rtag:: 50];
-		   	
+		   	unknown generic_species_list <- self MPI_RECV [source:: leftNeighbor, rtag:: 50];
 	        list<generic_species> generic_species_list_created <- pp.movingExp[0].create_generic_species_from_list(generic_species_list);
 		}
 	
 		// Right outer overlap zone
     	if (rightNeighbor != mpiRank) 
     	{
-		   	unknown generic_species_list <- self MPI_RECV [rcvsize:: 20000, source:: rightNeighbor, rtag:: 50];
-		   	
+		   	unknown generic_species_list <- self MPI_RECV [source:: rightNeighbor, rtag:: 50];
 	        list<generic_species> generic_species_list_created <- pp.movingExp[0].create_generic_species_from_list(generic_species_list);
 		}
+    }
+    
+    action updateOuterOLZ_odd
+    {    
+		
+		// Receive overlap zones from neighbors		 
+		// Left outer overlap zone 
+		if (leftNeighbor != mpiRank)
+		{
+		   	unknown generic_species_list <- self MPI_RECV [source:: leftNeighbor, rtag:: 50];		   	
+		   	list<generic_species> generic_species_list_created <- pp.movingExp[0].create_generic_species_from_list(generic_species_list);
+        }
+	
+		// Right outer overlap zone
+        if ( rightNeighbor != mpiRank)
+        {
+		   	unknown generic_species_list <- self MPI_RECV [source:: rightNeighbor, rtag:: 50];
+	        list<generic_species> generic_species_list_created <- pp.movingExp[0].create_generic_species_from_list(generic_species_list);
+        }
+        
+        if (leftNeighbor != mpiRank) // Only nodes with a left part of the env
+		{ 
+		   	list<generic_species> generic_species_list <- pp.movingExp[0].get_generic_species_list_in_area(stripStart, leftInnerOLZBound); 
+	   		do MPI_SEND mesg: generic_species_list dest: leftNeighbor stag: 50;      	
+		}
+	
+		// Right inner overlap zone
+		if (rightNeighbor != mpiRank) // Only nodes with a right part of the env
+		{ 	
+		   	list<generic_species> generic_species_list <- pp.movingExp[0].get_generic_species_list_in_area(rightInnerOLZBound, stripEnd); 
+	   		do MPI_SEND mesg: generic_species_list dest: rightNeighbor stag: 50;      
+    	}
+    }
+    
+	action updateInnerOLZ_odd
+    {
+			
+		// Receive incominig agents and create them in my part
+		// Left outer overlap zone
+    	if (leftNeighbor != mpiRank) 
+    	{
+		   	unknown generic_species_list <- self MPI_RECV [source:: leftNeighbor, rtag:: 50];   	
+	        list<generic_species> generic_species_list_created <- pp.movingExp[0].create_generic_species_from_list(generic_species_list);
+		}
+	
+		// Right outer overlap zone
+    	if (rightNeighbor != mpiRank) 
+    	{
+		   	unknown generic_species_list <- self MPI_RECV [source:: rightNeighbor, rtag:: 50]; 	
+	        list<generic_species> generic_species_list_created <- pp.movingExp[0].create_generic_species_from_list(generic_species_list);
+		}
+		
+		// Gather agents that have moved in the OLZ and send then to the neighbors	
+		// Left outer overlap zone
+		if (leftNeighbor != mpiRank) 
+		{
+		   	list<generic_species> generic_species_list <- pp.movingExp[0].get_generic_species_list_in_area(leftOuterOLZBound, stripStart); 
+		   	do MPI_SEND mesg: generic_species_list dest: leftNeighbor stag: 50;      	
+    	}
+		
+    	// Right outer overlap zone
+    	if (rightNeighbor != mpiRank)
+		{
+		   	list<generic_species> generic_species_list <- pp.movingExp[0].get_generic_species_list_in_area(stripEnd, rightOuterOLZBound); 
+			do MPI_SEND mesg: generic_species_list dest: rightNeighbor stag: 50;      
+    	}
     }
     
     action finalize // trouver un moyen d'exec le finalize ou bien de détecter la fin de sous-modèle 

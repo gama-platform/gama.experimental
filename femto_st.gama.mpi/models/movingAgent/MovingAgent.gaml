@@ -7,30 +7,16 @@
 model MovingAgent
 
 global {
-	
-	init {
-		self.shape <- square(300#m);
-		create generic_species number: 10;
- 	}
-}
 
-species generic_ref
-{
-	int index <- rnd(100);
 }
 
 species generic_species {
 	
 	int index;
-	generic_ref ref;
-	
+
 	init 
 	{
 		self.index <- rnd(100);
-		create generic_ref 
-		{
-			myself.ref <- self;
-		}
 		self.location <- one_of(vegetation_cell).location;
 	}
 	
@@ -48,19 +34,19 @@ grid vegetation_cell width: 50 height: 50 neighbors: 4{
 
 experiment movingExp type: gui {
 	
-	
-	//parameter worldSize var: shape <- square(200#m);
+	action create_species(int nb)
+	{
+		create generic_species number:nb;
+	}
 	
 	float get_size_model
 	{
-		/*write("SHAPE = "+worldSize+"\n");
-		write("SHAPE WIDTH = "+worldSize.width+"\n");*/
 		return world.shape.width;
 	}
 	
 	list<generic_species> get_generic_species_list_in_area(float start, float end)
 	{
-		list<generic_species> generic_species_list <- generic_species where(each.location.x >= start and each.location.x <= end) collect (each);
+		list<generic_species> generic_species_list <- generic_species where(each.location.x >= start and each.location.x <= end and not dead(each)) collect (each);
 		return generic_species_list;
 	}
 	
@@ -96,15 +82,10 @@ experiment movingExp type: gui {
 	
 	generic_species create_generic_species(map<string,unknown> specie_attributes)
 	{
-		create generic_ref returns:ref_tmp
-		{
-			 self.index <- map(specie_attributes at "ref") at "index";
-		}
 		create generic_species returns:created
 		{
+			self.location <- specie_attributes at "location";
 			self.index <- specie_attributes at "index";
-			self.ref <- ref_tmp[0];
-			//self.cell <- vegetation_cell grid_at {point(specie_attributes at "position").x, point(specie_attributes at "position").y};
 		}
 		
 		return created[0];
