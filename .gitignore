@@ -28,10 +28,5 @@ release/*
 /*/bin/
 msi.gama.ext/lib/
 /*/.apt_generated/
-*fix
-*prj
-*shx
-*shp
-*dbf
 stderr
 stdout
