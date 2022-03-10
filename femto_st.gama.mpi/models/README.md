@@ -2,33 +2,34 @@
 	---------------
 	
 # Run models:
-- adapt GAMA_HEADLESS_HOM in startMpiModel to use the right platform (win/mac/linux)
 - ./startMpiModel model.xml NB_PROC
 
 # Directories
-## samples:
-- first_mpi: just MPI_RANK and MPI_SIZE -> works fine
-- communicatkion: with MPI_SEND et MPI_RECV -> plante sur send
 
-# parallelPredatorPrey:
-- predatorPrey.gaml: base model used by the controllers
+## logs:
+- 1/rank.X : output of a simulation from processor X point of view
+- console-outputs-0.txt : output from global species
 
-- predatorPreyParallelControler2Proc.gaml: 
-  synopsis: controler for only two processors
-  state: should be working
-  
-- predatorPreyParallelControler2ProcOnlyLocation.gaml: 
-  synopsis: same but only the locations are exchanged, for tests.
-  state: should be working
+## incldude (include directory)
 
-- predatorPreyParallelStarterGeneric.gaml: 
-  synopsis: in the new archi the controller is started by the starter, 
-  state: ongoing dev
-- predatorPreyParallelControlerGeneric.gaml: 
-  synopsis: generic version, 
-  state: on going dev
+## basic:
+- first_mpi.gaml: display MPI_RANK and MPI_SIZE
+- communication.gaml: sending int and list of int through MPI_SEND and receiving MPI_RECV
 
+# parallelPredatorPrey: (basic prey-predator model)
+- predatorPrey.gaml: base model used by the controller, it implements the basic model + methods helping the controler to retrieve data from the model.
+- predatorPreyControler.gaml: controler of predatorPrey.gaml, it implements all the MPI function.
 
-	     
+# movingAgent: (agent moving inside 2D world)
+- MovingAgent.gaml: base model used by the controller, it implements the basic model + methods helping the controler to retrieve data from the model.
+- MovingAgentControler.gaml: controler of MovingAgent.gaml, it implements all the MPI function.  
+
+# 3D: (agent moving inside 3D world)
+- Cube.gaml: base model used by the controller, it implements the basic model + methods helping the controler to retrieve data from the model.
+- CubeControler.gaml: controler of Cube.gaml, it implements all the MPI function.  
+
+# shapefile : (agent moving inside 2D world defined with a shapefile)
+- SHP.gaml: base model used by the controller, it implements the basic model + methods helping the controler to retrieve data from the model.
+- SHPControler.gaml: controler of SHP.gaml, it implements all the MPI function.  
  
 
