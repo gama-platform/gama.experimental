@@ -10,7 +10,7 @@ import "SHP.gaml" as pp
 global skills: [MPI_Network] 
 {
     int nb_agent_total <- 10;
-    int nbLoop <- 100;
+    int nbLoop <- 20;
 	int rank;
 	
     init 
@@ -30,9 +30,15 @@ global skills: [MPI_Network]
     	}
     }
     
-    reflex write_cycle
+    reflex write_cycle when: cycle < nbLoop
     {
-    	write("current cycle "+cycle+" nb loop ?? "+nbLoop);
+    	write("current cycle  "+cycle+"\n");
+    }
+    
+    reflex end_simulation when: cycle = nbLoop + 1 
+    {
+    	write("end of simulation ----------------------- \n");
+    	do die; 	
     }
     
     action init_sub_simulation
@@ -95,7 +101,7 @@ species MPI skills: [MPI_Network]
     action updateOuterOLZ{}
     action updateInnerOLZ{}
 	
-	reflex runMpi when: cycle < nbLoop
+	reflex runMpi
 	{
 		//write(""+mpiRank+" cleanOuterOLZ ****\n");
     	do cleanOuterOLZ;
