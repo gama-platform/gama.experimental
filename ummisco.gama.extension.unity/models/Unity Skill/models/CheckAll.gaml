@@ -31,8 +31,8 @@ species CheckingAgent skills: [unity]{
 		 
 		 //TODO: Add support for notification frequency.
 		//do unityNotificationSubscribe notificationId: "Notification_01" objectName: playerName fieldType: "field" fieldName: "count" fieldValue:10 fieldOperator: "==";
-	
-	//	do getUnityField objectName: playerName attribute:"speed"; 											    // getUnityField
+		//	do getUnityField objectName: playerName attribute:"speed"; 											    
+		// getUnityField
 		
 		do callUnityMonoAction objectName: "GamaManager"   actionName:"InitGenericScene"  attribute:"true "; // monoActionTopic
 		
@@ -64,8 +64,6 @@ species CheckingAgent skills: [unity]{
 		do unityMove objectName: playerName position: {4,0,7} speed: 5 smoothMove: false;						// unityMove
 		
 		do unityMove objectName: playerName position: {-2,0,-2} speed: 1 smoothMove: true;						// unityMove
-		
-		
 		
 		write "messge sent";
 	}

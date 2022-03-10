@@ -62,6 +62,7 @@ species gama_agent skills: [unity]{
 	        match 1 {
 	        	map<string,string> AtList <- ["s"::50, "count"::"Count Text Changed", "win"::"Win Text Changed"];
 	        	do callUnityPluralAction objectName: playerName actionName:"changeAllAttributes"  attributes:AtList; 	// callUnityPluralAction
+	        //	do callUnityPluralAction2 objectName: playerName actionName:"changeAllAttributes"  attributes:AtList; 	// callUnityPluralAction
 	        	write " Mise à jour des attributs par appel de méthode. (Speed = 50, count text = Count Text Changed, win text = Win Text Changed)";
 	        } 
 	        match 2 {
@@ -160,6 +161,7 @@ species gama_agent skills: [unity]{
 		//write msg; 															
 	}
 	
+	 /* */
 	reflex check_new_message when: has_next_message_topic("replay"){
 		
 		write " Good, a new message";

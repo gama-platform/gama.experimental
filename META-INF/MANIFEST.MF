@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Client
+Bundle-SymbolicName: ummisco.gama.unity.client
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: ummisco.gama.unity.client
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
