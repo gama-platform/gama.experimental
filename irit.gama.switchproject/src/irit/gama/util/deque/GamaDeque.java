@@ -12,7 +12,6 @@
 package irit.gama.util.deque;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -262,7 +261,7 @@ public class GamaDeque<T> extends ArrayDeque<T> implements IContainer<Integer, O
 	@Override
 	public IList<Object> listValue(IScope scope, IType contentType, boolean copy) {
 		// return GamaListFactory.wrap(contentType, toArray());
-		ArrayList<? extends T> list = (ArrayList<? extends T>) Arrays.asList(toArray());
+		List<Object> list = Arrays.asList(toArray());
 		return (IList<Object>) GamaListFactory.wrap(contentType, list);
 	}
 
@@ -279,7 +278,7 @@ public class GamaDeque<T> extends ArrayDeque<T> implements IContainer<Integer, O
 	 */
 	@Override
 	public IContainer<?, ?> reverse(IScope scope) throws GamaRuntimeException {
-		ArrayList<T> list = (ArrayList<T>) Arrays.asList(toArray());
+		List<Object> list = Arrays.asList(toArray());
 		Collections.reverse(list);
 		return new GamaDeque(type, list);
 	}
