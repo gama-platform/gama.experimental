@@ -1,7 +1,7 @@
 package jobs;
 
 import java.io.File;
-import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
@@ -89,10 +89,8 @@ public class JobDocumentationModelIndependent extends JobDocumentation {
 		
 		//Generate the documentation for the imported models
 		
-		Iterator<URI> importedUris = (Iterator<URI>) GamlResourceIndexer.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
-		while(importedUris.hasNext())
-		{
-			URI tmpUri = importedUris.next();
+		Map<URI, String> importedUris = GamlResourceIndexer.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
+		for(final URI tmpUri : importedUris.keySet()){
 			//Compute the relative path
 			IPath importedModelPath = new Path(tmpUri.toFileString().replace("file:", ""));
 			IPath relativisedPath = importedModelPath.makeRelativeTo(new Path(indexPath));
