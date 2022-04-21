@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -188,10 +187,9 @@ public abstract class JobDocumentation extends WorkspaceJob {
 	public void generateForWrappedGamaFile(final WrappedGamaFile aFile) {
 
 		// Loop trough the imported models of the file and build the links between their species and the documentation
-		Iterator<URI> importedUris =
-				(Iterator<URI>) GamlResourceIndexer.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
-		while (importedUris.hasNext()) {
-			final URI tmpUri = importedUris.next();
+		Map<URI, String> importedUris =
+				GamlResourceIndexer.allImportsOf(URI.createURI(aFile.getResource().getLocationURI().toString()));
+		for(final URI tmpUri : importedUris.keySet()){
 			if (modelsDone.contains(tmpUri.toString()) == false) {
 				modelsDone.add(tmpUri.toString());
 				LightModel model = new LightModel(tmpUri);

@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
@@ -152,11 +151,10 @@ public class MarkdownModelDocumentor {
 	 */
 	public void loadImports() {
 		final IPath pathModel = modelFile.getResource().getRawLocation();
-		Iterator<URI> importedUris =
-				(Iterator<URI>) GamlResourceIndexer.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString()));
+		Map<URI, String> importedUris =
+				GamlResourceIndexer.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString()));
 
-		while (importedUris.hasNext()) {
-			final URI tmpUri = importedUris.next();
+		for(final URI tmpUri : importedUris.keySet()){
 			LightModel model = new LightModel(tmpUri);
 
 			final IPath importedModel = new Path(tmpUri.toFileString().replace("file:", ""));
