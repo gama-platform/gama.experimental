@@ -68,7 +68,6 @@ public class Operators {
 	
 	private static BufferedImage CamShotAct(final IScope scope,final Integer width, final Integer height, Integer webcamId) {
 		long mt = System.currentTimeMillis();
-		Webcam.setAutoOpenMode(true);
 		if ((webcamId != null) && (webcamId >= Webcam.getWebcams().size())) {
 			webcamId = 0;
 		} 
@@ -76,7 +75,7 @@ public class Operators {
 			webcam_id = webcamId;
 			
 			if (webcam != null) {
-				//webcam.close();
+				webcam.close();
 				webcam = null;
 			}
 		}
@@ -88,8 +87,9 @@ public class Operators {
 				webcam = Webcam.getDefault();
 				webcam_id = 0;
 			}
-			//webcam.open();
+
 			webcam.getLock().disable();
+			webcam.open();
 		}
 		if (webcam == null) {
 			GamaRuntimeException.error("No webcam detected", scope);
@@ -99,7 +99,7 @@ public class Operators {
 		if (width != null && height != null)  {
 			Dimension dim = new Dimension(width, height);
 			if (!webcam.getViewSize().equals(dim)) {
-				//webcam.close();
+				webcam.close();
 				boolean nonStandard = true;
 				for (int i = 0; i < webcam.getViewSizes().length; i++) {
 					if (webcam.getViewSizes()[i].equals(dim)) {
@@ -112,8 +112,9 @@ public class Operators {
 					webcam.setCustomViewSizes(nonStandardResolutions);
 				}
 				webcam.setViewSize(dim);
-				
-				//webcam.open();
+
+				webcam.getLock().disable();
+				webcam.open();
 			}
 
 		}
@@ -142,9 +143,38 @@ public class Operators {
 			can_be_const = false,
 			category = IOperatorCategory.LIST)
 	@doc (
-			value = "decode a QR code from a webcam a photoshot from a photoshot with the given resolution (width, height) in pixels from the given webcam")
+			value = "decode a QR code from a photoshot with the given resolution (width, height) in pixels from the given webcam")
 	public static String decodeQRcode(final IScope scope, final Integer width, final Integer height,final int idWebcam )  {
 		final BufferedImage tmpBfrImage = CamShotAct(scope, width, height, idWebcam);
+		if (tmpBfrImage == null)
+			GamaRuntimeException.error("Could not decode the image", scope);
+		LuminanceSource tmpSource = new BufferedImageLuminanceSource(tmpBfrImage);
+		BinaryBitmap tmpBitmap = new BinaryBitmap(new HybridBinarizer(tmpSource));
+		MultiFormatReader tmpBarcodeReader = new MultiFormatReader();
+		Result tmpResult;   
+		String tmpFinalResult = "";
+		try {
+			Map<DecodeHintType,Object> tmpHintsMap = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
+			tmpHintsMap.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+			tmpHintsMap.put(DecodeHintType.POSSIBLE_FORMATS, EnumSet.allOf(BarcodeFormat.class));
+			tmpHintsMap.put(DecodeHintType.PURE_BARCODE, Boolean.FALSE);
+			
+			tmpResult = tmpBarcodeReader.decode(tmpBitmap);
+			tmpFinalResult = String.valueOf(tmpResult.getText());
+		} catch (Exception tmpExcpt) {
+			GamaRuntimeException.error("BarCodeUtil.decode Excpt err - " + tmpExcpt.toString() + " - " + tmpExcpt.getMessage(), scope);
+		}
+		return tmpFinalResult;
+	}
+	
+	@operator (
+			value = "decodeQR",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "decode a QR code from a photoshot from the given webcam")
+	public static String decodeQRcode(final IScope scope, final int idWebcam )  {
+		final BufferedImage tmpBfrImage = CamShotAct(scope, null, null, idWebcam);
 		if (tmpBfrImage == null)
 			GamaRuntimeException.error("Could not decode the image", scope);
 		LuminanceSource tmpSource = new BufferedImageLuminanceSource(tmpBfrImage);
