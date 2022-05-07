@@ -43,7 +43,7 @@ experiment Displays type: gui
 	{
 		display View_change_color 
 		{
-			grid cell lines: #black;
+			grid cell border: #black;
 			event "pad_down" type: "launchpad" action: updateGrid;
 		}
 	}
