@@ -843,7 +843,7 @@ public class UnitySkill extends Skill implements IUnitySkill  {
 		
 	public static XStream getXStream(final IScope scope) {
 		final ConverterScope cScope = new ConverterScope(scope);
-		final XStream xstream = StreamConverter.loadAndBuild(cScope);
+		final XStream xstream = StreamConverter.loadAndBuild(cScope,cScope.getClass());
 		return xstream;
 	}
 	

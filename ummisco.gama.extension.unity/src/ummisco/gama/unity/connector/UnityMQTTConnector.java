@@ -24,6 +24,7 @@ import msi.gaml.types.IType;
 import ummisco.gama.dev.utils.DEBUG;
 import ummisco.gama.network.common.Connector;
 import ummisco.gama.network.common.GamaNetworkException;
+import ummisco.gama.network.common.socket.SocketService;
 import ummisco.gama.serializer.factory.StreamConverter;
 import ummisco.gama.serializer.gamaType.converters.ConverterScope;
 import ummisco.gama.unity.mqtt.SubscribeCallback;
@@ -136,6 +137,12 @@ public final class UnityMQTTConnector extends Connector {
 	protected void sendMessage(IAgent sender, String receiver, String content) throws GamaNetworkException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public SocketService getSocketService() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 //	public void releaseConnection() throws MqttException {
