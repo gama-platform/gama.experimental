@@ -118,7 +118,7 @@ species hunter schedules: [] {
 experiment simplemodel type: gui {
 	output {
 		display map {
-			grid patch lines:#black;
+			grid patch border: #black;
 			species hunter;
 		}
 	}
