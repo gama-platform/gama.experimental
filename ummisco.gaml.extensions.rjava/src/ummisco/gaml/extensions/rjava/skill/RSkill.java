@@ -177,7 +177,7 @@ public class RSkill extends Skill {
 		Pattern p = Pattern.compile(System.lineSeparator() + "|;");
 		final String cmd[] = p.split(scope.getStringArg("command"));
 		REXP result = null;
-		for (int i = 0; i < cmd.length - 1; i++) {
+		for (int i = 0; i < cmd.length; i++) {
 			String command = cmd[i].trim();
 			if (!command.isBlank()) { result = Reval(scope, command); }
 		}
@@ -371,26 +371,32 @@ public class RSkill extends Skill {
 	 */
 	public void initEnv(final IScope scope) {
 		env = System.getProperty("java.library.path");
-		if (!env.contains("jri")) {
-			final String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "")
-					.replace("libjri.so", "").replace("jri.dll", "");
-			if (System.getProperty("os.name").startsWith("Windows")) {
-				System.setProperty("java.library.path", RPath + ";" + env);
-			} else {
-				System.setProperty("java.library.path", RPath + ":" + env);
-			}
-			try {
-				final java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
-				fieldSysPath.setAccessible(true);
-				fieldSysPath.set(null, null);
-
-			} catch (final Exception ex) {
-				scope.getGui().getConsole().informConsole(ex.getMessage(), null);
-				ex.printStackTrace();
-			}
-			// System.out.println(System.getProperty("java.library.path"));
+		if(!env.contains("jri")) {
+			throw GamaRuntimeException.error("The path to the JRI is not set. Add the option -Djava.library.path=a_path to  your  GAMA.ini file (see the documentation for more details).", scope);			
 		}
-		System.loadLibrary("jri");
+
+// This does not work anymore with JAVA 17+.  An issue is that REngine load locally the lib...
+// This prevents us to allow the moeler to set the R path in the GUI interface....
+//		if (!env.contains("jri")) {
+//			final String RPath = GamaPreferences.External.LIB_R.value(scope).getPath(scope).replace("libjri.jnilib", "")
+//					.replace("libjri.so", "").replace("jri.dll", "");
+//			if (System.getProperty("os.name").startsWith("Windows")) {
+//				System.setProperty("java.library.path", RPath + ";" + env);
+//			} else {
+//				System.setProperty("java.library.path", RPath + ":" + env);
+//			}
+//			try {
+//				final java.lang.reflect.Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
+//				fieldSysPath.setAccessible(true);
+//				fieldSysPath.set(null, null);
+//
+//			} catch (final Exception ex) {
+//				scope.getGui().getConsole().informConsole(ex.getMessage(), null);
+//				ex.printStackTrace();
+//			}
+//			// System.out.println(System.getProperty("java.library.path"));
+//		}
+//		System.loadLibrary("jri");
 
 		if (System.getenv("R_HOME") == null)
 			throw GamaRuntimeException.error("The R_HOME environment variable is not set. R cannot be run.", scope);
