@@ -44,10 +44,16 @@ global skills: [RSkill] {
 		write "</plist>" color: #black;	
 		write "";
 		
-		write "In GAMA, you should change the Preferences to set the path to RScript to the file:" color: #red;
-		write " on Mac:      $R_HOME/library/rJava/jri/rlibjri.jnilib";
-		write " on Windows:  $R_HOME/library/rJava/jri/jri.dll";
-		write " on Ubuntu:   $R_HOME/library/rJava/jri/libjri.so";
+		write "In GAMA 1.8.2, you need to specify the path to the R connector library in the GAMA launching arguments."  color: #red;
+		write "To this purpose, you need to add to either (1) the GAMA.ini file if you use the release version of GAMA, or (2) to the launching configuration (if you use the source code version)" color:#red;
+		write "the following line: (replace PATH_TO_R by the path to R, i.e. the value in $R_PATH)" color: #red;
+		write " on Mac:      -Djava.library.path=PATH_TO_R/library/rJava/jri/rlibjri.jnilib";
+		write " on Windows:  -Djava.library.path=PATH_TO_R/library/rJava/jri/jri.dll";
+		write " on Ubuntu:   -Djava.library.path=PATH_TO_R/library/rJava/jri/libjri.so";
+		write "";
+		write "As an example, under macOS, you need to add:";
+		write "-Djava.library.path=/Library/Frameworks/R.framework/Resources/library/rJava/jri/";
+		
 		
 		do startR;
 		
