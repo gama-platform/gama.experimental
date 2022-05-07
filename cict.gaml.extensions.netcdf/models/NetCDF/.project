@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>NetCDF</name>
-	<comment>geotiff plugin</comment>
+	<comment>netcdf plugin</comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -20,7 +20,7 @@
 		<link>
 			<name>external/RESULT2015.res11</name>
 			<type>1</type>
-			<location>C:/git/HydraulicTools/RESULT2015.res11</location>
+			<location>/Applications/Eclipse.app/Contents/MacOS/C::/git/HydraulicTools/RESULT2015.res11</location>
 		</link>
 	</linkedResources>
 </projectDescription>
