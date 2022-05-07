@@ -15,6 +15,7 @@ import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import ummisco.gama.network.common.Connector;
 import ummisco.gama.network.common.GamaNetworkException;
+import ummisco.gama.network.common.socket.SocketService;
 
 public class MQTTUnityConnector extends Connector {
 
@@ -69,6 +70,12 @@ public class MQTTUnityConnector extends Connector {
 	protected void sendMessage(IAgent sender, String receiver, String content) throws GamaNetworkException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public SocketService getSocketService() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 //	class Callback implements MqttCallback {
