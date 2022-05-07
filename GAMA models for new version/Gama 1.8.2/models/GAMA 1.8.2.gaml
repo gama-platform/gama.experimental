@@ -53,13 +53,15 @@ global control: fsm{
 	int xmax <- round(width_and_height_of_environment /2 - bounds);     
 	int ymax <- round(width_and_height_of_environment /2 - bounds);   
 
-	int time_begin <- 100;
+
+	int time_turn_off_light <- 110;
+	int time_begin <- 130;
 	int time_to_step2 <- time_begin;
 	int time_to_step3 <- time_begin;
 	int time_to_step4 <- time_begin;
 	int time_to_step5 <- time_begin;
 	
-	int time_to_step6 <- 200;
+	int time_to_step6 <- time_begin;
 	int step_sim <- 1;
 	
 	rgb blue <- rgb(54, 112, 160);
@@ -75,6 +77,9 @@ global control: fsm{
 	geometry cell5;
 	geometry the_cell;
 	
+	bool end_sim <- false;
+	bool turn_off_light <- false update: cycle >= time_turn_off_light;
+	
 	init {
 		cell2 <- rectangle(shape.width /2, shape.height/ 2) at_location {location.x * 3 /2, location.y/2};
 		cell3 <- rectangle(shape.width /2, shape.height/ 2) at_location {location.x * 3 /2, 3/2 * location.y};
@@ -82,9 +87,11 @@ global control: fsm{
 		cell5 <- rectangle(shape.width /1.5, shape.height/ 1.5) ;
 		create boids_goal {
 			location <- {rnd(xmin,xmax),rnd(ymin,ymax)};
+			init_target <- copy(location);
 		}
 		create boids number: 100 {
 			location <- {rnd(xmin,xmax),rnd(ymin,ymax)};
+			init_target <- copy(location);
 		}
 		
 		ask cell(cell2.location) {
@@ -95,8 +102,9 @@ global control: fsm{
 		}
 
 		//Creation of the food places placed randomly with a certain distance between each
+		geometry g_p <- cell2 - (circle(world.shape.width/5) at_location cell2.location);
 		loop times: 4 {
-			point loc <- any_location_in(cell2);
+			point loc <- any_location_in(g_p);
 			list<cell> food_places <- (cell where ((each distance_to loc) < 10));
 			ask food_places {
 				if food = 0 {
@@ -107,8 +115,16 @@ global control: fsm{
 			}
 
 		}
+		ask cell {
+			init_is_nest <- is_nest;
+			init_food <- food;
+		}
 		//Creation of the ants that will be placed in the nest
-		create ant number: 100 with: (location: cell2.location);
+		geometry c <- circle(world.shape.width/10) at_location cell2.location;
+		create ant number: 100  {
+			location <- any_location_in(c);
+			init_target <- copy(location);
+		}
 		
 		free_places <- shuffle(cell where (each.grid_x < 50 and each.grid_y > 50));
 		int number_of_people <- int( length (free_places) * density_of_people);
@@ -116,16 +132,22 @@ global control: fsm{
 		create people number: number_of_people {
 			my_place <- one_of(free_places);
 			location <- my_place.location;	
-			free_places >> my_place;	
+			free_places >> my_place;
+			
+			init_target <- copy(location);	
 		}	
 		
 		create building from: shape_file_buildings with: [type::string(read ("NATURE"))]  {
 			shape <- polygon(shape.points collect {each.x /2.0, each.y /2.0});
 			location <- location + {world.location.x, world.location.y};
+			
+			init_target <- copy(location);
 		}
 		create road_ag from: shape_file_roads  {
 			shape <- line(shape.points collect {each.x /2.0, each.y /2.0});
 			location <- location + {world.location.x, world.location.y};
+			
+			init_target <- copy(location);
 		}
 		the_graph <- as_edge_graph(road_ag);
 		
@@ -134,6 +156,8 @@ global control: fsm{
 		create people_moving number: nb_people {
 			speed <- rnd(min_speed, max_speed);
 			location <- any_location_in (one_of(building)); 
+			
+			init_target <- copy(location);
 		}
 	}
 	//Reflex to diffuse the pheromon among the grid
@@ -189,7 +213,8 @@ global control: fsm{
 
 		map<rgb, list<cell>> by_color <- cell group_by (each.color);
 		ask runner {
-			target <- one_of(by_color at color);
+			target <- one_of(by_color at color).location;
+			
 		}
 
 		runners <- list(runner);
@@ -211,7 +236,7 @@ global control: fsm{
 	state phase1 {
 		enter {
 			ask boids + boids_goal + ant + base_change_behavior + people + people_moving + road_ag + building{
-				create runner with:(shape:to_build, color:color);
+				create runner with:(shape:to_build, color:color, final_target:init_target);
 				do die;
 			}
 			do load_image("../images/logo.png");
@@ -227,25 +252,48 @@ global control: fsm{
 		}
 
 		do one_step();
-		//transition to: phase3 when: empty(runners);
+		transition to: phase3 when: empty(runners);
 	}
-
-	/*state phase3 {
+	list<cell> cell_to_reinit;
+	state phase3 {
 		enter {
-			do load_image("../images/is_out.png");
+			ask runner {
+				if final_target = nil {do die;}
+				else {
+					target <- final_target;
+				}
+			}
+			cell_to_reinit <- cell where (each.init_is_nest or (each.init_food > 0));
+			runners <- list(runner);
+			
+			
 		}
 
 		do one_step();
+		ask cell_to_reinit where flip(0.01){
+			is_nest <- init_is_nest;
+			food <- init_food;
+			cell_to_reinit >> self;
+		}
+		if empty(runners) {
+				end_sim <- true;
+				ask cell_to_reinit {
+					is_nest <- init_is_nest;
+					food <- init_food;
 			
-	}*/
+				}
+			}
+			
+	}
 
 }
 
 
 species runner skills: [moving] {
 	rgb color <- one_of(blue, orange, yellow);
-	geometry target;
+	point target;
 	geometry my_shape;
+	point final_target;
 	float depth;
 }
 
@@ -258,7 +306,8 @@ grid cell width: 100 height: 100 neighbors: 8  use_regular_agents: false use_ind
 	rgb color <- is_nest ? nest_color : ((food > 0) ? food_color : ((road < 0.001) ? background : yellow)) update: is_nest ? nest_color : ((food > 0) ?
 	food_color : ((road < 0.001) ? background :yellow));
 	int food <- 0;
-	
+	bool init_is_nest;
+	int init_food;
 	aspect default{
 		draw shape color: color;
 	}
@@ -281,7 +330,8 @@ species ant skills: [moving] control: fsm parent: base_change_behavior {
 	float speed <- 1.0;
 	bool has_food <- false;
 	point my_target;
-
+	rgb color <- blue;
+	
 	//Reflex to place a pheromon stock in the cell
 	reflex diffuse_road when: has_food = true and not(step_sim in steps_concerned) {
 		cell(location).road <- cell(location).road + 100.0;
@@ -351,11 +401,12 @@ species ant skills: [moving] control: fsm parent: base_change_behavior {
 	geometry to_build -> {circle(5.0)};
 	
 	aspect default {
-		draw circle(5.0) color: blue;
+		draw circle(5.0) color: color;
 	} 
 }
 
 species base_change_behavior skills: [moving]{
+	point init_target;
 	point target_step ;
 	list<int> steps_concerned <- [2,3,4,5];
 	rgb color;
@@ -383,7 +434,7 @@ species boids_goal parent: base_change_behavior {
 	float range  <- 20.0;
 	point target <- nil;
 
-	
+	rgb color <- blue;
 	reflex wander when: step_sim = 1{ 
 		if target = nil {
 			target <- {rnd(xmin,xmax),rnd(ymin,ymax)};
@@ -396,7 +447,7 @@ species boids_goal parent: base_change_behavior {
 	geometry to_build -> {circle(10)};
 	
 	aspect default { 
-		draw circle(10) color: blue;
+		draw circle(10) color: color;
 	}
 } 
 
@@ -407,7 +458,7 @@ species boids skills: [moving]  parent: base_change_behavior {
 	//Range used to consider the group of the agent
 	float range <- minimal_distance * 2;
 	point velocity <- {0,0};
-	
+	rgb color <- orange;
 	point target_step <- any_location_in(cell2);
 	reflex step_change_loc when: step_sim in [2,3,4,5] {
 		if (target_step != nil) {
@@ -485,7 +536,7 @@ species boids skills: [moving]  parent: base_change_behavior {
 	
 	
 	aspect default { 
-		draw  triangle(15) rotate: heading  color: orange;
+		draw  triangle(15) rotate: heading  color: color;
 	}
 	
 } 
@@ -582,7 +633,13 @@ experiment "Run me!" type: gui {
 	output {
 		
 		display view background: #black type: opengl axes: false {
+			light #ambient intensity: (end_sim or not turn_off_light) ? 150 : 0;
+			
+			light "the_spot" active: not end_sim and (cycle >= time_turn_off_light)  type: #spot location: {world.shape.width / 2, world.shape.height / 2, world.shape.width / 2} direction: {0, 0, -1} 
+			intensity: min(200,3 * (cycle - time_turn_off_light)) show: false angle: 60  dynamic: true;
+			
 			agents "Grid" value: cell where ((each.food > 0) or (each.road > 0) or (each.is_nest));
+			
 			species ant   ;
 			species runner;
 			species boids_goal;
