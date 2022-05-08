@@ -13,7 +13,6 @@ global {
 	int image_width <- 320;
 	int image_height <- 240;
 	image_file image_to_decode <- image_file("../includes/26810014.jpg");
-	
 	init {
 		//Decode a QR code from an image
 		write sample(decodeQRFile(image_to_decode.path));
@@ -25,8 +24,7 @@ global {
 		
 		
 		if show_camera {
-			file f <- file(cam_shot("image_test", image_width, image_height, webcam));
-			matrix mat <- matrix(f);
+			matrix mat <- field(cam_shot("image_test", image_width, image_height, webcam));
 			ask cell_image {
 				color <- rgb(mat[grid_x,grid_y]);		
 			}
