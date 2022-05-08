@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -15,20 +17,35 @@ import com.github.sarxos.webcam.WebcamResolution;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
+import com.google.zxing.EncodeHintType;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
+import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.Result;
+import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.google.zxing.qrcode.encoder.ByteMatrix;
+import com.google.zxing.qrcode.encoder.Encoder;
+import com.google.zxing.qrcode.encoder.QRCode;
 
 import msi.gama.precompiler.IOperatorCategory;
+import msi.gama.ext.kml.BooleanConverter;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.operator;
+import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.file.GamaImageFile;
 import msi.gama.util.matrix.GamaIntMatrix;
+import msi.gama.util.matrix.GamaMatrix;
+import msi.gama.util.matrix.GamaObjectMatrix;
 import msi.gama.util.matrix.IMatrix;
+import msi.gaml.types.IType;
+import msi.gaml.types.Types;
 
 public class Operators {
 	
@@ -41,7 +58,7 @@ public class Operators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot from the default webcam")
-	public static GamaImageFile cam_shot(final IScope scope, final String filepath) {
+	public static IMatrix cam_shot(final IScope scope, final String filepath) {
 		return cam_shot(scope, filepath, null, null,null);
 	}
 	
@@ -51,7 +68,7 @@ public class Operators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot from the default webcam, with the given resolution (width, height) in pixels")
-	public static GamaImageFile cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height) {
+	public static IMatrix cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height) {
 		return cam_shot(scope, filepath, width, height, null);
 	}
 	
@@ -61,13 +78,12 @@ public class Operators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot with the given resolution (width, height) in pixels from the given webcam")
-	public static GamaImageFile cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height, Integer webcamid) {
+	public static IMatrix cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height, Integer webcamid) {
 		BufferedImage im = CamShotAct(scope, width, height, webcamid);
-		return new GamaImageFile(scope, filepath, matrixValueFromImage(scope, im)); 
+		return  matrixValueFromImage(scope, im); 
 	}
 	
 	private static BufferedImage CamShotAct(final IScope scope,final Integer width, final Integer height, Integer webcamId) {
-		long mt = System.currentTimeMillis();
 		if ((webcamId != null) && (webcamId >= Webcam.getWebcams().size())) {
 			webcamId = 0;
 		} 
@@ -92,10 +108,8 @@ public class Operators {
 			webcam.open();
 		}
 		if (webcam == null) {
-			GamaRuntimeException.error("No webcam detected", scope);
+			GAMA.reportError(scope, GamaRuntimeException.error("No webcam detected", scope), false);
 		}
-		System.out.println("lalal2: " + (System.currentTimeMillis() - mt));
-		mt = System.currentTimeMillis();
 		if (width != null && height != null)  {
 			Dimension dim = new Dimension(width, height);
 			if (!webcam.getViewSize().equals(dim)) {
@@ -137,6 +151,33 @@ public class Operators {
 	}
 	
 	
+	@operator (
+			value = "encodeQR",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "encode a given message into a QR code with the given resolution (width, height) as matrix of bool")
+	public static GamaMatrix encodeQRcode(final IScope scope, final String message, final int width, final int height)  {
+		com.google.zxing.Writer writer = new MultiFormatWriter();
+		BitMatrix matrix = null;
+	      try {
+            Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType,String>(2);
+            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            matrix = writer.encode(message,
+            com.google.zxing.BarcodeFormat.QR_CODE, width, height, hints);
+        } catch (com.google.zxing.WriterException e) {
+        	GAMA.reportError(scope, GamaRuntimeException.error("Problem when encoding the message \""+ message + "\": " + e.getMessage(), scope), true);
+        }
+
+		 GamaObjectMatrix matrixR = new GamaObjectMatrix(width, height, Types.BOOL);
+		 
+		 for (int i = 0; i < width; i++) {
+			 for (int j = 0; j < width; j++) {
+				 matrixR.set(scope, i, j, matrix.get(i, j)); 
+			 } 
+		 }
+		 return matrixR;	 
+	}
 	
 	@operator (
 			value = "decodeQR",
@@ -147,7 +188,7 @@ public class Operators {
 	public static String decodeQRcode(final IScope scope, final Integer width, final Integer height,final int idWebcam )  {
 		final BufferedImage tmpBfrImage = CamShotAct(scope, width, height, idWebcam);
 		if (tmpBfrImage == null)
-			GamaRuntimeException.error("Could not decode the image", scope);
+			GAMA.reportError(scope, GamaRuntimeException.error("Could not decode the image", scope), true);
 		LuminanceSource tmpSource = new BufferedImageLuminanceSource(tmpBfrImage);
 		BinaryBitmap tmpBitmap = new BinaryBitmap(new HybridBinarizer(tmpSource));
 		MultiFormatReader tmpBarcodeReader = new MultiFormatReader();
@@ -162,7 +203,7 @@ public class Operators {
 			tmpResult = tmpBarcodeReader.decode(tmpBitmap);
 			tmpFinalResult = String.valueOf(tmpResult.getText());
 		} catch (Exception tmpExcpt) {
-			GamaRuntimeException.error("BarCodeUtil.decode Excpt err - " + tmpExcpt.toString() + " - " + tmpExcpt.getMessage(), scope);
+			GAMA.reportError(scope, GamaRuntimeException.error("BarCodeUtil.decode Excpt err - " + tmpExcpt.toString() + " - " + tmpExcpt.getMessage(), scope), true);
 		}
 		return tmpFinalResult;
 	}
@@ -174,26 +215,7 @@ public class Operators {
 	@doc (
 			value = "decode a QR code from a photoshot from the given webcam")
 	public static String decodeQRcode(final IScope scope, final int idWebcam )  {
-		final BufferedImage tmpBfrImage = CamShotAct(scope, null, null, idWebcam);
-		if (tmpBfrImage == null)
-			GamaRuntimeException.error("Could not decode the image", scope);
-		LuminanceSource tmpSource = new BufferedImageLuminanceSource(tmpBfrImage);
-		BinaryBitmap tmpBitmap = new BinaryBitmap(new HybridBinarizer(tmpSource));
-		MultiFormatReader tmpBarcodeReader = new MultiFormatReader();
-		Result tmpResult;   
-		String tmpFinalResult = "";
-		try {
-			Map<DecodeHintType,Object> tmpHintsMap = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
-			tmpHintsMap.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
-			tmpHintsMap.put(DecodeHintType.POSSIBLE_FORMATS, EnumSet.allOf(BarcodeFormat.class));
-			tmpHintsMap.put(DecodeHintType.PURE_BARCODE, Boolean.FALSE);
-			
-			tmpResult = tmpBarcodeReader.decode(tmpBitmap);
-			tmpFinalResult = String.valueOf(tmpResult.getText());
-		} catch (Exception tmpExcpt) {
-			GamaRuntimeException.error("BarCodeUtil.decode Excpt err - " + tmpExcpt.toString() + " - " + tmpExcpt.getMessage(), scope);
-		}
-		return tmpFinalResult;
+		return decodeQRcode(scope, null,null,idWebcam);
 	}
 	
 		
@@ -207,16 +229,16 @@ public class Operators {
 		File whatFile = new File(file_path);
 		// check the required parameters 
 		if (whatFile == null || whatFile.getName().trim().isEmpty())
-			GamaRuntimeException.error("Problem when reading file " + file_path, scope);
+			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + file_path, scope), true);
 			
 		BufferedImage tmpBfrImage = null;
 		try {
 			tmpBfrImage = ImageIO.read(whatFile);
 		} catch (IOException tmpIoe) {
-			GamaRuntimeException.error("Problem when reading file " + file_path, scope);
+			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + file_path, scope), true);
 		}
 		if (tmpBfrImage == null)
-			GamaRuntimeException.error("Problem when reading file " + file_path, scope);
+			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + file_path, scope), true);
 		LuminanceSource tmpSource = new BufferedImageLuminanceSource(tmpBfrImage);
 		BinaryBitmap tmpBitmap = new BinaryBitmap(new HybridBinarizer(tmpSource));
 		MultiFormatReader tmpBarcodeReader = new MultiFormatReader();
@@ -226,8 +248,8 @@ public class Operators {
 			tmpResult = tmpBarcodeReader.decode(tmpBitmap);
 			tmpFinalResult = String.valueOf(tmpResult.getText());
 		} catch (Exception tmpExcpt) {
-			GamaRuntimeException.error(
-					"BarCodeUtil.decode Excpt err - " + tmpExcpt.toString() + " - " + tmpExcpt.getMessage(), scope);
+			GAMA.reportError(scope, GamaRuntimeException.error(
+					"BarCodeUtil.decode Excpt err - " + tmpExcpt.toString() + " - " + tmpExcpt.getMessage(), scope), true);
 		}
 		return tmpFinalResult;
 	}
