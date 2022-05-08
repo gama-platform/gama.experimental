@@ -40,9 +40,11 @@ import msi.gama.metamodel.shape.IShape;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.file;
+import msi.gama.precompiler.GamlAnnotations.no_test;
 import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.IConcept;
 import msi.gama.precompiler.IOperatorCategory;
+import msi.gama.precompiler.Reason;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
@@ -507,6 +509,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 
 	@operator(value = "openDataSet", can_be_const = false, category = IOperatorCategory.MATRIX)
 	@doc(value = "general operator to manipylate multidimension netcdf data.")
+	@no_test (Reason.IMPOSSIBLE_TO_TEST)
 	public static Boolean openDataSet(final IScope scope, final GamaNetCDFFile netcdf) {
 		if (netcdf == null || scope == null) {
 			return false;
@@ -542,6 +545,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 
 	@operator(value = "getTimeAxisSize", can_be_const = false, category = IOperatorCategory.MATRIX)
 	@doc(value = "general operator to manipylate multidimension netcdf data.")
+	@no_test (Reason.IMPOSSIBLE_TO_TEST)
 	public static Integer getTimeAxisSize(final IScope scope, final GamaNetCDFFile netcdf, int nbGrid) {
 		if (netcdf == null || scope == null) {
 			return -1;
@@ -572,6 +576,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 
 	@operator(value = "getGridsSize", can_be_const = false, category = IOperatorCategory.FILE)
 	@doc(value = "general operator to manipylate multidimension netcdf data.")
+	@no_test (Reason.IMPOSSIBLE_TO_TEST)
 	public static Integer getGridsSize(final IScope scope, final GamaNetCDFFile netcdf) {
 		if (netcdf == null || scope == null) {
 			return -1;
@@ -587,6 +592,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 
 	@operator(value = "readDataSlice", can_be_const = false, category = IOperatorCategory.MATRIX)
 	@doc(value = "general operator to manipylate multidimension netcdf data.")
+	@no_test (Reason.IMPOSSIBLE_TO_TEST)
 	public static IMatrix readDataSlice(final IScope scope, final GamaNetCDFFile netcdf, int nbGrid, int t_index,
 			int z_index, int y_index, int x_index) {
 		if (netcdf == null || scope == null) {
