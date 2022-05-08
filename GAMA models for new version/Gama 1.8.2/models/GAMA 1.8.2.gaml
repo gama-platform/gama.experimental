@@ -56,12 +56,12 @@ global control: fsm{
 
 	int time_turn_off_light <- 110;
 	int time_begin <- 130;
-	int time_to_step2 <- time_begin;
-	int time_to_step3 <- time_begin;
-	int time_to_step4 <- time_begin;
-	int time_to_step5 <- time_begin;
+	int time_to_step2 <- time_begin+ 50;
+	int time_to_step3 <- time_begin+ 100;
+	int time_to_step4 <- time_begin+ 150;
+	int time_to_step5 <- time_begin+ 200;
 	
-	int time_to_step6 <- time_begin;
+	int time_to_step6 <- time_begin+ 250;
 	int step_sim <- 1;
 	
 	rgb blue <- rgb(54, 112, 160);
