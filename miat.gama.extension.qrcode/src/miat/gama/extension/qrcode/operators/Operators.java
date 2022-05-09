@@ -21,6 +21,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
@@ -202,7 +203,10 @@ public class Operators {
 			
 			tmpResult = tmpBarcodeReader.decode(tmpBitmap);
 			tmpFinalResult = String.valueOf(tmpResult.getText());
+		}catch (NotFoundException tmpExcpt) { 
+			return null;
 		} catch (Exception tmpExcpt) {
+			
 			GAMA.reportError(scope, GamaRuntimeException.error("BarCodeUtil.decode Excpt err - " + tmpExcpt.toString() + " - " + tmpExcpt.getMessage(), scope), true);
 		}
 		return tmpFinalResult;
