@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Other Databases formats
+Bundle-SymbolicName: irit.gama.extensions.database.extended;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: irit.gama.extensions.database.extended
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: msi.gama.core,
+ msi.gama.ext,
+ ummisco.gama.annotations,
+ irit.gaml.extensions.database,
+ org.eclipse.osgi;bundle-version="3.17.200"
+Bundle-Activator: irit.gama.extensions.database.extended.Activator
+Bundle-ActivationPolicy: lazy
