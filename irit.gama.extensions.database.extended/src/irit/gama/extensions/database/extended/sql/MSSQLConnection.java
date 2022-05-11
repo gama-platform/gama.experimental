@@ -19,11 +19,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
-import msi.gama.database.sql.SqlConnection;
-import msi.gama.database.sql.SqlUtils;
+
+import irit.gaml.extensions.database.utils.sql.SqlConnection;
+import irit.gaml.extensions.database.utils.sql.SqlUtils;
 import msi.gama.metamodel.topology.projection.IProjection;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
@@ -376,4 +378,11 @@ public class MSSQLConnection extends SqlConnection {
 
 		return insertStr;
 	}
+	
+	@Override
+	public void close() throws Exception {
+		throw new NotImplementedException("Close not implemented");
+	}
+	
+	
 }

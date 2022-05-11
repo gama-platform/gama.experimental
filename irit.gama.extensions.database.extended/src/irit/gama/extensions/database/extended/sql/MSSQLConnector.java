@@ -3,13 +3,14 @@ package irit.gama.extensions.database.extended.sql;
 import java.util.HashMap;
 import java.util.Map;
 
-import msi.gama.database.sql.ISqlConnector;
-import msi.gama.database.sql.SqlConnection;
+import irit.gaml.extensions.database.utils.sql.ISqlConnector;
+import irit.gaml.extensions.database.utils.sql.SqlConnection;
+import msi.gama.runtime.IScope;
 
 public class MSSQLConnector implements ISqlConnector {
 
 	@Override
-	public SqlConnection connection(String venderName, String url, String port, String dbName, String userName,
+	public SqlConnection connection(final IScope scope, String venderName, String url, String port, String dbName, String userName,
 			String password, Boolean transformed) {
 		return new MSSQLConnection(venderName, url, port, dbName, userName, password, transformed);
 	}
