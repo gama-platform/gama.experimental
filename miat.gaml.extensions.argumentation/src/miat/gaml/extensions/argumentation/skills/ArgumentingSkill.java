@@ -96,8 +96,8 @@ public class ArgumentingSkill extends Skill {
 
 	
 	@action(name = "evaluate_argument", args = {
-			@arg(name = "argument", type = GamaArgumentType.id, optional = false, doc = @doc("the argument to evaluate")) }, doc = @doc(value = "evaluate the strength  of an argument for the agent", returns = "the strength of argument", examples = {
-					@example("float val <- evaluate_argument(one_argument);") }))
+	@arg(name = "argument", type = GamaArgumentType.id, optional = false, doc = @doc("the argument to evaluate")) }, doc = @doc(value = "evaluate the strength  of an argument for the agent", returns = "the strength of argument", examples = {
+	@example("float val <- evaluate_argument(one_argument);") }))
 	public Double primEvaluateArg(final IScope scope) throws GamaRuntimeException {
 		final GamaArgument a = scope.hasArg("argument") ? (GamaArgument) scope.getArg("argument", GamaArgumentType.id): null;
 		return evaluate_arg(scope,a);
@@ -140,8 +140,8 @@ public class ArgumentingSkill extends Skill {
 	}
 
 	@action(name = "preferred_extensions", args = {
-			@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) }, doc = @doc(value = "evaluate the preferred extensions of an argument graph", returns = "a list of list of arguments representing the preferred extensions", examples = {
-					@example("list<list<argument>> results <- preferred_extensions(a_graph);") }))
+	@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) }, doc = @doc(value = "evaluate the preferred extensions of an argument graph", returns = "a list of list of arguments representing the preferred extensions", examples = {
+	@example("list<list<argument>> results <- preferred_extensions(a_graph);") }))
 	public IList<IList> primComputePreferedExtension(final IScope scope) throws GamaRuntimeException {
 		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
 		if (graph == null)
@@ -151,8 +151,8 @@ public class ArgumentingSkill extends Skill {
 	}
 
 	@action(name = "complete_extensions", args = {
-			@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) }, doc = @doc(value = "evaluate the complete extensions of an argument graph", returns = "a list of list of arguments representing the complete extensions", examples = {
-					@example("list<list<argument>> results <-complete_extensions(a_graph);") }))
+	@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) }, doc = @doc(value = "evaluate the complete extensions of an argument graph", returns = "a list of list of arguments representing the complete extensions", examples = {
+	@example("list<list<argument>> results <-complete_extensions(a_graph);") }))
 	public IList<IList> primComputeCompletedExtension(final IScope scope) throws GamaRuntimeException {
 		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
 		if (graph == null)
@@ -162,8 +162,8 @@ public class ArgumentingSkill extends Skill {
 	}
 
 	@action(name = "stable_extensions", args = {
-			@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) }, doc = @doc(value = "evaluate the stable extensions of an argument graph", returns = "a list of list of arguments representing the stable extensions", examples = {
-					@example("list<list<argument>> results <-stable_extensions(a_graph);") }))
+	@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) }, doc = @doc(value = "evaluate the stable extensions of an argument graph", returns = "a list of list of arguments representing the stable extensions", examples = {
+	@example("list<list<argument>> results <-stable_extensions(a_graph);") }))
 	public IList<IList> primComputeStableExtension(final IScope scope) throws GamaRuntimeException {
 		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
 		if (graph == null)
@@ -172,13 +172,12 @@ public class ArgumentingSkill extends Skill {
 		return toGAMAList(graph, dungAF.getStableExts());
 	}
 
-	@action(
-			name = "add_attack",args = {
-			@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to which add an attack")),
-			@arg(name = "source", type = GamaArgumentType.id, optional = false, doc = @doc("the source (argument) of the attack")),
-			@arg(name = "target", type = GamaArgumentType.id, optional = false, doc = @doc("the target (argument) of the attack"))}, 
-			doc = @doc(value = "add an attack to the argumention graph", examples = {
-				@example("bool is_added <-add_attack(source_arg, target_arg);") }))
+	@action(name = "add_attack",args = {
+	@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to which add an attack")),
+	@arg(name = "source", type = GamaArgumentType.id, optional = false, doc = @doc("the source (argument) of the attack")),
+	@arg(name = "target", type = GamaArgumentType.id, optional = false, doc = @doc("the target (argument) of the attack"))}, 
+		doc = @doc(value = "add an attack to the argumention graph", examples = {
+	@example("bool is_added <-add_attack(source_arg, target_arg);") }))
 	public boolean primAddAttacks(final IScope scope ) throws GamaRuntimeException {
 		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
 		if (graph == null)
@@ -203,8 +202,8 @@ public class ArgumentingSkill extends Skill {
 	
 	
 	@action(name = "semi_stable_extensions", args = {
-			@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) }, doc = @doc(value = "evaluate the semi stable extensions of an argument graph", returns = "a list of list of arguments representing the semi stable extensions", examples = {
-					@example("list<list<argument>> results <-semi_stable_extensions(a_graph);") }))
+	@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) }, doc = @doc(value = "evaluate the semi stable extensions of an argument graph", returns = "a list of list of arguments representing the semi stable extensions", examples = {
+	@example("list<list<argument>> results <-semi_stable_extensions(a_graph);") }))
 	public IList<IList> primComputeSemiStableExtension(final IScope scope) throws GamaRuntimeException {
 		IGraph graph = (IGraph) scope.getArg("graph", IType.GRAPH);
 		if (graph == null)
@@ -214,16 +213,15 @@ public class ArgumentingSkill extends Skill {
 	}
 
 	@action(name = "extensions", args = {
-			@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) },
-
-			doc = @doc(value = "evaluate the extensions of an argument graph", returns = "a list of list of arguments representing the extensions", examples = {
-					@example("list<list<argument>> results <- extensions();") }))
+	@arg(name = "graph", type = IType.GRAPH, optional = true, doc = @doc("the graph to evaluate")) },
+		doc = @doc(value = "evaluate the extensions of an argument graph", returns = "a list of list of arguments representing the extensions", examples = {
+	@example("list<list<argument>> results <- extensions();") }))
 	public IList<IList> primComputeExtension(final IScope scope) throws GamaRuntimeException {
 		return primComputePreferedExtension(scope);
 	}
 
 	@action(name = "update_graph", doc = @doc(value = "update the weight of the argumentation graph", examples = {
-			@example("do update_graph;") }))
+	@example("do update_graph;") }))
 	public void primUpdateArgumentationGraph(final IScope scope) throws GamaRuntimeException {
 		IGraph graph = getArgGraph(scope.getAgent());
 		final ISpecies context = scope.getAgent().getSpecies();
@@ -267,8 +265,8 @@ public class ArgumentingSkill extends Skill {
 	}
 
 	@action(name = "evaluate_conclusion", args = {
-			@arg(name = "arguments", type = IType.CONTAINER, optional = false, doc = @doc("the list of arguments to evaluate")) }, doc = @doc(value = "evaluate the conclusion that can be taken from a list of arguments", returns = "the conclusion of the list of arguments", examples = {
-					@example("float val <- evaluate_conclusion(args);") }))
+	@arg(name = "arguments", type = IType.CONTAINER, optional = false, doc = @doc("the list of arguments to evaluate")) }, doc = @doc(value = "evaluate the conclusion that can be taken from a list of arguments", returns = "the conclusion of the list of arguments", examples = {
+	@example("float val <- evaluate_conclusion(args);") }))
 	public Double primEvaluateConcl(final IScope scope) throws GamaRuntimeException {
 		final IList args = scope.hasArg("arguments") ? (IList) scope.getArg("arguments", IType.LIST) : null;
 		if (args == null || args.isEmpty())
@@ -408,8 +406,8 @@ public class ArgumentingSkill extends Skill {
 			basic_strength.addValueAtIndex(scope, v, evaluate_arg(scope, v));
 			acceptability_values.addValueAtIndex(scope,  v, evaluate_arg(scope, v));
 		}
-		double threshold_acceptability_delta = 0.01f;
-		double max_acceptability_delta = 0f;
+		double threshold_acceptability_delta = 0.001f;
+		double max_acceptability_delta = 1f;
 		Set incoming_edges ;
 		while (max_acceptability_delta > threshold_acceptability_delta) {
 			max_acceptability_delta = 0f;
