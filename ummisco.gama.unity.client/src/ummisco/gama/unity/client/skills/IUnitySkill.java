@@ -51,6 +51,10 @@ public interface IUnitySkill {
 	public final static String TOPIC_DESTROY_OBJECT = "destroy";
 
 	public static final String TOPIC_GAMA = "Gama";
+	
+	public static final String TOPIC_UI_CREATE = "UICreate";
+	public static final String TOPIC_UI_ACTION = "UIAction";
+	public static final String UI_DEFAULT_PARENT = "Panel";
 
 	// Agent Properties
 	public static final String UNITY_LOCATION = "unity_location";

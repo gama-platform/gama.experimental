@@ -52,7 +52,9 @@ import ummisco.gama.unity.client.messages.PropertyTopicMessage;
 import ummisco.gama.unity.client.messages.ReplayMessage;
 import ummisco.gama.unity.client.messages.SetTopicMessage;
 import ummisco.gama.unity.client.messages.UIActionMessage;
+import ummisco.gama.unity.client.messages.UICreateMessage;
 import ummisco.gama.unity.client.mqtt.Utils;
+import ummisco.gama.unity.client.wox.serial.MappingDictionary;
 import ummisco.gama.unity.client.wox.serial.WoxSerializer;
 
 /**
@@ -333,8 +335,7 @@ public class UnitySkill extends Skill implements IUnitySkill {
 		publishUnityMessage(scope, connector.getClient(), IUnitySkill.TOPIC_MONO_FREE, topicMessage);
 	}
 
-	// TODO: Youcef-> Review this action with better description and genericity
-	// support
+	
 	@action(name = "callUnityPluralAction", args = {
 			@arg(name = "objectName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
 			@arg(name = "actionName", type = IType.STRING, optional = false, doc = @doc("The game object name")),
@@ -370,6 +371,7 @@ public class UnitySkill extends Skill implements IUnitySkill {
 
 		final GamaColor col = scope.hasArg("color") ? (GamaColor) scope.getArg("color", IType.COLOR)
 				: new GamaColor(255, 0, 255);
+	
 		final rgbColor color = new rgbColor(col.getRed(), col.getGreen(), col.getBlue());
 
 		final ColorTopicMessage topicMessage = new ColorTopicMessage(scope, sender, receiver, objectName,
@@ -528,10 +530,11 @@ public class UnitySkill extends Skill implements IUnitySkill {
 	public GamaMap<String, String> getUnityMessage(final IScope scope) {
 		String msg = connector.getNextMessage();
 		//msg = "<object type=\"MaterialUI.UIActionMessage\" dotnettype=\"MaterialUI.UIActionMessage, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\" id=\"0\"><field name=\"topic\" type=\"string\" value=\"UITopic\" /><field name=\"messageTime\" type=\"long\" value=\"1646750887\" /><field name=\"elementId\" type=\"string\" value=\"button1\" /><field name=\"actionCode\"><object type=\"int\" value=\"11\" id=\"1\" /></field><field name=\"content\" type=\"string\" value=\" \" /></object>";
-		HashMap<String, String> mappingDic = new HashMap<String, String>();
-		mappingDic.put("\"MaterialUI.UIActionMessage\"", "\"ummisco.gama.unity.client.messages.UIActionMessage\"");
+		//HashMap<String, String> mappingDic = new HashMap<String, String>();
+		//mappingDic.put("\"MaterialUI.UIActionMessage\"", "\"ummisco.gama.unity.client.messages.UIActionMessage\"");
 		
-		Object obj = WoxSerializer.deserializeFromString(msg, mappingDic);
+		
+		Object obj = WoxSerializer.deserializeFromString(msg, MappingDictionary.GetUIActionMessageDic("MaterialUI.UIActionMessage"));
 		UIActionMessage UIMsg = (UIActionMessage) obj;
 		
 		System.out.println(" Class name : " + UIActionMessage.class.getName());
@@ -632,11 +635,90 @@ public class UnitySkill extends Skill implements IUnitySkill {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
+	public synchronized void publishUnityWoxMessage(final IScope scope, final MqttClient client, final String topic,
+			final Object message) {
+		
+		final String serializedContent = WoxSerializer.getSerializedToString(message);
+		
+		DEBUG.OUT("The message with replace is : \n " + serializedContent);
+		
+		try {
+			final MqttTopic unityTopic = client.getTopic(topic);
+			final MqttMessage mqttMessage = new MqttMessage();
+			mqttMessage.setPayload(serializedContent.getBytes());
+			unityTopic.publish(mqttMessage);
+		} catch (final MqttPersistenceException e) {
+			e.printStackTrace();
+		} catch (final MqttException e) {
+			e.printStackTrace();
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public String serializeMessage(final IScope scope, final Object message) {
 		final UnitySerializer unitySerializer = new UnitySerializer();
 		unitySerializer.SetSerializer(getXStream(scope));
 		return unitySerializer.agentShapeToXML(message);
+	}
+	
+	
+	
+	
+	@action(name = "unityRemoteUI", args = {
+			@arg(name = "topic", type = IType.STRING, optional = true, doc = @doc("The UI game object topic")),
+			@arg(name = "uiType", type = IType.STRING, optional = false, doc = @doc("The type of the UI element")),
+			@arg(name = "parent", type = IType.STRING, optional = true, doc = @doc("The game object parent")),
+			@arg(name = "uiId", type = IType.STRING, optional = false, doc = @doc("The game object ID")),
+			@arg(name = "location", type = IType.POINT, optional = false, doc = @doc("The game object location")),
+			@arg(name = "height", type = IType.INT, optional = true, doc = @doc("The game object name")),
+			@arg(name = "width", type = IType.INT, optional = true, doc = @doc("The game object name")),
+			@arg(name = "label", type = IType.STRING, optional = true, doc = @doc("The game object name")),
+			@arg(name = "color", type = IType.COLOR, optional = true, doc = @doc("The color of the UI element")),
+			@arg(name = "content_text", type = IType.STRING, optional = true, doc = @doc("The game object name")),
+			@arg(name = "option_action", type = IType.MAP, optional = true, doc = @doc("The game object name")),
+			@arg(name = "size", type = IType.INT, optional = true, doc = @doc("The game object name")),
+			@arg(name = "state", type = IType.INT, optional = true, doc = @doc("The game object name"))}, 
+			doc = @doc(value = "Create a remote GUI in a Unity Scene.", returns = "void", examples = {
+			@example("") }))
+	public void unityRemoteUI(final IScope scope) {
+	
+		final String topic = scope.hasArg("topic") ? (String) scope.getArg("topic", IType.STRING) : IUnitySkill.TOPIC_UI_ACTION;
+		final String uiType = (String) scope.getArg("uiType", IType.STRING);
+		final String parent = scope.hasArg("parent") ? (String) scope.getArg("parent", IType.STRING) : IUnitySkill.UI_DEFAULT_PARENT;
+		final String uiId = (String) scope.getArg("uiId", IType.STRING);
+		final GamaPoint location = scope.hasArg("location") ? (GamaPoint) scope.getArg("location", IType.POINT) : new GamaPoint(0, 0, 0);
+		final int height = scope.hasArg("height") ? (int) scope.getArg("height", IType.INT) : 0;
+		final int width = scope.hasArg("width") ? (int) scope.getArg("width", IType.INT) : 0;
+		final String label = (String) scope.getArg("label", IType.STRING);
+		
+		final GamaColor color = scope.hasArg("color") ? (GamaColor) scope.getArg("color", IType.COLOR) : new GamaColor(255, 0, 255);
+		
+		final String content_text = scope.hasArg("content_text") ? (String) scope.getArg("content_text", IType.STRING) : "";
+		final Map<String, String> option_action = scope.hasArg("option_action") ? (Map<String, String> ) scope.getArg("option_action", IType.MAP) : new HashMap<String, String>();		
+		
+		final int size = scope.hasArg("size") ? (int) scope.getArg("size", IType.INT) : 1;
+		final int state = scope.hasArg("state") ? (int) scope.getArg("state", IType.INT) : 1;
+		
+		int x = (int) location.x;
+		int y = (int) location.y;
+		int z = (int) location.z;
+		
+		int redColor = color.getRed();
+		int greenColor = color.getGreen();
+		int blueColor = color.getBlue();
+		int alphaColor =  color.getAlpha();
+
+		final UICreateMessage createMessage = new UICreateMessage(scope, topic, uiType, parent, uiId, x, y, z, height, width, label, 
+				redColor, greenColor, blueColor, alphaColor,
+				content_text, option_action, size, state);
+													
+																											
+		publishUnityWoxMessage(scope, connector.getClient(), IUnitySkill.TOPIC_UI_CREATE, createMessage);
 	}
 
 }
