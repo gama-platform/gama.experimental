@@ -22,7 +22,7 @@ global skills:[MPI_Network] {
 	write "mon rank est " + my_rank ;
 		
 	/* Attention ici le nom de l'expe doit etre le meme que celui donne dans le gaml */	
-	agent exp <- load_sub_model("prey_predatorExp","/home/philippe/recherche/git/gama.experimental/femto_st.gama.mpi/models/parallelPredatorPrey/predatorPrey.gaml"); 
+	agent exp <- load_sub_model("prey_predatorExp","predatorPrey.gaml"); 
 		
 	netSize <- MPI_SIZE ();
 		

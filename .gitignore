@@ -28,3 +28,5 @@ release/*
 /*/bin/
 msi.gama.ext/lib/
 /*/.apt_generated/
+stderr
+stdout
