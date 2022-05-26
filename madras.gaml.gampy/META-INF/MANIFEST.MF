@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Gampy
+Bundle-SymbolicName: madras.gaml.gampy;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: madras.gaml.gampy
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: msi.gama.core;bundle-version="1.8.2",
+ msi.gama.ext;bundle-version="1.8.2"
+Export-Package: madras.gaml.gampy
+Bundle-ClassPath: .,
+ lib/dl4j/javapy.jar
