@@ -36,5 +36,5 @@ species dl_agent skills: [gampy] {
 	}
 }
 
-experiment load_keras {
+experiment load_torch {
 }

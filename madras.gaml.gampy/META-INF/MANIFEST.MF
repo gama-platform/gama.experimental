@@ -9,4 +9,4 @@ Require-Bundle: msi.gama.core;bundle-version="1.8.2",
  msi.gama.ext;bundle-version="1.8.2"
 Export-Package: madras.gaml.gampy
 Bundle-ClassPath: .,
- lib/dl4j/javapy.jar
+ lib/dl4j/gampy.jar
