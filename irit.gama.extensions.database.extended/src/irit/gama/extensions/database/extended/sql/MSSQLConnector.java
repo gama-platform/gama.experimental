@@ -16,7 +16,7 @@ public class MSSQLConnector implements ISqlConnector {
 	}
 
 	@Override
-	public Map<String, Object> getConnectionParameters(String host, String dbtype, String port, String database,
+	public Map<String, Object> getConnectionParameters(final IScope scope, String host, String dbtype, String port, String database,
 			String user, String passwd) {
 
 		Map<String, Object> connectionParameters = new HashMap<>();

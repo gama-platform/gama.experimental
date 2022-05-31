@@ -5,7 +5,7 @@ import org.osgi.framework.BundleContext;
 
 import irit.gama.extensions.database.extended.sql.MSSQLConnection;
 import irit.gama.extensions.database.extended.sql.MSSQLConnector;
-import msi.gama.database.sql.SqlUtils;
+import irit.gaml.extensions.database.utils.sql.SqlUtils; 
 
 public class Activator implements BundleActivator {
 
