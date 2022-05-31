@@ -8,10 +8,10 @@
 model testwebcam
 
 global {
-	int webcam <- 0;
+	int webcam <- 1;
 	bool show_camera <- true;
-	int image_width <- 320;
-	int image_height <- 240;
+	int image_width <- 640;//320;
+	int image_height <- 480;//240;
 	image_file image_to_decode <- image_file("../includes/26810014.jpg");
 	init {
 		//Decode a QR code from an image
