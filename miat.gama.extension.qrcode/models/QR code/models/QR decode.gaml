@@ -12,10 +12,21 @@ global {
 	bool show_camera <- true;
 	int image_width <- 640;//320;
 	int image_height <- 480;//240;
-	image_file image_to_decode <- image_file("../includes/26810014.jpg");
+	list<geometry> geoms;
+
+	image_file image_to_decode_multi <- image_file("../includes/multiQRcode.png");
+	image_file image_to_decode_simple <- image_file("../includes/26810014.jpg");
 	init {
+		matrix mat <- matrix(image_to_decode_multi);
 		//Decode a QR code from an image
-		write sample(decodeQRFile(image_to_decode.path));
+		write sample(decodeQRFile(image_to_decode_simple.path));
+		map result <- (decodeMultiQRFile(image_to_decode_multi.path));
+		write sample(result.keys);
+		float x_coeff <- shape.width / mat.columns;
+		float y_coeff <- shape.height / mat.rows;
+		loop r over: result {
+			geoms << polygon(geometry(r).points collect {each.x * x_coeff,each.y * y_coeff});
+		}
 	}
 	reflex capture_webcam {
 		//capture image from webcam
@@ -40,8 +51,17 @@ experiment qrcode_usage type: gui {
 			grid cell_image ;
 		}
 		
-		display image_decoded {
-			image image_to_decode ;
+		display image_decoded_simple {
+			image image_to_decode_simple ;
+		}
+		
+		display image_decoded_multi {
+			image image_to_decode_multi ;
+			graphics "code "{
+				loop g over: geoms {
+					draw g.contour + 0.5 color: #magenta;
+				}
+			}
 		}
 	}
 }
