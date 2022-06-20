@@ -8,37 +8,25 @@
 model NewModel
 
 global {
-	shape_file bounds <- shape_file("../includes/main_rivers_simple.shp");
-	list<shape_file> background_objects <- [shape_file("../includes/gates.shp")];
-	geometry shape <- envelope(bounds);
-
 	image_file real_map_image_file <- image_file("../includes/real_map.jpg");
 
 	string image_crop_name <- "real_map_crop.jpg";
 	string pattern_folder <- "../includes/patterns";
 	
 	int max_detection_objects <- 20;
-	
 	rgb color_pt_crop <- #red;
-	float point_size_crop <- shape.width /400;
+	float point_size_crop <- 0.25;
 	rgb color_mouse_crop <- #cyan;
-	float mouse_size_crop <- shape.width /200;
+	float mouse_size_crop <- 0.5;
 	
 	rgb color_pt_pattern <- #green;
-	float point_size_pattern <- shape.width /400;
+	float point_size_pattern <- 0.25;
 	rgb color_mouse_pattern <- #yellow;
-	float mouse_size_pattern <- shape.width /200;
-	
-	
-	rgb color_pt_mask <- #magenta;
-	float point_size_mask <- shape.width /400;
-	rgb color_mouse_mask <- #pink;
-	float mouse_size_mask <- shape.width /200;
+	float mouse_size_pattern <- 0.5;
 	
 	
 	string path_to_global_image <- real_map_image_file.path;
 	bool pattern_definition <- false;
-	bool mask_definition <- false;
 	bool crop_world <- false;
 	point first_pt <- nil;
 	point last_pt <- nil;
@@ -50,27 +38,27 @@ global {
 	
 	int init_score_max <- 50 min: 0 max: 400 ;
 	int current_score_max <- 50 min: 0 max: 400 parameter: true on_change: update_score;
-	bool mask_do_add <- true parameter: "Add a polygon to the mask?";
 	
 	float x_coeff ;
 	float y_coeff ;
+	float x_offset;
+	float y_offset;
 	
+	geometry mask_world_geom;
+	geometry crop_world_geom;
 	geometry temp_geometry;
 	
-	int init_x_res;
-	int init_y_res;
 	int x_res;
 	int y_res;
 	pattern concerned_pattern <- nil;
-	
 	init {
 		matrix mat <- matrix(real_map_image_file);
 		x_res <- mat.columns;
 		y_res <- mat.rows;
-		init_x_res <- mat.columns;
-		init_y_res <- mat.rows;
 		x_coeff <- shape.width / x_res;
 		y_coeff <- shape.height / y_res;
+		x_offset <- 0.0;
+		y_offset <- 0.0;
 		
 		if ! folder_exists(pattern_folder) {
 			file folder <- new_folder(pattern_folder);
@@ -79,42 +67,41 @@ global {
 		
 	}
 	
-	action save_data {
-		if mask_definition {
-			
-		} else {
-			map result <- user_input_dialog("Save patterns", [enter("Model file name", string, "Init patterns.gaml"), enter("Pattern file name", string, "patterns.csv")]);
-			string p1 <- result["Model file name"];
-			string p2 <- result["Pattern file name"];
-			string path_pa <-  pattern_folder +"/" + p2;
-			save "name,color,score_max,pattern_image_file" type:text to: path_pa;
-			ask pattern {
-				save [name,color,score_max,pattern_image_file] type: csv to: path_pa rewrite: false;
-			}
-			
-			string model_str <- "model pattern_model \n\n";
-			model_str <- model_str + "global {\n";
-			model_str <- model_str + "\tfloat x_coeff <- " + x_coeff + ";\n";
-			model_str <- model_str + "\tfloat y_coeff <- " + y_coeff + ";\n";
-			model_str <- model_str + "\tint max_detection_objects <- " + max_detection_objects + ";\n";
+	action save_patterns {
+		map result <- user_input_dialog("Save patterns", [enter("Model file name", string, "Init patterns.gaml"), enter("Pattern file name", string, "patterns.csv")]);
+		string p1 <- result["Model file name"];
+		string p2 <- result["Pattern file name"];
+		string path_pa <-  pattern_folder +"/" + p2;
+		save "name,color,score_max,pattern_image_file" type:text to: path_pa;
+		ask pattern {
+			save [name,color,score_max,pattern_image_file] type: csv to: path_pa rewrite: false;
+		}
 		
-			model_str <- model_str + "\n\taction initialize {\n\t\tcsv_file pattern_file <- csv_file(\"" + path_pa +"\",\",\",string,true);\n\t\tcreate pattern from:pattern_file with:(name:get(\"name\"), color:rgb(get(\"color\")), score_max:int(get(\"score_max\")),pattern_image_file:get(\"pattern_image_file\"));"  ;
-			
-			model_str <- model_str + "\n\t}";
-			
-			model_str <- model_str + "\n\n\taction indentify_all_matching_objects(string path_to_global_image) {\n\t\task pattern {\n\t\t\tdo indentify_matching_objects(path_to_global_image);\n\t\t}"  ;
-			
-			model_str <- model_str + "\n\t}";
-			
-			
-			
-			model_str <- model_str + "\n}";
-			model_str <- model_str + "\nspecies object{\n\tpattern my_pattern;\n\tint score;\n}";
+		string model_str <- "model pattern_model \n\n";
+		model_str <- model_str + "global {\n";
+		model_str <- model_str + "\tfloat x_coeff <- " + x_coeff + ";\n";
+		model_str <- model_str + "\tfloat y_coeff <- " + y_coeff + ";\n";
+		model_str <- model_str + "\tfloat x_offset <- " + x_offset + ";\n";
+		model_str <- model_str + "\tfloat y_offset <- " + y_offset + ";\n";
+		model_str <- model_str + "\tint max_detection_objects <- " + max_detection_objects + ";\n";
 	
-			model_str <- model_str + "\nspecies pattern{\n\trgb color;\n\tint score_max;\n\tstring pattern_image_file;\n\n\taction indentify_matching_objects(string path_to_global_image) {\n\t\tmap res <- image_matching(path_to_global_image,[pattern_image_file::name], max_detection_objects);\n\t\tloop r over: res.keys {\n\t\t\tfloat score <- float(map(res[r])[\"SCORE\"]);\n\t\t\tif score <= score_max {\n\t\t\t\tgeometry g <- polygon(geometry(r).points collect {(each.x * x_coeff) + x_offset,(each.y * y_coeff) + y_offset}); \n\t\t\t\tcreate object with: (shape:g.contour + 0.1, my_pattern:self, score:int(-1 * score));\n\t\t\t}\n\t\t}\n\t}\n}";
-			
-			save model_str to: p1 type:text;
-		}		
+		model_str <- model_str + "\n\taction initialize {\n\t\tcsv_file pattern_file <- csv_file(\"" + path_pa +"\",\",\",string,true);\n\t\tcreate pattern from:pattern_file with:(name:get(\"name\"), color:rgb(get(\"color\")), score_max:int(get(\"score_max\")),pattern_image_file:get(\"pattern_image_file\"));"  ;
+		
+		model_str <- model_str + "\n\t}";
+		
+		model_str <- model_str + "\n\n\taction indentify_all_matching_objects(string path_to_global_image) {\n\t\task pattern {\n\t\t\tdo indentify_matching_objects(path_to_global_image);\n\t\t}"  ;
+		
+		model_str <- model_str + "\n\t}";
+		
+		
+		
+		model_str <- model_str + "\n}";
+		model_str <- model_str + "\nspecies object{\n\tpattern my_pattern;\n\tint score;\n}";
+
+		model_str <- model_str + "\nspecies pattern{\n\trgb color;\n\tint score_max;\n\tstring pattern_image_file;\n\n\taction indentify_matching_objects(string path_to_global_image) {\n\t\tmap res <- image_matching(path_to_global_image,[pattern_image_file::name], max_detection_objects);\n\t\tloop r over: res.keys {\n\t\t\tfloat score <- float(map(res[r])[\"SCORE\"]);\n\t\t\tif score <= score_max {\n\t\t\t\tgeometry g <- polygon(geometry(r).points collect {(each.x * x_coeff) + x_offset,(each.y * y_coeff) + y_offset}); \n\t\t\t\tcreate object with: (shape:g.contour + 0.1, my_pattern:self, score:int(-1 * score));\n\t\t\t}\n\t\t}\n\t}\n}";
+		
+		save model_str to: p1 type:text;
+		
 				
 	}
 	
@@ -129,17 +116,6 @@ global {
 		
 	}
 	
-	action mode_mask_definition {
-		mask_definition <- not mask_definition;
-		first_pt <- nil;
-		pattern_definition <- false;
-		last_pt <- nil;
-		geom_pt <- nil;
-		temp_geometry <- nil;
-		concerned_pattern <- nil;
-		crop_world <- false;
-	}
-	
 	action mode_pattern {
 		pattern_definition <- not pattern_definition;
 		first_pt <- nil;
@@ -148,26 +124,22 @@ global {
 		temp_geometry <- nil;
 		concerned_pattern <- nil;
 		crop_world <- false;
-		mask_definition <- false;
 	}
 	
 	action mode_crop_world {
 		crop_world <- not crop_world;
 		pattern_definition <- false;
-		mask_definition <- false;
 		first_pt <- nil;
 		last_pt <- nil;
 		geom_pt <- nil;
 		concerned_pattern <- nil;
+		mask_world_geom <- nil;
 		temp_geometry <- nil;
-		//x_coeff <- shape.width / x_res;
-		//y_coeff <- shape.height / y_res;
-		if crop_world {
-			path_to_global_image <- real_map_image_file.path;
-			x_coeff <- shape.width / init_x_res;
-			y_coeff <- shape.height / init_y_res;
-		} 
-		
+		crop_world_geom <- nil;
+		x_coeff <- shape.width / x_res;
+		y_coeff <- shape.height / y_res;
+		x_offset <- 0.0;
+		y_offset <- 0.0;
 	}
 	
 	action mouse_move_action {
@@ -175,7 +147,9 @@ global {
 			mouse_loc <- #user_location;
 			if first_pt != nil and last_pt = nil {
 				temp_geometry <- polygon([first_pt, {first_pt.x,mouse_loc.y },mouse_loc, {mouse_loc.x,first_pt.y }]).contour;
+				
 			}
+			
 		}
 	}
 	
@@ -188,23 +162,19 @@ global {
 				last_pt <- nil;
 				temp_geometry <- nil;
 			}
-			if first_pt = nil and (#user_location overlaps world ){
+			if first_pt = nil and (#user_location overlaps (crop_world_geom = nil ? world : crop_world_geom)){
 				first_pt <- #user_location;
 			}
-			else if  (#user_location overlaps  world ){
-					
+			else if  (#user_location overlaps (crop_world_geom = nil ? world : crop_world_geom)){
 				last_pt <- #user_location;
 				temp_geometry <- nil;
 				geom_pt <- polygon([first_pt, {first_pt.x,last_pt.y },last_pt, {last_pt.x,first_pt.y }]);
-				if mask_definition {
-					
-				}
-				else if pattern_definition {
+				if pattern_definition {
 					map result <- user_input_dialog("New Pattern", [enter("Pattern name", string, ""), enter("Pattern color", rgb, rnd_color(255))]);
 					string name_pattern <- result["Pattern name"];
 					rgb color_pattern <- result["Pattern color"];
 					if name_pattern != "" {
-						string new_pattern_path <- crop_image(pattern_folder + "/" + name_pattern + ".png",geom_pt,path_to_global_image, world.shape );
+						string new_pattern_path <- crop_image(pattern_folder + "/" + name_pattern + ".png",geom_pt,path_to_global_image, crop_world_geom );
 						create pattern with: (pattern_image_file:new_pattern_path, score_max:init_score_max, name: name_pattern, color:color_pattern ) {
 							do indentify_matching_objects;
 						}
@@ -215,25 +185,21 @@ global {
 						ask object {
 							do die;
 						}
-						
-						path_to_global_image <-copy(new_image_path);
-						//crop_world_geom <- copy(geom_pt);
-						//mask_world_geom <- world.shape - crop_world_geom;
-						matrix mat <- matrix(image_file(path_to_global_image));
-						x_coeff <- shape.width / mat.columns;
-						y_coeff <- shape.height / mat.rows;
 						ask pattern {
 							do indentify_matching_objects;
 						}
-						ask experiment {
-							do update_outputs(true);
-						}
+						path_to_global_image <-copy(new_image_path);
+						crop_world_geom <- copy(geom_pt);
+						mask_world_geom <- world.shape - crop_world_geom;
+						matrix mat <- matrix(image_file(path_to_global_image));
+						x_coeff <- crop_world_geom.width / mat.columns;
+						y_coeff <- crop_world_geom.height / mat.rows;
+						x_offset <- crop_world_geom.points min_of each.x;
+						y_offset <- crop_world_geom.points min_of each.y;
 					}
 					
 						
 				}
-				last_pt <- nil;
-				first_pt <- nil;
 			}
 			
 		}
@@ -241,17 +207,6 @@ global {
 	
 }
 
-
-species background_object {
-	rgb color <- rnd_color(255);
-	aspect default {
-		if length(shape.points) = 1 {
-			draw circle(10) color: color;
-		} else {
-			draw shape color: color;
-		}
-	}
-}
 
 species pattern {
 	rgb color;
@@ -262,8 +217,8 @@ species pattern {
 		map res <- image_matching(path_to_global_image,[pattern_image_file::name], max_detection_objects);
 		loop r over: res.keys {
 			float score <- float(map(res[r])["SCORE"]);
-			geometry g <- polygon(geometry(r).points collect {(each.x * x_coeff),(each.y * y_coeff)}); 
-			create object with: (shape:g.contour +  (world.shape.width / 1000.0), my_pattern:self, score:int(-1 * score));
+			geometry g <- polygon(geometry(r).points collect {(each.x * x_coeff) + x_offset,(each.y * y_coeff) + y_offset}); 
+			create object with: (shape:g.contour + 0.1, my_pattern:self, score:int(-1 * score));
 		}
 	}
 }
@@ -274,10 +229,10 @@ species object {
 	aspect default {
 		if score <= my_pattern.score_max {
 			if (my_pattern = concerned_pattern) {
-				draw (shape + (world.shape.width / 500.0)) color: my_pattern.color;
+				draw (shape + 0.2) color: my_pattern.color;
 			
 			} else {
-				draw (shape + (world.shape.width / 1000.0)) color: my_pattern.color;
+				draw shape color: my_pattern.color;
 			
 			}
 			draw my_pattern.name + ": " + round(score) anchor: #center at: {location.x, location.y + shape.height / 1.3, 0.1} color: my_pattern.color font: font(30);
@@ -320,34 +275,29 @@ experiment CreatePatterns type: gui {
             	}
 	 
           	}
-          	graphics image {
-          		draw image_file(path_to_global_image);
-          	}
-			species background_object;
-			
+			image "../includes/real_map.jpg" refresh: false;
 			
 			species object ;
 			event "p" action: mode_pattern;
 			event "c" action: mode_crop_world;
-			event "s" action: save_data;
-			event "m" action: mode_mask_definition;
+			event "s" action: save_patterns;
 			
 			event mouse_down action: mouse_down_action;
 			event mouse_move action: mouse_move_action;
 			
 			graphics "pattern points" {
-				/*if mask_world_geom != nil {
+				if mask_world_geom != nil {
 					draw mask_world_geom  color: #black;
-				}*/
-				if (pattern_definition or crop_world or mask_definition)and mouse_loc != nil {
-					draw circle(pattern_definition ? mouse_size_pattern : (mask_definition ? mouse_size_mask : mouse_size_crop)) at: mouse_loc + {0,0,0.1} color: pattern_definition ? color_mouse_pattern: (mask_definition ? color_mouse_mask : color_mouse_crop);
-					draw temp_geometry + (world.shape.width / 1000.0) color: pattern_definition ? color_mouse_pattern: color_mouse_crop;
+				}
+				if (pattern_definition or crop_world )and mouse_loc != nil {
+					draw circle(pattern_definition ? mouse_size_pattern : mouse_size_crop) at: mouse_loc + {0,0,0.1} color: pattern_definition ? color_mouse_pattern: color_mouse_crop;
+					draw temp_geometry + 0.1 color: pattern_definition ? color_mouse_pattern: color_mouse_crop;
 				}
 				if first_pt != nil {
-					draw circle(pattern_definition ? point_size_pattern : (mask_definition ? point_size_mask : point_size_crop)) at: first_pt  + {0,0,0.1} color:  pattern_definition ? color_pt_pattern: (mask_definition ? color_pt_mask : color_pt_crop);
+					draw circle(pattern_definition ? point_size_pattern : point_size_crop) at: first_pt  + {0,0,0.1} color:  pattern_definition ? color_pt_pattern: color_pt_crop;
 				}
 				if last_pt != nil {
-					draw circle(pattern_definition ? point_size_pattern : (mask_definition ? point_size_mask : point_size_crop)) at: last_pt  + {0,0,0.1} color:  pattern_definition ? color_pt_pattern: (mask_definition ? color_pt_mask : color_pt_crop);
+					draw circle(pattern_definition ? point_size_pattern : point_size_crop) at: last_pt + {0,0,0.1} color:  pattern_definition ? color_pt_pattern: color_pt_crop;
 				}
 				/*if geom_pt != nil {
 					draw geom_pt.contour + 0.1 color: pattern_definition ? color_pt_pattern: color_pt_crop;
