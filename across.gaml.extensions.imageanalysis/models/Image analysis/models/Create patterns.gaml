@@ -14,10 +14,10 @@ global {
 	string pattern_folder <- "../includes/patterns";
 	
 	int max_detection_objects <- 20;
-	rgb color_pt_crop <- #red;
-	float point_size_crop <- 0.25;
-	rgb color_mouse_crop <- #cyan;
-	float mouse_size_crop <- 0.5;
+	rgb color_pt_removedistorsion <- #red;
+	float point_size_removedistorsion <- 0.25;
+	rgb color_mouse_removedistorsion <- #cyan;
+	float mouse_size_removedistorsion <- 0.5;
 	
 	rgb color_pt_pattern <- #green;
 	float point_size_pattern <- 0.25;
@@ -27,10 +27,14 @@ global {
 	
 	string path_to_global_image <- real_map_image_file.path;
 	bool pattern_definition <- false;
-	bool crop_world <- false;
+	bool remove_distorsion <- false;
 	point first_pt <- nil;
 	point last_pt <- nil;
 	geometry geom_pt <- nil;
+	
+	geometry temp_geometry <- nil;
+	
+	list<point> points_for_distorsion_removing;
 	
 	bool follow_mouse <- false;
 	point mouse_loc <- nil;
@@ -41,12 +45,8 @@ global {
 	
 	float x_coeff ;
 	float y_coeff ;
-	float x_offset;
-	float y_offset;
 	
-	geometry mask_world_geom;
-	geometry crop_world_geom;
-	geometry temp_geometry;
+	geometry remove_distorsion_world_geom;
 	
 	int x_res;
 	int y_res;
@@ -57,8 +57,7 @@ global {
 		y_res <- mat.rows;
 		x_coeff <- shape.width / x_res;
 		y_coeff <- shape.height / y_res;
-		x_offset <- 0.0;
-		y_offset <- 0.0;
+		
 		
 		if ! folder_exists(pattern_folder) {
 			file folder <- new_folder(pattern_folder);
@@ -81,8 +80,6 @@ global {
 		model_str <- model_str + "global {\n";
 		model_str <- model_str + "\tfloat x_coeff <- " + x_coeff + ";\n";
 		model_str <- model_str + "\tfloat y_coeff <- " + y_coeff + ";\n";
-		model_str <- model_str + "\tfloat x_offset <- " + x_offset + ";\n";
-		model_str <- model_str + "\tfloat y_offset <- " + y_offset + ";\n";
 		model_str <- model_str + "\tint max_detection_objects <- " + max_detection_objects + ";\n";
 	
 		model_str <- model_str + "\n\taction initialize {\n\t\tcsv_file pattern_file <- csv_file(\"" + path_pa +"\",\",\",string,true);\n\t\tcreate pattern from:pattern_file with:(name:get(\"name\"), color:rgb(get(\"color\")), score_max:int(get(\"score_max\")),pattern_image_file:get(\"pattern_image_file\"));"  ;
@@ -121,66 +118,77 @@ global {
 		first_pt <- nil;
 		last_pt <- nil;
 		geom_pt <- nil;
-		temp_geometry <- nil;
 		concerned_pattern <- nil;
-		crop_world <- false;
+		remove_distorsion <- false;
+		temp_geometry <- nil;
+		points_for_distorsion_removing <- [];
+		remove_distorsion_world_geom <- nil;
+		
 	}
 	
-	action mode_crop_world {
-		crop_world <- not crop_world;
+	action mode_remove_distorsion {
+		remove_distorsion <- not remove_distorsion;
 		pattern_definition <- false;
 		first_pt <- nil;
 		last_pt <- nil;
 		geom_pt <- nil;
-		concerned_pattern <- nil;
-		mask_world_geom <- nil;
 		temp_geometry <- nil;
-		crop_world_geom <- nil;
+		points_for_distorsion_removing <- [];
+		concerned_pattern <- nil;
+		remove_distorsion_world_geom <- nil;
+		path_to_global_image <- real_map_image_file.path;
 		x_coeff <- shape.width / x_res;
 		y_coeff <- shape.height / y_res;
-		x_offset <- 0.0;
-		y_offset <- 0.0;
 	}
 	
 	action mouse_move_action {
-		if pattern_definition or crop_world{
+		if pattern_definition {
 			mouse_loc <- #user_location;
 			if first_pt != nil and last_pt = nil {
 				temp_geometry <- polygon([first_pt, {first_pt.x,mouse_loc.y },mouse_loc, {mouse_loc.x,first_pt.y }]).contour;
 				
 			}
 			
+		} else if remove_distorsion {
+			mouse_loc <- #user_location;
+			if length(points_for_distorsion_removing) = 1 {
+				remove_distorsion_world_geom <- line(points_for_distorsion_removing + #user_location );
+			} else {
+				remove_distorsion_world_geom <- polygon(points_for_distorsion_removing + #user_location);
+			}
 		}
 	}
 	
 	
 	action mouse_down_action {
-		if pattern_definition or crop_world {
+		if pattern_definition {
 			if geom_pt != nil {
 				geom_pt <- nil;
 				first_pt <- nil;
 				last_pt <- nil;
-				temp_geometry <- nil;
 			}
-			if first_pt = nil and (#user_location overlaps (crop_world_geom = nil ? world : crop_world_geom)){
+			if first_pt = nil and (#user_location overlaps world ){
 				first_pt <- #user_location;
 			}
-			else if  (#user_location overlaps (crop_world_geom = nil ? world : crop_world_geom)){
+			else if  (#user_location overlaps world ){
 				last_pt <- #user_location;
-				temp_geometry <- nil;
 				geom_pt <- polygon([first_pt, {first_pt.x,last_pt.y },last_pt, {last_pt.x,first_pt.y }]);
-				if pattern_definition {
-					map result <- user_input_dialog("New Pattern", [enter("Pattern name", string, ""), enter("Pattern color", rgb, rnd_color(255))]);
-					string name_pattern <- result["Pattern name"];
-					rgb color_pattern <- result["Pattern color"];
-					if name_pattern != "" {
-						string new_pattern_path <- crop_image(pattern_folder + "/" + name_pattern + ".png",geom_pt,path_to_global_image, crop_world_geom );
-						create pattern with: (pattern_image_file:new_pattern_path, score_max:init_score_max, name: name_pattern, color:color_pattern ) {
-							do indentify_matching_objects;
-						}
+				map result <- user_input_dialog("New Pattern", [enter("Pattern name", string, ""), enter("Pattern color", rgb, rnd_color(255))]);
+				string name_pattern <- result["Pattern name"];
+				rgb color_pattern <- result["Pattern color"];
+				if name_pattern != "" {
+					string new_pattern_path <- crop_image(pattern_folder + "/" + name_pattern + ".png",geom_pt,path_to_global_image, world );
+					create pattern with: (pattern_image_file:new_pattern_path, score_max:init_score_max, name: name_pattern, color:color_pattern ) {
+						do indentify_matching_objects;
 					}
-				} else if crop_world {
-					string new_image_path <- crop_image(real_map_image_file.path replace (real_map_image_file.name,image_crop_name),geom_pt,real_map_image_file.path, world.shape);
+				}
+				
+			}
+			
+		} else if remove_distorsion {
+			points_for_distorsion_removing << #user_location;
+			if length(points_for_distorsion_removing) = 4 {
+				string new_image_path <- remove_perspective(real_map_image_file.path replace (real_map_image_file.name,image_crop_name),points_for_distorsion_removing,real_map_image_file.path, 500,500);
 					if new_image_path != nil {
 						ask object {
 							do die;
@@ -188,20 +196,20 @@ global {
 						ask pattern {
 							do indentify_matching_objects;
 						}
+						matrix mat <- matrix(image_file(new_image_path));
 						path_to_global_image <-copy(new_image_path);
-						crop_world_geom <- copy(geom_pt);
-						mask_world_geom <- world.shape - crop_world_geom;
-						matrix mat <- matrix(image_file(path_to_global_image));
-						x_coeff <- crop_world_geom.width / mat.columns;
-						y_coeff <- crop_world_geom.height / mat.rows;
-						x_offset <- crop_world_geom.points min_of each.x;
-						y_offset <- crop_world_geom.points min_of each.y;
+						x_coeff <- world.shape.width / mat.columns;
+						y_coeff <- world.shape.height / mat.rows;
+						points_for_distorsion_removing <- [];
+						remove_distorsion_world_geom <- nil;
 					}
-					
-						
+			} else {
+				if length(points_for_distorsion_removing) = 2 {
+					remove_distorsion_world_geom <- line(points_for_distorsion_removing);
+				} else {
+					remove_distorsion_world_geom <- polygon(points_for_distorsion_removing);
 				}
 			}
-			
 		}
 	}
 	
@@ -217,7 +225,7 @@ species pattern {
 		map res <- image_matching(path_to_global_image,[pattern_image_file::name], max_detection_objects);
 		loop r over: res.keys {
 			float score <- float(map(res[r])["SCORE"]);
-			geometry g <- polygon(geometry(r).points collect {(each.x * x_coeff) + x_offset,(each.y * y_coeff) + y_offset}); 
+			geometry g <- polygon(geometry(r).points collect {(each.x * x_coeff),(each.y * y_coeff)}); 
 			create object with: (shape:g.contour + 0.1, my_pattern:self, score:int(-1 * score));
 		}
 	}
@@ -268,40 +276,54 @@ experiment CreatePatterns type: gui {
             {
             	if  pattern_definition {
             		draw "Pattern definition" font: font(30) at: { 40#px,50#px } color: #white;
-            	} else if crop_world {
+            	} else if remove_distorsion {
             		draw "Crop the environment" font: font(30) at: { 40#px,  50#px } color: #white;
             	} else if concerned_pattern != nil {
             		draw "Modification of the max score of: " + concerned_pattern.name font: font(20) at: { 40#px,  50#px } color: #white;
             	}
 	 
           	}
-			image "../includes/real_map.jpg" refresh: false;
-			
+          	graphics "image" {
+          		draw image_file(path_to_global_image);
+          	}
+          	
 			species object ;
 			event "p" action: mode_pattern;
-			event "c" action: mode_crop_world;
+			event "c" action: mode_remove_distorsion;
 			event "s" action: save_patterns;
 			
 			event mouse_down action: mouse_down_action;
 			event mouse_move action: mouse_move_action;
 			
+			graphics "remove deformation" {
+				loop pt over: points_for_distorsion_removing {
+					draw circle(point_size_removedistorsion) at: pt color: color_pt_removedistorsion;
+				}
+			}
+			
+			graphics "remove deformation geom" transparency: 0.5 {
+				if remove_distorsion_world_geom != nil {
+					draw  remove_distorsion_world_geom color: color_pt_removedistorsion; 
+				}
+			}
+			graphics "mouse loc points" {
+				if (pattern_definition or remove_distorsion)and mouse_loc != nil {
+					draw circle(pattern_definition ? mouse_size_pattern : mouse_size_removedistorsion) at: mouse_loc + {0,0,0.1} color: pattern_definition ? color_mouse_pattern: color_mouse_removedistorsion;
+				}
+				
+			}
 			graphics "pattern points" {
-				if mask_world_geom != nil {
-					draw mask_world_geom  color: #black;
-				}
-				if (pattern_definition or crop_world )and mouse_loc != nil {
-					draw circle(pattern_definition ? mouse_size_pattern : mouse_size_crop) at: mouse_loc + {0,0,0.1} color: pattern_definition ? color_mouse_pattern: color_mouse_crop;
-					draw temp_geometry + 0.1 color: pattern_definition ? color_mouse_pattern: color_mouse_crop;
-				}
 				if first_pt != nil {
-					draw circle(pattern_definition ? point_size_pattern : point_size_crop) at: first_pt  + {0,0,0.1} color:  pattern_definition ? color_pt_pattern: color_pt_crop;
+					draw circle(point_size_pattern) at: first_pt  + {0,0,0.1} color:   color_pt_pattern;
 				}
 				if last_pt != nil {
-					draw circle(pattern_definition ? point_size_pattern : point_size_crop) at: last_pt + {0,0,0.1} color:  pattern_definition ? color_pt_pattern: color_pt_crop;
+					draw circle(point_size_pattern) at: last_pt + {0,0,0.1} color:  color_pt_pattern;
 				}
-				/*if geom_pt != nil {
-					draw geom_pt.contour + 0.1 color: pattern_definition ? color_pt_pattern: color_pt_crop;
-				}*/
+			}
+			graphics "pattern points geom" transparency: 0.5  {
+				if geom_pt != nil {
+					draw geom_pt color: color_pt_pattern;
+				}
 				
 				
 			} 
