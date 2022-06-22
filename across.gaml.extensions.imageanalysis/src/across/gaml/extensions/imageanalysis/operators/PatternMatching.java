@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import com.google.common.io.Files;
 
+import across.gaml.extensions.imageanalysis.boofcv.RemovePerspectiveDistortion;
 import boofcv.alg.template.TemplateMatching;
 import boofcv.factory.template.FactoryTemplateMatching;
 import boofcv.factory.template.TemplateScoreType;
@@ -18,6 +19,9 @@ import boofcv.io.image.ConvertBufferedImage;
 import boofcv.io.image.UtilImageIO;
 import boofcv.struct.feature.Match;
 import boofcv.struct.image.GrayF32;
+import boofcv.struct.image.ImageType;
+import boofcv.struct.image.Planar;
+import georegression.struct.point.Point2D_F64;
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.util.FileUtils;
 import msi.gama.metamodel.shape.GamaPoint;
@@ -47,6 +51,8 @@ public class PatternMatching {
 
         return matcher.getResults().toList();  
     }
+    
+    
 
 
     @operator (
@@ -88,6 +94,74 @@ public class PatternMatching {
 	    return null; 
 		
     }
+    
+    private static Point2D_F64 toPoint2D(GamaPoint pt, double coeffX, double coeffY) {
+    	 return new Point2D_F64(pt.x * coeffX,pt.y * coeffY);
+    }
+    
+    @operator (
+			value = "remove_perspective",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "remove the perspective from an image using 4 reference points (top-left, top-right, bottom-right, bottom-left)")
+	public static String removePerspective(final IScope scope, final String outputPath, final List<GamaPoint> points, final String  image_path, int resWidth, int resHeight)  {
+    	BufferedImage flat = removeDistortion(scope, points,image_path,resWidth,resHeight);
+		File outputfile = new File(FileUtils.constructAbsoluteFilePath(scope, outputPath, false));
+		try {
+
+			String ext = Files.getFileExtension(outputfile.getAbsolutePath());
+			ImageIO.write(flat, ext, outputfile);
+		} catch (IOException e) {
+			GAMA.reportError(scope, GamaRuntimeException.error("Problem when writting file " + outputfile +": " + e, scope), true);
+			
+		}
+		if (outputfile.exists())
+			return outputfile.getAbsolutePath();
+	    return null; 
+       
+    }
+    
+    public static BufferedImage removeDistortion(final IScope scope, final List<GamaPoint> points, final String  image_path, int resWidth, int resHeight) {
+    	if (points.size() != 4) {
+    		GAMA.reportError(scope, GamaRuntimeException.error("4 points have to be defined (top-left, top-right, bottom-right, bottom-left)", scope), true);
+    	}
+    	File imageFile = new File(FileUtils.constructAbsoluteFilePath(scope, image_path, true));
+		if (imageFile == null || imageFile.getName().trim().isEmpty())
+			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + image_path, scope), true);
+		BufferedImage tmpBfrImage = null;
+		try {
+			tmpBfrImage = ImageIO.read(imageFile);
+		} catch (IOException tmpIoe) {
+			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + image_path, scope), true);
+		}
+		if (tmpBfrImage == null)
+			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + image_path, scope), true);
+		Envelope3D envbounds = scope.getSimulation().getGeometry().getEnvelope() ;
+		double coeffX = tmpBfrImage.getWidth() / envbounds.getWidth();
+		double coeffY= tmpBfrImage.getHeight()/ envbounds.getHeight();
+		
+		Planar<GrayF32> input = ConvertBufferedImage.convertFromPlanar(tmpBfrImage, null, true, GrayF32.class);
+		Point2D_F64 PTL = toPoint2D(points.get(0), coeffX,coeffY);
+		Point2D_F64 PTR = toPoint2D(points.get(1), coeffX,coeffY);
+		Point2D_F64 PBR = toPoint2D(points.get(2), coeffX,coeffY);
+		Point2D_F64 PBL = toPoint2D(points.get(3), coeffX,coeffY);
+		
+		RemovePerspectiveDistortion<Planar<GrayF32>> removePerspective =
+				new RemovePerspectiveDistortion<>(resWidth, resHeight, ImageType.pl(3, GrayF32.class));
+
+		// Specify the corners in the input image of the region.
+		// Order matters! top-left, top-right, bottom-right, bottom-left
+		if (!removePerspective.apply(input,
+				PTL, PTR,PBR,PBL)) {
+			GAMA.reportError(scope, GamaRuntimeException.error("Problem with distortion computation", scope), true);
+		}
+
+		Planar<GrayF32> output = removePerspective.getOutput();
+
+		return ConvertBufferedImage.convertTo_F32(output, null, true);
+    }
+    
     @operator (
 			value = "image_matching",
 			can_be_const = false,
