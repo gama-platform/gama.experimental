@@ -10,7 +10,8 @@ model NewModel
 global {
 	image_file real_map_image_file <- image_file("../includes/real_map.jpg");
 
-	string image_crop_name <- "real_map_crop.jpg";
+	string image_distorsion_removed_name <- "real_map_distorsion_removed.jpg";
+	string image_shapren_name <- "real_map_sharpened.jpg";
 	string pattern_folder <- "../includes/patterns";
 	
 	int max_detection_objects <- 20;
@@ -64,6 +65,12 @@ global {
 		}
 		
 		
+	}
+	
+	action sharpen_image {
+		string pth <- real_map_image_file.path replace (real_map_image_file.name,image_shapren_name);
+		string new_image <- gray_sharpened_8(pth, path_to_global_image);
+		path_to_global_image <- new_image;
 	}
 	
 	action save_patterns {
@@ -136,9 +143,12 @@ global {
 		points_for_distorsion_removing <- [];
 		concerned_pattern <- nil;
 		remove_distorsion_world_geom <- nil;
-		path_to_global_image <- real_map_image_file.path;
-		x_coeff <- shape.width / x_res;
-		y_coeff <- shape.height / y_res;
+		if remove_distorsion {
+			path_to_global_image <- real_map_image_file.path;
+			x_coeff <- shape.width / x_res;
+			y_coeff <- shape.height / y_res;
+		}
+		
 	}
 	
 	action mouse_move_action {
@@ -188,7 +198,7 @@ global {
 		} else if remove_distorsion {
 			points_for_distorsion_removing << #user_location;
 			if length(points_for_distorsion_removing) = 4 {
-				string new_image_path <- remove_perspective(real_map_image_file.path replace (real_map_image_file.name,image_crop_name),points_for_distorsion_removing,real_map_image_file.path, 500,500);
+				string new_image_path <- remove_perspective(real_map_image_file.path replace (real_map_image_file.name,image_distorsion_removed_name),points_for_distorsion_removing,real_map_image_file.path, 1500,1500);
 					if new_image_path != nil {
 						ask object {
 							do die;
@@ -291,6 +301,7 @@ experiment CreatePatterns type: gui {
 			event "p" action: mode_pattern;
 			event "c" action: mode_remove_distorsion;
 			event "s" action: save_patterns;
+			event "r" action: sharpen_image;
 			
 			event mouse_down action: mouse_down_action;
 			event mouse_move action: mouse_move_action;
