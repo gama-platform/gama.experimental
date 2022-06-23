@@ -10,8 +10,8 @@ model testwebcam
 global {
 	int webcam <- 1;
 	bool show_camera <- true;
-	int image_width <- 640;//320;
-	int image_height <- 480;//240;
+	int image_width <- 320;
+	int image_height <- 240;
 	list<geometry> geoms;
 
 	image_file image_to_decode_multi <- image_file("../includes/multiQRcode.png");

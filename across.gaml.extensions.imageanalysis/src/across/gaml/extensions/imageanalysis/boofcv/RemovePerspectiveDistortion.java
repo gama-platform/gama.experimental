@@ -19,20 +19,34 @@
 package across.gaml.extensions.imageanalysis.boofcv;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.ops.ConvertMatrixData;
 
 import boofcv.abst.distort.FDistort;
 import boofcv.abst.geo.Estimate1ofEpipolar;
+import boofcv.alg.enhance.GEnhanceImageOps;
+import boofcv.alg.filter.binary.BinaryImageOps;
+import boofcv.alg.filter.binary.Contour;
+import boofcv.alg.filter.binary.GThresholdImageOps;
+import boofcv.alg.filter.binary.ThresholdImageOps;
 import boofcv.alg.interpolate.InterpolationType;
+import boofcv.alg.misc.ImageStatistics;
 import boofcv.factory.geo.FactoryMultiView;
+import boofcv.gui.ListDisplayPanel;
+import boofcv.gui.binary.VisualizeBinaryData;
 import boofcv.gui.image.ShowImages;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.io.image.UtilImageIO;
+import boofcv.struct.ConfigLength;
+import boofcv.struct.ConnectRule;
 import boofcv.struct.geo.AssociatedPair;
 import boofcv.struct.image.GrayF32;
+import boofcv.struct.image.GrayS32;
+import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.ImageBase;
 import boofcv.struct.image.ImageType;
 import boofcv.struct.image.Planar;
@@ -170,8 +184,8 @@ public class RemovePerspectiveDistortion<T extends ImageBase<T>> {
 	public static void main(String[] args) {
 		
 		
-		BufferedImage orig = UtilImageIO.loadImageNotNull("C:\\Users\\admin_ptaillandie\\Documents\\GitHub\\gama.experimental\\across.gaml.extensions.imageanalysis\\src\\across\\gaml\\extensions\\imageanalysis\\operators\\real_map.jpg");
-		Planar<GrayF32> input = ConvertBufferedImage.convertFromPlanar(orig, null, true, GrayF32.class);
+		BufferedImage orig = UtilImageIO.loadImageNotNull("C:\\Users\\admin_ptaillandie\\Documents\\GitHub\\gama.experimental\\across.gaml.extensions.imageanalysis\\src\\across\\gaml\\extensions\\imageanalysis\\operators\\real_map_sharpened.jpg");
+		/*Planar<GrayF32> input = ConvertBufferedImage.convertFromPlanar(orig, null, true, GrayF32.class);
 
 		RemovePerspectiveDistortion<Planar<GrayF32>> removePerspective =
 				new RemovePerspectiveDistortion<>(500, 500, ImageType.pl(3, GrayF32.class));
@@ -184,11 +198,107 @@ public class RemovePerspectiveDistortion<T extends ImageBase<T>> {
 			throw new RuntimeException("Failed!?!?");
 		}
 
-		Planar<GrayF32> output = removePerspective.getOutput();
-
+		
 		BufferedImage flat = ConvertBufferedImage.convertTo_F32(output, null, true);
+		GrayF32 input_ = ConvertBufferedImage.convertFromSingle(flat, null, GrayF32.class);
+		
+		var binary = new GrayU8(output.width, output.height);
+
+		Planar<GrayU8> color = ConvertBufferedImage.convertFrom(flat, true, ImageType.PL_U8);
+		Planar<GrayU8> adjusted = color.createSameShape();
+
+		
 		ShowImages.showWindow(orig, "Original Image", true);
-		ShowImages.showWindow(flat, "Without Perspective Distortion", true);
+		ShowImages.showWindow(flat, "Without Perspective Distortion", true);*/
+		GrayF32 input_ = ConvertBufferedImage.convertFromSingle(orig, null, GrayF32.class);
+		var binary = new GrayU8(input_.width, input_.height);
+
+		
+		
+		
+		// Display multiple images in the same window
+				var gui = new ListDisplayPanel();
+
+		// Global Methods
+		GThresholdImageOps.threshold(input_, binary, ImageStatistics.mean(input_), true);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Global: Mean");
+		GThresholdImageOps.threshold(input_, binary, GThresholdImageOps.computeOtsu(input_, 0, 255), true);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Global: Otsu");
+		GThresholdImageOps.threshold(input_, binary, GThresholdImageOps.computeEntropy(input_, 0, 255), true);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Global: Entropy");
+
+		// Local method
+		GThresholdImageOps.localMean(input_, binary, ConfigLength.fixed(57), 1.0, true, null, null, null);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Local: Mean");
+		GThresholdImageOps.localGaussian(input_, binary, ConfigLength.fixed(85), 1.0, true, null, null);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Local: Gaussian");
+		GThresholdImageOps.localNiblack(input_, binary, ConfigLength.fixed(11), 0.30f, true);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Local: Niblack");
+		GThresholdImageOps.localSauvola(input_, binary, ConfigLength.fixed(11), 0.30f, true);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Local: Sauvola");
+		GThresholdImageOps.localWolf(input_, binary, ConfigLength.fixed(11), 0.30f, true);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Local: Wolf");
+		GThresholdImageOps.localNick(input_, binary, ConfigLength.fixed(11), -0.2f, true);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Local: NICK");
+		GThresholdImageOps.blockMinMax(input_, binary, ConfigLength.fixed(21), 1.0, true, 15);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Block: Min-Max");
+		GThresholdImageOps.blockMean(input_, binary, ConfigLength.fixed(21), 1.0, true);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Block: Mean");
+		GThresholdImageOps.blockOtsu(input_, binary, false, ConfigLength.fixed(21), 0.5, 1.0, true);
+		gui.addImage(VisualizeBinaryData.renderBinary(binary, false, null), "Block: Otsu");
+
+		// Sauvola is tuned for text image. Change radius to make it run better in others.
+
+		// Show the image image for reference
+		gui.addImage(ConvertBufferedImage.convertTo(input_, null), "Input Image");
+		
+		
+
+		
+		String imageName = "ttt";
+		String fileName = imageName.substring(imageName.lastIndexOf('/') + 1);
+		
+		
+		
+		// convert into a usable format
+				GrayF32 input = ConvertBufferedImage.convertFromSingle(orig, null, GrayF32.class);
+			var label = new GrayS32(input.width, input.height);
+
+				// Select a global threshold using Otsu's method.
+				double threshold = GThresholdImageOps.computeOtsu(input, 0, 255);
+
+				// Apply the threshold to create a binary image
+				ThresholdImageOps.threshold(input, binary, (float)threshold, true);
+
+				// remove small blobs through erosion and dilation
+				// The null in the input indicates that it should internally declare the work image it needs
+				// this is less efficient, but easier to code.
+				GrayU8 filtered = BinaryImageOps.erode8(binary, 1, null);
+				filtered = BinaryImageOps.dilate8(filtered, 1, null);
+
+				// Detect blobs inside the image using an 8-connect rule
+				List<Contour> contours = BinaryImageOps.contour(filtered, ConnectRule.EIGHT, label);
+
+				// colors of contours
+				int colorExternal = 0xFFFFFF;
+				int colorInternal = 0xFF2020;
+
+				// display the results
+				BufferedImage visualBinary = VisualizeBinaryData.renderBinary(binary, false, null);
+				BufferedImage visualFiltered = VisualizeBinaryData.renderBinary(filtered, false, null);
+				BufferedImage visualLabel = VisualizeBinaryData.renderLabeledBG(label, contours.size(), null);
+				BufferedImage visualContour = VisualizeBinaryData.renderContours(contours, colorExternal, colorInternal,
+						input.width, input.height, null);
+
+				gui.addImage(visualBinary, "Binary Original");
+				gui.addImage(visualFiltered, "Binary Filtered");
+				gui.addImage(visualLabel, "Labeled Blobs");
+				gui.addImage(visualContour, "Contours");
+			
+		
+		
+		ShowImages.showWindow(gui, fileName);
+		
 		
 		
 	}
