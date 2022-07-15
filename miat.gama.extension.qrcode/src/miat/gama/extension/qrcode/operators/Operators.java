@@ -4,11 +4,9 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -30,6 +28,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.multi.GenericMultipleBarcodeReader;
 import com.google.zxing.multi.MultipleBarcodeReader;
 
+import msi.gama.common.util.FileUtils;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.GamaShape;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -40,7 +39,6 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMapFactory;
-import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import msi.gama.util.matrix.GamaIntMatrix;
 import msi.gama.util.matrix.GamaMatrix;
@@ -260,7 +258,8 @@ public class Operators {
 	}
 	
 	public static Map<String, GamaShape> decodeQRcodeFile(final IScope scope, final String file_path, boolean multiple)  {
-		File whatFile = new File(file_path);
+		String path_gen = FileUtils.constructAbsoluteFilePath(scope, file_path, true);
+		File whatFile = new File(path_gen);
 		// check the required parameters 
 		if (whatFile == null || whatFile.getName().trim().isEmpty())
 			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + file_path, scope), true);
@@ -287,9 +286,10 @@ public class Operators {
 					
 				}
 			} catch (NotFoundException e) {
+				return null;
+			} catch (Error e) {
 				GAMA.reportError(scope, GamaRuntimeException.error(
 						"BarCodeUtil.decode Excpt err - " + e.toString() + " - " + e.getMessage(), scope), true);
-
 			}
 
 		    
@@ -298,9 +298,11 @@ public class Operators {
 				tmpResult = tmpBarcodeReader.decode(tmpBitmap);
 				tmpFinalResult.put(tmpResult.getText(), toShape(scope,tmpResult));
 				
-			} catch (Exception tmpExcpt) {
+			} catch (NotFoundException e) {
+				return null;
+			} catch (Error e) {
 				GAMA.reportError(scope, GamaRuntimeException.error(
-						"BarCodeUtil.decode Excpt err - " + tmpExcpt.toString() + " - " + tmpExcpt.getMessage(), scope), true);
+						"BarCodeUtil.decode Excpt err - " + e.toString() + " - " + e.getMessage(), scope), true);
 			}
 	    }
 		
