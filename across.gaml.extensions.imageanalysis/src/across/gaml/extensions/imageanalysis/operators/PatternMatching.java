@@ -458,7 +458,7 @@ public class PatternMatching {
             if (directoryListing != null) {
                 sortByNumber(directoryListing);
                 for (int i = 0; i < directoryListing.length; i++){
-                	Lego l = new Lego(2, 2, Types.INT);
+                	Lego l = new Lego(2, 2);
                 	l.setVal(classifyCode(scope, directoryListing[i]));
                 	results.add(l);
                 	System.out.println("Element: ");
