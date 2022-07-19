@@ -4,6 +4,9 @@ package across.gaml.extensions.imageanalysis.operators;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -35,14 +38,111 @@ import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMapFactory;
+import msi.gama.util.matrix.GamaIntMatrix;
 import msi.gaml.operators.Spatial.Creation;
+import msi.gaml.types.IType;
+import msi.gaml.types.Types;
 
 public class PatternMatching {
+	// hdtrung - save 4 selected points of map: top-left, top-right, bottom-right, bottom-left
+	private static List<GamaPoint> map_corners;
+	
+	public static void print2DArray(int[][] arr){
+//        System.out.println(arr[0][0] + " " + arr[1][0] + " | ");
+//        System.out.println(arr[0][1] + " " + arr[1][1] + " | ");
+    }
+	
+	public static double getBlackIntensity(final BufferedImage img){
+        int intensity = 0;
+        int total = img.getHeight() * img.getWidth() - 20;
+
+        for (int i = 0; i < img.getHeight()-5; i++) {
+            for (int j = 0; j < img.getWidth()-5; j++) {
+                int p  = img.getRGB(i,j) & 0xFF;
+                if(p <= 60){
+                    intensity++;
+                }
+            }
+        }
+        return ((double)intensity/(double)total) * 100;
+    }
+	
+	private static String cropGrid(final File srcImg, final int cols, final int rows) throws IOException {
+		BufferedImage bf = ImageIO.read(srcImg);
+        int width = bf.getWidth()/(2 * cols - 1);
+        int height = bf.getHeight()/(2 * rows - 1);
+        int files = 0;
+        
+        String basePath = new File("results").getAbsolutePath();
+        if (!new File(basePath).exists()) {
+        	new File(basePath).mkdir();
+        }
+        
+        for (int i = 0; i < 2*cols - 1; i = i + 2){
+            for (int j = 0; j < 2*rows - 1; j = j + 2){
+                BufferedImage dest = bf.getSubimage(i*width, j*height, width, height);
+                files++;
+                File pathFile = new File(basePath + "/" + files + ".PNG");
+                ImageIO.write(dest,"PNG", pathFile);
+            }
+        }
+        
+        
+//        File file = new File(resultPath);
+//        System.out.println("check2");
+//        if(file.exists()) {
+//        	System.out.println("check3");
+//	        for (int i = 0; i < 2*cols - 1; i = i + 2){
+//	            for (int j = 0; j < 2*rows - 1; j = j + 2){
+//	                BufferedImage dest = srcImg.getSubimage(i*width, j*height, width, height);
+//	                int numberFiles = file.list().length + 1;
+//	                File pathFile = new File(resultPath + numberFiles + ".PNG");
+//	                ImageIO.write(dest,"PNG", pathFile);
+//	            }
+//	        }
+//        }else {
+//        	System.out.println("check4");
+//        	new File(resultPath).mkdir();
+//        	System.out.println("make directory: " + file.isDirectory());
+//        	for (int i = 0; i < 2*cols - 1; i = i + 2){
+//	            for (int j = 0; j < 2*rows - 1; j = j + 2){
+//	            	System.out.println("check5");
+//	                BufferedImage dest = srcImg.getSubimage(i*width, j*height, width, height);
+//	                int numberFiles = file.list().length + 1;
+//	                File pathFile = new File(resultPath + numberFiles + ".PNG");
+//	                ImageIO.write(dest,"PNG", pathFile);
+//	                System.out.println("check6");
+//	            }
+//	        }
+//        }
+        return null;
+    }
+	
+	private static String cropImage(final BufferedImage srcImg, final int cols, final int rows) throws IOException {
+        int width = srcImg.getWidth()/cols;
+        int height = srcImg.getHeight()/rows;
+        
+        String basePath = new File("results").getAbsolutePath();
+        if (!new File(basePath).exists()) {
+        	new File(basePath).mkdir();
+        }
+
+        for (int i = 0; i < cols; i++){
+            for (int j = 0; j < rows; j++){
+                BufferedImage dest = srcImg.getSubimage(i*width, j*height, width, height);
+                File pathFile = new File(basePath + "/" + i + j + ".PNG");
+                ImageIO.write(dest,"PNG", pathFile);
+            }
+        }
+        return null;
+    }
 	
     private static List<Match> findMatches(GrayF32 image, GrayF32 template, GrayF32 mask,
                                            int expectedMatches ) {
         // create template matcher.
+    
         TemplateMatching<GrayF32> matcher =
                 FactoryTemplateMatching.createMatcher(TemplateScoreType.SUM_SQUARE_ERROR, GrayF32.class);
 
@@ -54,8 +154,60 @@ public class PatternMatching {
         return matcher.getResults().toList();  
     }
     
-    
+    public static GamaIntMatrix classifyCode(final IScope scope, final File f){
+        int[][] r = new int[2][2];
+        GamaIntMatrix l = new GamaIntMatrix(2, 2);
+        try{
+            BufferedImage img = ImageIO.read(f);
+            int width = img.getWidth()/2;
+            int height = img.getHeight()/2;
+            int files = 0;
+            String basePath = new File("prcImg").getAbsolutePath();
+            new File(basePath + files).mkdir();
 
+            for (int i = 0; i < 2; i++){
+                for (int j = 0; j < 2; j++){
+                    BufferedImage dest = img.getSubimage(i*width, j*height, width, height);
+                    File pathFile = new File(basePath + files + "/" + + i + j + ".png");
+                    ImageIO.write(dest,"png", pathFile);
+                    if(getBlackIntensity(ImageIO.read(pathFile)) > 30){
+                        r[i][j] = 1;
+                        l.set(scope, i, j, 1);
+                    }else {
+                        r[i][j] = 0;
+                        l.set(scope, i, j, 0);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return l;
+    }
+    
+    public static void sortByNumber(final File[] files) {
+        Arrays.sort(files, new Comparator<File>() {
+            @Override
+            public int compare(File o1, File o2) {
+                int n1 = extractNumber(o1.getName());
+                int n2 = extractNumber(o2.getName());
+                return n1 - n2;
+            }
+
+            private int extractNumber(String name) {
+                int i = 0;
+                try {
+                    int e = name.lastIndexOf('.');
+                    String number = name.substring(0, e);
+                    i = Integer.parseInt(number);
+                } catch(Exception e) {
+                    i = 0;
+                }
+                return i;
+            }
+        });
+    }
 
     @operator (
 			value = "crop_image",
@@ -172,6 +324,7 @@ public class PatternMatching {
 
 			String ext = Files.getFileExtension(outputfile.getAbsolutePath());
 			ImageIO.write(flat, ext, outputfile);
+			map_corners = points;
 		} catch (IOException e) {
 			GAMA.reportError(scope, GamaRuntimeException.error("Problem when writting file " + outputfile +": " + e, scope), true);
 			
@@ -233,7 +386,9 @@ public class PatternMatching {
 	@doc (
 			value = "detect pattern images from an image")
 	public static Map<GamaShape, Map<String, Double>> patternMatching(final IScope scope, final String image_path, final Map<String, String> patterns_path, final Integer expectedMatches )  {
+//    public static Map<GamaShape, Map<String, Double>> patternMatching(final IScope scope, final String image_path, final Integer cols, final Integer rows )  {
     	File whatFile = new File(FileUtils.constructAbsoluteFilePath(scope, image_path, true));
+    	
 		// check the required parameters 
 		if (whatFile == null || whatFile.getName().trim().isEmpty())
 			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + image_path, scope), true);
@@ -259,9 +414,62 @@ public class PatternMatching {
              }
              
         }
+//        System.out.println(image_path);
+////        cropGrid(final BufferedImage srcImg, final int cols, final int rows)
+//        try {
+//            cropGrid(whatFile, cols, rows);
+//            String basePath = new File("results").getAbsolutePath();
+//            File dir = new File(basePath);
+//            File[] directoryListing = dir.listFiles();
+//            
+//            if (directoryListing != null) {
+//                sortByNumber(directoryListing);
+//                for (int i = 0; i < directoryListing.length; i++){
+//                	System.out.println(okilaaaaa)
+//                    System.out.println(directoryListing[i].getName());
+////                    print2DArray(classifyCode(directoryListing[i]));
+//                    System.out.println("------------------------------------------------");
+//                }
+//            }
+//        }catch (Exception e){
+//        	e.printStackTrace();
+//        }
         return result;
        
     }
 
-  
+    @operator (
+			value = "code_detect",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "detect lego code from an image")
+    public static List<Lego> codeDetecting(final IScope scope, final String image_path, final Integer cols, final Integer rows )  {
+    	List<Lego> results = GamaListFactory.create();
+    	File whatFile = new File(FileUtils.constructAbsoluteFilePath(scope, image_path, true));
+		if (whatFile == null || whatFile.getName().trim().isEmpty())
+			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + image_path, scope), true);
+		try {
+            cropGrid(whatFile, cols, rows);
+            String basePath = new File("results").getAbsolutePath();
+            File dir = new File(basePath);
+            File[] directoryListing = dir.listFiles();
+            
+            if (directoryListing != null) {
+                sortByNumber(directoryListing);
+                for (int i = 0; i < directoryListing.length; i++){
+                	Lego l = new Lego(2, 2, Types.INT);
+                	l.setVal(classifyCode(scope, directoryListing[i]));
+                	results.add(l);
+                	System.out.println("Element: ");
+                    System.out.println(l.getVal());
+                    System.out.println("------------------------------------------------");
+                }
+            }
+        }catch (Exception e){
+        	e.printStackTrace();
+        }
+		
+        return results;
+    }
 }
