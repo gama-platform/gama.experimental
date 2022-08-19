@@ -18,7 +18,7 @@ generate_parent_pom(){
     modules=$'\n'$"<modules>"$'\n'
     for file in *; do 
       if [[ -d "$file" && ! -L "$file" ]]; then
-        echo "$file is a directory"; 
+        #echo "$file is a directory"; 
          if [[ -f "$file/pom.xml" && "$file" != "msi.gama.experimental.parent" ]]; then
             echo "File $file/pom.xml found!"        
             modules="$modules <module>../$file</module> "$'\n'
@@ -55,7 +55,7 @@ generate_p2updatesite_category(){
 				temp=$(echo $temp|tr -d '\n')
                 cate="$cate $temp "$'\r'$'\n'        
 				
-                echo $cate
+                #echo $cate
 				echo 
                 
             fi
@@ -63,7 +63,7 @@ generate_p2updatesite_category(){
       fi; 
     done
 
-    echo $cate
+    #echo $cate
     
     if [[ "$current_cate" != "$cate" ]]; then
         echo "$cate" > msi.gama.experimental.p2updatesite/category_body.xml
@@ -76,5 +76,5 @@ generate_p2updatesite_category
 #git_push
 
 cd msi.gama.experimental.parent &&
-mvn clean install -U &&
+mvn clean install  -P p2Repo  --settings ../settings.xml &&
 cd -

@@ -1,12 +1,13 @@
 #!/bin/bash
 
 deploy(){	
-cd msi.gama.experimental.p2updatesite &&
-mvn -U clean install -P p2Repo --settings ../settings.xml && 
-cd -
-}
 
-deploy
+cd msi.gama.experimental.p2updatesite &&
+mvn install -P p2Repo --settings ../settings.xml && 
+cd -
+
+}
+ 
 MESSAGE=$(git log -1 HEAD --pretty=format:%s)
 echo $MESSAGE
 if  [[ ${MESSAGE} == *"ci ext"* ]]; then			
