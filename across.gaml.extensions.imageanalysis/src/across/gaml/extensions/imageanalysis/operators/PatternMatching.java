@@ -4,33 +4,25 @@ package across.gaml.extensions.imageanalysis.operators;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import com.github.sarxos.webcam.Webcam;
 import com.google.common.io.Files;
 
 import across.gaml.extensions.imageanalysis.boofcv.RemovePerspectiveDistortion;
-import boofcv.alg.enhance.GEnhanceImageOps;
-import boofcv.alg.template.TemplateMatching;
-import boofcv.factory.template.FactoryTemplateMatching;
-import boofcv.factory.template.TemplateScoreType;
 import boofcv.io.image.ConvertBufferedImage;
-import boofcv.io.image.UtilImageIO;
-import boofcv.struct.feature.Match;
 import boofcv.struct.image.GrayF32;
-import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.ImageType;
 import boofcv.struct.image.Planar;
 import georegression.struct.point.Point2D_F64;
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.common.util.FileUtils;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.GamaShape;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.operator;
@@ -39,20 +31,14 @@ import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
-import msi.gama.util.GamaMapFactory;
 import msi.gama.util.matrix.GamaIntMatrix;
-import msi.gaml.operators.Spatial.Creation;
 import msi.gaml.types.IType;
-import msi.gaml.types.Types;
 
 public class PatternMatching {
 	// hdtrung - save 4 selected points of map: top-left, top-right, bottom-right, bottom-left
 	private static List<GamaPoint> map_corners;
-	
-	public static void print2DArray(int[][] arr){
-//        System.out.println(arr[0][0] + " " + arr[1][0] + " | ");
-//        System.out.println(arr[0][1] + " " + arr[1][1] + " | ");
-    }
+	private static List<List<GamaIntMatrix>> current_matrix_map;
+	private static List<List<Integer>> current_int_map;
 	
 	public static double getBlackIntensity(final BufferedImage img){
         int intensity = 0;
@@ -88,71 +74,24 @@ public class PatternMatching {
                 ImageIO.write(dest,"PNG", pathFile);
             }
         }
-        
-        
-//        File file = new File(resultPath);
-//        System.out.println("check2");
-//        if(file.exists()) {
-//        	System.out.println("check3");
-//	        for (int i = 0; i < 2*cols - 1; i = i + 2){
-//	            for (int j = 0; j < 2*rows - 1; j = j + 2){
-//	                BufferedImage dest = srcImg.getSubimage(i*width, j*height, width, height);
-//	                int numberFiles = file.list().length + 1;
-//	                File pathFile = new File(resultPath + numberFiles + ".PNG");
-//	                ImageIO.write(dest,"PNG", pathFile);
-//	            }
-//	        }
-//        }else {
-//        	System.out.println("check4");
-//        	new File(resultPath).mkdir();
-//        	System.out.println("make directory: " + file.isDirectory());
-//        	for (int i = 0; i < 2*cols - 1; i = i + 2){
-//	            for (int j = 0; j < 2*rows - 1; j = j + 2){
-//	            	System.out.println("check5");
-//	                BufferedImage dest = srcImg.getSubimage(i*width, j*height, width, height);
-//	                int numberFiles = file.list().length + 1;
-//	                File pathFile = new File(resultPath + numberFiles + ".PNG");
-//	                ImageIO.write(dest,"PNG", pathFile);
-//	                System.out.println("check6");
-//	            }
-//	        }
-//        }
         return null;
     }
 	
-	private static String cropImage(final BufferedImage srcImg, final int cols, final int rows) throws IOException {
-        int width = srcImg.getWidth()/cols;
-        int height = srcImg.getHeight()/rows;
-        
-        String basePath = new File("results").getAbsolutePath();
-        if (!new File(basePath).exists()) {
-        	new File(basePath).mkdir();
-        }
-
-        for (int i = 0; i < cols; i++){
-            for (int j = 0; j < rows; j++){
-                BufferedImage dest = srcImg.getSubimage(i*width, j*height, width, height);
-                File pathFile = new File(basePath + "/" + i + j + ".PNG");
-                ImageIO.write(dest,"PNG", pathFile);
-            }
-        }
-        return null;
-    }
-	
-    private static List<Match> findMatches(GrayF32 image, GrayF32 template, GrayF32 mask,
-                                           int expectedMatches ) {
-        // create template matcher.
-    
-        TemplateMatching<GrayF32> matcher =
-                FactoryTemplateMatching.createMatcher(TemplateScoreType.SUM_SQUARE_ERROR, GrayF32.class);
-
-        // Find the points which match the template the best
-        matcher.setImage(image);
-        matcher.setTemplate(template, mask, expectedMatches);
-        matcher.process();
-
-        return matcher.getResults().toList();  
-    }
+	public static BufferedImage mirrorImage(BufferedImage img) throws IOException {
+	      //Getting the height and with of the read image.
+	      int height = img.getHeight();
+	      int width = img.getWidth();
+	      //Creating Buffered Image to store the output
+	      BufferedImage res = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+	      for(int j = 0; j < height; j++){
+	         for(int i = 0, w = width - 1; i < width; i++, w--){
+	            int p = img.getRGB(i, j);
+	            //set mirror image pixel value - both left and right
+	            res.setRGB(w, j, p);
+	         }
+	      }
+	      return res;
+	}
     
     public static GamaIntMatrix classifyCode(final IScope scope, final File f){
         int[][] r = new int[2][2];
@@ -253,78 +192,19 @@ public class PatternMatching {
     	 return new Point2D_F64(pt.x * coeffX,pt.y * coeffY);
     }
     
-    
-    @operator (
-			value = "gray_sharpened_4",
-			can_be_const = false,
-			category = IOperatorCategory.LIST)
-	@doc (
-			value = "Grayscale the image and apply sharpen-4")
-	public static String shapened4(final IScope scope, final String outputPath, final String  image_path)  {
-    	BufferedImage tmpBfrImage = getBufferedImage(scope,image_path );
-    	BufferedImage result = null;
-    	Planar<GrayU8> color = ConvertBufferedImage.convertFrom(tmpBfrImage, true, ImageType.PL_U8);
-    	Planar<GrayU8> adjusted = color.createSameShape();
-        GEnhanceImageOps.sharpen4(color, adjusted);
-        result = ConvertBufferedImage.convertTo_U8(adjusted, null, true);
-    	File outputfile = new File(FileUtils.constructAbsoluteFilePath(scope, outputPath, false));
-		try {
-
-			String ext = Files.getFileExtension(outputfile.getAbsolutePath());
-			ImageIO.write(result, ext, outputfile);
-		} catch (IOException e) {
-			GAMA.reportError(scope, GamaRuntimeException.error("Problem when writting file " + outputfile +": " + e, scope), true);
-			
-		}
-		if (outputfile.exists())
-			return outputfile.getAbsolutePath();
-	    return null; 
-       
-    }
-    
-    @operator (
-			value = "gray_sharpened_8",
-			can_be_const = false,
-			category = IOperatorCategory.LIST)
-	@doc (
-			value = "Grayscale the image and apply sharpen-8")
-	public static String shapened8(final IScope scope, final String outputPath, final String  image_path)  {
-    	BufferedImage tmpBfrImage = getBufferedImage(scope,image_path );
-    	BufferedImage result = null;
-    	Planar<GrayU8> color = ConvertBufferedImage.convertFrom(tmpBfrImage, true, ImageType.PL_U8);
-    	Planar<GrayU8> adjusted = color.createSameShape();
-        GEnhanceImageOps.sharpen8(color, adjusted);
-        result = ConvertBufferedImage.convertTo_U8(adjusted, null, true);
-    	File outputfile = new File(FileUtils.constructAbsoluteFilePath(scope, outputPath, false));
-		try {
-
-			String ext = Files.getFileExtension(outputfile.getAbsolutePath());
-			ImageIO.write(result, ext, outputfile);
-		} catch (IOException e) {
-			GAMA.reportError(scope, GamaRuntimeException.error("Problem when writting file " + outputfile +": " + e, scope), true);
-			
-		}
-		if (outputfile.exists())
-			return outputfile.getAbsolutePath();
-	    return null; 
-       
-    }
-    
-    
     @operator (
 			value = "remove_perspective",
 			can_be_const = false,
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "remove the perspective from an image using 4 reference points (top-left, top-right, bottom-right, bottom-left)")
-	public static String removePerspective(final IScope scope, final String outputPath, final List<GamaPoint> points, final String  image_path, int resWidth, int resHeight)  {
-    	BufferedImage flat = removeDistortion(scope, points,image_path,resWidth,resHeight);
+	public static String removePerspective(final IScope scope, final String outputPath, final String  image_path, int resWidth, int resHeight)  {
+    	BufferedImage flat = removeDistortion(scope, map_corners,image_path,resWidth,resHeight);
 		File outputfile = new File(FileUtils.constructAbsoluteFilePath(scope, outputPath, false));
 		try {
-
+			BufferedImage flat1 = mirrorImage(flat);
 			String ext = Files.getFileExtension(outputfile.getAbsolutePath());
 			ImageIO.write(flat, ext, outputfile);
-			map_corners = points;
 		} catch (IOException e) {
 			GAMA.reportError(scope, GamaRuntimeException.error("Problem when writting file " + outputfile +": " + e, scope), true);
 			
@@ -334,6 +214,7 @@ public class PatternMatching {
 	    return null; 
        
     }
+    
     public static BufferedImage getBufferedImage(final IScope scope, final String  image_path) {
     	File imageFile = new File(FileUtils.constructAbsoluteFilePath(scope, image_path, true));
 		if (imageFile == null || imageFile.getName().trim().isEmpty())
@@ -378,74 +259,19 @@ public class PatternMatching {
 
 		return ConvertBufferedImage.convertTo_F32(output, null, true);
     }
-    
-    @operator (
-			value = "image_matching",
-			can_be_const = false,
-			category = IOperatorCategory.LIST)
-	@doc (
-			value = "detect pattern images from an image")
-	public static Map<GamaShape, Map<String, Double>> patternMatching(final IScope scope, final String image_path, final Map<String, String> patterns_path, final Integer expectedMatches )  {
-//    public static Map<GamaShape, Map<String, Double>> patternMatching(final IScope scope, final String image_path, final Integer cols, final Integer rows )  {
-    	File whatFile = new File(FileUtils.constructAbsoluteFilePath(scope, image_path, true));
-    	
-		// check the required parameters 
-		if (whatFile == null || whatFile.getName().trim().isEmpty())
-			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + image_path, scope), true);
-		Map result =  GamaMapFactory.create();
-        // Original image
-        GrayF32 image = UtilImageIO.loadImage(whatFile.getParentFile().getAbsolutePath(), whatFile.getName(), GrayF32.class);
-        int numMatches = expectedMatches == null ?  Integer.MAX_VALUE : expectedMatches;
-        for(String pattern : patterns_path.keySet()) {
-        	File pi = new File(FileUtils.constructAbsoluteFilePath(scope, pattern, true));
-    		
-        	 GrayF32 patim = UtilImageIO.loadImage(pi.getParentFile().getAbsolutePath(), pi.getName(), GrayF32.class);
-        	 var output = new BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_BGR);
-             ConvertBufferedImage.convertTo(image, output);
-             List<Match> found = findMatches(image, patim, null, numMatches);
-             for (Match m : found) {
-            	Map info =  GamaMapFactory.create();
-            	 info.put("TYPE", patterns_path.get(pattern));
-            	 info.put("SCORE", m.score);
-            	
-                 IShape shape = Creation.rectangle(scope, patim.width , patim.height);
-                 shape.setLocation(new GamaPoint(m.x + patim.width/2.0,m.y + patim.height/2.0));
-                 result.put(shape, info);
-             }
-             
-        }
-//        System.out.println(image_path);
-////        cropGrid(final BufferedImage srcImg, final int cols, final int rows)
-//        try {
-//            cropGrid(whatFile, cols, rows);
-//            String basePath = new File("results").getAbsolutePath();
-//            File dir = new File(basePath);
-//            File[] directoryListing = dir.listFiles();
-//            
-//            if (directoryListing != null) {
-//                sortByNumber(directoryListing);
-//                for (int i = 0; i < directoryListing.length; i++){
-//                	System.out.println(okilaaaaa)
-//                    System.out.println(directoryListing[i].getName());
-////                    print2DArray(classifyCode(directoryListing[i]));
-//                    System.out.println("------------------------------------------------");
-//                }
-//            }
-//        }catch (Exception e){
-//        	e.printStackTrace();
-//        }
-        return result;
-       
-    }
 
+    
     @operator (
 			value = "code_detect",
 			can_be_const = false,
+			type = IType.LIST,
+			content_type = IType.MATRIX,
 			category = IOperatorCategory.LIST)
 	@doc (
-			value = "detect lego code from an image")
-    public static List<Lego> codeDetecting(final IScope scope, final String image_path, final Integer cols, final Integer rows )  {
-    	List<Lego> results = GamaListFactory.create();
+			value = "detect lego code from an image - result is matrix type")
+    public static List<List<GamaIntMatrix>> codeDetectMatrix(final IScope scope, final String image_path, final Integer cols, final Integer rows )  {
+    	List<List<GamaIntMatrix>> results = GamaListFactory.create();
+    	List<List<GamaIntMatrix>> reverse_results = GamaListFactory.create();
     	File whatFile = new File(FileUtils.constructAbsoluteFilePath(scope, image_path, true));
 		if (whatFile == null || whatFile.getName().trim().isEmpty())
 			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + image_path, scope), true);
@@ -455,21 +281,175 @@ public class PatternMatching {
             File dir = new File(basePath);
             File[] directoryListing = dir.listFiles();
             
+            int current_index = 0;
+            
             if (directoryListing != null) {
                 sortByNumber(directoryListing);
-                for (int i = 0; i < directoryListing.length; i++){
-                	Lego l = new Lego(2, 2);
-                	l.setVal(classifyCode(scope, directoryListing[i]));
-                	results.add(l);
-                	System.out.println("Element: ");
-                    System.out.println(l.getVal());
-                    System.out.println("------------------------------------------------");
+                for (int i = 0; i < cols; i++) {
+                	List<GamaIntMatrix> r = GamaListFactory.create();
+                	List<Integer> r2 = GamaListFactory.create();
+                	for (int j = 0; j < rows; j++) {
+                		GamaIntMatrix l = new GamaIntMatrix(2, 2);
+                    	l = classifyCode(scope, directoryListing[current_index]);
+                    	r.add(l); 	
+                    	current_index++;
+                	}
+                	results.add(r);
+                	System.out.println();
                 }
+                Collections.reverse(results);
+            }
+            for (File file: dir.listFiles())
+                if (!file.isDirectory())
+                    file.delete();
+            if(current_matrix_map != null) {
+	           	for (int i = 0; i < results.size(); i++) {
+	           		if (current_matrix_map.get(i) != results.get(i)) {
+	           			current_matrix_map = results;
+	           			Collections.reverse(results);
+	           			return results;
+	           		}
+	           	}
+            } else {
+            	current_matrix_map = results;
+   			 	return results;
             }
         }catch (Exception e){
         	e.printStackTrace();
         }
-		
-        return results;
+		return current_matrix_map;
     }
+
+    @operator (
+			value = "code_detect",
+			can_be_const = false,
+			type = IType.LIST,
+			content_type = IType.MATRIX,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "detect lego code from an image - result is int type")
+    public static List<List<Integer>> codeDetectInt(final IScope scope, final String image_path, final Integer cols, final Integer rows )  {
+    	List<List<GamaIntMatrix>> results = GamaListFactory.create();
+    	List<List<Integer>> int_results = GamaListFactory.create();
+    	File whatFile = new File(FileUtils.constructAbsoluteFilePath(scope, image_path, true));
+    	
+		if (whatFile == null || whatFile.getName().trim().isEmpty())
+			GAMA.reportError(scope, GamaRuntimeException.error("Problem when reading file " + image_path, scope), true);
+		try {
+            cropGrid(whatFile, cols, rows);
+            String basePath = new File("results").getAbsolutePath();
+            File dir = new File(basePath);
+            File[] directoryListing = dir.listFiles();
+            
+            int current_index = 0;
+            
+            if (directoryListing != null) {
+                sortByNumber(directoryListing);
+                for (int i  = 0; i < cols; i++) {
+                	List<GamaIntMatrix> r = GamaListFactory.create();
+                	List<Integer> r2 = GamaListFactory.create();
+                	for (int j = 0; j < rows; j++) {
+                		GamaIntMatrix l = new GamaIntMatrix(2, 2);
+                    	l = classifyCode(scope, directoryListing[current_index]);
+                    	int tmp = convertCode(l);
+                    	r.add(l);
+                    	r2.add(tmp);     	
+                    	current_index++;
+                	}
+                	results.add(r);
+                	int_results.add(r2);
+                }
+            }
+            Collections.reverse(int_results);
+            for (File file: dir.listFiles())
+                if (!file.isDirectory())
+                    file.delete();
+            if(current_int_map != null) {
+	           	for (int i = 0; i < results.size(); i++) {
+	           		if (current_int_map.get(i) != int_results.get(i)) {
+	           			current_int_map = int_results;
+	           			return int_results;
+	           		}
+	           	}
+            } else {
+            	current_int_map = int_results;
+   			 	return int_results;
+            }
+        }catch (Exception e){
+        	e.printStackTrace();
+        }
+		return current_int_map;
+    }
+    
+    public static int convertCode(GamaIntMatrix m) {
+    	int result = 0;
+    	int sum = m.getMatrix()[0] + m.getMatrix()[1] + m.getMatrix()[2]+ m.getMatrix()[3];
+        switch (sum){
+            case 1:
+                if (m.getMatrix()[0] == 1 || m.getMatrix()[3] == 1){
+                	result = 10;
+                }else {
+                	result = 11;
+                }
+                break;
+            case 2:
+                if (m.getMatrix()[0] == m.getMatrix()[3]){
+                    if (m.getMatrix()[0] == 1){
+                    	result = 20;
+                    }else {
+                    	result = 21;
+                    }
+                }else {
+                    if (m.getMatrix()[0] == m.getMatrix()[1]){
+                    	result = 30;
+                    }else {
+                    	result = 31;
+                    }
+                }
+                break;
+            case 3:
+                if (m.getMatrix()[0] == 0 || m.getMatrix()[3] == 0){
+                	result = 40;
+                }else {
+                	result = 41;
+                }
+                break;
+            default: result = 0;
+        }
+    	return result;
+    }
+    
+    @operator (
+			value = "map_define",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "define 4 corners of map from an image using 4 reference points (top-left, top-right, bottom-right, bottom-left)")
+	public static String mapDefine(final IScope scope, final List<GamaPoint> points)  {
+    	captureImg(scope, "../includes/difine_map.png", 0);
+    	map_corners = points;
+	    return null; 
+    }
+    
+    @operator (
+			value = "capture_image",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "capture an image by webcam.")
+	public static String captureImg (final IScope scope, final String name, final Integer camera) {
+		Webcam webcam = Webcam.getWebcamByName(Webcam.getWebcams().get(camera).getName());
+//		for(Webcam w : Webcam.getWebcams()) {
+//			System.out.println(w.getName());
+//		}
+		webcam.open();
+		try {
+			BufferedImage img = webcam.getImage();
+			ImageIO.write(img, "PNG", new File(FileUtils.constructAbsoluteFilePath(scope, name, false)));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return name;
+	}
 }
