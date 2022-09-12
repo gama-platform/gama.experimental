@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="across.gama.feature.imageanalysis"
+      id="across.gaml.feature.imageanalysis"
       label="Imageanalysis"
       version="1.0.0.qualifier">
 

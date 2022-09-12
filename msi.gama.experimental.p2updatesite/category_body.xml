@@ -1,5 +1,6 @@
 
  
+ <feature url="features/across.gaml.feature.imageanalysis_1.0.0.qualifier.jar" id="across.gaml.feature.imageanalysis" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/cict.feature.VR_1.0.0.qualifier.jar" id="cict.feature.VR" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/femto_st.gama.feature.mpi_1.0.0.qualifier.jar" id="femto_st.gama.feature.mpi" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/irit.gama.feature.jdeqsim_1.0.0.qualifier.jar" id="irit.gama.feature.jdeqsim" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
