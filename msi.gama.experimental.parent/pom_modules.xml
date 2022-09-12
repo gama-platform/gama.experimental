@@ -33,11 +33,13 @@
  <module>../ummisco.gama.feature.markdown.documentation</module> 
  <module>../ummisco.gama.feature.matlab</module> 
  <module>../ummisco.gama.feature.remote.gui</module> 
+ <module>../ummisco.gama.feature.uml</module> 
  <module>../ummisco.gama.feature.unity</module> 
  <module>../ummisco.gama.gaming</module> 
  <module>../ummisco.gama.gamr</module> 
  <module>../ummisco.gama.markdown.documentation</module> 
  <module>../ummisco.gama.remote.gui</module> 
+ <module>../ummisco.gama.uml</module> 
  <module>../ummisco.gaml.extensions.fuzzylogic</module> 
  <module>../ummisco.gaml.extensions.mike</module> 
  <module>../ummisco.gaml.extensions.rjava</module> 
