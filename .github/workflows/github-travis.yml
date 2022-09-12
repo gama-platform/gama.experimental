@@ -26,7 +26,7 @@ jobs:
       
       - name: Prepare build
         run: |
-          echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.defaultLogLevel=error -XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmx2048m'" >> ~/.mavenrc
+          echo "MAVEN_OPTS='-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmx6g -Xms6g'" >> ~/.mavenrc
           sudo chmod +x $GITHUB_WORKSPACE/*.sh 
           bash custom_mvn.sh
           cat ~/.m2/settings.xml 
@@ -39,6 +39,13 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           TRAVIS_COMMIT: ${ GITHUB_SHA }
           TRAVIS_EVENT_TYPE: ${{ github.event_name }}
+
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Cache local Maven repository
         uses: actions/cache@v2
