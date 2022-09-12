@@ -22,8 +22,8 @@
         <profile>
             <id>gpg</id>
             <properties>
-                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-                <gpg.keyname>${env.GPG_KEYNAME}</gpg.keyname>
+                <gpg.passphrase>${secrets.GPG_PASSPHRASE}</gpg.passphrase>
+                <gpg.keyname>${secrets.GPG_KEYNAME}</gpg.keyname>
             </properties>
         </profile>
     </profiles>
