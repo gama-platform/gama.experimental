@@ -46,6 +46,7 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          fingerprint: "D861BC55B2E55B9E24888225DC437A2CA43755F0"
 
       - name: Cache local Maven repository
         uses: actions/cache@v2
