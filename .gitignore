@@ -30,3 +30,6 @@ msi.gama.ext/lib/
 /*/.apt_generated/
 stderr
 stdout
+
+msi.gama.experimental.p2updatesite/category.xml
+msi.gama.experimental.parent/pom.xml
