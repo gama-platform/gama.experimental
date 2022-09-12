@@ -4,7 +4,7 @@ Bundle-Name: Uml Generator
 Bundle-SymbolicName: ummisco.gama.uml;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: ummisco.gama.uml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: org.apache.commons.io,
  org.eclipse.compare,
  org.eclipse.ui.commands

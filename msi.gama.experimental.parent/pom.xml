@@ -21,8 +21,8 @@
 			<url>http://updates.gama-platform.org/1.8.2</url>
 		</repository>
 		<repository>
-			<id>eclipse-2021-12</id>
-			<url>https://download.eclipse.org/releases/2021-12</url>
+			<id>eclipse-2022-03</id>
+			<url>https://download.eclipse.org/releases/2022-03</url>
 			<layout>p2</layout>
 		</repository>
 	</repositories>

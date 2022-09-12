@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: mit.gaml.extension.launchpad
 Bundle-SymbolicName: mit.gaml.extension.launchpad;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: msi.gama.core,
  msi.gama.ext
 Bundle-ClassPath: libs/lib/hazelcast-2.6.jar,
