@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: GAML Standalone executable creator
 Bundle-SymbolicName: ummisco.gama.gamr;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Main-Class: gamrGenerator.GamaLauncher
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,

@@ -4,7 +4,7 @@ Bundle-Name: Apiland
 Bundle-SymbolicName: maelia.extensions.apiland;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: maelia.extensions.apiland
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: msi.gama.core;bundle-version="1.8.1"
 Export-Package: maelia.extensions.apiland.skills
 Bundle-ClassPath: lib/antlr-4.4.jar,
