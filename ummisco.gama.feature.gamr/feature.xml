@@ -2,7 +2,7 @@
 <feature
       id="ummisco.gama.feature.gamr"
       label="GAMR creator"
-      version="1.0.0.qualifier">
+      version="1.8.2.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
