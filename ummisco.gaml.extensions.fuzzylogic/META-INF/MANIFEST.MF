@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Fuzzy logic extension
 Bundle-SymbolicName: ummisco.gaml.extensions.fuzzylogic;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.8.2.qualifier
 Automatic-Module-Name: ummisco.gaml.extensions.fuzzylogic
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: msi.gama.core;bundle-version="1.7.0",
- msi.gama.ext;bundle-version="1.7.0"
+Require-Bundle: msi.gama.core;bundle-version="1.8.2",
+ msi.gama.ext;bundle-version="1.8.2"
 Bundle-ClassPath: lib/jFuzzyLogic.jar,
  .
 Export-Package: ummisco.gaml.extensions.fuzzylogic.gaml

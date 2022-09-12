@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Gaming
 Bundle-SymbolicName: ummisco.gama.gaming;singleton:=true
-Bundle-Version: 1.7.0.qualifier
+Bundle-Version: 1.8.2.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: msi.gama.core;bundle-version="1.7.0",
- msi.gama.ext;bundle-version="1.7.0"
+Require-Bundle: msi.gama.core;bundle-version="1.8.2",
+ msi.gama.ext;bundle-version="1.8.2"
 Automatic-Module-Name: ummisco.gama.gaming
