@@ -76,5 +76,10 @@ generate_p2updatesite_category
 #git_push
 
 cd msi.gama.experimental.parent &&
+
+if [[ $GPG_PASSPHRASE != "" ]]; then
+    mvn verify -Dgpg.passphrase=$GPG_PASSPHRASE --settings ../settings.xml 
+fi
+
 mvn clean install  -P p2Repo  --settings ../settings.xml &&
 cd -
