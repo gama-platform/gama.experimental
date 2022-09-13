@@ -22,8 +22,7 @@
         <profile>
             <id>gpg</id>
             <properties>
-                <gpg.passphrase>${secrets.GPG_PASSPHRASE}</gpg.passphrase>
-                <gpg.keyname>${secrets.GPG_KEYNAME}</gpg.keyname>
+                <gpg.keyname>6BB1546499D1932E</gpg.keyname>
             </properties>
         </profile>
     </profiles>

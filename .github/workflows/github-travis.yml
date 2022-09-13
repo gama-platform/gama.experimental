@@ -58,7 +58,6 @@ jobs:
 
       - name: Build with Maven 
         run: |
-            mvn verify -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
             bash decrypt_secret.sh
             bash $GITHUB_WORKSPACE/travis_build.sh 
         env:
@@ -70,6 +69,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           TRAVIS_COMMIT: ${ GITHUB_SHA }
           TRAVIS_EVENT_TYPE: ${{ github.event_name }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
               
 
       - name: Check if it's a manual trigger and should deploy
