@@ -23,14 +23,6 @@ jobs:
           java-version: '17'
           java-package: jdk  
           cache: maven
-
-      - name: Import GPG key
-        id: import_gpg
-        uses: crazy-max/ghaction-import-gpg@v5
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          #fingerprint: "D861BC55B2E55B9E24888225DC437A2CA43755F0"
       
       - name: Prepare build
         run: |
@@ -40,9 +32,6 @@ jobs:
           bash custom_mvn.sh
           cat ~/.m2/settings.xml 
           bash decrypt_secret.sh
-          # GPG
-          touch ~/.gnupg/gpg.conf
-          echo "default-key  6BB1546499D1932E" >> ~/.gnupg/gpg.conf
         env:
           MSG: ${ github.event.head_commit.message } 
           SSH_USER_PWD: ${{ secrets.USER_PWD }}
@@ -53,6 +42,15 @@ jobs:
           TRAVIS_COMMIT: ${ GITHUB_SHA }
           TRAVIS_EVENT_TYPE: ${{ github.event_name }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Import JAR signing keystore
+        run: |
+          echo $GAMA_KEYSTORE_BASE64 | base64 --decode > ~/gama.keystore
+          # Config file
+          sed -i "s/<storepass>GAMA_STORE/<storepass>$GAMA_STORE/g" $GITHUB_WORKSPACE/msi.gama.experimental.parent/pom_footer.xml
+        env:
+          GAMA_KEYSTORE_BASE64: ${{ secrets.GAMA_KEYSTORE_BASE64 }}
+          GAMA_STORE: ${{ secrets.GAMA_KEYSTORE_STOREPASS }}
 
       - name: Build with Maven 
         run: bash $GITHUB_WORKSPACE/travis_build.sh 
