@@ -45,7 +45,7 @@ jobs:
 
       - name: Import JAR signing keystore
         run: |
-          echo $GAMA_KEYSTORE_BASE64 | base64 --decode > ~/gama.keystore
+          echo "$GAMA_KEYSTORE_BASE64" | base64 --decode > ~/gama.keystore
           # Config file
           sed -i "s/<storepass>GAMA_STORE/<storepass>$GAMA_STORE/g" $GITHUB_WORKSPACE/msi.gama.experimental.parent/pom_footer.xml
         env:
