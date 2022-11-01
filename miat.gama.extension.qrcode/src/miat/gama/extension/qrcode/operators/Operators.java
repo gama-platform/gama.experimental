@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import com.github.sarxos.webcam.Webcam;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
@@ -28,6 +27,7 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.multi.GenericMultipleBarcodeReader;
 import com.google.zxing.multi.MultipleBarcodeReader;
 
+import miat.gama.extension.qrcode.type.GamaWebcam;
 import msi.gama.common.util.FileUtils;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.GamaShape;
@@ -49,8 +49,6 @@ import msi.gaml.types.Types;
 
 public class Operators {
 	
-	static Webcam webcam;
-	static Integer webcam_id;
 	
 	
 	@operator (
@@ -79,61 +77,39 @@ public class Operators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot with the given resolution (width, height) in pixels from the given webcam")
-	public static IMatrix cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height, Integer webcamid) {
-		BufferedImage im = CamShotAct(scope, width, height, webcamid);
+	public static IMatrix cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height, GamaWebcam webcam) {
+		BufferedImage im = CamShotAct(scope, width, height, webcam);
 		return  matrixValueFromImage(scope, im); 
 	}
 	
-	private static BufferedImage CamShotAct(final IScope scope,final Integer width, final Integer height, Integer webcamId) {
-		if ((webcamId != null) && (webcamId >= Webcam.getWebcams().size())) {
-			webcamId = 0;
-		} 
-		if ((webcam_id != null) && (webcam_id != webcamId)){
-			webcam_id = webcamId;
-			
-			if (webcam != null) {
-				webcam.close();
-				webcam = null;
-			}
-		}
-		if (webcam == null) {
-			if ((webcamId != null) ) {
-				webcam = Webcam.getWebcams().get(webcamId);
-				webcam_id = webcamId;
-			} else {
-				webcam = Webcam.getDefault();
-				webcam_id = 0;
-			}
-
-			webcam.getLock().disable();
-			webcam.open();
-		}
-		if (webcam == null) {
+	private static BufferedImage CamShotAct(final IScope scope,final Integer width, final Integer height, GamaWebcam webcam) {
+	
+		if (webcam == null || webcam.getWebcam() == null) {
 			GAMA.reportError(scope, GamaRuntimeException.error("No webcam detected", scope), false);
 		}
 		if (width != null && height != null)  {
 			Dimension dim = new Dimension(width, height);
-			if (!webcam.getViewSize().equals(dim)) {
-				webcam.close();
+			if (!webcam.getWebcam().getViewSize().equals(dim)) {
+				webcam.getWebcam().close();
 				boolean nonStandard = true;
-				for (int i = 0; i < webcam.getViewSizes().length; i++) {
-					if (webcam.getViewSizes()[i].equals(dim)) {
+				for (int i = 0; i < webcam.getWebcam().getViewSizes().length; i++) {
+					if (webcam.getWebcam().getViewSizes()[i].equals(dim)) {
 						nonStandard = false;
 						break;
 					}
 				}
 				if (nonStandard) {
 					Dimension[] nonStandardResolutions = new Dimension[] {dim};
-					webcam.setCustomViewSizes(nonStandardResolutions);
+					webcam.getWebcam().setCustomViewSizes(nonStandardResolutions);
 				}
-				webcam.setViewSize(dim);
+				webcam.getWebcam().setViewSize(dim);
 
-				webcam.getLock().disable();
-				webcam.open();
+				webcam.getWebcam().getLock().disable();
+				webcam.getWebcam().open();
 			}
 
 		}
-		BufferedImage bim = (BufferedImage) webcam.getImage(); 
+		BufferedImage bim = (BufferedImage) webcam.getWebcam().getImage(); 
 		return bim;
 	}
 	
@@ -186,8 +162,8 @@ public class Operators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "decode a QR code from a photoshot with the given resolution (width, height) in pixels from the given webcam")
-	public static String decodeQRcode(final IScope scope, final Integer width, final Integer height,final int idWebcam )  {
-		final BufferedImage tmpBfrImage = CamShotAct(scope, width, height, idWebcam);
+	public static String decodeQRcode(final IScope scope, final Integer width, final Integer height,final GamaWebcam webcam )  {
+		final BufferedImage tmpBfrImage = CamShotAct(scope, width, height, webcam);
 		if (tmpBfrImage == null)
 			GAMA.reportError(scope, GamaRuntimeException.error("Could not decode the image", scope), true);
 		LuminanceSource tmpSource = new BufferedImageLuminanceSource(tmpBfrImage);
@@ -218,8 +194,8 @@ public class Operators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "decode a QR code from a photoshot from the given webcam")
-	public static String decodeQRcode(final IScope scope, final int idWebcam )  {
-		return decodeQRcode(scope, null,null,idWebcam);
+	public static String decodeQRcode(final IScope scope, final GamaWebcam webcam )  {
+		return decodeQRcode(scope, null,null,webcam);
 	}
 	
 	
