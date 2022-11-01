@@ -8,7 +8,7 @@
 model testwebcam
 
 global {
-	int webcam <- 1;
+	webcam webcam1 <- webcam(1);
 	bool show_camera <- true;
 	int image_width <- 320;
 	int image_height <- 240;
@@ -30,12 +30,12 @@ global {
 	}
 	reflex capture_webcam {
 		//capture image from webcam
-		string result_qr_decode <- string(decodeQR(image_width, image_height,webcam));
+		string result_qr_decode <- string(decodeQR(image_width, image_height,webcam1));
 		write sample(result_qr_decode);
 		
 		
 		if show_camera {
-			matrix mat <- field(cam_shot("image_test", image_width, image_height, webcam));
+			matrix mat <- field(cam_shot("image_test", image_width, image_height, webcam1));
 			ask cell_image {
 				color <- rgb(mat[grid_x,grid_y]);		
 			}
