@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Image analysis</name>
-	<comment>imageanalysis plugin</comment>
+	<name>across.gama.feature.imageanalysis</name>
+	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -10,10 +10,14 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.pde.FeatureBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
 		<nature>msi.gama.application.gamaNature</nature>
-		<nature>msi.gama.application.pluginNature</nature>
 	</natures>
 </projectDescription>
