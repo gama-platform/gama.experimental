@@ -10,20 +10,22 @@ model analyseImage
 global {
 	list<rgb> colors <- [#red, #blue, #magenta, #yellow, #pink, #orange, #green, #cyan, #violet, #gray, #olivedrab, #lightsteelblue, #lightcoral];
 	image_file image_file_test <- image_file("../includes/WIN_20221102_11_17_05_Pro.jpg");
+	//image_file image_file_test <- image_file("../includes/WIN_20221107_09_53_49_Pro.jpg");
+	//image_file image_file_test <- image_file("../includes/WIN_20221107_09_54_37_Pro.jpg");
 	geometry shape <- rectangle(1920, 1080);
 	
 	
 	//tolerance for the comparison of color (white and black)
-	float tolerance_BW <- 1.2 min: 1.0 max: 2.0 step: 0.1 parameter: true;
+	float tolerance_BW <- 1.0 min: 1.0 max: 2.0 step: 0.1 parameter: true;
 	
 	//allow to increase the constrast of the image
-	float coeff_constrast <- 1.5 min: 1.0 max:3.0 step: 0.1 parameter: true;
+	float coeff_constrast <- 2.0 min: 1.0 max:3.0 step: 0.1 parameter: true;
 	
 	//define the low threshold for the detection of block
 	float low_threhold_block_detection <- 0.1 min: 0.0 max:0.5 step: 0.1 parameter: true;
 	
 	//define the high threshold for the detection of block
-	float high_threhold_block_detection <- 0.3 min: 0.1 max:1.0 step: 0.1 parameter: true;
+	float high_threhold_block_detection <- 0.5 min: 0.1 max:1.0 step: 0.1 parameter: true;
 	
 	//possibility to save all the images produced for debugging puropose
 	bool save_image <- false parameter: true;
@@ -82,7 +84,11 @@ global {
 				}
 			}
 		}
+		do create_agents;
+	
 	}
+	
+	action create_agents;
 	
 	//create a new pattern from a 2x2 matrix
 	pattern create_pattern(string id, int v00,int v01,int v10,int v11) {
@@ -99,9 +105,7 @@ global {
 		define_blacksubblock_points <- false;
 		define_bounds_points <- false;
 		distorsion_points <- [];
-		whitesubblock_points <- [];
-		blacksubblock_points <- [];
-		define_bounds_points <- [];
+		
 		current_mode <- "Definition of distorsion points";
 	}
 	
@@ -110,10 +114,7 @@ global {
 		define_whitesubblock_points <- not define_whitesubblock_points;
 		define_blacksubblock_points <- false;
 		define_bounds_points <- false;
-		distorsion_points <- [];
 		whitesubblock_points <- [];
-		blacksubblock_points <- [];
-		define_bounds_points <- [];
 		current_mode <- "Definition of the white block";
 	}
 	
@@ -122,10 +123,7 @@ global {
 		define_whitesubblock_points <- false;
 		define_blacksubblock_points <- not define_blacksubblock_points;
 		define_bounds_points <- false;
-		distorsion_points <- [];
-		whitesubblock_points <- [];
 		blacksubblock_points <- [];
-		define_bounds_points <- [];
 		current_mode <- "Definition of the black block";
 	}
 	
@@ -134,9 +132,6 @@ global {
 		define_whitesubblock_points <- false;
 		define_blacksubblock_points <- false;
 		define_bounds_points <- not define_bounds_points;
-		distorsion_points <- [];
-		whitesubblock_points <- [];
-		blacksubblock_points <- [];
 		bounds_points <- [];
 		current_mode <- "Definition of the block bound";
 	}
@@ -194,11 +189,12 @@ global {
 			  black_subblock, //black subblock for the computation of the black intensity 
 			  white_subblock,//white subblock for the computation of the white intensity
 			  bounds_g, //example of block for computation of the expected size of blocks
-			 tolerance_BW, //optional: tolerance for black and white color: default: 1.2
+			 tolerance_BW, //optional: tolerance for black and white color: default: 1.0
 			low_threhold_block_detection,//optional: low threshold for block detection, default: 0.1
-			 high_threhold_block_detection, //optional: high threshold for block detection, default: 0.3
-			 coeff_constrast, //optional: coefficient to increase the contrast of the imahe, default: 1.5 
+			 high_threhold_block_detection, //optional: high threshold for block detection, default: 0.5
+			 coeff_constrast, //optional: coefficient to increase the contrast of the imahe, default: 2.0 
 			 save_image //optional: save the image produced (just for debugging purpose)
+			
 		);
 		
 		
@@ -240,7 +236,6 @@ species cell
 		}
 	}
 }
-
 
 
 experiment analyseImage type: gui {

@@ -20,12 +20,19 @@ import across.gaml.extensions.imageanalysis.types.GamaWebcam;
 import across.gaml.extensions.imageanalysis.types.PatternBlock;
 import across.gaml.extensions.imageanalysis.types.PhysicalBlock;
 import boofcv.alg.color.ColorRgb;
+import boofcv.alg.enhance.EnhanceImageOps;
+import boofcv.alg.enhance.GEnhanceImageOps;
 import boofcv.alg.feature.detect.edge.CannyEdge;
+import boofcv.alg.feature.detect.edge.EdgeContour;
+import boofcv.alg.feature.detect.edge.EdgeSegment;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
+import boofcv.alg.misc.ImageStatistics;
+import boofcv.alg.shapes.ShapeFittingOps;
 import boofcv.factory.feature.detect.edge.FactoryEdgeDetectors;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.ConnectRule;
+import boofcv.struct.PointIndex_I32;
 import boofcv.struct.image.GrayF32;
 import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.ImageType;
@@ -158,7 +165,7 @@ public class PatternMatching {
 			maxyCorner = minyCorner + expectedH;
 		}
 		
-		 return image.getSubimage(minxCorner, minyCorner, Math.min(maxxCorner - minxCorner, image.getWidth() -1), Math.min(maxyCorner - minyCorner, image.getHeight()));
+		 return image.getSubimage(minxCorner, minyCorner, Math.min(maxxCorner - minxCorner, image.getWidth() -minxCorner), Math.min(maxyCorner - minyCorner, image.getHeight() -minyCorner));
 	}
 	
 	public static BufferedImage mirrorImage(BufferedImage img) throws IOException {
@@ -226,9 +233,9 @@ public class PatternMatching {
 	            		if (saveImage) {
 	            			File outputfile = new File(scope.getModel().getProjectPath() + "\\models\\generated\\subblocks\\image_"+cpt+".jpg");
 	                		ImageIO.write(dest, "jpg", outputfile);
-		                    System.out.println("image_" + cpt + " -> " + getBlackIntensity(dest) + " i: "+i + " j: "+j + " black:  " + isBlack(dest,thresholdMaxBlack,thresholdMinWhite));
+		                    System.out.println("image_" + cpt + " -> " + getBlackIntensity(dest) + " i: "+i + " j: "+j + " black:  " + isBlack(dest,thresholdMaxBlack,thresholdMinWhite) );
 	            		}
-	                    if(isBlack(dest,thresholdMaxBlack,thresholdMinWhite)){
+	            		if(isBlack(dest,thresholdMaxBlack,thresholdMinWhite)){
 		                    l.set(scope, j, i, 0);
 	                    }else {
 	                        l.set(scope, j, i, 1);
@@ -383,6 +390,7 @@ public class PatternMatching {
     }
 
     public static double getBlackIntensity(final BufferedImage img){
+    	
         int intensity = 0;
         int total = img.getHeight() * img.getWidth();
         for (int i = img.getMinX(); i < img.getWidth() ; i++) {
@@ -392,30 +400,89 @@ public class PatternMatching {
         }
         return (0.0 + intensity) / (0.0 + total) ;
     }
+    public static boolean isBlackNumberCanny(final BufferedImage img, float threshLow, float threshHigh){
+    	GrayF32 input = ConvertBufferedImage.convertFromSingle(img, null, GrayF32.class);
+
+		BufferedImage displayImage = new BufferedImage(input.width, input.height, BufferedImage.TYPE_INT_RGB);
+		// Finds edges inside the image
+		CannyEdge<GrayF32, GrayF32> canny = FactoryEdgeDetectors.canny(2, true, true, GrayF32.class, GrayF32.class);
+		
+		canny.process(input, 0.1f, 0.3f, null);
+		List<EdgeContour> contours = canny.getContours();
+		double sumPerimeters = 0;
+		for (EdgeContour e : contours) {
+			for (EdgeSegment s : e.segments) {
+				double perimetersS = 0;
+				List<PointIndex_I32> vertexes = ShapeFittingOps.fitPolygon(s.points, false, minSide, cornerPenalty);
+				if (vertexes.isEmpty()) continue;
+				PointIndex_I32 p0 = vertexes.get(0);
+				for (int i = 1; i < vertexes.size() ; i++) {
+					PointIndex_I32 p1 = vertexes.get(i);
+					perimetersS += p1.distance(p0);
+					p0 = p1;
+				}
+				sumPerimeters += perimetersS;
+			}
+		}
+		System.out.println("Number: " + sumPerimeters);
+		
+		return sumPerimeters < 70.0;
+		
+    }
     
-    public static boolean isBlack(final BufferedImage img, double thresholdB, double thresholdW){
+    public static BufferedImage improveImage(BufferedImage img) {
+    	 Planar<GrayU8> color = ConvertBufferedImage.convertFrom(img, true, ImageType.PL_U8);
+ 		
+         Planar<GrayU8> adjusted = color.createSameShape();
+
+         GEnhanceImageOps.sharpen8(color, adjusted);
+         img = ConvertBufferedImage.convertTo(adjusted, null, true);
+ 		
+        color = ConvertBufferedImage.convertFrom(img, true, ImageType.PL_U8);
+ 		adjusted = color.createSameShape();
+
+ 		int[] histogram = new int[256];
+ 		int[] transform = new int[256];
+
+
+ 		// Apply the correction to each color band independently. Alternatively, you could compute the adjustment
+ 		// on a gray scale image then apply the same transform to each band
+ 		for (int bandIdx = 0; bandIdx < color.getNumBands(); bandIdx++) {
+ 			ImageStatistics.histogram(color.getBand(bandIdx), 0, histogram);
+ 			EnhanceImageOps.equalize(histogram, transform);
+ 			EnhanceImageOps.applyTransform(color.getBand(bandIdx), transform, adjusted.getBand(bandIdx));
+ 		}
+ 		
+ 		GEnhanceImageOps.equalizeLocal(color, 50, adjusted, 256, null);
+ 		img = ConvertBufferedImage.convertTo(adjusted, null, true);
+ 		return img;
+    }
+    public static boolean isBlack( BufferedImage img, double thresholdB, double thresholdW){
         int cptB = 0;
         int cptW = 0;
-        for (int i = img.getMinX(); i < img.getWidth() ; i++) {
+
+        img = improveImage(img);
+		
+         for (int i = img.getMinX(); i < img.getWidth() ; i++) {
             for (int j = img.getMinTileY(); j < img.getHeight(); j++) {
-               int intensity  = img.getRGB(i,j) & 0xFF;
+            	int intensity  = img.getRGB(i,j) & 0xFF;
                if (intensity <= thresholdB) 
             	   cptB++;
                if (intensity >= thresholdW) 
             	   cptW++;
-               
             }
         }
-       // System.out.println("cptB: " + cptB + " cptW: "+ cptW);
+        System.out.println("cptB: " + cptB + " cptW: "+ cptW);
         return cptB >=  cptW;
     }
 	
     
-    static private List<Double> computeThresholdBlackIntensity(final IScope scope, final BufferedImage image, IShape blacksubBlock, IShape whitesubBlock, double tolerance, boolean saveImage ) {
+    static private List<Double> computeThresholdBlackIntensity(final IScope scope, BufferedImage image, IShape blacksubBlock, IShape whitesubBlock, double tolerance, boolean saveImage ) {
+
     	Envelope3D env = scope.getSimulation().getGeometry().getEnvelope();
     	
     	Envelope3D envB = blacksubBlock.getEnvelope();
-    	
+    	image = improveImage(image);
     	BufferedImage blackIm = image.getSubimage((int)(envB.getMinX() / env.getWidth() * image.getWidth()), (int)(envB.getMinY() / env.getHeight() * image.getHeight()), (int)(envB.getWidth() / env.getWidth() * image.getWidth()), (int)(envB.getHeight() / env.getHeight() * image.getHeight()));
     	double bI = getBlackIntensity(blackIm);
     	if (saveImage) {
@@ -461,7 +528,7 @@ public class PatternMatching {
 	@doc (
 			value = "detect the block from the image")
 	public static IList<PhysicalBlock> detecBlocks(final IScope scope, String imagePath, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int resWidth, int resHeight, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds) {
-    	return detecBlocks( scope, imagePath,  patterns, distorsionPoint, cols,  rows,  blacksubBlock,  whitesubBlock,  bounds, 1.2, 0.1f, 0.3f, 1.5f, false);
+    	return detecBlocks( scope, imagePath,  patterns, distorsionPoint, cols,  rows,  blacksubBlock,  whitesubBlock,  bounds, 1.0, 0.1f, 0.5f, 2.0f, false);
 
     }
     
@@ -473,7 +540,7 @@ public class PatternMatching {
 			value = "detect the block from the image")
 	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final int webcamImageWidth, final int webcamImageHeight, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds ) {
     	BufferedImage image = CamShotAct(scope,webcamImageWidth,webcamImageHeight, webcam);
-    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds, 1.2, 0.1f, 0.3f, 1.5f, false);
+    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds, 1.0, 0.1f, 0.5f, 2.0f, false);
 	}
     
     
@@ -485,9 +552,11 @@ public class PatternMatching {
 			value = "detect the block from the image")
 	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final int webcamImageWidth, final int webcamImageHeight, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage ) {
     	BufferedImage image = CamShotAct(scope,webcamImageWidth,webcamImageHeight, webcam);
-    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage );
+    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage);
 	}
     
+    
+   
     
     @operator (
 			value = "detect_blocks",
@@ -495,12 +564,15 @@ public class PatternMatching {
 			category = "image")
 	@doc (
 			value = "detect the block from the image")
-	public static IList<PhysicalBlock> detecBlocks(final IScope scope, String imagePath, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage ) {
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope, String imagePath, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage) {
 		
     	final BufferedImage image = getBufferedImage(scope, imagePath);
-    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage );
+    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage);
 
 	}
+    
+
+   
     
 	public static IList<PhysicalBlock> detecBlocks(final IScope scope, BufferedImage image, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage ) {
 		try {
@@ -516,7 +588,7 @@ public class PatternMatching {
     		List<Double> th =  computeThresholdBlackIntensity(scope, image, blacksubBlock, whitesubBlock, tolerance,saveImage);
     		double thresholdMaxBlack = th.get(0);
     		double thresholdMinWhite = th.get(1);
-			return codeDetectBlocksFct(scope, image,patterns, distorsionPoint, cols, rows, thresholdMaxBlack , thresholdMinWhite, expectedW, expectedH, (float) threshLow, (float) threshHigh, (float) coeffContrast, saveImage ) ;
+    		return codeDetectBlocksFct(scope, image,patterns, distorsionPoint, cols, rows, thresholdMaxBlack , thresholdMinWhite, expectedW, expectedH, (float) threshLow, (float) threshHigh, (float) coeffContrast, saveImage) ;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
