@@ -184,7 +184,7 @@ public class PatternMatching {
 	      return res;
 	}
     
-    public static IList<PhysicalBlock> classifyCode(final IScope scope, final List<BufferedImage> images, IList<PatternBlock> patterns, double thresholdMaxBlack, double thresholdMinWhite, int cols, int rows, double x0, double y0, double cx, double cy, float coeffContrast, boolean saveImage){
+    public static IList<PhysicalBlock> classifyCode(final IScope scope, final List<BufferedImage> images, IList<PatternBlock> patterns, double thresholdMaxBlack, double thresholdMinWhite, int cols, int rows, double x0, double y0, double cx, double cy, float coeffContrast, boolean saveImage, boolean improveImage){
         int nbR = 0;
         int nbC = 0;
         Envelope3D envbounds = scope.getSimulation().getGeometry().getEnvelope() ;
@@ -233,9 +233,9 @@ public class PatternMatching {
 	            		if (saveImage) {
 	            			File outputfile = new File(scope.getModel().getProjectPath() + "\\models\\generated\\subblocks\\image_"+cpt+".jpg");
 	                		ImageIO.write(dest, "jpg", outputfile);
-		                    System.out.println("image_" + cpt + " -> " + getBlackIntensity(dest) + " i: "+i + " j: "+j + " black:  " + isBlack(dest,thresholdMaxBlack,thresholdMinWhite) );
+		                    System.out.println("image_" + cpt + " -> " + getBlackIntensity(dest) + " i: "+i + " j: "+j + " black:  " + isBlack(dest,thresholdMaxBlack,thresholdMinWhite,improveImage) );
 	            		}
-	            		if(isBlack(dest,thresholdMaxBlack,thresholdMinWhite)){
+	            		if(isBlack(dest,thresholdMaxBlack,thresholdMinWhite, improveImage)){
 		                    l.set(scope, j, i, 0);
 	                    }else {
 	                        l.set(scope, j, i, 1);
@@ -457,11 +457,12 @@ public class PatternMatching {
  		img = ConvertBufferedImage.convertTo(adjusted, null, true);
  		return img;
     }
-    public static boolean isBlack( BufferedImage img, double thresholdB, double thresholdW){
+    public static boolean isBlack( BufferedImage img, double thresholdB, double thresholdW, boolean improveImage){
         int cptB = 0;
         int cptW = 0;
 
-        img = improveImage(img);
+        if (improveImage)
+        	img = improveImage(img);
 		
          for (int i = img.getMinX(); i < img.getWidth() ; i++) {
             for (int j = img.getMinTileY(); j < img.getHeight(); j++) {
@@ -472,17 +473,17 @@ public class PatternMatching {
             	   cptW++;
             }
         }
-        System.out.println("cptB: " + cptB + " cptW: "+ cptW);
         return cptB >=  cptW;
     }
 	
     
-    static private List<Double> computeThresholdBlackIntensity(final IScope scope, BufferedImage image, IShape blacksubBlock, IShape whitesubBlock, double tolerance, boolean saveImage ) {
+    static private List<Double> computeThresholdBlackIntensity(final IScope scope, BufferedImage image, IShape blacksubBlock, IShape whitesubBlock, double tolerance, boolean saveImage, boolean improveImage ) {
 
     	Envelope3D env = scope.getSimulation().getGeometry().getEnvelope();
     	
     	Envelope3D envB = blacksubBlock.getEnvelope();
-    	image = improveImage(image);
+    	 if (improveImage)
+    		 image = improveImage(image);
     	BufferedImage blackIm = image.getSubimage((int)(envB.getMinX() / env.getWidth() * image.getWidth()), (int)(envB.getMinY() / env.getHeight() * image.getHeight()), (int)(envB.getWidth() / env.getWidth() * image.getWidth()), (int)(envB.getHeight() / env.getHeight() * image.getHeight()));
     	double bI = getBlackIntensity(blackIm);
     	if (saveImage) {
@@ -528,7 +529,7 @@ public class PatternMatching {
 	@doc (
 			value = "detect the block from the image")
 	public static IList<PhysicalBlock> detecBlocks(final IScope scope, String imagePath, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int resWidth, int resHeight, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds) {
-    	return detecBlocks( scope, imagePath,  patterns, distorsionPoint, cols,  rows,  blacksubBlock,  whitesubBlock,  bounds, 1.0, 0.1f, 0.5f, 2.0f, false);
+    	return detecBlocks( scope, imagePath,  patterns, distorsionPoint, cols,  rows,  blacksubBlock,  whitesubBlock,  bounds, 1.0, 0.1f, 0.5f, 2.0f, false, false);
 
     }
     
@@ -540,7 +541,7 @@ public class PatternMatching {
 			value = "detect the block from the image")
 	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final int webcamImageWidth, final int webcamImageHeight, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds ) {
     	BufferedImage image = CamShotAct(scope,webcamImageWidth,webcamImageHeight, webcam);
-    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds, 1.0, 0.1f, 0.5f, 2.0f, false);
+    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds, 1.0, 0.1f, 0.5f, 2.0f, false, false);
 	}
     
     
@@ -550,9 +551,9 @@ public class PatternMatching {
 			category = "image")
 	@doc (
 			value = "detect the block from the image")
-	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final int webcamImageWidth, final int webcamImageHeight, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage ) {
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final int webcamImageWidth, final int webcamImageHeight, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage, boolean improveImage ) {
     	BufferedImage image = CamShotAct(scope,webcamImageWidth,webcamImageHeight, webcam);
-    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage);
+    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage,  improveImage );
 	}
     
     
@@ -564,17 +565,17 @@ public class PatternMatching {
 			category = "image")
 	@doc (
 			value = "detect the block from the image")
-	public static IList<PhysicalBlock> detecBlocks(final IScope scope, String imagePath, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage) {
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope, String imagePath, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage, boolean improveImage ) {
 		
     	final BufferedImage image = getBufferedImage(scope, imagePath);
-    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage);
+    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage, improveImage );
 
 	}
     
 
    
     
-	public static IList<PhysicalBlock> detecBlocks(final IScope scope, BufferedImage image, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage ) {
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope, BufferedImage image, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage, boolean improveImage ) {
 		try {
 			if (saveImage) {
 				File outputfolder = new File(scope.getModel().getProjectPath() + "\\models\\generated");
@@ -585,17 +586,17 @@ public class PatternMatching {
     		Envelope3D env = scope.getSimulation().getGeometry().getEnvelope();
         	int expectedW = (int)(bounds.getWidth() / env.getWidth() * image.getWidth()); 
     		int expectedH = (int)(bounds.getHeight() / env.getHeight() * image.getHeight());
-    		List<Double> th =  computeThresholdBlackIntensity(scope, image, blacksubBlock, whitesubBlock, tolerance,saveImage);
+    		List<Double> th =  computeThresholdBlackIntensity(scope, image, blacksubBlock, whitesubBlock, tolerance,saveImage, improveImage);
     		double thresholdMaxBlack = th.get(0);
     		double thresholdMinWhite = th.get(1);
-    		return codeDetectBlocksFct(scope, image,patterns, distorsionPoint, cols, rows, thresholdMaxBlack , thresholdMinWhite, expectedW, expectedH, (float) threshLow, (float) threshHigh, (float) coeffContrast, saveImage) ;
+    		return codeDetectBlocksFct(scope, image,patterns, distorsionPoint, cols, rows, thresholdMaxBlack , thresholdMinWhite, expectedW, expectedH, (float) threshLow, (float) threshHigh, (float) coeffContrast, saveImage, improveImage) ;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
     	return null;
 	}
 	
-    private static IList<PhysicalBlock> codeDetectBlocksFct(final IScope scope, final BufferedImage image, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, double thresholdMaxBlack, double thresholdMinWhite, int expectedW, int expectedH, float threshLow, float threshHigh, float coeffContrast, boolean saveImage) throws IOException  {
+    private static IList<PhysicalBlock> codeDetectBlocksFct(final IScope scope, final BufferedImage image, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, double thresholdMaxBlack, double thresholdMinWhite, int expectedW, int expectedH, float threshLow, float threshHigh, float coeffContrast, boolean saveImage, boolean improveImage) throws IOException  {
     	BufferedImage imageWD = (distorsionPoint != null && (distorsionPoint.size() == 4)) ? removeDistortion(scope, distorsionPoint, image) : image; 
     	if (saveImage) {
     		File outputfile = new File(scope.getModel().getProjectPath() + "\\models\\generated\\image_distorsion.jpg");
@@ -618,7 +619,7 @@ public class PatternMatching {
     		yM = envbounds.getHeight();
     	}
     	
-        return classifyCode(scope, imageGrid, patterns, thresholdMaxBlack, thresholdMinWhite, cols, rows, x0,y0, (xM -x0) / envbounds.getWidth(), (yM - y0)/ envbounds.getHeight(), coeffContrast, saveImage);
+        return classifyCode(scope, imageGrid, patterns, thresholdMaxBlack, thresholdMinWhite, cols, rows, x0,y0, (xM -x0) / envbounds.getWidth(), (yM - y0)/ envbounds.getHeight(), coeffContrast, saveImage, improveImage);
     }
     
   
@@ -652,6 +653,15 @@ public class PatternMatching {
 			value = "get a photoshot with the given resolution (width, height) in pixels from the given webcam")
 	public static IMatrix cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height, GamaWebcam webcam) {
 		BufferedImage im = CamShotAct(scope, width, height, webcam);
+		if (filepath != null && !filepath.isBlank()) {
+			String path_gen = FileUtils.constructAbsoluteFilePath(scope, filepath, false);
+			File outputfile = new File(path_gen);
+	    	try {
+				ImageIO.write(im, "jpg", outputfile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return  matrixValueFromImage(scope, im); 
 	}
 	

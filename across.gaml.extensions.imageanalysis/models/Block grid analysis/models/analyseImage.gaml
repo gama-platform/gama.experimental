@@ -9,17 +9,19 @@ model analyseImage
 
 global {
 	list<rgb> colors <- [#red, #blue, #magenta, #yellow, #pink, #orange, #green, #cyan, #violet, #gray, #olivedrab, #lightsteelblue, #lightcoral];
-	image_file image_file_test <- image_file("../includes/WIN_20221102_11_17_05_Pro.jpg");
-	//image_file image_file_test <- image_file("../includes/WIN_20221107_09_53_49_Pro.jpg");
-	//image_file image_file_test <- image_file("../includes/WIN_20221107_09_54_37_Pro.jpg");
+	
+	image_file image_file_test <- image_file("../includes/images.jpg");
+
+
 	geometry shape <- rectangle(1920, 1080);
 	
 	
+
 	//tolerance for the comparison of color (white and black)
-	float tolerance_BW <- 1.0 min: 1.0 max: 2.0 step: 0.1 parameter: true;
+	float tolerance_BW <- 1.2 min: 1.0 max: 2.0 step: 0.1 parameter: true;
 	
 	//allow to increase the constrast of the image
-	float coeff_constrast <- 2.0 min: 1.0 max:3.0 step: 0.1 parameter: true;
+	float coeff_constrast <- 1.0 min: 1.0 max:3.0 step: 0.1 parameter: true;
 	
 	//define the low threshold for the detection of block
 	float low_threhold_block_detection <- 0.1 min: 0.0 max:0.5 step: 0.1 parameter: true;
@@ -27,20 +29,17 @@ global {
 	//define the high threshold for the detection of block
 	float high_threhold_block_detection <- 0.5 min: 0.1 max:1.0 step: 0.1 parameter: true;
 	
+	//apply filters to improve the image quality
+	bool improve_image <- false parameter: true;
+	
 	//possibility to save all the images produced for debugging puropose
 	bool save_image <- false parameter: true;
+
 	
-	//points used for the distorsion computation
-	list<point> distorsion_points <- [{332.5892028808594,46.62588882446289,0.0},{1359.1029052734375,33.372005462646484,0.0},{1348.7962646484375,1046.6259765625,0.0},{356.15557861328125,1048.099609375,0.0}];
-	
-	//points used to define the typical size of a block to analysis
-	list<point> bounds_points <- [{879.5982666015625,455.6495361328125,0.0},{945.5914306640625,519.5516967773438,0.0}];
-	
-	//points used to compute the typical level of intensity of white blocks
-	list<point> whitesubblock_points <-[{915.5494995117188,457.8449401855469,0.0},{943.7417602539062,485.8640441894531,0.0}];
-	
-	//points used to compute the typical level of intensity of black blocks
-	list<point> blacksubblock_points <- [{358.23541259765625,757.6268920898438,0.0},{387.1962890625,785.8941040039062,0.0}];
+	list<point> distorsion_points <- [{384.54160789844855,64.96240601503759,0.0},{1402.7644569816644,32.48120300751879,0.0},{1408.1805359661496,1039.3984962406014,0.0},{430.5782792665726,1055.639097744361,0.0}];
+	list<point> bounds_points <- [{668.4972170686457,466.4175824175824,0.0},{736.1781076066791,525.7582417582418,0.0}];
+	list<point> blacksubblock_points <-[{537.8849721706865,469.978021978022,0.0},{569.9443413729128,497.2747252747253,0.0}];
+	list<point> whitesubblock_points <-[{699.3692022263451,331.1208791208791,0.0},{731.4285714285714,360.7912087912088,0.0}];
 	
 	string current_mode <- "";
 	list<pattern> patterns; 
@@ -48,24 +47,27 @@ global {
 	bool define_distorsion_points <- false;
 	bool define_whitesubblock_points <- false;
 	bool define_blacksubblock_points <- false;
-	
+	point mouse_location;
 	map<string,list<point>> blocks_detected;
 	
 	init {
-		//patterns that we want to detect with their id
+		
 		patterns << create_pattern("1", 0,1,0,0);
-		patterns << create_pattern("2", 1,0,1,1);
-		patterns << create_pattern("3", 0,1,1,1);
-		patterns << create_pattern("4", 0,1,1,0);
-		patterns << create_pattern("5", 1,0,0,0);
-		patterns << create_pattern("6", 1,1,0,1);
-		patterns << create_pattern("7", 1,1,1,0);
-		patterns << create_pattern("8", 1,1,0,0);
-		patterns << create_pattern("9", 0,0,0,1);
-		patterns << create_pattern("10", 1,0,0,1);
-		patterns << create_pattern("11", 0,1,0,1);
-		patterns << create_pattern("12", 1,0,1,0);
-		patterns << create_pattern("13", 0,0,1,0);
+		patterns << create_pattern("2", 0,1,1,1);
+		patterns << create_pattern("3", 0,0,0,1);
+		patterns << create_pattern("4", 1,1,1,0);
+		patterns << create_pattern("5", 1,0,0,1);
+		
+		patterns << create_pattern("6", 1,0,1,0);
+		patterns << create_pattern("7", 1,0,0,0);
+		
+		patterns << create_pattern("8", 1,0,1,1);
+		patterns << create_pattern("9", 0,0,1,0);
+		patterns << create_pattern("13", 0,0,1,1);
+		
+		patterns << create_pattern("12", 0,1,0,1);
+		patterns << create_pattern("10", 1,1,0,1);
+		patterns << create_pattern("11", 0,1,1,0);
 		
 		point pt0 <- distorsion_points[0];
 		point pt1 <- distorsion_points[2];
@@ -74,7 +76,7 @@ global {
 		float h <- pt1.y - pt0.y;
 		
 		//read from the file the expected results for validation purpose
-		matrix data <- matrix(csv_file("../includes/data.csv", " ", false));
+		matrix data <- matrix(csv_file("../includes/data2.csv", " ", false));
 		loop i from: 0 to: data.columns - 1 {
 			loop j from: 0 to: data.rows -1 {
 				point loc <- {pt0.x + (i + 0.5)/(data.columns) * w,  pt0.y + (j + 0.5)/(data.rows) * h};
@@ -127,6 +129,10 @@ global {
 		current_mode <- "Definition of the black block";
 	}
 	
+	action define_mouse_loc {
+		mouse_location <- #user_location;
+	}
+	
 	action define_bounds {
 		define_distorsion_points <- false;
 		define_whitesubblock_points <- false;
@@ -141,6 +147,10 @@ global {
 		if define_distorsion_points {
 			if (length(distorsion_points) < 4) {
 				distorsion_points << #user_location;
+				if length(distorsion_points) = 4{
+					write sample(distorsion_points);
+				}
+				
 			}
 		} else if define_whitesubblock_points {
 			if (length(whitesubblock_points) < 2) {
@@ -193,8 +203,8 @@ global {
 			low_threhold_block_detection,//optional: low threshold for block detection, default: 0.1
 			 high_threhold_block_detection, //optional: high threshold for block detection, default: 0.5
 			 coeff_constrast, //optional: coefficient to increase the contrast of the imahe, default: 2.0 
-			 save_image //optional: save the image produced (just for debugging purpose)
-			
+			 save_image, //optional: save the image produced (just for debugging purpose)
+			improve_image //optional: apply filter on the image, default: false
 		);
 		
 		
@@ -260,8 +270,11 @@ experiment analyseImage type: gui {
 			event "b" action: define_black_subblock;
 			event "w" action: define_white_subblock;
 			event "g" action: define_bounds;
-			
+			event #mouse_move action: define_mouse_loc;
 			event #mouse_down action: mouse_click;
+			graphics "mouse_loc" {
+				draw circle(5) at: mouse_location;
+			}
 			graphics "distorsion" {
 				loop pt over: distorsion_points {
 					draw circle(10) color: #red at: pt;
