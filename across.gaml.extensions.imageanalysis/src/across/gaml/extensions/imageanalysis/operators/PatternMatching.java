@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.github.sarxos.webcam.Webcam;
 import com.google.common.io.Files;
 
 import across.gaml.extensions.imageanalysis.boofcv.RemovePerspectiveDistortion;
@@ -273,7 +274,15 @@ public class PatternMatching {
         return blocks;
     }
     
-   
+   @operator (
+		   value = "save_webcam_image",
+		   can_be_const = false
+		   )
+   @doc(
+		   value = "saves the current webcam image in a file")
+   public static boolean saveWebcamImage(final IScope scope, final GamaWebcam webcam, final String image_path) {
+	   return webcam.saveImageAsFile(image_path);
+   }
 
     @operator (
 			value = "crop_image",

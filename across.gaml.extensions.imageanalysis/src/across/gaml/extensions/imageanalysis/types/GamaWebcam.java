@@ -1,8 +1,14 @@
 package across.gaml.extensions.imageanalysis.types;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import com.github.sarxos.webcam.Webcam;
 
 import msi.gama.common.interfaces.IValue;
+import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
@@ -37,6 +43,19 @@ public class GamaWebcam implements IValue {
 	
 	public void setType(Integer id) {
 		this.id = id;
+	}
+
+
+	public boolean saveImageAsFile(String file_path) {
+		File outputfile = new File(file_path);
+		try {
+			ImageIO.write(webcam.getImage(), "jpg", outputfile);
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 
