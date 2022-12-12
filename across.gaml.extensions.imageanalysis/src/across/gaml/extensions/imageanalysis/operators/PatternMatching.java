@@ -274,14 +274,15 @@ public class PatternMatching {
         return blocks;
     }
     
+    
    @operator (
 		   value = "save_webcam_image",
 		   can_be_const = false
 		   )
    @doc(
 		   value = "saves the current webcam image in a file")
-   public static boolean saveWebcamImage(final IScope scope, final GamaWebcam webcam, final String image_path) {
-	   return webcam.saveImageAsFile(image_path);
+   public static boolean saveWebcamImage(final IScope scope, final GamaWebcam webcam, final String image_path, int width, int height) {
+	   return webcam.saveImageAsFile(scope, image_path, width, height);
    }
 
     @operator (
