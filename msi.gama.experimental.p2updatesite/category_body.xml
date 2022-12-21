@@ -7,10 +7,10 @@
  <feature url="features/irit.gama.feature.switchproject_1.0.0.qualifier.jar" id="irit.gama.feature.switchproject" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/miat.feature.qrcode_1.0.0.qualifier.jar" id="miat.feature.qrcode" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/mit.feature.launchpad_1.0.0.qualifier.jar" id="mit.feature.launchpad" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gama.feature.camisole_1.8.2.qualifier.jar" id="ummisco.gama.feature.camisole" version="1.8.2.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gama.feature.gamr_1.8.2.qualifier.jar" id="ummisco.gama.feature.gamr" version="1.8.2.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gama.feature.markdown.documentation_1.8.2.qualifier.jar" id="ummisco.gama.feature.markdown.documentation" version="1.8.2.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gama.feature.uml_1.8.2.qualifier.jar" id="ummisco.gama.feature.uml" version="1.8.2.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gama.feature.unity_1.8.2.qualifier.jar" id="ummisco.gama.feature.unity" version="1.8.2.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gaml.feature.hydro_1.8.2.qualifier.jar" id="ummisco.gaml.feature.hydro" version="1.8.2.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/ummisco.gama.feature.camisole_1.9.0.qualifier.jar" id="ummisco.gama.feature.camisole" version="1.9.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/ummisco.gama.feature.gamr_1.9.0.qualifier.jar" id="ummisco.gama.feature.gamr" version="1.9.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/ummisco.gama.feature.markdown.documentation_1.9.0.qualifier.jar" id="ummisco.gama.feature.markdown.documentation" version="1.9.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/ummisco.gama.feature.uml_1.9.0.qualifier.jar" id="ummisco.gama.feature.uml" version="1.9.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/ummisco.gama.feature.unity_1.9.0.qualifier.jar" id="ummisco.gama.feature.unity" version="1.9.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/ummisco.gaml.feature.hydro_1.9.0.qualifier.jar" id="ummisco.gaml.feature.hydro" version="1.9.0.qualifier"> <category name="gama.optional"/> </feature> 
 
