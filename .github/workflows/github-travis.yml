@@ -6,7 +6,7 @@ name: Github Travis
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ GAMA_1.8.2 ]
+    branches: [ GAMA_1.9.0 ]
   workflow_dispatch:  # For manual trigger
 
 jobs:
@@ -63,7 +63,6 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           TRAVIS_COMMIT: ${ GITHUB_SHA }
           TRAVIS_EVENT_TYPE: ${{ github.event_name }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
               
 
       - name: Check if it's a manual trigger and should deploy
