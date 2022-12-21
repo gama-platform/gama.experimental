@@ -44,7 +44,7 @@ global skills: [RSkill] {
 		write "</plist>" color: #black;	
 		write "";
 		
-		write "In GAMA 1.8.2, you need to specify the path to the R connector library in the GAMA launching arguments."  color: #red;
+		write "In GAMA 1.9.0, you need to specify the path to the R connector library in the GAMA launching arguments."  color: #red;
 		write "To this purpose, you need to add to either (1) the GAMA.ini file if you use the release version of GAMA, or (2) to the launching configuration (if you use the source code version)" color:#red;
 		write "the following line: (replace PATH_TO_R by the path to R, i.e. the value in $R_PATH)" color: #red;
 		write " on Mac:      -Djava.library.path=PATH_TO_R/library/rJava/jri/rlibjri.jnilib";

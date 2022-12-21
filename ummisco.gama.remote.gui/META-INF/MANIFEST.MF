@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: remote_GUI
 Bundle-SymbolicName: ummisco.gama.remote.gui;singleton:=true
-Bundle-Version: 1.8.2.qualifier
-Require-Bundle: ummisco.gama.network;bundle-version="1.8.2",
- msi.gama.core;bundle-version="1.8.2",
- ummisco.gama.serialize;bundle-version="1.8.2",
- msi.gama.ext;bundle-version="1.8.2"
+Bundle-Version: 1.9.0.qualifier
+Require-Bundle: ummisco.gama.network;bundle-version="1.9.0",
+ msi.gama.core;bundle-version="1.9.0",
+ ummisco.gama.serialize;bundle-version="1.9.0",
+ msi.gama.ext;bundle-version="1.9.0"
 Automatic-Module-Name: ummisco.gama.remote.gui
