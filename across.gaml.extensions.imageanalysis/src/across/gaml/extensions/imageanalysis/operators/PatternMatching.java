@@ -13,7 +13,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import com.github.sarxos.webcam.Webcam;
 import com.google.common.io.Files;
 
 import across.gaml.extensions.imageanalysis.boofcv.RemovePerspectiveDistortion;
@@ -632,36 +631,17 @@ public class PatternMatching {
         return classifyCode(scope, imageGrid, patterns, thresholdMaxBlack, thresholdMinWhite, cols, rows, x0,y0, (xM -x0) / envbounds.getWidth(), (yM - y0)/ envbounds.getHeight(), coeffContrast, saveImage, improveImage);
     }
     
-  
-    
+
+
+
 
 	@operator (
 			value = "cam_shot",
 			can_be_const = false,
 			category = IOperatorCategory.LIST)
 	@doc (
-			value = "get a photoshot from the default webcam")
-	public static IMatrix cam_shot(final IScope scope, final String filepath) {
-		return cam_shot(scope, filepath, null, null,null);
-	}
-	
-	@operator (
-			value = "cam_shot",
-			can_be_const = false,
-			category = IOperatorCategory.LIST)
-	@doc (
-			value = "get a photoshot from the default webcam, with the given resolution (width, height) in pixels")
-	public static IMatrix cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height) {
-		return cam_shot(scope, filepath, width, height, null);
-	}
-	
-	@operator (
-			value = "cam_shot",
-			can_be_const = false,
-			category = IOperatorCategory.LIST)
-	@doc (
-			value = "get a photoshot with the given resolution (width, height) in pixels from the given webcam")
-	public static IMatrix cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height, GamaWebcam webcam) {
+			value = "get a photoshot with the given resolution (width, height) in pixels from the given webcam and save it to the file")
+	public static IMatrix cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height,final GamaWebcam webcam) {
 		BufferedImage im = CamShotAct(scope, width, height, webcam);
 		if (filepath != null && !filepath.isBlank()) {
 			String path_gen = FileUtils.constructAbsoluteFilePath(scope, filepath, false);
@@ -675,38 +655,96 @@ public class PatternMatching {
 		return  matrixValueFromImage(scope, im); 
 	}
 	
+	
+	@operator (
+			value = "cam_shot",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "get a photoshot with the given resolution (width, height) in pixels from the given webcam")
+	public static IMatrix cam_shot(final IScope scope, final Integer width, final Integer height, GamaWebcam webcam) {
+		return  cam_shot(scope, null, width, height, webcam); 
+	}
+	
+	
+	
+	@operator (
+			value = "cam_shot",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "get a photoshot from the webcam with default resolution")
+	public static IMatrix cam_shot(final IScope scope, GamaWebcam webcam) {
+		return  cam_shot(scope, null, null, null, webcam); 
+	}
+	
+	
+	
 	private static BufferedImage CamShotAct(final IScope scope,final Integer width, final Integer height, GamaWebcam webcam) {
 	
 		if (webcam == null || webcam.getWebcam() == null) {
 			GAMA.reportError(scope, GamaRuntimeException.error("No webcam detected", scope), false);
+			return null;
 		}
 		if (width != null && height != null)  {
+			
 			Dimension dim = new Dimension(width, height);
+			
+			boolean nonStandard = true;
+			int max_width = 0; int max_width_corresponding_height = 0; // we need to save those in pairs to preserve ratios
+			int max_height = 0;int max_height_corresponding_width = 0;
+			
+			for (Dimension avail_dim : webcam.getWebcam().getViewSizes()) {
+				
+				if (max_width < avail_dim.width) {
+					max_width = avail_dim.width;
+					max_width_corresponding_height = avail_dim.height;
+				}
+				
+				if (max_height < avail_dim.height) {
+					max_height = avail_dim.height;
+					max_height_corresponding_width = avail_dim.width;
+				}
+				
+				if (avail_dim.equals(dim)) {
+					nonStandard = false;
+					break;
+				}
+			}
+			
+			if(width > max_width) {
+				dim.width = max_width;
+				dim.height = max_width_corresponding_height;
+				nonStandard = false;
+			}
+			if(height > max_height) {
+				dim.height = max_height;
+				dim.width = max_height_corresponding_width;
+				nonStandard = false;
+			}
+			
 			if (!webcam.getWebcam().getViewSize().equals(dim)) {
 				webcam.getWebcam().close();
-				boolean nonStandard = true;
-				for (int i = 0; i < webcam.getWebcam().getViewSizes().length; i++) {
-					if (webcam.getWebcam().getViewSizes()[i].equals(dim)) {
-						nonStandard = false;
-						break;
-					}
-				}
-				if (nonStandard) {
+				
+				if (nonStandard ) {
 					Dimension[] nonStandardResolutions = new Dimension[] {dim};
 					webcam.getWebcam().setCustomViewSizes(nonStandardResolutions);
 				}
 				webcam.getWebcam().setViewSize(dim);
-
-				webcam.getWebcam().getLock().disable();
-				webcam.getWebcam().open();
 			}
 
 		}
+		
+		webcam.getWebcam().getLock().disable();
+		webcam.getWebcam().open();
 		BufferedImage bim = (BufferedImage) webcam.getWebcam().getImage(); 
 		return bim;
 	}
 	
 	private static IMatrix matrixValueFromImage(final IScope scope, final BufferedImage image) {
+		if (image == null) {
+			return null;
+		}
 		int xSize, ySize;
 		BufferedImage resultingImage = image;
 		xSize = image.getWidth();
