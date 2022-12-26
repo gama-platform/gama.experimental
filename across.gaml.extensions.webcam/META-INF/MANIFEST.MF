@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Webcam plugin
+Bundle-SymbolicName: across.gaml.extensions.webcam;singleton:=true
+Bundle-Version: 1.9.0.qualifier
+Export-Package: across.gaml.extensions.webcam.operators,
+ across.gaml.extensions.webcam.types
+Require-Bundle: msi.gama.core;bundle-version="1.9.0",
+ msi.gama.ext;bundle-version="1.9.0"
+Automatic-Module-Name: across.gaml.extensions.webcam
+Bundle-ClassPath: lib/webcam-capture-0.3.12.jar,
+ lib/slf4j-nop-1.7.2.jar,
+ lib/slf4j-api-1.7.2.jar,
+ lib/bridj-0.7.0.jar,
+ .
+Bundle-RequiredExecutionEnvironment: JavaSE-17

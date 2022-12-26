@@ -9,7 +9,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/artoolkitplus-2.3.1-1.4.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/boofcv-android-0.40.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/boofcv-ip-multiview-0.40.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/bridj-0.7.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-compress-1.20.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-io-2.11.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/darklaf-core-1.4.3.1.jar"/>
@@ -67,7 +66,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/opencv-4.0.1-1.4.4-windows-x86_64.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/protobuf-java-3.17.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/rsyntaxtextarea-2.6.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/snakeyaml-1.23.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/svgSalamander-1.1.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/swing-worker-1.1.jar"/>
@@ -75,7 +73,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/tesseract-4.0.0-1.4.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/trove4j-3.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/videoinput-0.200-1.4.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/webcam-capture-0.3.12.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/zip4j-2.8.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/georegression-0.24.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ddogleg-0.21.jar"/>
@@ -92,7 +89,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/boofcv-reconstruction-0.40.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/boofcv-all-0.40.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/boofcv-javacv-0.40.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/boofcv-WebcamCapture-0.40.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/boofcv-core-0.40.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/boofcv-io-0.40.1.jar"/>
 	<classpathentry kind="src" path="src"/>

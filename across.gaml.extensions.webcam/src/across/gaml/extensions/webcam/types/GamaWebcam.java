@@ -1,22 +1,43 @@
-package miat.gama.extension.qrcode.type;
+package across.gaml.extensions.webcam.types;
+
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import com.github.sarxos.webcam.Webcam;
 
 import msi.gama.common.interfaces.IValue;
+import msi.gama.common.util.FileUtils;
+import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gama.util.GamaListFactory;
+import msi.gama.util.GamaPair;
+import msi.gama.util.IList;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
-@vars({ @variable(name = "id", type = IType.INT)})
+@vars({ @variable(name = "id", type = IType.INT),@variable(name = "resolutions", type = IType.LIST) })
 public class GamaWebcam implements IValue {
 
 	private Webcam webcam;
 	private Integer id;
 	
 	
+	@getter ("resolutions")
+	public IList<GamaPair<Integer, Integer>> getResolutions() {
+		Dimension[] dims =  webcam.getViewSizes();
+		IList<GamaPair<Integer, Integer>> resolutions = GamaListFactory.create();
+		for (Dimension d : dims) {
+			resolutions.add(new GamaPair<Integer, Integer>(d.width, d.height, Types.INT, Types.INT));
+		}
+		return resolutions;
+	}
 	
 	public Webcam getWebcam() {
 		return webcam;

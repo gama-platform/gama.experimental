@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: miat.gama.extension.qrcode
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: msi.gama.core;bundle-version="1.8.2",
- msi.gama.ext;bundle-version="1.8.2"
+ msi.gama.ext;bundle-version="1.8.2",
+ across.gaml.extensions.webcam;bundle-version="1.9.0"
 Bundle-ClassPath: lib/core-3.4.1.jar,
  lib/javase-3.4.1.jar,
  lib/bridj-0.7.0.jar,

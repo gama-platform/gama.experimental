@@ -11,42 +11,38 @@ model analyseWebcamImage
 import "analyseImage.gaml"
 
 global {
-	int image_width <- 1920;
-	int image_height <- 1080;
+	int image_width <- 640;
+	int image_height <- 480;
+	bool image_miror_horizontal <- true ;
+	bool image_miror_vertical <- false ;
+	
 	bool save_image <- true;
 	list<point> distorsion_points <- [{384.54160789844855,64.96240601503759,0.0},{1402.7644569816644,32.48120300751879,0.0},{1408.1805359661496,1039.3984962406014,0.0},{430.5782792665726,1055.639097744361,0.0}];
 	list<point> bounds_points <- [{668.4972170686457,466.4175824175824,0.0},{736.1781076066791,525.7582417582418,0.0}];
 	list<point> blacksubblock_points <-[{537.8849721706865,469.978021978022,0.0},{569.9443413729128,497.2747252747253,0.0}];
 	list<point> whitesubblock_points <-[{699.3692022263451,331.1208791208791,0.0},{731.4285714285714,360.7912087912088,0.0}];
+	matrix img;
+	webcam webcam1 <- webcam(0);
 	
 	action create_agents {
-		matrix mat <- cam_shot(nil, image_width,image_height, webcam(1));
+		img <- cam_shot(webcam1, image_width::image_height );
 		create webcam_analyser {
 			do run_thread interval: 2#s;
 		}
-	}
-	webcam webcam1 <- webcam(1);
+	} 
 	
 	reflex capture_webcam {
-		matrix mat <- field(cam_shot(nil, image_width, image_height, webcam1));
-		ask cell_image {
-			color <- rgb(mat[grid_x,grid_y]);		
-		}
+		img <- cam_shot(webcam1,image_width::image_height);
 		ask webcam_analyser {
 			do analyse_image;
 		}
 	}
 }
 
-grid cell_image width: image_width height: image_height;
 
 species webcam_analyser skills: [thread] {
-	bool show_came <- true;
-	//int image_width <- 640;
-	//int image_height <- 480;
 	
 	action analyse_image {
-		//write "lalala";
 		blocks_detected <- [];
 		
 		//building the geometries (black block, white block, block bounds) from the points defined
@@ -55,9 +51,10 @@ species webcam_analyser skills: [thread] {
 		geometry bounds_g <- length(bounds_points) = 2 ? polygon([bounds_points[0],{bounds_points[1].x, bounds_points[0].y},bounds_points[1],{bounds_points[0].x, bounds_points[1].y} ]): nil;
 		
 		//detecting the code
-		list<block> blocks <- detect_blocks(
+	 list<block> blocks <- detect_blocks(
 			webcam1, //webcam used for the image analysis
-			image_width, image_height, //webcam image resolution
+			image_width::image_height, //webcam image resolution
+			image_miror_horizontal, image_miror_vertical,
 			patterns, //list of patterns to detect
 			distorsion_points, //list of 4 detection points (top-left, top-right, bottom-right, bottom-left)
 			  8,8, //size of the grid (columns, rows)
@@ -83,8 +80,8 @@ species webcam_analyser skills: [thread] {
 				
 			} 
 		}
-		write "blocks: " + blocks collect each.type;
-	}
+		write "blocks: " + blocks collect each.type;	
+	} 
 	//the action run in the thread 
 	action thread_action {
 		//do analyse_image;
@@ -106,7 +103,7 @@ experiment test {
             	draw "'g': define the bound of block" at: { 50#px,  140#px } color: # white font: font("Helvetica", 20, #bold);
             	
             }
-            grid cell_image ;
+         	 image matrix:img;
 			species cell position: {0,0,0.01};
 			event "p" action: define_distorsions_points;
 			event "d" action: define_code;
