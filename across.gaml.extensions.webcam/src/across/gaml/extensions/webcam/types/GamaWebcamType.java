@@ -1,28 +1,13 @@
-package miat.gama.extension.qrcode.type;
+package across.gaml.extensions.webcam.types;
 
 import com.github.sarxos.webcam.Webcam;
 
-import msi.gama.common.interfaces.IKeyword;
-import msi.gama.metamodel.shape.GamaPoint;
-//import miat.gaml.extensions.argumentation.types.GamaArgument;
-//import miat.gaml.extensions.argumentation.types.GamaArgumentType;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.precompiler.ITypeProvider;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.GamlAnnotations.test;
 import msi.gama.precompiler.GamlAnnotations.type;
+import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaMap;
-import msi.gama.util.matrix.GamaIntMatrix;
-import msi.gama.util.matrix.IMatrix;
-import msi.gaml.expressions.IExpression;
-import msi.gaml.types.GamaMatrixType;
 import msi.gaml.types.GamaType;
 import msi.gaml.types.IType;
-import msi.gaml.types.Types;
 
 @type(name = "webcam", id = GamaWebcamType.id, wraps = { GamaWebcam.class }, concept = { IConcept.TYPE, "webcam" })
 public class GamaWebcamType extends GamaType<GamaWebcam> {
@@ -32,6 +17,8 @@ public class GamaWebcamType extends GamaType<GamaWebcam> {
 	@Override
 	public GamaWebcam getDefault() {
 		GamaWebcam webcam = new GamaWebcam(0);
+		webcam.getWebcam().getLock().disable();
+		webcam.getWebcam().close();
 		webcam.setWebcam(Webcam.getDefault());
 		return webcam;
 	}
@@ -43,7 +30,6 @@ public class GamaWebcamType extends GamaType<GamaWebcam> {
 
 	@Override
 	public GamaWebcam cast(IScope scope, Object obj, Object param, boolean copy) throws GamaRuntimeException {
-		// TODO Auto-generated method stub
 		if(obj instanceof GamaWebcam) {
 			return (GamaWebcam) obj;
 		}
@@ -55,6 +41,8 @@ public class GamaWebcamType extends GamaType<GamaWebcam> {
 			}
 			GamaWebcam webcam = new GamaWebcam(id);
 			webcam.setWebcam(Webcam.getWebcams().get(id));
+			webcam.getWebcam().getLock().disable();
+			webcam.getWebcam().close();
 			return webcam;
 		}
 		return null;

@@ -2,7 +2,6 @@ package across.gaml.extensions.imageanalysis.operators;
 
  
 import java.awt.BasicStroke;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
@@ -16,9 +15,10 @@ import javax.imageio.ImageIO;
 import com.google.common.io.Files;
 
 import across.gaml.extensions.imageanalysis.boofcv.RemovePerspectiveDistortion;
-import across.gaml.extensions.imageanalysis.types.GamaWebcam;
 import across.gaml.extensions.imageanalysis.types.PatternBlock;
 import across.gaml.extensions.imageanalysis.types.PhysicalBlock;
+import across.gaml.extensions.webcam.operators.WebcamOperators;
+import across.gaml.extensions.webcam.types.GamaWebcam;
 import boofcv.alg.color.ColorRgb;
 import boofcv.alg.enhance.EnhanceImageOps;
 import boofcv.alg.enhance.GEnhanceImageOps;
@@ -50,6 +50,7 @@ import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
+import msi.gama.util.GamaPair;
 import msi.gama.util.IList;
 import msi.gama.util.matrix.GamaIntMatrix;
 import msi.gama.util.matrix.IMatrix;
@@ -273,16 +274,7 @@ public class PatternMatching {
         return blocks;
     }
     
-    
-   @operator (
-		   value = "save_webcam_image",
-		   can_be_const = false
-		   )
-   @doc(
-		   value = "saves the current webcam image in a file")
-   public static boolean saveWebcamImage(final IScope scope, final GamaWebcam webcam, final String image_path, int width, int height) {
-	   return webcam.saveImageAsFile(scope, image_path, width, height);
-   }
+   
 
     @operator (
 			value = "crop_image",
@@ -547,9 +539,20 @@ public class PatternMatching {
 			can_be_const = false,
 			category = "image")
 	@doc (
-			value = "detect the block from the image")
-	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final int webcamImageWidth, final int webcamImageHeight, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds ) {
-    	BufferedImage image = CamShotAct(scope,webcamImageWidth,webcamImageHeight, webcam);
+			value = "detect the block from the webcam")
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope,final GamaWebcam webcam, final boolean mirroHorizontal,  final boolean mirrorVertical, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds ) {
+    	BufferedImage image =  WebcamOperators.CamShotAct(scope, webcam, null, mirroHorizontal, mirrorVertical);
+    	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds, 1.0, 0.1f, 0.5f, 2.0f, false, false);
+	}
+    
+    @operator (
+			value = "detect_blocks",
+			can_be_const = false,
+			category = "image")
+	@doc (
+			value = "detect the block from the webcam")
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope,final GamaWebcam webcam, final GamaPair<Integer, Integer> resolutions, final boolean mirroHorizontal,  final boolean mirrorVertical, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds ) {
+    	BufferedImage image =  WebcamOperators.CamShotAct(scope, webcam, resolutions, mirroHorizontal, mirrorVertical);
     	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds, 1.0, 0.1f, 0.5f, 2.0f, false, false);
 	}
     
@@ -559,9 +562,9 @@ public class PatternMatching {
 			can_be_const = false,
 			category = "image")
 	@doc (
-			value = "detect the block from the image")
-	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final int webcamImageWidth, final int webcamImageHeight, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage, boolean improveImage ) {
-    	BufferedImage image = CamShotAct(scope,webcamImageWidth,webcamImageHeight, webcam);
+			value = "detect the block from the webacam")
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final GamaPair<Integer, Integer> resolutions,  final boolean mirroHorizontal,  final boolean mirrorVertical, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage, boolean improveImage ) {
+    	BufferedImage image = WebcamOperators.CamShotAct(scope, webcam, resolutions, mirroHorizontal, mirrorVertical);
     	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage,  improveImage );
 	}
     
@@ -632,114 +635,6 @@ public class PatternMatching {
     }
     
 
-
-
-
-	@operator (
-			value = "cam_shot",
-			can_be_const = false,
-			category = IOperatorCategory.LIST)
-	@doc (
-			value = "get a photoshot with the given resolution (width, height) in pixels from the given webcam and save it to the file")
-	public static IMatrix cam_shot(final IScope scope, final String filepath, final Integer width, final Integer height,final GamaWebcam webcam) {
-		BufferedImage im = CamShotAct(scope, width, height, webcam);
-		if (filepath != null && !filepath.isBlank()) {
-			String path_gen = FileUtils.constructAbsoluteFilePath(scope, filepath, false);
-			File outputfile = new File(path_gen);
-	    	try {
-				ImageIO.write(im, "jpg", outputfile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return  matrixValueFromImage(scope, im); 
-	}
-	
-	
-	@operator (
-			value = "cam_shot",
-			can_be_const = false,
-			category = IOperatorCategory.LIST)
-	@doc (
-			value = "get a photoshot with the given resolution (width, height) in pixels from the given webcam")
-	public static IMatrix cam_shot(final IScope scope, final Integer width, final Integer height, GamaWebcam webcam) {
-		return  cam_shot(scope, null, width, height, webcam); 
-	}
-	
-	
-	
-	@operator (
-			value = "cam_shot",
-			can_be_const = false,
-			category = IOperatorCategory.LIST)
-	@doc (
-			value = "get a photoshot from the webcam with default resolution")
-	public static IMatrix cam_shot(final IScope scope, GamaWebcam webcam) {
-		return  cam_shot(scope, null, null, null, webcam); 
-	}
-	
-	
-	
-	private static BufferedImage CamShotAct(final IScope scope,final Integer width, final Integer height, GamaWebcam webcam) {
-	
-		if (webcam == null || webcam.getWebcam() == null) {
-			GAMA.reportError(scope, GamaRuntimeException.error("No webcam detected", scope), false);
-			return null;
-		}
-		if (width != null && height != null)  {
-			
-			Dimension dim = new Dimension(width, height);
-			
-			boolean nonStandard = true;
-			int max_width = 0; int max_width_corresponding_height = 0; // we need to save those in pairs to preserve ratios
-			int max_height = 0;int max_height_corresponding_width = 0;
-			
-			for (Dimension avail_dim : webcam.getWebcam().getViewSizes()) {
-				
-				if (max_width < avail_dim.width) {
-					max_width = avail_dim.width;
-					max_width_corresponding_height = avail_dim.height;
-				}
-				
-				if (max_height < avail_dim.height) {
-					max_height = avail_dim.height;
-					max_height_corresponding_width = avail_dim.width;
-				}
-				
-				if (avail_dim.equals(dim)) {
-					nonStandard = false;
-					break;
-				}
-			}
-			
-			if(width > max_width) {
-				dim.width = max_width;
-				dim.height = max_width_corresponding_height;
-				nonStandard = false;
-			}
-			if(height > max_height) {
-				dim.height = max_height;
-				dim.width = max_height_corresponding_width;
-				nonStandard = false;
-			}
-			
-			if (!webcam.getWebcam().getViewSize().equals(dim)) {
-				webcam.getWebcam().close();
-				
-				if (nonStandard ) {
-					Dimension[] nonStandardResolutions = new Dimension[] {dim};
-					webcam.getWebcam().setCustomViewSizes(nonStandardResolutions);
-				}
-				webcam.getWebcam().setViewSize(dim);
-			}
-
-		}
-		
-		webcam.getWebcam().getLock().disable();
-		webcam.getWebcam().open();
-		BufferedImage bim = (BufferedImage) webcam.getWebcam().getImage(); 
-		return bim;
-	}
 	
 	private static IMatrix matrixValueFromImage(final IScope scope, final BufferedImage image) {
 		if (image == null) {

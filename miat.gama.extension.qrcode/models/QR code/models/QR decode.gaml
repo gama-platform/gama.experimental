@@ -8,10 +8,13 @@
 model testwebcam
 
 global {
-	webcam webcam1 <- webcam(1);
-	bool show_camera <- true;
-	int image_width <- 320;
-	int image_height <- 240;
+	webcam webcam1 <- webcam(0);
+	
+	//image to display
+	matrix img; 
+	
+	int image_width <- 640;
+	int image_height <- 480;
 	list<geometry> geoms;
 
 	image_file image_to_decode_multi <- image_file("../includes/multiQRcode.png");
@@ -30,25 +33,18 @@ global {
 	}
 	reflex capture_webcam {
 		//capture image from webcam
-		string result_qr_decode <- string(decodeQR(image_width, image_height,webcam1));
+		string result_qr_decode <- string(decodeQR(webcam1,image_width::image_height));
 		write sample(result_qr_decode);
+		img <- cam_shot(webcam1, image_width::image_height);
 		
-		
-		if show_camera {
-			matrix mat <- field(cam_shot("image_test", image_width, image_height, webcam1));
-			ask cell_image {
-				color <- rgb(mat[grid_x,grid_y]);		
-			}
-		}
 	}
 }
 
-grid cell_image width: image_width height: image_height;
 
 experiment qrcode_usage type: gui {
 	output {
 		display image_from_webcam {
-			grid cell_image ;
+			image matrix:img;
 		}
 		
 		display image_decoded_simple {
