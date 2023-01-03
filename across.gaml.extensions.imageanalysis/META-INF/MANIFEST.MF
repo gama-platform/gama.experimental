@@ -5,9 +5,9 @@ Bundle-SymbolicName: across.gaml.extensions.imageanalysis;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: across.gaml.extensions.imageanalysis
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: msi.gama.core;bundle-version="1.8.2",
- msi.gama.ext;bundle-version="1.8.2",
- across.gaml.extensions.webcam;bundle-version="1.9.0"
+Require-Bundle: across.gaml.extensions.webcam;bundle-version="1.9.0",
+ msi.gama.ext;bundle-version="1.9.0",
+ msi.gama.core;bundle-version="1.9.0"
 Bundle-ClassPath: lib/boofcv-core-0.40.1.jar,
  lib/boofcv-io-0.40.1.jar,
  lib/boofcv-all-0.40.1.jar,
