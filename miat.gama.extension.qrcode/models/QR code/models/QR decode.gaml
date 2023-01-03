@@ -38,7 +38,7 @@ global {
 		img <- cam_shot(webcam1, image_width::image_height);
 		
 	}
-}
+} 
 
 
 experiment qrcode_usage type: gui {
