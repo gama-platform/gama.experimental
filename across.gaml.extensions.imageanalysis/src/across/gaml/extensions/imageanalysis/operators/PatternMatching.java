@@ -425,7 +425,6 @@ public class PatternMatching {
 				sumPerimeters += perimetersS;
 			}
 		}
-		System.out.println("Number: " + sumPerimeters);
 		
 		return sumPerimeters < 70.0;
 		
@@ -562,7 +561,7 @@ public class PatternMatching {
 			can_be_const = false,
 			category = "image")
 	@doc (
-			value = "detect the block from the webacam")
+			value = "detect the block from the webcam")
 	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final GamaPair<Integer, Integer> resolutions,  final boolean mirroHorizontal,  final boolean mirrorVertical, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage, boolean improveImage ) {
     	BufferedImage image = WebcamOperators.CamShotAct(scope, webcam, resolutions, mirroHorizontal, mirrorVertical);
     	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage,  improveImage );
