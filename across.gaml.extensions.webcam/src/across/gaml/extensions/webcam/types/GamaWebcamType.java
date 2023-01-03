@@ -17,9 +17,13 @@ public class GamaWebcamType extends GamaType<GamaWebcam> {
 	@Override
 	public GamaWebcam getDefault() {
 		GamaWebcam webcam = new GamaWebcam(0);
-		webcam.getWebcam().getLock().disable();
-		webcam.getWebcam().close();
 		webcam.setWebcam(Webcam.getDefault());
+		if (webcam.getWebcam() != null) {
+			if (webcam.getWebcam().getLock() != null)
+				webcam.getWebcam().getLock().disable();
+			webcam.getWebcam().close();
+			webcam.getWebcam().open();
+		}
 		return webcam;
 	}
 
@@ -41,8 +45,12 @@ public class GamaWebcamType extends GamaType<GamaWebcam> {
 			}
 			GamaWebcam webcam = new GamaWebcam(id);
 			webcam.setWebcam(Webcam.getWebcams().get(id));
-			webcam.getWebcam().getLock().disable();
-			webcam.getWebcam().close();
+			if (webcam.getWebcam() != null) {
+				if (webcam.getWebcam().getLock() != null)
+					webcam.getWebcam().getLock().disable();
+				webcam.getWebcam().close();
+				webcam.getWebcam().open();
+			}
 			return webcam;
 		}
 		return null;

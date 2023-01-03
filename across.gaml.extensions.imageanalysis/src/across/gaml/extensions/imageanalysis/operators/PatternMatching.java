@@ -374,6 +374,9 @@ public class PatternMatching {
 		int resWidth = (int) (coeffX * (points.get(1).x - points.get(0).x) ) ;
 		int resHeight = (int) (coeffY * (points.get(2).y - points.get(0).y) ) ;
 		
+		if (input.getNumBands() > 3 ) {
+			input.reshape(input.width, input.height, 3);
+		}
 		
 		RemovePerspectiveDistortion<Planar<GrayF32>> removePerspective =
 				new RemovePerspectiveDistortion<>(resWidth, resHeight, ImageType.pl(3, GrayF32.class));
@@ -386,7 +389,7 @@ public class PatternMatching {
 		}
 
 		Planar<GrayF32> output = removePerspective.getOutput();
-
+		
 		return ConvertBufferedImage.convertTo_F32(output, null, true);
     }
 

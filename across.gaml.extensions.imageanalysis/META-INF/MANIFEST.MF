@@ -4,10 +4,11 @@ Bundle-Name: Imageanalysis
 Bundle-SymbolicName: across.gaml.extensions.imageanalysis;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: across.gaml.extensions.imageanalysis
+Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: across.gaml.extensions.webcam;bundle-version="1.9.0",
- msi.gama.ext;bundle-version="1.9.0",
- msi.gama.core;bundle-version="1.9.0"
+Require-Bundle: msi.gama.ext;bundle-version="1.9.0",
+ msi.gama.core;bundle-version="1.9.0",
+ across.gaml.extensions.webcam;bundle-version="1.9.0"
 Bundle-ClassPath: lib/boofcv-core-0.40.1.jar,
  lib/boofcv-io-0.40.1.jar,
  lib/boofcv-all-0.40.1.jar,
@@ -94,4 +95,23 @@ Bundle-ClassPath: lib/boofcv-core-0.40.1.jar,
  lib/trove4j-3.0.3.jar,
  lib/videoinput-0.200-1.4.4.jar,
  lib/zip4j-2.8.0.jar
-Export-Package: across.gaml.extensions.imageanalysis.operators
+Export-Package: across.gaml.extensions.imageanalysis.boofcv;
+  uses:="boofcv.struct.image,
+   boofcv.struct.distort,
+   georegression.struct.homography,
+   org.ejml.data,
+   georegression.struct.point,
+   boofcv.abst.distort,
+   boofcv.abst.geo",
+ across.gaml.extensions.imageanalysis.operators;
+  uses:="msi.gama.runtime,
+   msi.gama.util,
+   msi.gama.metamodel.shape,
+   across.gaml.extensions.webcam.types",
+ across.gaml.extensions.imageanalysis.types;
+  uses:="msi.gama.common.interfaces,
+   msi.gama.util.matrix,
+   msi.gama.runtime,
+   msi.gaml.expressions,
+   msi.gaml.types,
+   msi.gama.metamodel.shape"
