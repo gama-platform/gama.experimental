@@ -100,9 +100,9 @@ public class Operators {
 			can_be_const = false,
 			category = IOperatorCategory.LIST)
 	@doc (
-			value = "decode a QR code from a photoshot with the given resolution (width, height) in pixels from the given webcam")
-	public static String decodeQRcode(final IScope scope,  final GamaWebcam webcam, final GamaPair<Integer,Integer> resolutions)  {
-		final BufferedImage tmpBfrImage = WebcamOperators.CamShotAct(scope, webcam,resolutions, false,false);
+			value = "decode a QR code from a photoshot with the given resolution (width, height) in pixels from the given webcam - autoclose or not the webcam after")
+	public static String decodeQRcode(final IScope scope,  final GamaWebcam webcam, final GamaPair<Integer,Integer> resolutions, final boolean autoclose)  {
+		final BufferedImage tmpBfrImage = WebcamOperators.CamShotAct(scope, webcam,resolutions, false,false, autoclose);
 		if (tmpBfrImage == null)
 			GAMA.reportError(scope, GamaRuntimeException.error("Could not decode the image", scope), true);
 		LuminanceSource tmpSource = new BufferedImageLuminanceSource(tmpBfrImage);
@@ -132,9 +132,9 @@ public class Operators {
 			can_be_const = false,
 			category = IOperatorCategory.LIST)
 	@doc (
-			value = "decode a QR code from a photoshot from the given webcam")
-	public static String decodeQRcode(final IScope scope, final GamaWebcam webcam )  {
-		return decodeQRcode(scope,webcam, null);
+			value = "decode a QR code from a photoshot from the given webcam - autoclose or not the webcam after")
+	public static String decodeQRcode(final IScope scope, final GamaWebcam webcam, final boolean autoclose )  {
+		return decodeQRcode(scope,webcam, null, autoclose);
 	}
 	
 	

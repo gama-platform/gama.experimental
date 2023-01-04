@@ -25,14 +25,14 @@ global {
 	webcam webcam1 <- webcam(0);
 	
 	action create_agents {
-		img <- cam_shot(webcam1, image_width::image_height );
+		img <- cam_shot(webcam1, image_width::image_height,false );
 		create webcam_analyser {
 			do run_thread interval: 2#s;
 		}
 	} 
 	
 	reflex capture_webcam {
-		img <- cam_shot(webcam1,image_width::image_height);
+		img <- cam_shot(webcam1,image_width::image_height, false);
 		ask webcam_analyser {
 			do analyse_image;
 		}
@@ -55,6 +55,7 @@ species webcam_analyser skills: [thread] {
 			webcam1, //webcam used for the image analysis
 			image_width::image_height, //webcam image resolution
 			image_miror_horizontal, image_miror_vertical,
+			false,
 			patterns, //list of patterns to detect
 			distorsion_points, //list of 4 detection points (top-left, top-right, bottom-right, bottom-left)
 			  8,8, //size of the grid (columns, rows)

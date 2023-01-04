@@ -33,9 +33,9 @@ global {
 	}
 	reflex capture_webcam {
 		//capture image from webcam
-		string result_qr_decode <- string(decodeQR(webcam1,image_width::image_height));
+		string result_qr_decode <- string(decodeQR(webcam1,image_width::image_height, false));
 		write sample(result_qr_decode);
-		img <- cam_shot(webcam1, image_width::image_height);
+		img <- cam_shot(webcam1, image_width::image_height, false);
 		
 	}
 } 
