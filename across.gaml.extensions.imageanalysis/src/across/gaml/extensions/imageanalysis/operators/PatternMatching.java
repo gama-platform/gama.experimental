@@ -538,6 +538,17 @@ public class PatternMatching {
     
     @operator (
 			value = "detect_blocks",
+			can_be_const = true,
+			category = "image")
+	@doc (
+			value = "detect the block from the image contained in the matrix")
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope, IMatrix<Integer> image, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage, boolean improveImage ) {
+    	final BufferedImage  img = GamaIntMatrix.constructBufferedImageFromMatrix(scope, image);
+    	return detecBlocks(scope, img,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage, improveImage );
+    }
+    
+    @operator (
+			value = "detect_blocks",
 			can_be_const = false,
 			category = "image")
 	@doc (
