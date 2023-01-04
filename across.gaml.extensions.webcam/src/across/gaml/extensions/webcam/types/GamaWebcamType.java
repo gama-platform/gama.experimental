@@ -21,8 +21,8 @@ public class GamaWebcamType extends GamaType<GamaWebcam> {
 		if (webcam.getWebcam() != null) {
 			if (webcam.getWebcam().getLock() != null)
 				webcam.getWebcam().getLock().disable();
-			webcam.getWebcam().close();
-			webcam.getWebcam().open();
+//			webcam.getWebcam().close();
+//			webcam.getWebcam().open();
 		}
 		return webcam;
 	}
