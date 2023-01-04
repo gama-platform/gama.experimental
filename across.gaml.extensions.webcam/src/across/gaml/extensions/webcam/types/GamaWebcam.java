@@ -1,16 +1,10 @@
 package across.gaml.extensions.webcam.types;
 
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import com.github.sarxos.webcam.Webcam;
 
 import msi.gama.common.interfaces.IValue;
-import msi.gama.common.util.FileUtils;
 import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
@@ -25,7 +19,7 @@ import msi.gaml.types.Types;
 @vars({ @variable(name = "id", type = IType.INT),@variable(name = "resolutions", type = IType.LIST) })
 public class GamaWebcam implements IValue {
 
-	private Webcam webcam;
+	private WebcamCustom webcam;
 	private Integer id;
 	
 	
@@ -39,11 +33,11 @@ public class GamaWebcam implements IValue {
 		return resolutions;
 	}
 	
-	public Webcam getWebcam() {
+	public WebcamCustom getWebcam() {
 		return webcam;
 	}
 
-	public void setWebcam(Webcam webcam) {
+	public void setWebcam(WebcamCustom webcam) {
 		this.webcam = webcam;
 	}
 
@@ -87,5 +81,6 @@ public class GamaWebcam implements IValue {
 		return null;
 	}
 
+	
 	
 }

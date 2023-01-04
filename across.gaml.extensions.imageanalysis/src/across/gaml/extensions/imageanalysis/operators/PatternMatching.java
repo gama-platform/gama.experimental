@@ -546,15 +546,15 @@ public class PatternMatching {
     	final BufferedImage  img = GamaIntMatrix.constructBufferedImageFromMatrix(scope, image);
     	return detecBlocks(scope, img,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage, improveImage );
     }
-    
+     
     @operator (
 			value = "detect_blocks",
 			can_be_const = false,
 			category = "image")
 	@doc (
-			value = "detect the block from the webcam")
-	public static IList<PhysicalBlock> detecBlocks(final IScope scope,final GamaWebcam webcam, final boolean mirroHorizontal,  final boolean mirrorVertical, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds ) {
-    	BufferedImage image =  WebcamOperators.CamShotAct(scope, webcam, null, mirroHorizontal, mirrorVertical);
+			value = "detect the block from the webcam - autoclose or not the webcam after")
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope,final GamaWebcam webcam, final boolean mirroHorizontal,  final boolean mirrorVertical, final boolean autoclose, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds ) {
+    	BufferedImage image =  WebcamOperators.CamShotAct(scope, webcam, null, mirroHorizontal, mirrorVertical, autoclose);
     	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds, 1.0, 0.1f, 0.5f, 2.0f, false, false);
 	}
     
@@ -563,9 +563,9 @@ public class PatternMatching {
 			can_be_const = false,
 			category = "image")
 	@doc (
-			value = "detect the block from the webcam")
-	public static IList<PhysicalBlock> detecBlocks(final IScope scope,final GamaWebcam webcam, final GamaPair<Integer, Integer> resolutions, final boolean mirroHorizontal,  final boolean mirrorVertical, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds ) {
-    	BufferedImage image =  WebcamOperators.CamShotAct(scope, webcam, resolutions, mirroHorizontal, mirrorVertical);
+			value = "detect the block from the webcam - autoclose or not the webcam after")
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope,final GamaWebcam webcam, final GamaPair<Integer, Integer> resolutions, final boolean mirroHorizontal,  final boolean mirrorVertical, final boolean autoclose, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds ) {
+    	BufferedImage image =  WebcamOperators.CamShotAct(scope, webcam, resolutions, mirroHorizontal, mirrorVertical,autoclose);
     	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds, 1.0, 0.1f, 0.5f, 2.0f, false, false);
 	}
     
@@ -575,9 +575,9 @@ public class PatternMatching {
 			can_be_const = false,
 			category = "image")
 	@doc (
-			value = "detect the block from the webcam")
-	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final GamaPair<Integer, Integer> resolutions,  final boolean mirroHorizontal,  final boolean mirrorVertical, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage, boolean improveImage ) {
-    	BufferedImage image = WebcamOperators.CamShotAct(scope, webcam, resolutions, mirroHorizontal, mirrorVertical);
+			value = "detect the block from the webcam - autoclose or not the webcam after")
+	public static IList<PhysicalBlock> detecBlocks(final IScope scope, GamaWebcam webcam, final GamaPair<Integer, Integer> resolutions,  final boolean mirroHorizontal,  final boolean mirrorVertical, final boolean autoclose, final IList<PatternBlock> patterns, final IList<GamaPoint> distorsionPoint, int cols, int rows, IShape blacksubBlock, IShape whitesubBlock, IShape bounds,double tolerance, double threshLow, double threshHigh, double coeffContrast, boolean saveImage, boolean improveImage ) {
+    	BufferedImage image = WebcamOperators.CamShotAct(scope, webcam, resolutions, mirroHorizontal, mirrorVertical, autoclose);
     	return detecBlocks(scope, image,patterns, distorsionPoint, cols, rows, blacksubBlock, whitesubBlock, bounds,tolerance, threshLow, threshHigh, coeffContrast,saveImage,  improveImage );
 	}
     

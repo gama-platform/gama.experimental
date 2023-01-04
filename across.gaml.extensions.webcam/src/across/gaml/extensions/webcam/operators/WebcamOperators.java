@@ -62,14 +62,15 @@ public class WebcamOperators {
 			can_be_const = false,
 			category = IOperatorCategory.LIST)
 	@doc (
-			value = "get a photoshot with the given resolution <pair(width, height) in pixels> from the given webcam, and optionnaly mirror the image, and save it to the file")
-	public static IMatrix cam_shot(final IScope scope,final GamaWebcam webcam,  final GamaPair<Integer, Integer> resolution,final boolean mirrorHorizontal, final boolean mirrorVertical, final String filepath ) {
-		BufferedImage im = CamShotAct(scope, webcam, resolution, mirrorHorizontal,mirrorVertical);
+			value = "get a photoshot with the given resolution <pair(width, height) in pixels> from the given webcam, and optionnaly mirror the image, and save it to the file - autoclose or not the webcam after")
+	public static IMatrix cam_shot(final IScope scope,final GamaWebcam webcam,  final GamaPair<Integer, Integer> resolution,final boolean mirrorHorizontal, final boolean mirrorVertical, final String filepath, final boolean autoclose) {
+		BufferedImage im = CamShotAct(scope, webcam, resolution, mirrorHorizontal,mirrorVertical, autoclose);
 		if (filepath != null && !filepath.isBlank()) {
 			String path_gen = FileUtils.constructAbsoluteFilePath(scope, filepath, false);
 			File outputfile = new File(path_gen);
 	    	try {
-	    		Files.createDirectories(Paths.get(path_gen));
+	    		if (!Files.exists(Paths.get(path_gen))) 
+	    			Files.createDirectories(Paths.get(path_gen));
 	    		ImageIO.write(im, com.google.common.io.Files.getFileExtension(path_gen), outputfile);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -78,14 +79,40 @@ public class WebcamOperators {
 		return  matrixValueFromImage(scope, im); 
 	}
 	
+	
+	@operator (
+			value = "close_webcam",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "close a webcam")
+	public static boolean closeWebcam(final IScope scope, final GamaWebcam webcam) {
+		webcam.getWebcam().getLock().disable();
+			
+		return webcam.getWebcam().close();
+	}
+
+	@operator (
+			value = "open_webcam",
+			can_be_const = false,
+			category = IOperatorCategory.LIST)
+	@doc (
+			value = "open a webcam")
+	public static boolean openWebcam(final IScope scope, final GamaWebcam webcam) {
+		webcam.getWebcam().getLock().disable();
+		return webcam.getWebcam().open(false);
+	}
+
+	
+	
 	@operator (
 			value = "cam_shot",
 			can_be_const = false,
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot with the default resolution from the given webcam, and optionnaly mirror the image, and save it to the file")
-	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final boolean mirrorHorizontal, final boolean mirrorVertical,final String filepath) {
-		return cam_shot(scope,webcam, null,mirrorHorizontal, mirrorVertical, filepath ) ;
+	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final boolean mirrorHorizontal, final boolean mirrorVertical,final String filepath, final boolean autoclose) {
+		return cam_shot(scope,webcam, null,mirrorHorizontal, mirrorVertical, filepath, autoclose ) ;
 	}
 	
 	@operator (
@@ -94,8 +121,8 @@ public class WebcamOperators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot with the default resolution  from the given webcam and save it to the file")
-	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final String filepath) {
-		return cam_shot(scope,webcam, null,false, false, filepath ) ;
+	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final String filepath, final boolean autoclose) {
+		return cam_shot(scope,webcam, null,false, false, filepath, autoclose ) ;
 	}
 	
 	@operator (
@@ -104,8 +131,8 @@ public class WebcamOperators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot with the given resolution <pair(width, height) in pixels> from the given webcam and save it to the file")
-	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final GamaPair<Integer, Integer> resolution,final String filepath) {
-		return cam_shot(scope,webcam, null,false, false, filepath ) ;
+	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final GamaPair<Integer, Integer> resolution,final String filepath, final boolean autoclose) {
+		return cam_shot(scope,webcam, null,false, false, filepath, autoclose ) ;
 	}
 	
 	@operator (
@@ -114,8 +141,8 @@ public class WebcamOperators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot with the default resolution from the given webcam, and optionnaly mirror the image")
-	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam,final GamaPair<Integer, Integer> resolution, final boolean mirrorHorizontal, final boolean mirrorVertical) {
-		return cam_shot(scope,webcam, resolution,mirrorHorizontal, mirrorVertical, null ) ;
+	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam,final GamaPair<Integer, Integer> resolution, final boolean mirrorHorizontal, final boolean mirrorVertical, final boolean autoclose) {
+		return cam_shot(scope,webcam, resolution,mirrorHorizontal, mirrorVertical, null, autoclose ) ;
 	}
 	
 	@operator (
@@ -124,8 +151,8 @@ public class WebcamOperators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot with the default resolution from the given webcam, and optionnaly mirror the image")
-	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final boolean mirrorHorizontal, final boolean mirrorVertical) {
-		return cam_shot(scope,webcam, null,mirrorHorizontal, mirrorVertical, null ) ;
+	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final boolean mirrorHorizontal, final boolean mirrorVertical, final boolean autoclose) {
+		return cam_shot(scope,webcam, null,mirrorHorizontal, mirrorVertical, null, autoclose ) ;
 	}
 	
 	@operator (
@@ -134,8 +161,8 @@ public class WebcamOperators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot with the default resolution  from the given webcam")
-	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam) {
-		return cam_shot(scope,webcam, null,false, false, null ) ;
+	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final boolean autoclose) {
+		return cam_shot(scope,webcam, null,false, false, null, autoclose ) ;
 	}
 	
 	@operator (
@@ -144,20 +171,25 @@ public class WebcamOperators {
 			category = IOperatorCategory.LIST)
 	@doc (
 			value = "get a photoshot with the given resolution <pair(width, height) in pixels> from the given webcam")
-	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final GamaPair<Integer, Integer> resolution) {
-		return cam_shot(scope,webcam, null,false, false, null ) ;
+	public static IMatrix cam_shot(final IScope scope, final GamaWebcam webcam, final GamaPair<Integer, Integer> resolution, final boolean autoclose) {
+		return cam_shot(scope,webcam, null,false, false, null, autoclose ) ;
 	}
 	
 	
 
 	
 	
-	public static BufferedImage CamShotAct(final IScope scope, GamaWebcam webcam, final GamaPair<Integer, Integer> resolution,final boolean mirrorHorizontal, final boolean mirrorVertical) {
-	
+	public static BufferedImage CamShotAct(final IScope scope, GamaWebcam webcam, final GamaPair<Integer, Integer> resolution,final boolean mirrorHorizontal, final boolean mirrorVertical, final boolean autoclose) {
 		if (webcam == null || webcam.getWebcam() == null) {
 			GAMA.reportError(scope, GamaRuntimeException.error("No webcam detected", scope), false);
 			return null;
 		}
+		
+		if (!webcam.getWebcam().isOpen()) {
+			
+			openWebcam(scope, webcam);
+		}
+		
 		if (resolution != null )  {
 			final int width = Cast.asInt(scope, resolution.key);
 			final int height = Cast.asInt(scope, resolution.value);
@@ -204,16 +236,20 @@ public class WebcamOperators {
 					Dimension[] nonStandardResolutions = new Dimension[] {dim};
 					webcam.getWebcam().setCustomViewSizes(nonStandardResolutions);
 				}
-				if (!webcam.getWebcam().isOpen())
+				if (!webcam.getWebcam().isOpen()) 
 					webcam.getWebcam().setViewSize(dim);
 			}
-			webcam.getWebcam().open();
-			
-
+			if (webcam.getWebcam().getLock().isLocked()) {
+				webcam.getWebcam().getLock().unlock();
+			}
+			openWebcam(scope, webcam);
 		}
+		BufferedImage im = mirrorImage((BufferedImage) webcam.getWebcam().getImage(), mirrorHorizontal,mirrorVertical); 
 		
-		return mirrorImage((BufferedImage) webcam.getWebcam().getImage(), mirrorHorizontal,mirrorVertical); 
-		
+		if (autoclose) 
+			webcam.getWebcam().close();
+		return im;
+			
 	}
 	
 	private static IMatrix matrixValueFromImage(final IScope scope, final BufferedImage image) {
