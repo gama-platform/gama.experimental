@@ -65,10 +65,10 @@ public class PatternBlockType extends GamaType<PatternBlock> {
 		value = "creates a pattern block with a size provided by the first operand, and filled with the second operand",
 		comment = "Note that both components of the right operand point should be positive, otherwise an exception is raised.",
 		see = { IKeyword.MATRIX, "as_matrix" })
-public static PatternBlock matrix_with(final IScope scope, final String typeName, final GamaPoint size, final IExpression init) {
+public static PatternBlock matrix_with(final IScope scope, final String typeName, final GamaPoint size, final IExpression init, final boolean parallel) {
 	if (size == null) throw GamaRuntimeException.error("A nil size is not allowed for patterns", scope);
 	
-	return new PatternBlock(scope, typeName,(int)size.x, (int)size.y, init);
+	return new PatternBlock(scope, typeName,(int)size.x, (int)size.y, init, parallel);
 }
 
 @operator (

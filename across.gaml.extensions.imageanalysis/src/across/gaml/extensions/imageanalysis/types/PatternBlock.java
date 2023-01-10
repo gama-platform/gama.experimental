@@ -21,9 +21,9 @@ public class PatternBlock implements IValue {
 	public PatternBlock(String typeName) {
 		id = typeName;
 	}
-	public PatternBlock(IScope scope, String typeName, int cols, int rows, IExpression init) {
+	public PatternBlock(IScope scope, String typeName, int cols, int rows, IExpression init, boolean parallel) {
 		id = typeName;
-		matrix = (GamaIntMatrix) GamaMatrixType.with(scope, init, cols, rows);
+		matrix = (GamaIntMatrix) GamaMatrixType.with(scope, init, cols, rows, parallel);
 	}
 
 	@getter ("id")
