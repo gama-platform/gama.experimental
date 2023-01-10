@@ -2,6 +2,7 @@
 <modules>
  <module>../across.gaml.extensions.imageanalysis</module> 
  <module>../across.gaml.feature.imageanalysis</module> 
+ <module>../across.gaml.extensions.webcam</module>
  <module>../cict.feature.netcdf</module> 
  <module>../cict.feature.VR</module> 
  <module>../cict.gaml.extensions.netcdf</module> 
