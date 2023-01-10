@@ -129,9 +129,6 @@ global {
 		current_mode <- "Definition of the black block";
 	}
 	
-	action define_mouse_loc {
-		mouse_location <- #user_location;
-	}
 	
 	action define_bounds {
 		define_distorsion_points <- false;
@@ -140,6 +137,9 @@ global {
 		define_bounds_points <- not define_bounds_points;
 		bounds_points <- [];
 		current_mode <- "Definition of the block bound";
+	}
+	action define_mouse_loc {
+		mouse_location <- #user_location;
 	}
 	
 	action mouse_click {
