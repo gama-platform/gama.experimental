@@ -68,10 +68,10 @@ public class PhysicalBlockType extends GamaType<PhysicalBlock> {
 		value = "creates a block with a size provided by the first operand, and filled with the second operand",
 		comment = "Note that both components of the right operand point should be positive, otherwise an exception is raised.",
 		see = { IKeyword.MATRIX, "as_matrix" })
-public static PhysicalBlock matrix_with(final IScope scope, final String typeName, final GamaPoint size, final IExpression init, final IShape shape) {
+public static PhysicalBlock matrix_with(final IScope scope, final String typeName, final GamaPoint size, final IExpression init, final IShape shape, final boolean parallel) {
 	if (size == null) throw GamaRuntimeException.error("A nil size is not allowed for blocks", scope);
 	
-	return new PhysicalBlock(scope, typeName,(int)size.x, (int)size.y, init, shape);
+	return new PhysicalBlock(scope, typeName,(int)size.x, (int)size.y, init, shape, parallel);
 }
 	
 }

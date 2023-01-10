@@ -21,8 +21,8 @@ public class PhysicalBlock implements IValue {
 	}
 	
 
-	public PhysicalBlock(IScope scope, String typeName, int cols, int rows, IExpression init, IShape geom) {
-		pattern = new PatternBlock(scope, typeName, cols, rows, init);
+	public PhysicalBlock(IScope scope, String typeName, int cols, int rows, IExpression init, IShape geom, boolean parallel) {
+		pattern = new PatternBlock(scope, typeName, cols, rows, init, parallel);
 		shape = geom;
 	}
 
