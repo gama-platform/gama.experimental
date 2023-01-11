@@ -19,7 +19,8 @@
 				<checksumPolicy>ignore</checksumPolicy>
 			</snapshots>
 			<id>p2Repo</id>
-			<url>http://updates.gama-platform.org/1.9.0</url>
+			<url>https://updates.gama-platform.org/1.9.0</url>
+			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>eclipse-swt</id>
