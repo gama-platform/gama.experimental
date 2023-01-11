@@ -4,7 +4,7 @@ Bundle-Name: JDQSIM implementation
 Bundle-SymbolicName: irit.gama.jdeqsim;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: irit.gama.jdeqsim
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: msi.gama.core,
  msi.gama.ext,
  ummisco.gama.annotations
