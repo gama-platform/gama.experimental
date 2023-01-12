@@ -163,7 +163,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 			
 			try {
 				if (fillBuffer) {
-					scope.getGui().getStatus().beginSubStatus("Reading file " + getName(scope));
+					scope.getGui().getStatus().beginSubStatus(scope, "Reading file " + getName(scope));
 				}
 				// Necessary to compute it here, because it needs to be passed
 				// to the Hints
@@ -239,7 +239,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 				final double cmy = cellHeight / 2;
 //				for (int n = numRows * numCols, i = n-1 ; i > -1; i--) {
 				for (int i = 0, n = numRows * numCols; i < n; i++) {
-					scope.getGui().getStatus().setSubStatusCompletion(i / (double) n);
+					scope.getGui().getStatus().setSubStatusCompletion(scope, i / (double) n);
 					final int yy = i / numCols;
 					final int xx = i - yy * numCols;
 //					final int xx = i / numRows;
@@ -272,7 +272,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 //				if (store != null) {
 //					store.dispose();
 //				}
-				scope.getGui().getStatus().endSubStatus("Opening file " + getName(scope));
+				scope.getGui().getStatus().endSubStatus(scope, "Opening file " + getName(scope));
 			}
 		}
 
