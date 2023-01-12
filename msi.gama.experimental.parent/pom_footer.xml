@@ -22,6 +22,17 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-compiler-plugin</artifactId>
 				<version>${tycho.version}</version>
+				<executions>
+					<execution>
+						<id>verify-classpath</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>validate-classpath</goal>
+						</goals>
+						<configuration>
+						</configuration>
+					</execution>
+				</executions>
 				<configuration>
 					<debug>false</debug>
 					<source>${jdk.version}</source>
