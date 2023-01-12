@@ -12,15 +12,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-
-import org.apache.commons.lang.SystemUtils;
-import org.eclipse.core.runtime.Platform;
-
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gaml.operators.Strings;
 
 public class GamaLauncher extends JFrame {
 	String gama = "";
