@@ -24,6 +24,7 @@ import fr.inra.sad.bagap.apiland.capfarm.simul.output.ConsoleOutput;
 import fr.inra.sad.bagap.apiland.capfarm.simul.output.FarmShapefileOutput;
 import fr.inra.sad.bagap.apiland.core.time.Instant;
 import maelia.extensions.apiland.skills.ouput.GamaOutput;
+import msi.gama.common.geometry.GeometryUtils;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.common.interfaces.ITyped;
 import msi.gama.common.preferences.GamaPreferences;
@@ -54,6 +55,7 @@ import msi.gaml.expressions.IExpression;
 import msi.gaml.operators.Files;
 import msi.gaml.skills.Skill;
 import msi.gaml.statements.SaveStatement;
+import msi.gaml.statements.save.ShapeSaver;
 import msi.gaml.types.IType;
 
 
@@ -139,7 +141,7 @@ public class ApilandTerritorySkill extends Skill {
 
 	private static void  toShapeFile(IScope scope, File newFile, IList<? extends IShape> shapes) {
 		final StringBuilder specs = new StringBuilder(shapes.size() * 20);
-		final String geomType = SaveStatement.getGeometryType(shapes);
+		final String geomType = GeometryUtils.getGeometryStringType(shapes);//SaveStatement.getGeometryType(shapes);
 		specs.append("geometry:" + geomType);
 		try {
 			SpeciesDescription species =
@@ -197,7 +199,9 @@ public class ApilandTerritorySkill extends Skill {
 				}
 			}
 			// }
-			SaveStatement.saveShapeFile(scope, newFile, shapes, specs.toString(), code, attributes, gis);
+
+
+//			new ShapeSaver().save(scope, newFile, shapes, specs.toString(), code, attributes);
 			
 		} catch (final GamaRuntimeException e) {
 			throw e;
