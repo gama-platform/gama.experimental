@@ -81,5 +81,5 @@ if [[ $GPG_PASSPHRASE != "" ]]; then
     mvn verify -Dgpg.passphrase=$GPG_PASSPHRASE --settings ../settings.xml 
 fi
 
-mvn clean install  -P p2Repo  --settings ../settings.xml &&
+mvn clean install  -Dtycho.equinox.resolver.uses=true -P p2Repo  --settings ../settings.xml &&
 cd -
