@@ -69,8 +69,8 @@ public class WebcamOperators {
 			String path_gen = FileUtils.constructAbsoluteFilePath(scope, filepath, false);
 			File outputfile = new File(path_gen);
 	    	try {
-	    		if (!Files.exists(Paths.get(path_gen))) 
-	    			Files.createDirectories(Paths.get(path_gen));
+	    		if (!Files.exists(Paths.get(path_gen).getParent())) 
+	    			Files.createDirectories(Paths.get(path_gen).getParent());
 	    		ImageIO.write(im, com.google.common.io.Files.getFileExtension(path_gen), outputfile);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -217,7 +217,7 @@ public class WebcamOperators {
 				}
 			}
 			
-			if(width > max_width) {
+			/*if(width > max_width) {
 				dim.width = max_width;
 				dim.height = max_width_corresponding_height;
 				nonStandard = false;
@@ -227,7 +227,7 @@ public class WebcamOperators {
 				dim.width = max_height_corresponding_width;
 				nonStandard = false;
 			}
-			
+			*/
 			if (!webcam.getWebcam().getViewSize().equals(dim)) {
 				webcam.getWebcam().close();
 					
