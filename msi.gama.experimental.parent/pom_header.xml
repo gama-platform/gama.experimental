@@ -7,7 +7,6 @@
 	<packaging>pom</packaging>
 
 	<repositories>
-
 		<repository>
 			<id>p2Repo</id>
 			<url>https://updates.gama-platform.org/1.9.0/</url>
@@ -21,22 +20,27 @@
 				<checksumPolicy>ignore</checksumPolicy>
 			</snapshots>
 		</repository>
-
 		<repository>
-			<id>eclipse-swt</id>
+			<id>eclipse-2022-12</id>
 			<url>https://download.eclipse.org/releases/2022-12</url>
 			<layout>p2</layout>
 			<releases>
 				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
 			</releases>
 			<snapshots>
 				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
 			</snapshots>
 		</repository>
-
 	</repositories>
 
 	<pluginRepositories>
+		<pluginRepository>
+			<id>eclipse-2022-12</id>
+			<url>https://download.eclipse.org/releases/2022-12</url>
+			<layout>default</layout>
+		</pluginRepository>
 		<pluginRepository>
 			<id>p2Repo</id>
 			<url>https://updates.gama-platform.org/1.9.0</url>
