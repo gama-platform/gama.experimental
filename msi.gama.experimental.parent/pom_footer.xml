@@ -17,6 +17,11 @@
 		</extensions>
 
 		<plugins>
+	        <plugin>
+	          <groupId>org.eclipse.tycho</groupId>
+	          <artifactId>tycho-p2-repository-plugin</artifactId>
+	          <version>3.0.1</version>
+	        </plugin>
 
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
