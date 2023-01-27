@@ -1,23 +1,9 @@
 
 			<filePermissions>666</filePermissions>
 			<directoryPermissions>777</directoryPermissions>
-			
-			<configuration>
-				<sshExecutable>plink</sshExecutable>
-				<scpExecutable>pscp</scpExecutable>
-				<timeout>120000000</timeout> 
-			</configuration>
 		</server>
 	</servers>
-	<mirrors>
-        <mirror>
-            <id>insecure-repo</id>
-            <mirrorOf>p2Repo</mirrorOf> 
-            <url>http://updates.gama-platform.org/1.9.0</url>
-            <blocked>false</blocked>
-        </mirror>
-    </mirrors>
-
+    
     <profiles>
         <profile>
             <id>gpg</id>
