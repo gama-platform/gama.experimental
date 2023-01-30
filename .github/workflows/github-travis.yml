@@ -52,6 +52,14 @@ jobs:
           GAMA_KEYSTORE_BASE64: ${{ secrets.GAMA_KEYSTORE_BASE64 }}
           GAMA_STORE: ${{ secrets.GAMA_KEYSTORE_STOREPASS }}
 
+      # Dirty quick fix
+      - name: Locally build gama packages
+        run: |
+          git clone --depth 1 https://github.com/gama-platform/gama.git -b GAMA_1.9.0
+          cd gama
+          bash travis/compile.sh
+          cd ..
+
       - name: Build with Maven 
         run: bash $GITHUB_WORKSPACE/travis_build.sh 
         env:
