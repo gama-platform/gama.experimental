@@ -57,7 +57,7 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/gama-platform/gama.git -b GAMA_1.9.0
           cd gama
-          bash travis/compile.sh
+          bash travis/build.sh
           cd ..
 
       - name: Build with Maven 
