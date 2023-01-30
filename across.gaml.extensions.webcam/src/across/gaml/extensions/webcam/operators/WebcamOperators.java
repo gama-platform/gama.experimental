@@ -252,7 +252,7 @@ public class WebcamOperators {
 			
 	}
 	
-	private static IMatrix matrixValueFromImage(final IScope scope, final BufferedImage image) {
+	public static IMatrix matrixValueFromImage(final IScope scope, final BufferedImage image) {
 		if (image == null) {
 			return null;
 		}
