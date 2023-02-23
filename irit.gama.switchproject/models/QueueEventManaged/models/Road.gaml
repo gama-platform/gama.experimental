@@ -72,7 +72,7 @@ species car skills: [scheduling] {
 			do change_locations;
 		}
 
-		do later the_action: die at: (event_date + 1);
+		do later the_action: "die" at: (event_date + 1);
 	}
 
 	// Default aspect
@@ -111,7 +111,7 @@ species queue_road skills: [scheduling] {
 
 			// Die
 			ask c {
-				do later the_action: die_in_peace with_arguments: map("last_word"::"OK"); // at is null -> no
+				do later the_action: "die_in_peace" with_arguments: map("last_word"::"OK"); // at is null -> no
 			}
 
 		}
@@ -143,7 +143,7 @@ species queue_road skills: [scheduling] {
 			push item: new_car to: cars_queue;
 
 			// Schedule pop
-			do later the_action: pop_car at: t;
+			do later the_action: "pop_car" at: t;
 		}
 
 	}

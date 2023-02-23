@@ -15,11 +15,11 @@ global {
 
 	init {
 		create manager;
-		create people;
+		create people number: 2;
 		
 		ask people {
-			loop t from: 60 to: 600 step: 60 {
-				do later the_action: info at: starting_date + t#s refer_to: any(people) ;
+			loop t from: 10 to: 100 step: 10 {
+				do later the_action: "info" at: starting_date + t#s refer_to: people(0) ;
 			}
 		}
 	}	
