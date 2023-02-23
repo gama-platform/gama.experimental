@@ -84,7 +84,7 @@ public class SchedulingSkill extends Skill {
 	// Action of architecture
 
 	@action(name = "later", args = {
-			@arg(name = IKeywordIrit.THE_ACTION, type = IType.ID, optional = false, doc = @doc("The name of an action or a primitive")),
+			@arg(name = IKeywordIrit.THE_ACTION, type = IType.STRING, optional = false, doc = @doc("The name of an action or a primitive")),
 			@arg(name = IKeywordIrit.WITH_ARGUMENTS, type = IType.MAP, optional = true, doc = @doc("A map expression containing the parameters of the action")),
 			@arg(name = IKeywordIrit.AT, type = IType.DATE, optional = true, doc = @doc("Call date")),
 			@arg(name = IKeywordIrit.REFER_TO, type = IType.AGENT, optional = true, doc = @doc("The agent to refer")) }, doc = @doc(examples = {
@@ -95,12 +95,19 @@ public class SchedulingSkill extends Skill {
 		GamaDate date = (GamaDate) scope.getArg(IKeywordIrit.AT, IType.DATE);
 		// Get caller
 		IAgent caller = scope.getAgent();
-		// Get action
-		ActionDescription action = (ActionDescription) scope.getArg(IKeywordIrit.THE_ACTION, IType.ID);
 		// Get arguments
 		GamaMap<String, Object> args = (GamaMap<String, Object>) scope.getArg(IKeywordIrit.WITH_ARGUMENTS, IType.MAP);
 		// Get refer to agent
 		IAgent referredAgent = (IAgent) scope.getArg(IKeywordIrit.REFER_TO, IType.AGENT);
+		
+		// Get action
+		String actionName = (String) scope.getArg(IKeywordIrit.THE_ACTION, IType.STRING);
+		ActionDescription action;
+		if(referredAgent == null ) {
+			action = caller.getSpecies().getDescription().getAction(actionName);			
+		} else {
+			action = referredAgent.getSpecies().getDescription().getAction(actionName);
+		}
 
 		// Get manager
 		IAgent manager = (IAgent) scope.getAgent().getAttribute(IKeywordIrit.EVENT_MANAGER);

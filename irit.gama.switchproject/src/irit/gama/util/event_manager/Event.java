@@ -283,7 +283,13 @@ public class Event {
 		System.out.println("EXEC END " + dateTime.format(formatter));
 		
 		return res;*/
-		scope.execute(action, getRuntimeArgs()).getValue();
+//		scope.execute(action, getRuntimeArgs()).getValue();
+		if(referredAgent == null) {
+			scope.execute(action, getRuntimeArgs()).getValue();
+		} else {
+			scope.execute(action, referredAgent, true, getRuntimeArgs()).getValue();
+		}
+		
 		return true;
 	}
 	
