@@ -5,7 +5,7 @@
       version="1.9.0.qualifier">
 
    <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+      Adds to the gaml language the skill and operators necessary to bind agents to R.
    </description>
 
    <copyright url="http://www.example.com/copyright">
