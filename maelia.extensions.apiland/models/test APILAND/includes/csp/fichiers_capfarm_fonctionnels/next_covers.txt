@@ -1,4 +1,0 @@
-previous;orgeI;CouvRg;fmais
-orgeI;1;1;1
-CouvRg;1;1;1
-fmais;1;1;1
