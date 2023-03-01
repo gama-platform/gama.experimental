@@ -40,7 +40,7 @@ public class GamlToUMLConverter {
 	public GamlToUMLConverter(final WrappedGamaFile modelFile, final boolean light) {
 		this.model = GAML.getContents(URI.createURI(modelFile.getResource().getLocationURI().toString()));
 		importedModelsURIs =
-				(Iterator<URI>) GamlResourceIndexer.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString()));
+				GamlResourceIndexer.allImportsOf(URI.createURI(modelFile.getResource().getRawLocationURI().toString())).keySet().iterator();
 		umlText = new XMLStringBuilder();
 		species = new HashMap<>();
 		attributes = new HashMap<>();
