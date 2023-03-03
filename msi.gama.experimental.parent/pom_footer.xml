@@ -1,18 +1,28 @@
 
 	<properties>
-		<tycho.version>3.0.1</tycho.version>
+		<tycho.version>3.0.3</tycho.version>
 		<jdk.version>17</jdk.version>
 		<project.version>1.9.0-SNAPSHOT</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
+		<wagon.version>3.5.3</wagon.version>
 	</properties>
 
 	<build>
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>${wagon.version}</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-common</artifactId>
+				<version>${wagon.version}</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh</artifactId>
-				<version>3.5.1</version>
+				<version>${wagon.version}</version>
 			</extension>
 		</extensions>
 

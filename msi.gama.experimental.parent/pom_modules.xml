@@ -11,9 +11,7 @@
  <module>../femto_st.gama.mpi</module> 
  <module>../idees.gama.features.weka</module> 
  <module>../idees.gama.weka</module> 
- <module>../irit.gama.feature.jdeqsim</module> 
  <module>../irit.gama.feature.switchproject</module> 
- <module>../irit.gama.jdeqsim</module> 
  <module>../irit.gama.switchproject</module> 
  <module>../miat.feature.qrcode</module> 
  <module>../miat.gama.extension.ifcfile</module> 
@@ -32,14 +30,12 @@
  <module>../ummisco.gama.extension.unity</module> 
  <module>../ummisco.gama.feature.camisole</module> 
  <module>../ummisco.gama.feature.gaming</module> 
- <module>../ummisco.gama.feature.gamr</module> 
  <module>../ummisco.gama.feature.markdown.documentation</module> 
  <module>../ummisco.gama.feature.matlab</module> 
  <module>../ummisco.gama.feature.remote.gui</module> 
  <module>../ummisco.gama.feature.uml</module> 
  <module>../ummisco.gama.feature.unity</module> 
  <module>../ummisco.gama.gaming</module> 
- <module>../ummisco.gama.gamr</module> 
  <module>../ummisco.gama.markdown.documentation</module> 
  <module>../ummisco.gama.remote.gui</module> 
  <module>../ummisco.gama.uml</module> 
