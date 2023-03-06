@@ -21,13 +21,11 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          java-package: jdk  
-          cache: maven
+          java-package: jdk
       
       - name: Prepare build
         run: |
           # mvn
-          echo "MAVEN_OPTS='-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmx6g -Xms6g'" >> ~/.mavenrc
           sudo chmod +x $GITHUB_WORKSPACE/*.sh 
           bash custom_mvn.sh
           cat ~/.m2/settings.xml 
