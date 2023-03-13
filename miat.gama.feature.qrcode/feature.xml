@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="miat.feature.qrcode"
+      id="miat.gama.feature.qrcode"
       label="Qrcode"
       version="1.0.0.qualifier">
 
