@@ -96,7 +96,7 @@ global {
 	pattern create_pattern(string id, int v00,int v01,int v10,int v11) {
 		matrix m <- {2,2} matrix_with 0;
 		m[0,0] <- v00;m[0,1] <- v01;m[1,0] <- v10;m[1,1] <- v11; 
-		pattern p  <- pattern_with(id, {2,2}, 0);
+		pattern p  <- pattern_with(id, {2,2}, 0, false);
 		p <- p with_matrix m;
 		return p;
 	}
