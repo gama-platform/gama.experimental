@@ -6,10 +6,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="lib/slf4j-nop-1.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/bridj-0.7.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/webcam-capture-0.3.13-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-nop-1.7.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.7.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/webcam-capture-0.3.12.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gaml">
 		<attributes>
