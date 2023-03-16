@@ -1,6 +1,10 @@
 package across.gaml.extensions.webcam.types;
 
+import java.util.Locale;
+
+import com.github.eduramiba.webcamcapture.drivers.NativeDriver;
 import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.ds.buildin.WebcamDefaultDriver;
 
 import msi.gama.precompiler.GamlAnnotations.type;
 import msi.gama.precompiler.IConcept;
@@ -13,6 +17,14 @@ import msi.gaml.types.IType;
 public class GamaWebcamType extends GamaType<GamaWebcam> {
 	public final static int id = IType.AVAILABLE_TYPES + 4532623;
 
+	static {
+		final String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
+		if ((os.contains("mac")) || (os.contains("darwin"))) 
+		     Webcam.setDriver(new NativeDriver());
+		else 
+			Webcam.setDriver( new WebcamDefaultDriver());
+	}
+	
 	@Override
 	public GamaWebcam getDefault() {
 		return null;
@@ -35,7 +47,6 @@ public class GamaWebcamType extends GamaType<GamaWebcam> {
 				return null;
 			}
 			
-			Webcam.resetDriver();
 			GamaWebcam webcam = new GamaWebcam(id);
 			WebcamCustom c = new WebcamCustom(Webcam.getWebcams().get(id).getDevice());
 			if (c.getLock().isLocked()) {
