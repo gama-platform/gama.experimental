@@ -104,7 +104,7 @@ experiment test {
             	draw "'g': define the bound of block" at: { 50#px,  140#px } color: # white font: font("Helvetica", 20, #bold);
             	
             }
-         	 image matrix:img;
+         	image image(img);
 			species cell position: {0,0,0.01};
 			event "p" action: define_distorsions_points;
 			event "d" action: define_code;

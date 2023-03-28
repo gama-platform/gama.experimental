@@ -36,7 +36,7 @@ experiment ImageVectorization type: gui {
 	output {
 		display image type: opengl {
 			
-			image matrix:img refresh: false;
+			image image(img) refresh: false;
 			graphics "objects"{
 				loop l over: objects {
 					draw l color: rnd_color(255) depth: 1;
@@ -44,7 +44,7 @@ experiment ImageVectorization type: gui {
 			}		
 		}
 		display image1 type: opengl {
-			image matrix:img1 refresh: false;	
+			image image(img) refresh: false;	
 		}
 	}
 }
