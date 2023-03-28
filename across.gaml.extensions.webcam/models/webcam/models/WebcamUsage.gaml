@@ -44,7 +44,7 @@ experiment display_webcam autorun: true{
 	output {
 		display "Webcam image"  {
 			//display the image from the webcam
-			image matrix:img;
+			image image(img);
 		}
 	}
 }
