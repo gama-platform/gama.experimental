@@ -51,11 +51,12 @@ public class GeneralOperators {
 				category = IOperatorCategory.LIST)
 		@doc (
 				value = "remove the perspective from an image using 4 reference points (top-left, top-right, bottom-right, bottom-left)")
-		public static IMatrix removePerspective(final IScope scope,  final IMatrix inputImage, final double coefficient)  {
+		public static IMatrix removePerspective(final IScope scope,  final IMatrix inputImage, final double threshold)  {
 	    	BufferedImage buf = GamaIntMatrix.constructBufferedImageFromMatrix(scope, inputImage);
 	    	GrayF32 input = ConvertBufferedImage.convertFromSingle(buf, null, GrayF32.class);
 			var binary = new GrayU8(input.width, input.height);
-			double threshold = GThresholdImageOps.computeHuang(input, 0, 255) * coefficient;
+			
+			
 			ThresholdImageOps.threshold(input, binary, (float)threshold, true);
 			GrayU8 filtered = BinaryImageOps.erode8(binary, 1, null);
 			filtered = BinaryImageOps.dilate8(filtered, 1, null);
@@ -63,17 +64,65 @@ public class GeneralOperators {
 	   }
 	   
 	   @operator (
+				value = "huang_threshold",
+				can_be_const = false,
+				category = IOperatorCategory.LIST)
+		@doc (
+				value = "Compute the Huang Threshold from the image")
+		public static Double computeHuang(final IScope scope,  final IMatrix inputImage)  {
+	    	BufferedImage buf = GamaIntMatrix.constructBufferedImageFromMatrix(scope, inputImage);
+	    	GrayF32 input = ConvertBufferedImage.convertFromSingle(buf, null, GrayF32.class);
+			return GThresholdImageOps.computeHuang(input, 0, 255) ;
+	   }
+	   
+	   @operator (
+				value = "entropy_threshold",
+				can_be_const = false,
+				category = IOperatorCategory.LIST)
+		@doc (
+				value = "Compute the Entropy Threshold from the image")
+		public static Double computeEntropy(final IScope scope,  final IMatrix inputImage)  {
+	    	BufferedImage buf = GamaIntMatrix.constructBufferedImageFromMatrix(scope, inputImage);
+	    	GrayF32 input = ConvertBufferedImage.convertFromSingle(buf, null, GrayF32.class);
+			return GThresholdImageOps.computeEntropy(input, 0, 255) ;
+	   }
+	   
+	   @operator (
+				value = "otsu_threshold",
+				can_be_const = false,
+				category = IOperatorCategory.LIST)
+		@doc (
+				value = "Compute the Otsu Threshold from the image")
+		public static Double computeOtsu(final IScope scope,  final IMatrix inputImage)  {
+	    	BufferedImage buf = GamaIntMatrix.constructBufferedImageFromMatrix(scope, inputImage);
+	    	GrayF32 input = ConvertBufferedImage.convertFromSingle(buf, null, GrayF32.class);
+			return GThresholdImageOps.computeOtsu(input, 0, 255) ;
+	   }
+	   
+	 
+	   @operator (
+				value = "li_threshold",
+				can_be_const = false,
+				category = IOperatorCategory.LIST)
+		@doc (
+				value = "Compute the Li Threshold from the image")
+		public static Double computeLi(final IScope scope,  final IMatrix inputImage)  {
+	    	BufferedImage buf = GamaIntMatrix.constructBufferedImageFromMatrix(scope, inputImage);
+	    	GrayF32 input = ConvertBufferedImage.convertFromSingle(buf, null, GrayF32.class);
+			return GThresholdImageOps.computeLi(input, 0, 255) ;
+	   }
+	   
+	   @operator (
 				value = "to_binary_image",
 				can_be_const = false,
 				category = IOperatorCategory.LIST)
 		@doc (
-				value = "remove the perspective from an image using 4 reference points (top-left, top-right, bottom-right, bottom-left)")
-		public static IMatrix removePerspective(final IScope scope,  final IMatrix inputImage)  {
+				value = "return a binary image using the given threshold")
+		public static IMatrix toBinaryImage(final IScope scope,  final IMatrix inputImage, Double threshold)  {
 	    	BufferedImage buf = GamaIntMatrix.constructBufferedImageFromMatrix(scope, inputImage);
 	    	GrayF32 input = ConvertBufferedImage.convertFromSingle(buf, null, GrayF32.class);
 			var binary = new GrayU8(input.width, input.height);
-			double threshold = GThresholdImageOps.computeHuang(input, 0, 255) ;
-			ThresholdImageOps.threshold(input, binary, (float)threshold, true);
+			ThresholdImageOps.threshold(input, binary, threshold.floatValue(), true);
 			GrayU8 filtered = BinaryImageOps.erode8(binary, 1, null);
 			filtered = BinaryImageOps.dilate8(filtered, 1, null);
 			return WebcamOperators.matrixValueFromImage(scope, VisualizeBinaryData.renderBinary(filtered, false, null));
