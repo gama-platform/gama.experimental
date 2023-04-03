@@ -1,4 +1,4 @@
-package ummisco.gaml.extensions.hecras.skill;
+package ummisco.gama.extension.hecras.skill;
 /*
  * The contents of this file is dual-licensed under 2
  * alternative Open Source/Free licenses: LGPL 2.1 or later and

@@ -1,4 +1,4 @@
-package ummisco.gaml.extensions.hecras.skill;
+package ummisco.gama.extension.hecras.skill;
 
 /**
  * @author Pavel Savara (original)

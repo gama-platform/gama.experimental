@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="ummisco.gaml.extensions.hecras/lib"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="ummisco.gama.extension.hecras/lib"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="jni4net-0.8.8.0-bin/samples/myCSharpDemoCalc/work"/>
