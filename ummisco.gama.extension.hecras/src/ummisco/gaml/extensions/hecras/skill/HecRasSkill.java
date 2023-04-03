@@ -1,4 +1,4 @@
-package ummisco.gaml.extensions.hecras.skill;
+package ummisco.gama.extension.hecras.skill;
 
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.skill;

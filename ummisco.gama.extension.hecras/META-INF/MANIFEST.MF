@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: hecras extension
-Bundle-SymbolicName: ummisco.gaml.extensions.hecras;singleton:=true
+Bundle-SymbolicName: ummisco.gama.extension.hecras;singleton:=true
 Bundle-Version: 1.9.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: msi.gama.core;visibility:=reexport,
@@ -118,7 +118,7 @@ Export-Package: com.sun.jna,
  rpc.ncacn_np,
  rpc.pdu,
  rpc.security.ntlm,
- ummisco.gaml.extensions.hecras.skill
+ ummisco.gama.extension.hecras.skill
 Bundle-ClassPath: .,
  lib/jna-5.4.0.jar,
  lib/jna-platform-5.4.0.jar,
@@ -130,4 +130,4 @@ Bundle-ClassPath: .,
  lib/junit.jar,
  lib/slf4j-api-1.7.25.jar,
  lib/ext/slf4j-simple-1.7.25.jar
-Automatic-Module-Name: ummisco.gaml.extensions.hecras
+Automatic-Module-Name: ummisco.gama.extension.hecras
