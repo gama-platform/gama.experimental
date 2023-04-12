@@ -9,3 +9,9 @@ n = c(2, 3, 5)
 s = c("aa", "bb", "cc") 
 b = c(TRUE, FALSE, TRUE) 
 df = data.frame(n, s, b)
+
+y<-2
+y
+
+y<-2;  x <- 10/y;  x
+# x should be equals to 5
