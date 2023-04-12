@@ -9,3 +9,17 @@ n = c(2, 3, 5)
 s = c("aa", "bb", "cc") 
 b = c(TRUE, FALSE, TRUE) 
 df = data.frame(n, s, b)
+
+y<-2
+
+
+y<-2;  x <- 10/y;  x
+# x should be equal to 5
+
+s <- 0
+for (i in c(1,2,3)) { 
+  s <- s + i
+  s <- s * 2
+}
+s
+# s should be 22

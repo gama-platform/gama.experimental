@@ -17,7 +17,7 @@ global skills:[RSkill]{
 		// Loop that takes each line of the R script and execute it.
 	 	loop s over: Rcode.contents{
 			unknown a <- R_eval(s);
-			write "R>"+s;
+			write "R>"+s color: (s index_of("#") = 0) ? #green : #darkblue;
 			write a;
 		}
 	}	
