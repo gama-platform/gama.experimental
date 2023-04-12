@@ -26,7 +26,6 @@ import org.rosuda.JRI.RMainLoopCallbacks;
 import org.rosuda.JRI.RVector;
 import org.rosuda.JRI.Rengine;
 
-import msi.gama.common.preferences.GamaPreferences;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.GamaShape;
@@ -151,6 +150,11 @@ public class RSkill extends Skill {
 
 	/** The env. */
 	private String env;
+	
+	/** To eval multilines loop */
+	boolean inBlock = false;
+	String line = "";
+
 
 	/**
 	 * Prim R eval.
@@ -177,9 +181,21 @@ public class RSkill extends Skill {
 		Pattern p = Pattern.compile(System.lineSeparator() + "|;");
 		final String cmd[] = p.split(scope.getStringArg("command"));
 		REXP result = null;
+		
 		for (int i = 0; i < cmd.length; i++) {
 			String command = cmd[i].trim();
-			if (!command.isBlank()) { result = Reval(scope, command); }
+			if(command.contains("for") && command.contains("{")) {
+				line = "";
+				inBlock = true;
+			}
+			if(inBlock && command.contains("}")) {
+				line = line + command;
+				inBlock = false;		
+				result = Reval(scope, line);
+			}
+			if(inBlock) {
+				line = line + command +";";				
+			} else if (!command.isBlank()) { result = Reval(scope, command); }
 		}
 
 		return dataConvert_R2G(result);
