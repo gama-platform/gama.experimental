@@ -22,7 +22,7 @@ import msi.gaml.types.GamaType;
  * The Class GamaPopGeneratorType.
  */
 @type (
-		name = "gen_population_generator",
+		name = GamaPopGeneratorType.GENERATORNAME,
 		id = 938373948,
 		wraps = { GamaPopGenerator.class },
 		kind = ISymbolKind.Variable.REGULAR,
@@ -30,6 +30,8 @@ import msi.gaml.types.GamaType;
 		doc = { @doc ("Represents a population generator that can be used to create agents") })
 public class GamaPopGeneratorType extends GamaType<GamaPopGenerator> {
 
+	public static final String GENERATORNAME = "gen_population_generator"; 
+	
 	@Override
 	public boolean canCastToConst() {
 		return true;
