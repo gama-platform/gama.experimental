@@ -13,6 +13,8 @@ package ummisco.gaml.extensions.rjava.skill;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +28,6 @@ import org.rosuda.JRI.RMainLoopCallbacks;
 import org.rosuda.JRI.RVector;
 import org.rosuda.JRI.Rengine;
 
-import msi.gama.common.preferences.GamaPreferences;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.GamaShape;
@@ -151,7 +152,7 @@ public class RSkill extends Skill {
 
 	/** The env. */
 	private String env;
-
+	
 	/**
 	 * Prim R eval.
 	 *
@@ -167,7 +168,7 @@ public class RSkill extends Skill {
 					name = "command",
 					type = IType.STRING,
 					optional = true,
-					doc = @doc ("R command to be evalutated")) },
+					doc = @doc ("R command to be evaluated")) },
 			doc = @doc (
 					value = "evaluate the R command",
 					returns = "value in Gama data type",
@@ -185,6 +186,38 @@ public class RSkill extends Skill {
 		return dataConvert_R2G(result);
 	}
 
+	/**
+	 * Prim R eval.
+	 *
+	 * @param scope
+	 *            the scope
+	 * @return the object
+	 * @throws GamaRuntimeException
+	 *             the gama runtime exception
+	 */
+	@action (
+			name = "R_eval_script",
+			args = { @arg (
+					name = "file_path",
+					type = IType.STRING,
+					optional = true,
+					doc = @doc ("Path to the R script file to be evaluated")) },
+			doc = @doc (
+					value = "evaluate the R script contained at the operand path",
+					returns = "value in Gama data type",
+					examples = { @example (" R_eval_script(RCode.path)") }))
+	public Object primREvalScript(final IScope scope) throws GamaRuntimeException {
+        String fileName = "";
+		try {
+			fileName = new File(scope.getStringArg("file_path")).getCanonicalPath().replace("\\", "\\\\");
+		}  catch (IOException e) {
+			throw GamaRuntimeException.create(e, scope);
+		}
+        REXP result = Reval(scope, "source(\""+fileName+"\")");
+
+		return dataConvert_R2G(result);
+	}	
+	
 	/**
 	 * Start R.
 	 *
