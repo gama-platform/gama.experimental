@@ -11,15 +11,7 @@ b = c(TRUE, FALSE, TRUE)
 df = data.frame(n, s, b)
 
 y<-2
-
+y
 
 y<-2;  x <- 10/y;  x
-# x should be equal to 5
-
-s <- 0
-for (i in c(1,2,3)) { 
-  s <- s + i
-  s <- s * 2
-}
-s
-# s should be 22
+# x should be equals to 5
