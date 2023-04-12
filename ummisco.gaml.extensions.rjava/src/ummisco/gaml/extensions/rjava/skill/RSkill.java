@@ -13,6 +13,8 @@ package ummisco.gaml.extensions.rjava.skill;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -151,11 +153,6 @@ public class RSkill extends Skill {
 	/** The env. */
 	private String env;
 	
-	/** To eval multilines loop */
-	boolean inBlock = false;
-	String line = "";
-
-
 	/**
 	 * Prim R eval.
 	 *
@@ -171,7 +168,7 @@ public class RSkill extends Skill {
 					name = "command",
 					type = IType.STRING,
 					optional = true,
-					doc = @doc ("R command to be evalutated")) },
+					doc = @doc ("R command to be evaluated")) },
 			doc = @doc (
 					value = "evaluate the R command",
 					returns = "value in Gama data type",
@@ -181,26 +178,46 @@ public class RSkill extends Skill {
 		Pattern p = Pattern.compile(System.lineSeparator() + "|;");
 		final String cmd[] = p.split(scope.getStringArg("command"));
 		REXP result = null;
-		
 		for (int i = 0; i < cmd.length; i++) {
 			String command = cmd[i].trim();
-			if(command.contains("for") && command.contains("{")) {
-				line = "";
-				inBlock = true;
-			}
-			if(inBlock && command.contains("}")) {
-				line = line + command;
-				inBlock = false;		
-				result = Reval(scope, line);
-			}
-			if(inBlock) {
-				line = line + command +";";				
-			} else if (!command.isBlank()) { result = Reval(scope, command); }
+			if (!command.isBlank()) { result = Reval(scope, command); }
 		}
 
 		return dataConvert_R2G(result);
 	}
 
+	/**
+	 * Prim R eval.
+	 *
+	 * @param scope
+	 *            the scope
+	 * @return the object
+	 * @throws GamaRuntimeException
+	 *             the gama runtime exception
+	 */
+	@action (
+			name = "R_eval_script",
+			args = { @arg (
+					name = "file_path",
+					type = IType.STRING,
+					optional = true,
+					doc = @doc ("Path to the R script file to be evaluated")) },
+			doc = @doc (
+					value = "evaluate the R script contained at the operand path",
+					returns = "value in Gama data type",
+					examples = { @example (" R_eval_script(RCode.path)") }))
+	public Object primREvalScript(final IScope scope) throws GamaRuntimeException {
+        String fileName = "";
+		try {
+			fileName = new File(scope.getStringArg("file_path")).getCanonicalPath().replace("\\", "\\\\");
+		}  catch (IOException e) {
+			throw GamaRuntimeException.create(e, scope);
+		}
+        REXP result = Reval(scope, "source(\""+fileName+"\")");
+
+		return dataConvert_R2G(result);
+	}	
+	
 	/**
 	 * Start R.
 	 *

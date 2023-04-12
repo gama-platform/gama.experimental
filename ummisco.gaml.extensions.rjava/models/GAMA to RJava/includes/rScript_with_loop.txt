@@ -1,0 +1,31 @@
+y<-2
+y
+
+y<-2;  x <- 10/y;  x
+# x should be equals to 5
+
+s1 <- 0
+for (i in c(1,2,3)) { 
+  s1 <- s1 + i
+  s1 <- s1 * 2
+}
+s1
+# s1 should be equals to 22
+
+square <- function(t) {
+  return(t*t)
+}
+
+s <- 0
+for(i in 1:4)
+{
+  cpt <- square(i)
+  while(cpt > 0)
+  {
+    s <- s + cpt
+    cpt <- cpt - 1
+  }
+  
+}
+s
+# s should be equals to 192
