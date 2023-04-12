@@ -25,6 +25,7 @@ import espacedev.gaml.extensions.genstar.generator.IGenstarGenerator;
 import espacedev.gaml.extensions.genstar.statement.GenerateStatement.GenerateValidator;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant;
 import espacedev.gaml.extensions.genstar.utils.GenStarGamaUtils;
+import msi.gama.common.interfaces.IKeyword;
 import msi.gama.kernel.experiment.ExperimentAgent;
 import msi.gama.kernel.simulation.SimulationPopulation;
 import msi.gama.metamodel.agent.IAgent;
@@ -68,22 +69,6 @@ import one.util.streamex.StreamEx;
 /**
  * The Class GenerateStatement.
  */
-
-/**
- * The Class GenerateStatement.
- */
-
-/**
- * The Class GenerateStatement.
- */
-
-/**
- * The Class GenerateStatement.
- */
-
-/**
- * The Class GenerateStatement.
- */
 @symbol (
 		name = GENERATE,
 		kind = SEQUENCE_STATEMENT,
@@ -98,10 +83,10 @@ import one.util.streamex.StreamEx;
 		kinds = { ISymbolKind.BEHAVIOR, SEQUENCE_STATEMENT })
 @facets (
 		value = { @facet (
-				name = SPECIES,
-				type = { IType.SPECIES, IType.AGENT },
-				optional = true,
-				doc = @doc ("The species of the agents to be created.")),
+						name = SPECIES,
+						type = { IType.SPECIES, IType.AGENT },
+						optional = true,
+						doc = @doc ("The species of the agents to be created.")),
 				@facet (
 						name = FROM,
 						type = IType.NONE,
@@ -135,7 +120,7 @@ import one.util.streamex.StreamEx;
 						type = { IType.STRING },
 						optional = true,
 						doc = @doc ("To specify the type of generator you want to use: as of now there is only DS (or DirectSampling) available")) },
-		omissible = SPECIES)
+		omissible = IKeyword.SPECIES)
 
 @doc (
 		value = "Allows to create a synthetic population of agent from a set of given rules",
@@ -227,40 +212,6 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 		if (returns != null) { scope.setVarValue(returns, agents); }
 		return agents;
 	}
-
-	/**
-	 * Description PLZZZZZ Call it before calling the ICreateDelegate createFrom method !
-	 *
-	 * @param scope
-	 * @param values
-	 */
-
-	/**
-	 * Fill with user init.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @param values
-	 *            the values
-	 */
-
-	/**
-	 * Fill with user init.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @param values
-	 *            the values
-	 */
-
-	/**
-	 * Fill with user init.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @param values
-	 *            the values
-	 */
 
 	/**
 	 * Fill with user init.
@@ -408,7 +359,7 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 						if (found) { break; }
 					}
 					if (type == Types.MATRIX) {
-						// verify that x,y matrix match possible attributes values
+						// TODO verify that x,y matrix match possible attributes values
 					}
 					if (!found) {
 						description.warning(

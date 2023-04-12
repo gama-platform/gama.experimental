@@ -22,11 +22,17 @@ import java.util.List;
  */
 public class GenStarConstant {
 
-	/** The Constant GSGENERATOR. */
+	/** The Constant GSGENERATOR representing the main operator to generate agents. */
 	public static final String GSGENERATOR = "generator";
 
-	/** The Constant GSATTRIBUTES. */
+	/** The Constant GSATTRIBUTES representing the attributes to generate in synthetic agent. */
 	public static final String GSATTRIBUTES = "attributes";
+	
+	/** The constant GSLOCALISE represents the main gaml operator to localise agents based on genstar */
+	public static final String GSLOCALISE = "localise"; 
+	
+	/** The Constant representing the feature of a shapefile / geometry **/
+	public static final String GSFEATURE = "feature";
 
 	/** The Constant EPSILON. */
 	public static final Double EPSILON = Math.pow(10, -6);

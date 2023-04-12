@@ -25,6 +25,8 @@ import espacedev.gaml.extensions.genstar.generator.FileBasedGenerator;
 import espacedev.gaml.extensions.genstar.generator.IGenstarGenerator;
 import espacedev.gaml.extensions.genstar.generator.MatrixBasedGenerator;
 import espacedev.gaml.extensions.genstar.generator.OldGenstarGenerator;
+import espacedev.gaml.extensions.genstar.localisation.IGenstarLocaliser;
+import espacedev.gaml.extensions.genstar.localisation.WithinGeometryLocaliser;
 import espacedev.gaml.extensions.genstar.type.GamaRange;
 import espacedev.gaml.extensions.genstar.type.GamaRangeType;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant.GenerationAlgorithm;
@@ -219,23 +221,13 @@ public class GenStarGamaUtils {
 				OldGenstarGenerator.getInstance() };
 	}
 
-	/*
-	 * public static GamaGraph<IAgent,IShape> toGAMAGraph(IScope scope, SpinNetwork net, GamaPopGenerator gen) {
-	 * IType<?> nodeType ;
-	 *
-	 * Optional<IAgent> first = gen.getAgents().stream().findFirst(); if (first.isPresent()) { nodeType =
-	 * first.get().getGamlType(); } else { return null; }
-	 *
-	 * GamaGraph<IAgent,IShape> gamaNetwork = new GamaGraph<>(scope, net.isDirected(),nodeType,Types.GEOMETRY);
-	 *
-	 * for(IAgent agt : gen.getAgents()) { gamaNetwork.addVertex(agt); }
-	 *
-	 * for(Edge e : net.getLinks()) { IAgent sourceAgt = gen.getAgent(net.getDemoEntityNode(e.getNode0())); IAgent
-	 * targetAgt = gen.getAgent(net.getDemoEntityNode(e.getNode1()));
-	 *
-	 * gamaNetwork.addEdge(sourceAgt, targetAgt); }
-	 *
-	 * return gamaNetwork; }
+	/**
+	 * Retrieve all possible localiser based on Genstar
+	 * 
+	 * @return
 	 */
-
+	public static IGenstarLocaliser[] getGamaLocaliser() {
+		return new IGenstarLocaliser[] { WithinGeometryLocaliser.getInstance() };
+	}
+ 
 }
