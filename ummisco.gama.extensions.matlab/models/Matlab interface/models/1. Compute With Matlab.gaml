@@ -28,7 +28,7 @@ global {
 }
 
 species matlab_agent parent: agent_MATLAB {
-	string path_to_matlab <- "/Applications/MATLAB_R2019a.app/bin/maci64/";
+//	string path_to_matlab <- "/Applications/MATLAB_R2019a.app/bin/maci64/";
 }
 
 experiment ComputeWithMatlab type: gui { }

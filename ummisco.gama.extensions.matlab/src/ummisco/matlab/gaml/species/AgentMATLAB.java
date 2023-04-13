@@ -25,7 +25,7 @@ import msi.gaml.types.IType;
 import ummisco.matlab.gama.matlabengine.MatlabEngineInteraction;
 import ummisco.matlab.gama.matlabengine.MatlabEngineManager;
 import ummisco.matlab.gama.utils.IMatlabKeyword;
-import ummisco.matlab.gama.utils.ManagePaths;
+// import ummisco.matlab.gama.utils.ManagePaths;
 
 @species (
 		name = "agent_MATLAB",
@@ -37,7 +37,7 @@ public class AgentMATLAB extends GamlAgent {
 	String pathToMatlab ;
 	// For Mac "/Applications/MATLAB_R2019a.app/bin/maci64/"
 	MatlabEngine eng;
-	boolean aSyncEngine = false;
+	boolean aSyncEngine = true;
 	ArrayList<String> addedPaths;
 
 	
@@ -58,14 +58,6 @@ public class AgentMATLAB extends GamlAgent {
 	@Override
 	public boolean init(final IScope scope) {
 		boolean i = super.init(scope);
-		
-		try {
-			ManagePaths.addLibraryPath(pathToMatlab);
-		} catch (NoSuchFieldException e) {
-		    throw GamaRuntimeException.error("The file " + pathToMatlab + "cannot be found.", getScope());
-		} catch (Exception e) {
-		    throw GamaRuntimeException.error("Error in the initialization of the path to Matlab.", getScope());
-		} 
 		
 		eng = MatlabEngineManager.startMatlabEngine(getScope(), aSyncEngine);	
 		addedPaths = new ArrayList<>();
