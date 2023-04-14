@@ -1,14 +1,13 @@
 package spll.localizer.linker;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import core.metamodel.attribute.Attribute;
-import core.metamodel.entity.AGeoEntity;
 import core.metamodel.entity.IEntity;
-import core.metamodel.value.IValue;
+import msi.gama.metamodel.agent.IAgent;
+import msi.gama.runtime.IScope;
+import msi.gama.util.IList;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.distribution.ISpatialDistribution;
 
@@ -24,68 +23,68 @@ import spll.localizer.distribution.ISpatialDistribution;
  *
  * @param <SD>
  */
-public interface ISPLinker<E extends IEntity<Attribute<? extends IValue>>> {
+public interface ISPLinker<IShape> {
 
 	public enum ConstraintsReleaseRule {
 		PRIORITY, LINEAR;
 	}
 	
 	/**
-	 * Main method to link an entity to one candidate draw from a collection. There is two aspect involve:
+	 * Main method to link an entity to one candidate draw from a IList. There is two aspect involve:
 	 * <ul>
 	 *  <li> a {@link ISpatialDistribution} to draw spatial entities from
-	 *  <li> a collection of {@link ISpatialConstraint} to prior filter candidates spatial entities
+	 *  <li> a IList of {@link ISpatialConstraint} to prior filter candidates spatial entities
 	 * </ul>
 	 * 
 	 * @param entity
 	 * @param candidates
 	 * @return
 	 */
-	public Optional<AGeoEntity<? extends IValue>> getCandidate(E entity,
-			Collection<? extends AGeoEntity<? extends IValue>> candidates);
+	public Optional<IShape> getCandidate(IScope scope, IAgent entity,
+			IList<IShape> candidates);
 	
 	/**
-	 * Main method to link a set of synthetic entities with a chosen spatial entity candidate drawn from a collection.
-	 * This involves the same element as in {@link #getCandidate(IEntity, Collection)} except that filtering is made once
+	 * Main method to link a set of synthetic entities with a chosen spatial entity candidate drawn from a IList.
+	 * This involves the same element as in {@link #getCandidate(IEntity, IList)} except that filtering is made once
 	 * 
 	 * @param entity
 	 * @param candidates
 	 * @return
 	 */
-	public Map<E, Optional<AGeoEntity<? extends IValue>>>  getCandidates(Collection<E> entities,
-			Collection<? extends AGeoEntity<? extends IValue>> candidates);
+	public Map<IAgent, Optional<IShape>>  getCandidates(IScope scope,IList<IAgent> entities,
+			IList<IShape> candidates);
 
 	/**
 	 * Set the distribution to be used to sort linked places
 	 * 
 	 * @param distribution
 	 */
-	public void setDistribution(ISpatialDistribution<E> distribution);
+	public void setDistribution(ISpatialDistribution<IShape> distribution);
 	
 	/**
 	 * The distribution to be used
 	 * 
 	 * @return {@link ISpatialDistribution} the spatial distribution used to draw a candidate
 	 */
-	public ISpatialDistribution<E> getDistribution();
+	public ISpatialDistribution<IShape> getDistribution();
 
 	/**
-	 * Filter the collection of given candidate to fit {@link ISPLinker} constraints requirement without releasing them
+	 * Filter the IList of given candidate to fit {@link ISPLinker} constraints requirement without releasing them
 	 * 
 	 * @param candidates
-	 * @return the collection of fitting spatial entities that are acceptable candidates
+	 * @return the IList of fitting spatial entities that are acceptable candidates
 	 */
-	public Collection<AGeoEntity<? extends IValue>> filter(
-			Collection<? extends AGeoEntity<? extends IValue>> candidates);
+	public IList<IShape> filter(IScope scope,
+			IList<IShape> candidates);
 	
 	/**
-	 * Filter the collection of given candidate with constraint release
+	 * Filter the IList of given candidate with constraint release
 	 * 
 	 * @param candidates
-	 * @return the collection of fitting spatial entities that are acceptable candidates
+	 * @return the IList of fitting spatial entities that are acceptable candidates
 	 */
-	public Collection<AGeoEntity<? extends IValue>> filterWithRelease(
-			Collection<? extends AGeoEntity<? extends IValue>> candidates);
+	public IList<IShape> filterWithRelease(IScope scope,
+			IList<IShape> candidates);
 	
 	/**
 	 * Set a new list of constraints
@@ -102,7 +101,7 @@ public interface ISPLinker<E extends IEntity<Attribute<? extends IValue>>> {
 	public void addConstraints(ISpatialConstraint... constraints);
 
 	/**
-	 * Get back the collection of constaints
+	 * Get back the IList of constaints
 	 * 
 	 * @return {@link List} The list of spatial constraints to filter candidates for a link
 	 */

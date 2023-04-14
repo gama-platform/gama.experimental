@@ -1,12 +1,10 @@
 package spll.localizer.distribution;
 
-import java.util.Collections;
-import java.util.List;
-
-import core.metamodel.entity.ADemoEntity;
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.value.IValue;
 import core.util.random.GenstarRandom;
+import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
+import msi.gama.util.IList;
 
 /**
  * Uniform Spatial Distribution: each candidate has the same probability to be chosen 
@@ -15,30 +13,30 @@ import core.util.random.GenstarRandom;
  *
  * @param <N>
  */
-public class UniformSpatialDistribution<N extends Number, E extends ADemoEntity> implements ISpatialDistribution<E> {
+public class UniformSpatialDistribution<N extends Number, E extends IShape> implements ISpatialDistribution<IShape> {
 	
-	private List<? extends AGeoEntity<? extends IValue>> candidates;
+	private IList<IShape> candidates;
 
 	@Override
-	public AGeoEntity<? extends IValue> getCandidate(E entity, List<? extends AGeoEntity<? extends IValue>> candidates) {
+	public IShape getCandidate(IScope scope, IAgent entity, IList<IShape> candidates) {
 		return candidates.get(GenstarRandom.getInstance().nextInt(candidates.size()));
 	}
 
 	@Override
-	public AGeoEntity<? extends IValue> getCandidate(E entity) {
+	public IShape getCandidate(IScope scope, IAgent entity) {
 		if(this.candidates == null || this.candidates.isEmpty())
 			throw new NullPointerException("No candidates have been setp - use ISpatialDistribution.setCandidates(List) first");
-		return this.getCandidate(entity, candidates);
+		return this.getCandidate(scope, entity, candidates);
 	}
 
 	@Override
-	public void setCandidate(List<? extends AGeoEntity<? extends IValue>> candidates) {
+	public void setCandidate(IList<IShape> candidates) {
 		this.candidates = candidates;
 	}
 
 	@Override
-	public List<? extends AGeoEntity<? extends IValue>> getCandidates() {
-		return Collections.unmodifiableList(candidates);
+	public IList<IShape> getCandidates(IScope scope) {
+		return candidates.copy(scope);
 	}
 	
 }

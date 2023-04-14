@@ -12,8 +12,8 @@ package spll.localizer.distribution.function;
 
 import java.util.function.Function;
 
-import core.metamodel.entity.AGeoEntity;
 import core.metamodel.value.IValue;
+import msi.gama.metamodel.shape.IShape;
 
 /**
  *
@@ -23,13 +23,13 @@ import core.metamodel.value.IValue;
  *
  * @param <N>
  */
-public interface ISpatialEntityFunction<N extends Number> extends Function<AGeoEntity<? extends IValue>, N> {
+public interface ISpatialEntityFunction<N extends Number> extends Function<IShape, N> {
 
 	/**
 	 * javadoc
 	 *
 	 * @param entity
 	 */
-	default void updateFunctionState(final AGeoEntity<? extends IValue> entity) {}
+	default void updateFunctionState(final IShape entity) {}
 
 }

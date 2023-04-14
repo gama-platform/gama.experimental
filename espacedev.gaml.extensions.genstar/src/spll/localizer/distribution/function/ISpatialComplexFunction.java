@@ -1,12 +1,10 @@
 package spll.localizer.distribution.function;
 
-import java.util.Collection;
 import java.util.function.BiFunction;
 
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.value.IValue;
-import spll.SpllEntity;
-
+import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.util.IList;
 /**
  * TODO javadoc
  * 
@@ -14,7 +12,7 @@ import spll.SpllEntity;
  *
  * @param <N>
  */
-public interface ISpatialComplexFunction<N extends Number> extends BiFunction<AGeoEntity<? extends IValue>, SpllEntity, N> {
+public interface ISpatialComplexFunction<N extends Number> extends BiFunction<IAgent,IShape, N> {
 
 	/**
 	 * TODO: javadoc
@@ -22,7 +20,7 @@ public interface ISpatialComplexFunction<N extends Number> extends BiFunction<AG
 	 * @param entities
 	 * @param candidates
 	 */
-	public void updateFunctionState(Collection<SpllEntity> entities, Collection<AGeoEntity<? extends IValue>> candidates);
+	public void updateFunctionState(IList<IAgent> entities, IList<IShape> candidates);
 	
 	/**
 	 * TODO

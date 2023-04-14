@@ -1,81 +1,78 @@
 package spll.localizer.constraint;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.locationtech.jts.geom.Geometry;
-
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.io.IGSGeofile;
-import core.metamodel.value.IValue;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.GAMA;
+import msi.gama.runtime.IScope;
+import msi.gama.util.GamaListFactory;
+import msi.gama.util.IList;
+import msi.gaml.operators.Containers;
+import msi.gaml.operators.Spatial.Queries;
+import msi.gaml.operators.Spatial.Transformations;
+import msi.gaml.types.Types;
 
 public class SpatialConstraintLocalization extends ASpatialConstraint {
 
-	Geometry bounds;
-	protected IGSGeofile<? extends AGeoEntity<? extends IValue>, IValue> referenceFile;
+	IShape bounds;
+	protected IList<IShape> geoms;
 	
-	public SpatialConstraintLocalization(Geometry bounds) {
+	public SpatialConstraintLocalization(IShape bounds) {
 		super();
 		this.bounds = bounds;
 	}
 
 	@Override
-	public List<AGeoEntity<? extends IValue>> getCandidates(List<AGeoEntity<? extends IValue>> nests) {
+	public IList<IShape> getCandidates(IScope scope, IList<IShape> nests) {
 		if (bounds == null) return nests;
 		
 		//System.out.println("nests: " + nests.size());
-		List<AGeoEntity<? extends IValue>> cands = null;
-		if (referenceFile != null) {
-			cands = new ArrayList<>(referenceFile.getGeoEntityIntersect(bounds));
-			cands.removeIf(a -> !a.getGeometry().getCentroid().intersects(bounds));
+		IList<IShape> cands = null;
+		if (geoms != null && !geoms.isEmpty()) {
+			cands = (IList<IShape>) Queries.overlapping(null, geoms, bounds);
+			cands.removeIf(a -> !a.getGeometry().getLocation().intersects(bounds));
 			if (nests != null) {
-				Collection<String> nestNames = new ArrayList<>();
-				for (AGeoEntity<? extends IValue> nest : nests) {
-					nestNames.add(nest.getGenstarName());
-				}
-				cands.removeIf(a -> !nestNames.contains(a.getGenstarName()));
+				cands = Containers.inter(GAMA.getRuntimeScope(), cands, nests);
 			}
 		} else {
-			cands = nests.stream().filter(a -> a.getGeometry().getCentroid().intersects(bounds)).toList();
+			cands = GamaListFactory.createWithoutCasting(Types.GEOMETRY, nests.stream().filter(a -> a.getLocation().intersects(bounds)).toList());
 		}
 		return cands;
 	}
 
 	@Override
-	public boolean updateConstraint(AGeoEntity<? extends IValue> nest) {
+	public boolean updateConstraint(IShape nest) {
 		return false;
 	}
 
 	@Override
-	public void relaxConstraintOp(Collection<AGeoEntity<? extends IValue>> nests) {
+	public void relaxConstraintOp(IList<IShape> nests) {
 		if (bounds != null) 
-			bounds = bounds.buffer(increaseStep);
+			bounds = Transformations.enlarged_by(GAMA.getRuntimeScope(), bounds, increaseStep);
 		else 
 			currentValue = maxIncrease;
 	}
 	
 	// ---------------------- //
 	
-	public Geometry getBounds() {
+	public IShape getBounds() {
 		return bounds;
 	}
 
-	public void setBounds(Geometry bounds) {
+	public void setBounds(IShape bounds) {
 		this.bounds = bounds;
 		currentValue = 0.0;
 		constraintLimitReach = false;
 	}
 
-
-	public IGSGeofile<? extends AGeoEntity<? extends IValue>, IValue> getReferenceFile() {
-		return referenceFile;
+	public IList<IShape> getGeoms() {
+		return geoms;
 	}
 
-	public void setReferenceFile(IGSGeofile<? extends AGeoEntity<? extends IValue>, IValue> referenceFile) {
-		this.referenceFile = referenceFile;
+	public void setGeoms(IList<IShape> geoms) {
+		this.geoms = geoms;
 	}
+
+
+	
 
 
 }

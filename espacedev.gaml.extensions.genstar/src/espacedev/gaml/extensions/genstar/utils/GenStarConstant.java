@@ -29,7 +29,7 @@ public class GenStarConstant {
 	public static final String GSATTRIBUTES = "attributes";
 	
 	/** The constant GSLOCALISE represents the main gaml operator to localise agents based on genstar */
-	public static final String GSLOCALISE = "localise"; 
+	public static final String GSLOCALISE = "localize"; 
 	
 	/** The Constant representing the feature of a shapefile / geometry **/
 	public static final String GSFEATURE = "feature";
@@ -37,6 +37,10 @@ public class GenStarConstant {
 	/** The Constant EPSILON. */
 	public static final Double EPSILON = Math.pow(10, -6);
 
+
+	/** The constant GSLOCALISE represents the main gaml operator to localise agents based on genstar */
+	public static final String NESTS = "nests"; 
+	
 	/**
 	 * Interface to deal with aliases
 	 *

@@ -10,8 +10,7 @@
  ********************************************************************************************************/
 package spll.localizer.distribution.function;
 
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.value.IValue;
+import msi.gama.metamodel.shape.IShape;
 
 /**
  * The Class AreaFunction.
@@ -19,7 +18,7 @@ import core.metamodel.value.IValue;
 public class AreaFunction implements ISpatialEntityFunction<Double> {
 
 	@Override
-	public Double apply(final AGeoEntity<? extends IValue> t) {
+	public Double apply(final IShape t) {
 		return t.getArea();
 	}
 

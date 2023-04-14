@@ -3,11 +3,19 @@ package spll.localizer.distribution;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import core.metamodel.entity.ADemoEntity;
-import core.metamodel.entity.AGeoEntity;
 import core.metamodel.value.IValue;
 import core.util.random.roulette.ARouletteWheelSelection;
 import core.util.random.roulette.RouletteWheelSelectionFactory;
+import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
+import msi.gama.util.GamaList;
+import msi.gama.util.GamaListFactory;
+import msi.gama.util.IList;
+
+import msi.gaml.operators.Containers;
+import msi.gaml.operators.Random;
+import msi.gaml.types.Types;
 import spll.localizer.distribution.function.ISpatialEntityFunction;
 
 /**
@@ -18,38 +26,37 @@ import spll.localizer.distribution.function.ISpatialEntityFunction;
  *
  * @param <N>
  */
-public class BasicSpatialDistribution<N extends Number, E extends ADemoEntity> implements ISpatialDistribution<E> {
+public class BasicSpatialDistribution<N extends Number,E extends IShape> implements ISpatialDistribution<IShape> {
 	
 	private ISpatialEntityFunction<N> function;
-	private ARouletteWheelSelection<N, ? extends AGeoEntity<? extends IValue>> roulette;
+	private ARouletteWheelSelection<N, ? extends IShape> roulette;
 
 	public BasicSpatialDistribution(ISpatialEntityFunction<N> function) {
 		this.function = function;
-	}
+	} 
 	
-	@Override
-	public AGeoEntity<? extends IValue> getCandidate(E entity, List<? extends AGeoEntity<? extends IValue>> candidates) {
-		return RouletteWheelSelectionFactory.getRouletteWheel(candidates.stream()
-				.map(a -> function.apply(a)).toList(), candidates)
-			.drawObject();
+	@Override 
+	public IShape getCandidate(IScope scope, IAgent entity, IList<IShape> candidates) {
+		return candidates.anyValue(scope);
 	}
 
 	@Override
-	public AGeoEntity<? extends IValue> getCandidate(E entity) {
+	public IShape getCandidate(IScope scope, IAgent entity) {
 		if(this.roulette == null || this.roulette.getKeys().isEmpty())
 			throw new NullPointerException("No candidate geographic entity to draw from");
 		return roulette.drawObject();
 	}
 
 	@Override
-	public void setCandidate(List<? extends AGeoEntity<? extends IValue>> candidates) {
+	public void setCandidate(IList<IShape> candidates) {
 		this.roulette = RouletteWheelSelectionFactory.getRouletteWheel(candidates.stream()
-				.map(a -> function.apply(a)).toList(), candidates);
+			.map(a -> function.apply(a)).toList(), candidates);
 	}
 
 	@Override
-	public List<? extends AGeoEntity<? extends IValue>> getCandidates() {
-		return roulette.getKeys();
+	public IList<IShape> getCandidates(IScope scope) {
+		return (IList<IShape>) GamaListFactory.createWithoutCasting(Types.GEOMETRY,roulette.getKeys());
 	}
+
 	
 }

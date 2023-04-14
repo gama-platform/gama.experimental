@@ -1,35 +1,26 @@
 package spll.localizer.pointInalgo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.locationtech.jts.algorithm.Centroid;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
+import msi.gama.metamodel.shape.GamaPoint;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
+import msi.gama.util.GamaListFactory;
+import msi.gama.util.IList;
 
 public class CentroidPointinLocalizer implements PointInLocalizer{
 
-	public static GeometryFactory FACTORY = new GeometryFactory();
-	
 	@Override
-	public Point pointIn(Geometry geom) {
-		return FACTORY.createPoint(Centroid.getCentroid(geom));
+	public GamaPoint pointIn(IScope scope, IShape geom) {
+		return geom.getLocation().copy(scope);
 	}
 
 	@Override
-	public List<Point> pointIn(Geometry geom, int nb) {
-		List<Point> points = new ArrayList<>();
+	public IList<GamaPoint> pointIn(IScope scope, IShape geom, int nb) {
+		IList<GamaPoint> points = GamaListFactory.create();
 		for (int i = 0; i < nb; i++)
-			points.add(pointIn(geom));
+			points.add(pointIn(scope, geom));
 		return points;
 	}
 
-	@Override
-	public void setRand(Random rand) {
-		// do nothing
-	}
 
 	
 }

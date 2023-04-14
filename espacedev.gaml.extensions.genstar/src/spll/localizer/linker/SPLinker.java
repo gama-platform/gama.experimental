@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import core.metamodel.entity.ADemoEntity;
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.value.IValue;
+import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
+import msi.gama.util.GamaListFactory;
+import msi.gama.util.IList;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.distribution.ISpatialDistribution;
 
@@ -24,55 +26,54 @@ import spll.localizer.distribution.ISpatialDistribution;
  * @author kevinchapuis
  *
  */
-public class SPLinker<E extends ADemoEntity> implements ISPLinker<E> {
+public class SPLinker implements ISPLinker<IShape> {
 	
-	private ISpatialDistribution<E> distribution;
+	private ISpatialDistribution<IShape> distribution;
 	private List<ISpatialConstraint> constraints;
 	private ConstraintsReleaseRule rule;
 	
-	public SPLinker(ISpatialDistribution<E> distribution) {
+	public SPLinker(ISpatialDistribution<IShape> distribution) {
 		this.distribution = distribution;
 		this.constraints = new ArrayList<>();
 		this.rule = ConstraintsReleaseRule.PRIORITY;
 	}
 	
-	public SPLinker(ISpatialDistribution<E> distribution, ConstraintsReleaseRule rule) {
+	public SPLinker(ISpatialDistribution<IShape> distribution, ConstraintsReleaseRule rule) {
 		this(distribution);
 		this.rule = rule;
 	}
 
-	@Override
-	public Optional<AGeoEntity<? extends IValue>> getCandidate(E entity,
-			Collection<? extends AGeoEntity<? extends IValue>> candidates) {
+	@Override 
+	public Optional<IShape> getCandidate(IScope scope, IAgent entity,
+			IList<IShape> candidates) {
 
-		Collection<AGeoEntity<? extends IValue>> filteredCandidates = this.filter(candidates);
+		IList<IShape> filteredCandidates = this.filter(scope, candidates);
 
 		return filteredCandidates.isEmpty() ? Optional.empty() : 
-			Optional.ofNullable(distribution.getCandidate(entity, new ArrayList<>(filteredCandidates)));
+			Optional.ofNullable(distribution.getCandidate(scope, entity, filteredCandidates));
 	}
 	
 	@Override
-	public Map<E, Optional<AGeoEntity<? extends IValue>>> getCandidates(Collection<E> entities,
-			Collection<? extends AGeoEntity<? extends IValue>> candidates) {
+	public Map<IAgent, Optional<IShape>>  getCandidates(IScope scope,IList<IAgent> entities,
+			IList<IShape> candidates) {	
 		
+		Map<IAgent, Optional<IShape>> res = entities.stream()
+				.collect(Collectors.toMap(Function.identity(), e -> this.getCandidate(scope, e,candidates)));
 		
-		Map<E, Optional<AGeoEntity<? extends IValue>>> res = entities.stream()
-				.collect(Collectors.toMap(Function.identity(), e -> this.getCandidate(e,candidates)));
-		
-		Collection<E> unbindedEntities = new HashSet<>();
-		for(E e : res.keySet()) { 
+		Collection<IAgent> unbindedEntities = new LinkedHashSet<>();
+		for(IAgent e : res.keySet()) { 
 			if(!res.get(e).isPresent()) unbindedEntities.add(e);
 			else constraints.forEach(c -> c.updateConstraint(res.get(e).get()));
 		}
 		
 		if(!unbindedEntities.isEmpty()) {
-			Collection<? extends AGeoEntity<? extends IValue>> filteredCandidates = null;
+			IList<IShape> filteredCandidates = null;
 			do {
-				filteredCandidates = this.filterWithRelease(candidates);
+				filteredCandidates = this.filterWithRelease(scope, candidates);
 				res.clear();
-				for(E e : unbindedEntities) {
-					Optional<AGeoEntity<? extends IValue>> oNest = Optional.ofNullable(
-							distribution.getCandidate(e, new ArrayList<>(filteredCandidates))); 
+				for(IAgent e : unbindedEntities) {
+					Optional<IShape> oNest = Optional.ofNullable(
+							distribution.getCandidate(scope, e, filteredCandidates.copy(scope))); 
 					if(oNest.isPresent()) {
 						res.put(e, oNest); 
 						constraints.stream().forEach(c -> c.updateConstraint(oNest.get()));
@@ -85,52 +86,52 @@ public class SPLinker<E extends ADemoEntity> implements ISPLinker<E> {
 	}
 	
 	@Override
-	public void setDistribution(ISpatialDistribution<E> distribution) {
+	public void setDistribution(ISpatialDistribution<IShape> distribution) {
 		this.distribution = distribution;
 	}
 
 	@Override
-	public ISpatialDistribution<E> getDistribution() {
+	public ISpatialDistribution<IShape> getDistribution() {
 		return distribution;
 	}
 	
 	@Override
-	public Collection<AGeoEntity<? extends IValue>> filterWithRelease (
-			Collection<? extends AGeoEntity<? extends IValue>> candidates) {
-		List<AGeoEntity<? extends IValue>> filteredCandidates = new ArrayList<>(candidates);
+	public IList<IShape> filterWithRelease(IScope scope,
+			IList<IShape> candidates) {
+		IList<IShape> filteredCandidates = candidates.copy(scope);
 		List<ISpatialConstraint> scs = constraints.stream().sorted(
 				(c1,c2) -> Integer.compare(c1.getPriority(), c2.getPriority()))
 				.toList();
 		switch(rule) {
 		case LINEAR:
 			do {
-				List<AGeoEntity<? extends IValue>> newFilteredCandidates = new ArrayList<>(filteredCandidates);
+				IList<IShape> newFilteredCandidates =filteredCandidates.copy(scope);
 				for(ISpatialConstraint sc : scs.stream()
 						.filter(c -> !c.isConstraintLimitReach())
 						.toList()) {
-					newFilteredCandidates = sc.getCandidates(filteredCandidates);
+					newFilteredCandidates = sc.getCandidates(scope, filteredCandidates);
 					if(newFilteredCandidates.isEmpty()) {
-						sc.relaxConstraint(newFilteredCandidates);
-						newFilteredCandidates = sc.getCandidates(newFilteredCandidates);
+						sc.relaxConstraint(newFilteredCandidates); 
+						newFilteredCandidates = sc.getCandidates(scope, newFilteredCandidates);
 					}
 				}
 				if(!newFilteredCandidates.isEmpty()) {
 					return newFilteredCandidates;
 				}
 			} while(scs.stream().noneMatch(c -> !c.isConstraintLimitReach()));
-			return Collections.emptyList();
+			return GamaListFactory.EMPTY_LIST;
 		default:
 			for(ISpatialConstraint sc : scs) {
-				List<AGeoEntity<? extends IValue>> newFilteredCandidates = sc.getCandidates(filteredCandidates);
+				IList<IShape> newFilteredCandidates = sc.getCandidates(scope, filteredCandidates);
 				if(newFilteredCandidates.isEmpty()) {
 					do {
 						sc.relaxConstraint(filteredCandidates);
-						newFilteredCandidates = sc.getCandidates(filteredCandidates);
+						newFilteredCandidates = sc.getCandidates(scope, filteredCandidates);
 					} while(!newFilteredCandidates.isEmpty() &&
 							!sc.isConstraintLimitReach());
 				}
 				if(newFilteredCandidates.isEmpty())
-					return Collections.emptyList();
+					return GamaListFactory.EMPTY_LIST;
 				filteredCandidates = newFilteredCandidates;
 			}
 			return filteredCandidates;
@@ -139,18 +140,18 @@ public class SPLinker<E extends ADemoEntity> implements ISPLinker<E> {
 	}
 	
 	@Override
-	public Collection<AGeoEntity<? extends IValue>> filter(
-			Collection<? extends AGeoEntity<? extends IValue>> candidates) {
-		List<AGeoEntity<? extends IValue>> filteredCandidates = new ArrayList<>(candidates);
+	public IList<IShape> filter(IScope scope,
+			IList<IShape> candidates) {
+		IList<IShape> filteredCandidates = candidates.copy(scope);
 		List<ISpatialConstraint> scs = constraints.stream().sorted(
 				(c1,c2) -> Integer.compare(c1.getPriority(), c2.getPriority()))
 				.toList();
 		for(ISpatialConstraint sc : scs) {
-			filteredCandidates = sc.getCandidates(filteredCandidates);
-			if(filteredCandidates.isEmpty())
-				return Collections.emptyList();
+			filteredCandidates = sc.getCandidates(scope, filteredCandidates);
+			if(filteredCandidates.isEmpty()) 
+				return GamaListFactory.create();
 		}
-		return filteredCandidates;	
+		return filteredCandidates;	 
 	}
 
 	@Override

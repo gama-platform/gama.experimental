@@ -1,8 +1,6 @@
 package spll.localizer;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -10,19 +8,16 @@ import org.geotools.feature.SchemaException;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.operation.TransformException;
 
-import core.metamodel.IPopulation;
 import core.metamodel.attribute.Attribute;
-import core.metamodel.entity.ADemoEntity;
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.io.IGSGeofile;
-import core.metamodel.value.IValue;
-import spll.SpllEntity;
-import spll.SpllPopulation;
+import msi.gama.common.interfaces.IValue;
+import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
+import msi.gama.util.IList;
 import spll.algo.LMRegressionOLS;
 import spll.algo.exception.IllegalRegressionException;
 import spll.datamapper.exception.GSMapperException;
 import spll.datamapper.normalizer.SPLUniformNormalizer;
-import spll.io.exception.InvalidGeoFormatException;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.distribution.ISpatialDistribution;
 import spll.localizer.linker.ISPLinker;
@@ -64,7 +59,7 @@ public interface ISPLocalizer {
 	 * @param population
 	 * @return
 	 */
-	public IPopulation<SpllEntity, Attribute<? extends IValue>> localisePopulation();
+	public void localisePopulation(IScope scope, IList<IAgent> population);
 	
 	/**
 	 * Link entity of a population to a spatial entity using provided linker
@@ -74,8 +69,8 @@ public interface ISPLocalizer {
 	 * @param linker
 	 * @return
 	 */
-	public SpllPopulation linkPopulation(SpllPopulation population, ISPLinker<SpllEntity> linker, 
-			Collection<? extends AGeoEntity<? extends IValue>> linkedPlaces, 
+	public void linkPopulation(IList<IAgent> population, ISPLinker<IShape> linker, 
+			IList<IShape> linkedPlaces, 
 			Attribute<? extends IValue> attribute);
 	
 	////////////////////////////////////////////////
@@ -91,7 +86,7 @@ public interface ISPLocalizer {
 	 * @param keyAttPop : the population attribute to link to geographical entities
 	 * @param keyAttMatch : the geographical feature to link to population
 	 */
-	public void setMatcher(IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> match, 
+	public void setMatcher(IList<IShape> match, 
 			String keyAttPop, String keyAttMatch);
 	
 	/**
@@ -104,7 +99,7 @@ public interface ISPLocalizer {
 	 * @param releaseStep : the increase step to which released constraint
 	 * @param priority : the priority of the matching over other constraint
 	 */
-	public void setMatcher(IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> match, 
+	public void setMatcher(IList<IShape> match, 
 			String keyAttPop, String keyAttMatch, double releaseLimit, double releaseStep, int priority);
 	
 	/**
@@ -118,8 +113,8 @@ public interface ISPLocalizer {
 	 * @throws MismatchedDimensionException 
 	 * @throws SchemaException 
 	 */
-	public IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> estimateMatcher(File destination) 
-			throws MismatchedDimensionException, IllegalArgumentException, IOException, TransformException, SchemaException;
+	//public IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> estimateMatcher(File destination) 
+	//		throws MismatchedDimensionException, IllegalArgumentException, IOException, TransformException, SchemaException;
 	
 	
 	///////////////////////////////////////////////
@@ -136,7 +131,7 @@ public interface ISPLocalizer {
 	 * @param entityNbAreas
 	 * @param numberProperty
 	 */
-	public void setMapper(IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> map, 
+	public void setMapper(IList<IShape> map, 
 			String numberProperty);
 	
 	/**
@@ -161,10 +156,10 @@ public interface ISPLocalizer {
 	 * @throws IllegalArgumentException 
 	 * @throws MismatchedDimensionException 
 	 */
-	public void setMapper(List<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> endogeneousVarFile, 
+	public void setMapper(IList<IList<IShape>> endogeneousEntities, 
 			List<? extends IValue> varList, LMRegressionOLS lmRegressionOLS, SPLUniformNormalizer splUniformNormalizer) 
 					throws IOException, TransformException, InterruptedException, ExecutionException, IllegalRegressionException, 
-					IndexOutOfBoundsException, GSMapperException, SchemaException, MismatchedDimensionException, IllegalArgumentException, InvalidGeoFormatException;
+					IndexOutOfBoundsException, GSMapperException, SchemaException, MismatchedDimensionException, IllegalArgumentException;
 	
 	/**
 	 * Setup a density map - from the result of spatial interpolation: this interpolation
@@ -188,11 +183,11 @@ public interface ISPLocalizer {
 	 * @throws IllegalArgumentException 
 	 * @throws MismatchedDimensionException 
 	 */
-	public void setMapper(IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> mainMapper, 
-			String mainAttribute, List<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> endogeneousVarFile, 
+	public void setMapper(IList<IShape> mainMapper, 
+			String mainAttribute, IList<IList<IShape>> endogeneousdata, 
 			List<? extends IValue> varList, LMRegressionOLS lmRegressionOLS, SPLUniformNormalizer splUniformNormalizer) 
 					throws IOException, TransformException, InterruptedException, ExecutionException, IllegalRegressionException, 
-					IndexOutOfBoundsException, GSMapperException, SchemaException, MismatchedDimensionException, IllegalArgumentException, InvalidGeoFormatException;
+					IndexOutOfBoundsException, GSMapperException, SchemaException, MismatchedDimensionException, IllegalArgumentException;
 	
 	///////////////////////////////////////////////////
 	// -------------- CONSTRAINT PART -------------- //
@@ -238,13 +233,13 @@ public interface ISPLocalizer {
 	 * @param distribution
 	 * @return
 	 */
-	public void setDistribution(ISpatialDistribution<ADemoEntity> distribution);
+	public void setDistribution(ISpatialDistribution<IShape> distribution);
 	
 	/**
 	 * Get the spatial distribution
 	 * 
 	 * @return
 	 */
-	public ISpatialDistribution<ADemoEntity> getDistribution();
+	public ISpatialDistribution<IShape> getDistribution();
 	
 }

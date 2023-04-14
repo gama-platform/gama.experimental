@@ -1,12 +1,11 @@
 package espacedev.gaml.extensions.genstar.localisation;
 
-import java.util.Map;
-
 import espacedev.gaml.extensions.genstar.statement.LocaliseStatement;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
 import msi.gama.util.IList;
-import spll.SpllEntity;
+import msi.gaml.operators.Cast;
+import spll.localizer.SPLocalizer;
 
 public class WithinGeometryLocaliser implements IGenstarLocaliser {
 
@@ -23,14 +22,11 @@ public class WithinGeometryLocaliser implements IGenstarLocaliser {
 	
 	@Override
 	public void localise(IScope scope, IList<? extends IAgent> pop, Object nests, LocaliseStatement locStatement) {
-		
+		SPLocalizer loc = new SPLocalizer(scope, Cast.asList(scope, nests));
+		loc.localisePopulation(scope, (IList<IAgent>) pop);
 		// TODO : transpose the Gama population of agent into Genstar IPopulation / with potential explicit link between them
 		
 		
-		Map<IAgent, SpllEntity> convertedPop;
-		for(IAgent a : pop) {
-			
-		}
 		
 		// TODO : go through localisation process of SpllEntity
 		

@@ -1,9 +1,8 @@
 package spll.localizer.constraint;
 
-import java.util.Collection;
 
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.value.IValue;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.util.IList;
 
 /**
  * Abstract numerical representation of a spatial constraint: it deals with priority (int) 
@@ -27,7 +26,7 @@ public abstract class ASpatialConstraint implements ISpatialConstraint {
 	}
 	
 	@Override
-	public void relaxConstraint(Collection<AGeoEntity<? extends IValue>> nests) {
+	public void relaxConstraint(IList<IShape> nests) {
 		if (currentValue < maxIncrease) {
 			currentValue = Math.min(currentValue + increaseStep, maxIncrease);
 			constraintLimitReach = false;
@@ -94,6 +93,6 @@ public abstract class ASpatialConstraint implements ISpatialConstraint {
 	 * 
 	 * @param nests
 	 */
-	public abstract void relaxConstraintOp(Collection<AGeoEntity<? extends IValue>> nests);
+	public abstract void relaxConstraintOp(IList<IShape> nests);
 	
 }
