@@ -1,7 +1,6 @@
 package spll.datamapper.matcher;
 
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.value.IValue;
+import msi.gama.metamodel.shape.IShape;
 import spll.datamapper.variable.SPLVariable;
 
 public class SPLAreaMatcher implements ISPLMatcher<SPLVariable, Double> {
@@ -10,13 +9,13 @@ public class SPLAreaMatcher implements ISPLMatcher<SPLVariable, Double> {
 	
 	private final SPLVariable variable;
 
-	private AGeoEntity<? extends IValue> entity;
+	private IShape entity;
 	
-	protected SPLAreaMatcher(AGeoEntity<? extends IValue> entity, SPLVariable variable){
+	protected SPLAreaMatcher(IShape entity, SPLVariable variable){
 		this(entity, variable, 1d);
 	}
 	
-	protected SPLAreaMatcher(AGeoEntity<? extends IValue> entity, SPLVariable variable, double area){
+	protected SPLAreaMatcher(IShape entity, SPLVariable variable, double area){
 		this.entity = entity;
 		this.variable = variable;
 		this.area = area;
@@ -44,7 +43,7 @@ public class SPLAreaMatcher implements ISPLMatcher<SPLVariable, Double> {
 	}
 
 	@Override
-	public AGeoEntity<? extends IValue> getEntity() {
+	public IShape getEntity() {
 		return entity;
 	}
 	
@@ -52,7 +51,7 @@ public class SPLAreaMatcher implements ISPLMatcher<SPLVariable, Double> {
 	
 	@Override
 	public String toString() {
-		return entity.getGenstarName()+" => ["+getVariable()+" = "+area+"]";
+		return entity.toString()+" => ["+getVariable()+" = "+area+"]";
 	}
 
 	/* (non-Javadoc)

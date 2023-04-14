@@ -21,6 +21,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 
 import core.metamodel.attribute.Attribute;
 import core.metamodel.attribute.AttributeFactory;
+import core.metamodel.entity.AGeoEntity;
 import core.metamodel.value.IValue;
 import core.metamodel.value.numeric.ContinuousValue;
 import core.util.data.GSDataParser;
@@ -46,9 +47,9 @@ public class GeoEntityFactory {
 
 	private SimpleFeatureBuilder contingencyFeatureBuilder;
 
-	private Map<Feature, SpllFeature> feature2splFeature;
+	private Map<Feature, AGeoEntity<IValue>> feature2splFeature;
 
-	public GeoEntityFactory(final Map<Feature, SpllFeature> feature2splFeature) {
+	public GeoEntityFactory(final Map<Feature, AGeoEntity<IValue>> feature2splFeature) {
 		this.featureAttributes = new HashMap<>();
 		this.feature2splFeature = feature2splFeature;
 	}

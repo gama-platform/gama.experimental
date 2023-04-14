@@ -13,11 +13,11 @@ package espacedev.gaml.extensions.genstar.utils;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.stream.Collectors;
 
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.value.IValue;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant.SpatialConstraint;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
+import msi.gama.util.IList;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.constraint.SpatialConstraintMaxDensity;
 import spll.localizer.constraint.SpatialConstraintMaxDistance;
@@ -138,8 +138,8 @@ public class GenStarGamaConstraintBuilder {
 	 * @param nests
 	 * @return The Collection (HashSet) of {@link ISpatialConstraint} built
 	 */
-	public Collection<ISpatialConstraint> buildConstraints(
-			final Collection<? extends AGeoEntity<? extends IValue>> nests) throws IllegalStateException {
+	public Collection<ISpatialConstraint> buildConstraints(IScope scope,
+			final IList<IShape> nests) throws IllegalStateException {
 		if (!hasConstraints())
 			throw new IllegalStateException("You must have at least one constraint setup to use the builder");
 		Collection<ISpatialConstraint> buildConstraints = new LinkedHashSet<>();
@@ -195,7 +195,7 @@ public class GenStarGamaConstraintBuilder {
 	 * @return {@link ISpatialConstraint}
 	 */
 	public ISpatialConstraint
-			getFeatureDensityConstraint(final Collection<? extends AGeoEntity<? extends IValue>> nests) {
+			getFeatureDensityConstraint(final IList<IShape> nests) {
 		SpatialConstraintMaxDensity sc = new SpatialConstraintMaxDensity(nests, densityFeature);
 		sc.setMaxIncrease(densityLimit);
 		sc.setPriority(densityPriority);
@@ -213,7 +213,7 @@ public class GenStarGamaConstraintBuilder {
 	 * @return {@link ISpatialConstraint}
 	 */
 	public ISpatialConstraint
-			getConstantDensityConstraint(final Collection<? extends AGeoEntity<? extends IValue>> nests) {
+			getConstantDensityConstraint(final IList<IShape> nests) {
 		SpatialConstraintMaxDensity sc = new SpatialConstraintMaxDensity(nests, densityConstant);
 		sc.setMaxIncrease(densityLimit);
 		sc.setIncreaseStep(densityStep);
@@ -251,7 +251,7 @@ public class GenStarGamaConstraintBuilder {
 	 * @return {@link ISpatialConstraint}
 	 */
 	public ISpatialConstraint
-			getFeatureCapacityConstraint(final Collection<? extends AGeoEntity<? extends IValue>> nests) {
+			getFeatureCapacityConstraint(final IList<IShape> nests) {
 		SpatialConstraintMaxNumber sc = new SpatialConstraintMaxNumber(nests, capacityFeature);
 		sc.setMaxIncrease(capacityLimit);
 		sc.setPriority(capacityPriority);
@@ -269,7 +269,7 @@ public class GenStarGamaConstraintBuilder {
 	 * @return {@link ISpatialConstraint}
 	 */
 	public ISpatialConstraint
-			getConstantCapacityConstraint(final Collection<? extends AGeoEntity<? extends IValue>> nests) {
+			getConstantCapacityConstraint(final IList<IShape> nests) {
 		SpatialConstraintMaxNumber sc = new SpatialConstraintMaxNumber(nests, capacityConstant * 1d);
 		sc.setMaxIncrease(capacityLimit);
 		sc.setIncreaseStep(capacityStep);
@@ -305,9 +305,9 @@ public class GenStarGamaConstraintBuilder {
 	 *            : the name of the attribute to retrieve density value
 	 * @return {@link ISpatialConstraint}
 	 */
-	public ISpatialConstraint getDistanceConstraint(final Collection<? extends AGeoEntity<? extends IValue>> nests) {
+	public ISpatialConstraint getDistanceConstraint(final IList<IShape> nests) {
 		SpatialConstraintMaxDistance sc =
-				new SpatialConstraintMaxDistance(nests.stream().collect(Collectors.toList()), distanceConstant);
+				new SpatialConstraintMaxDistance(nests, distanceConstant);
 		sc.setMaxIncrease(distanceLimit);
 		sc.setIncreaseStep(distanceStep);
 		sc.setPriority(distancePriority);

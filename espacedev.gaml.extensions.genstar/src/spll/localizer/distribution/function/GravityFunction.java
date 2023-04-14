@@ -7,9 +7,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import core.metamodel.entity.AGeoEntity;
 import core.metamodel.value.IValue;
-import spll.SpllEntity;
+import msi.gama.metamodel.shape.IShape;
 
 /**
  * Function that computes probability based on the gravity model
@@ -19,7 +18,7 @@ import spll.SpllEntity;
  */
 public class GravityFunction implements ISpatialComplexFunction<Double> {
 
-	private Map<AGeoEntity<? extends IValue>, Double> mass; 
+	private Map<IShape, Double> mass; 
 	private double buffer = -1;
 	private double frictionCoeff = 1.0;
 	

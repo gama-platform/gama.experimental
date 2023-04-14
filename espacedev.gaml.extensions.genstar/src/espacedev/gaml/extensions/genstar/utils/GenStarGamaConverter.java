@@ -19,9 +19,6 @@ import msi.gaml.descriptions.SpeciesDescription;
 import msi.gaml.descriptions.VariableDescription;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
-import spll.SpllEntity;
-import spll.entity.SpllFeature;
-
 /**
  * 
  * Meant to be a class with utils methods to convert Genstar object into Gama object
@@ -84,15 +81,5 @@ public class GenStarGamaConverter {
 		return ge;
 	}
 	
-	/**
-	 * 
-	 * @param agent
-	 * @return
-	 */
-	public static SpllFeature convertToNest(IAgent agent) {
-		SpllFeature sf = null;
-		
-		return sf;
-	}
 	
 }

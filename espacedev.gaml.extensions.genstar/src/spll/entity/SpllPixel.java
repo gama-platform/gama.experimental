@@ -4,13 +4,14 @@ import java.util.Map;
 
 import org.geotools.geometry.Envelope2D;
 import org.geotools.geometry.jts.GeometryBuilder;
-
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.Point;
 
 import core.metamodel.attribute.Attribute;
 import core.metamodel.entity.AGeoEntity;
 import core.metamodel.value.numeric.ContinuousValue;
+import msi.gama.metamodel.shape.GamaPoint;
+import msi.gama.metamodel.shape.GamaShape;
+import msi.gama.metamodel.shape.IShape;
 
 public class SpllPixel extends AGeoEntity<ContinuousValue> {
 	
@@ -38,17 +39,18 @@ public class SpllPixel extends AGeoEntity<ContinuousValue> {
 	}
 
 	@Override
-	public Point getLocation() {
-		return new GeometryBuilder().point(pixel.getCenterX(), pixel.getCenterY());
+	public GamaPoint getLocation() {
+		return new GamaPoint(pixel.getCenterX(), pixel.getCenterY());
 	}
 	
 	@Override
-	public Geometry getGeometry() {
-		return new GeometryBuilder().polygon(
+	public IShape getGeometry() {
+		Geometry g = new GeometryBuilder().polygon(
 				pixel.getMinX(), pixel.getMinY(),
 				pixel.getMinX(), pixel.getMaxY(),
 				pixel.getMaxX(), pixel.getMaxY(),
 				pixel.getMaxX(), pixel.getMinY());
+		return new GamaShape(g);
 	}
 	
 	public int getGridX() {

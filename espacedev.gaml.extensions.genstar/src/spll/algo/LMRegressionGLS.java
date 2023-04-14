@@ -14,6 +14,8 @@ import org.apache.commons.math3.stat.regression.GLSMultipleLinearRegression;
 
 import core.metamodel.entity.AGeoEntity;
 import core.metamodel.value.IValue;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.util.GamaMapFactory;
 import spll.datamapper.matcher.ISPLMatcher;
 import spll.datamapper.variable.SPLVariable;
 
@@ -27,13 +29,13 @@ import spll.datamapper.variable.SPLVariable;
 public class LMRegressionGLS extends GLSMultipleLinearRegression implements ISPLRegressionAlgo<SPLVariable, Double> {
 
 	private List<SPLVariable> regVars;
-	private List<AGeoEntity<? extends IValue>> observation;
+	private List<IShape> observation;
 	
 	private Map<SPLVariable, Double> regression;
 	private double intercept;
 
 	@Override
-	public void setupData(Map<AGeoEntity<? extends IValue>, Double> observations, 
+	public void setupData(Map<IShape, Double> observations, 
 			Set<ISPLMatcher<SPLVariable, Double>> regressors){
 		this.regVars = new ArrayList<>(regressors
 				.parallelStream().map(varfm -> varfm.getVariable())
@@ -41,7 +43,7 @@ public class LMRegressionGLS extends GLSMultipleLinearRegression implements ISPL
 		this.observation = new ArrayList<>(observations.size());
 		double[] instances = new double[regVars.size() * observations.size() + observations.size()];
 		int instanceCount = 0;
-		for(AGeoEntity<? extends IValue> geoEntity : observations.keySet()){
+		for(IShape geoEntity : observations.keySet()){
 			observation.add(geoEntity);
 			instances[instanceCount++] = observations.get(geoEntity);
 			for(int i = 0; i < regVars.size(); i++){
@@ -70,8 +72,8 @@ public class LMRegressionGLS extends GLSMultipleLinearRegression implements ISPL
 	}
 
 	@Override
-	public Map<AGeoEntity<? extends IValue>, Double> getResidual() {
-		Map<AGeoEntity<? extends IValue>, Double> residual = new HashMap<>();
+	public Map<IShape,Double> getResidual() {
+		Map<IShape, Double> residual = GamaMapFactory.create();
 		double[] rVec = super.estimateResiduals();
 		for(int i = 0; i < observation.size(); i++)
 			residual.put(observation.get(i), rVec[i]);

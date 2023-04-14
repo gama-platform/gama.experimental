@@ -1,10 +1,10 @@
 package spll.localizer.constraint;
 
-import java.util.Collection;
 import java.util.List;
 
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.value.IValue;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
+import msi.gama.util.IList;
 
 /**
  * Represents a spatial constraint which might return the candidates compliant 
@@ -17,10 +17,10 @@ public interface ISpatialConstraint {
 	/**
 	 * Return a filtered list of possible nest considering the spatial constraint defined
 	 * 
-	 * @param nests : a set of geography to locate synthetic entities in
+	 * @param filteredCandidates : a set of geography to locate synthetic entities in
 	 * @return
 	 */
-	public List<AGeoEntity<? extends IValue>> getCandidates(List<AGeoEntity<? extends IValue>> nests);
+	public IList<IShape> getCandidates(IScope scope, IList<IShape> filteredCandidates);
 	
 	/**
 	 * A way to update the constraint considering a set of possible spatial entities to locate synthetic entities in.
@@ -29,14 +29,14 @@ public interface ISpatialConstraint {
 	 * @param nest
 	 * @return
 	 */
-	public boolean updateConstraint(AGeoEntity<? extends IValue> nest);
+	public boolean updateConstraint(IShape nest);
 	
 	/**
 	 * How the constraints should be relaxed
 	 * 
 	 * @param nests
 	 */
-	public void relaxConstraint(Collection<AGeoEntity<? extends IValue>> nests);
+	public void relaxConstraint(IList<IShape> nests);
 	
 	/**
 	 * The priority of the constraint (int)

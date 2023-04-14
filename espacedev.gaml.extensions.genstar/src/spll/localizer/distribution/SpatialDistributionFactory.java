@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import core.metamodel.entity.ADemoEntity;
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.io.IGSGeofile;
-import core.metamodel.value.IValue;
-import spll.SpllEntity;
-import spll.entity.SpllFeature;
+import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
+import msi.gama.util.IList;
 import spll.localizer.constraint.SpatialConstraintMaxNumber;
 import spll.localizer.distribution.function.AreaFunction;
 import spll.localizer.distribution.function.CapacityFunction;
@@ -61,8 +59,8 @@ public class SpatialDistributionFactory {
 	 * @param function
 	 * @return
 	 */
-	public <N extends Number, E extends ADemoEntity> ISpatialDistribution<E> getDistribution(ISpatialEntityFunction<N> function){
-		return new BasicSpatialDistribution<N, E>(function);
+	public <N extends Number, E extends IShape> ISpatialDistribution<IShape> getDistribution(ISpatialEntityFunction<N> function){
+		return new BasicSpatialDistribution<N, IShape>(function);
 	}
 	
 	/**
@@ -73,9 +71,9 @@ public class SpatialDistributionFactory {
 	 * @param candidates
 	 * @return
 	 */
-	public <N extends Number, E extends ADemoEntity> ISpatialDistribution<E> getDistribution(ISpatialEntityFunction<N> function,
-			List<? extends AGeoEntity<? extends IValue>> candidates){
-		ISpatialDistribution<E> distribution = new BasicSpatialDistribution<>(function);
+	public <N extends Number, E extends IShape> ISpatialDistribution<IShape> getDistribution(ISpatialEntityFunction<N> function,
+			IList<IShape> candidates){
+		ISpatialDistribution<IShape> distribution = new BasicSpatialDistribution<>(function);
 		distribution.setCandidate(candidates);
 		return distribution;
 	}
@@ -87,15 +85,12 @@ public class SpatialDistributionFactory {
 	 * @param geofile
 	 * @return
 	 */
-	public <N extends Number, E extends ADemoEntity> ISpatialDistribution<E> getDistribution(ISpatialEntityFunction<N> function,
-			IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> geofile){
-		List<? extends AGeoEntity<? extends IValue>> candidates = null;
-		try {
-			candidates = new ArrayList<AGeoEntity<? extends IValue>>(geofile.getGeoEntity());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return this.getDistribution(function, candidates);
+	public <N extends Number, E extends IShape> ISpatialDistribution<E> getDistribution(IScope scope, ISpatialEntityFunction<N> function,
+			IList<IShape> geoms){
+		IList<IShape> candidates = null;
+		candidates = geoms.copy(scope);
+		
+		return this.getDistribution(scope, function, candidates);
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +101,7 @@ public class SpatialDistributionFactory {
 	 * All provided spatial entities have the same probability - uniform distribution
 	 * @return
 	 */
-	public <E extends ADemoEntity> ISpatialDistribution<E> getUniformDistribution(){
+	public <IAgent> ISpatialDistribution<IShape> getUniformDistribution(){
 		return new UniformSpatialDistribution<>();
 	}
 	
@@ -116,7 +111,7 @@ public class SpatialDistributionFactory {
 	 * 
 	 * @return
 	 */
-	public <E extends ADemoEntity> ISpatialDistribution<E> getAreaBasedDistribution(){
+	public <IAgent> ISpatialDistribution<IShape> getAreaBasedDistribution(){
 		return this.getDistribution(new AreaFunction());
 	}
 	
@@ -127,27 +122,18 @@ public class SpatialDistributionFactory {
 	 * 
 	 * @return
 	 */
-	public <E extends ADemoEntity> ISpatialDistribution<E> getAreaBasedDistribution(List<? extends AGeoEntity<? extends IValue>> candidates){
-		return this.getDistribution(new AreaFunction(), candidates);
+	public <IAgent> ISpatialDistribution<IShape> getAreaBasedDistribution(IScope scope, IList<IShape> candidates){
+		return this.getDistribution(scope, new AreaFunction(), candidates);
 	}
 	
-	/**
-	 * @see #getAreaBasedDistribution()
-	 * <p>
-	 * adds cached candidates from vector file
-	 * 
-	 * @return
-	 */
-	public <E extends ADemoEntity> ISpatialDistribution<E> getAreaBasedDistribution(IGSGeofile<SpllFeature, IValue> geofile){
-		return this.getDistribution(new AreaFunction(), geofile);
-	}
+	
 	/**
 	 * Probability is computed as a linear function of spatial entity capacity. This capacity
 	 * is provided by {@code scNumber} argument and can be dynamically updated
 	 * @param scNumber
 	 * @return
 	 */
-	public <E extends ADemoEntity> ISpatialDistribution<E> getCapacityBasedDistribution(SpatialConstraintMaxNumber scNumber){
+	public <IAgent> ISpatialDistribution<IShape> getCapacityBasedDistribution(SpatialConstraintMaxNumber scNumber){
 		return new BasicSpatialDistribution<>(new CapacityFunction(scNumber));
 	}
 	
@@ -158,7 +144,7 @@ public class SpatialDistributionFactory {
 	 * @param function
 	 * @return
 	 */
-	public <N extends Number> ISpatialDistribution<SpllEntity> getDistribution(ISpatialComplexFunction<N> function){
+	public <N extends Number> ISpatialDistribution getDistribution(ISpatialComplexFunction<N> function){
 		return new ComplexSpatialDistribution<N>(function);
 	}
 	
@@ -171,9 +157,9 @@ public class SpatialDistributionFactory {
 	 * @param candidates
 	 * @return
 	 */
-	public <N extends Number> ISpatialDistribution<SpllEntity> getDistribution(ISpatialComplexFunction<N> function,
-			List<? extends AGeoEntity<? extends IValue>> candidates){
-		ISpatialDistribution<SpllEntity> distribution = new ComplexSpatialDistribution<N>(function);
+	public <N extends Number> ISpatialDistribution getDistribution(ISpatialComplexFunction<N> function,
+			IList<IShape> candidates){
+		ISpatialDistribution distribution = new ComplexSpatialDistribution<N>(function);
 		distribution.setCandidate(candidates);
 		return distribution;
 	}
@@ -186,7 +172,7 @@ public class SpatialDistributionFactory {
 	 * Probability is computed as a linear function of distance between spatial and population entities
 	 * @return
 	 */
-	public ISpatialDistribution<SpllEntity> getDistanceBasedDistribution(){
+	public ISpatialDistribution getDistanceBasedDistribution(){
 		return new ComplexSpatialDistribution<>(new DistanceFunction());
 	}
 	
@@ -198,12 +184,12 @@ public class SpatialDistributionFactory {
 	 * @param entities
 	 * @return
 	 */
-	public ISpatialDistribution<SpllEntity> getGravityModelDistribution(
-			Collection<? extends AGeoEntity<? extends IValue>> candidates, 
+	/*public ISpatialDistribution getGravityModelDistribution(
+			IList<IShape> candidates, 
 			double frictionCoeff,
-			SpllEntity... entities){
+			IAgent... entities){ 
 		return new ComplexSpatialDistribution<>(new GravityFunction(candidates, frictionCoeff, entities));
-	}
+	}*/
 	
 	/**
 	 * Gravity model that associate probability (the mass in gravity model) to each candidates according to gravity model, 
@@ -215,10 +201,10 @@ public class SpatialDistributionFactory {
 	 * @param entities
 	 * @return
 	 */
-	public ISpatialDistribution<SpllEntity> getGravityModelDistribution(
-			Collection<? extends AGeoEntity<? extends IValue>> candidates, 
-			double frictionCoeff, double buffer, SpllEntity... entities){
+	/*public ISpatialDistribution<IAgent> getGravityModelDistribution(
+			IList<IShape> candidates, 
+			double frictionCoeff, double buffer, IAgent... entities){
 		return new ComplexSpatialDistribution<>(new GravityFunction(candidates, frictionCoeff, buffer, entities));
-	}
+	}*/
 	
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import core.metamodel.entity.AGeoEntity;
 import core.metamodel.value.IValue;
+import msi.gama.metamodel.shape.IShape;
 import spll.datamapper.matcher.ISPLMatcher;
 import spll.datamapper.variable.ISPLVariable;
 
@@ -23,11 +24,11 @@ public interface ISPLRegressionAlgo<V extends ISPLVariable, T> {
 	 */
 	public Map<V, Double> getRegressionParameter();
 	
-	public Map<AGeoEntity<? extends IValue>, Double> getResidual();
+	public Map<IShape, Double> getResidual();
 	
 	public double getIntercept();
 	
-	public void setupData(Map<AGeoEntity<? extends IValue>, Double> observations,
+	public void setupData(Map<IShape, Double> observations,
 			Set<ISPLMatcher<V, T>> regressors);
 	
 }

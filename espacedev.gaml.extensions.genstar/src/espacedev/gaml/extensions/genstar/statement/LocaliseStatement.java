@@ -1,6 +1,5 @@
 package espacedev.gaml.extensions.genstar.statement;
 
-import static msi.gama.common.interfaces.IKeyword.FROM;
 import static msi.gama.common.interfaces.IKeyword.SPECIES;
 import static msi.gama.precompiler.ISymbolKind.SEQUENCE_STATEMENT;
 
@@ -23,6 +22,7 @@ import msi.gama.precompiler.GamlAnnotations.symbol;
 import msi.gama.precompiler.GamlAnnotations.usage;
 import msi.gama.precompiler.IConcept;
 import msi.gama.precompiler.IOperatorCategory;
+import msi.gama.precompiler.ISymbolKind;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.IList;
@@ -40,7 +40,6 @@ import msi.gaml.statements.IStatement.WithArgs;
 import msi.gaml.statements.RemoteSequence;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
-import one.util.streamex.StreamEx;
 
 @symbol (
 		name = GenStarConstant.GSLOCALISE,
@@ -53,7 +52,7 @@ import one.util.streamex.StreamEx;
 		concept = { IConcept.AGENT_LOCATION, IConcept.SPECIES },
 		remote_context = true)
 @inside (
-		kinds = { SEQUENCE_STATEMENT })
+		kinds = { ISymbolKind.BEHAVIOR,  SEQUENCE_STATEMENT })
 @facets (
 		value = { @facet (
 						name = SPECIES,
@@ -61,8 +60,9 @@ import one.util.streamex.StreamEx;
 						optional = false,
 						doc = @doc ("The species of the agents to be localised.")),
 				@facet (
-						name = FROM,
-						type = IType.NONE,
+						name = GenStarConstant.NESTS,
+						type = IType.CONTAINER,
+						of = IType.GEOMETRY,
 						optional = false,
 						doc = @doc (
 								value = """
@@ -93,7 +93,7 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 	// ----------------
 	
 	/** The algorithm. */
-	private final IExpression from;
+	private final IExpression nests;
 	
 	/** The species. */
 	private final IExpression species;
@@ -109,7 +109,7 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 	
 	public LocaliseStatement(IDescription desc) {
 		super(desc);
-		this.from = getFacet(IKeyword.FROM);
+		this.nests = getFacet(GenStarConstant.NESTS);
 		this.species = getFacet(IKeyword.SPECIES);
 		this.feature = getFacet(GenStarConstant.GSFEATURE);
 				
@@ -135,6 +135,7 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 					"No population of " + species.serialize(false) + " is accessible in the context of " + scope.getAgent() + ".",
 					scope);
 			pop = scope.getAgent().getPopulationFor(s);
+			
 		}
 		
 		// TODO select among several localiser when they will be defined
@@ -145,7 +146,7 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 //						algorithm == null ? null : algorithm.value(scope), init, this);
 
 		// TODO fill in the proper set of attributes to localise population
-		genl.localise(scope, pop, from.value(scope), this);
+		genl.localise(scope, pop, nests.value(scope), this);
 		
 		return pop;
 	}
@@ -180,23 +181,21 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 			final IExpression exp = description.getFacetExpr(FROM);
 			if (exp != null) {
 				final IType type = exp.getGamlType();
-
-				if (type.id() != 938373948) { // type id 938373948 is the one of the IValue GamaPopGenerator
-					boolean found = false;
-					if (type == Types.LIST) {
-						// TODO verify if the list is actually a list of geometries
-						found = true;
-					}
-					if (type == Types.FILE) {
-						// TODO verify if the file is actually a shape or raster file
-						found = true;
-					}
-					if (!found) {
-						description.warning(
-								"Facet 'from' expects an expression with one of the following types: " 
-										+ Arrays.asList(Types.LIST,Types.FILE,GamaPopGeneratorType.GENERATORNAME),
-								WRONG_TYPE, FROM);
-					}
+				boolean found = false;
+				if (type == Types.LIST) {
+					// TODO verify if the list is actually a list of geometries
+					found = true;
+				}
+				if (type == Types.FILE) {
+					// TODO verify if the file is actually a shape or raster file
+					found = true;
+				}
+				if (!found) {
+					description.warning(
+							"Facet 'from' expects an expression with one of the following types: " 
+									+ Arrays.asList(Types.SPECIES,Types.LIST,Types.FILE),
+							WRONG_TYPE, FROM);
+					
 				}
 			}
 			

@@ -119,7 +119,7 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 			throws IOException, TransformException, InterruptedException, ExecutionException {
 		if (mapper == null) {
 			mapper = new SPLMapper<>();
-			mapper.setMainSPLFile(mainFile);
+			mapper.setMainSPLFile(mainEntities);
 			mapper.setMainProperty(super.getMainAttribute());
 			mapper.setRegAlgo(regressionAlgorithm);
 			mapper.setMatcherFactory(matcherFactory);
@@ -174,7 +174,7 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 		// Define utilities
 		Collection<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaries =
 				new ArrayList<>(super.ancillaryFiles);
-		Collection<? extends AGeoEntity<? extends IValue>> mainGeoData = super.mainFile.getGeoEntity();
+		Collection<? extends AGeoEntity<? extends IValue>> mainGeoData = super.mainEntities.getGeoEntity();
 		ancillaries.remove(outputFormat);
 
 		// Iterate over pixels to apply regression coefficient

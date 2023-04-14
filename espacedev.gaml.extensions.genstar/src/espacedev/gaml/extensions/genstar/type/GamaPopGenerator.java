@@ -43,8 +43,6 @@ import msi.gama.util.IList;
 import msi.gaml.operators.Strings;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
-import spll.entity.SpllFeature;
-import spll.io.SPLVectorFile;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.constraint.SpatialConstraintMaxDensity;
 import spll.localizer.constraint.SpatialConstraintMaxNumber;
@@ -90,9 +88,7 @@ import spll.localizer.distribution.SpatialDistributionFactory;
 				type = 0,
 				doc = { @doc ("The type of spatial distribution used to locate entities: uniform, based on area, based on density or capacity") }), // Should
 																																					// it
-																																					// be
-																																					// a
-																																					// species
+																																						// species
 																																					// ?
 		@variable (
 				name = GamaPopGenerator.CONSTRAINTS_LABEL,
@@ -635,7 +631,7 @@ public class GamaPopGenerator implements IValue {
 	 *            the scope
 	 * @return the spatial distribution
 	 */
-	@SuppressWarnings ("rawtypes")
+/*	@SuppressWarnings ("rawtypes")
 	public ISpatialDistribution getSpatialDistribution(final SPLVectorFile sfGeometries, final IScope scope) {
 		if (getSpatialDistribution() == null) { setSpatialDistribution(SpatialDistribution.DEFAULT); }
 		switch (getSpatialDistribution().getConcept()) {
@@ -643,7 +639,7 @@ public class GamaPopGenerator implements IValue {
 				SpatialConstraintMaxNumber scmn = null;
 				if (distributionFeature == null || Strings.isEmpty(distributionFeature)) throw GamaRuntimeException
 						.error("You must specified a spatial feature (attribute) to based distribution upon", scope);
-				List<SpllFeature> sf =
+				List<AGeoEntity> sf =
 						sfGeometries.getGeoEntity().stream()
 								.filter(f -> f.getAttributes().stream()
 										.noneMatch(af -> af.getAttributeName().equalsIgnoreCase(distributionFeature)))
@@ -673,7 +669,7 @@ public class GamaPopGenerator implements IValue {
 				};
 		}
 	}
-
+*/
 	// ------------------
 	// Spatial constraint
 	// ------------------
@@ -697,10 +693,10 @@ public class GamaPopGenerator implements IValue {
 	 * @throws IllegalStateException
 	 *             the illegal state exception
 	 */
-	public Collection<ISpatialConstraint> getConstraints(final SPLVectorFile sfGeometries, final IScope scope)
+	/*public Collection<ISpatialConstraint> getConstraints(final SPLVectorFile sfGeometries, final IScope scope)
 			throws IllegalStateException {
 		return this.cBuilder.buildConstraints(sfGeometries.getGeoEntity());
-	}
+	}*/
 
 	// -------------------------
 	// Mapper / ancilary methods

@@ -16,6 +16,9 @@ import core.metamodel.entity.AGeoEntity;
 import core.metamodel.io.IGSGeofile;
 import core.metamodel.value.IValue;
 import core.util.GSPerformanceUtil;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.util.GamaListFactory;
+import msi.gama.util.IList;
 import spll.datamapper.variable.SPLVariable;
 
 public class SPLAreaMatcherFactory implements ISPLMatcherFactory<SPLVariable, Double> {
@@ -29,16 +32,16 @@ public class SPLAreaMatcherFactory implements ISPLMatcherFactory<SPLVariable, Do
 	}
 
 	@Override
-	public List<ISPLMatcher<SPLVariable, Double>> getMatchers(AGeoEntity<? extends IValue> entity, 
-			IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> regressorsFile) 
+	public List<ISPLMatcher<V, T>> getMatchers(IShape geoData, 
+			IList<IList<IShape>> ancillaryEntities) 
 					throws IOException, TransformException, InterruptedException, ExecutionException { 
-		return getMatchers(Arrays.asList(entity), regressorsFile);
+		IList l = GamaListFactory.create();
+		l.add(geoData);
+		return getMatchers(l, ancillaryEntities);
 	}
 
 	@Override
-	public List<ISPLMatcher<SPLVariable, Double>> getMatchers(Collection<? extends AGeoEntity<? extends IValue>> entities,
-			IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> regressorsFile) 
-					throws IOException, TransformException, InterruptedException, ExecutionException {
+	public List<ISPLMatcher<V, T>> getMatchers(IList<IShape> entities,IList<IList<IShape>> regressorsEntities) 			throws IOException, TransformException, InterruptedException, ExecutionException {
 		GSPerformanceUtil gspu = new GSPerformanceUtil("Start processing regressors' data");
 		gspu.setObjectif(entities.size());
 		List<ISPLMatcher<SPLVariable, Double>> varList = entities

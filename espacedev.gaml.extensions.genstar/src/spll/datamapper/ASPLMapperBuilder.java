@@ -17,6 +17,8 @@ import org.opengis.referencing.operation.TransformException;
 import core.metamodel.entity.AGeoEntity;
 import core.metamodel.io.IGSGeofile;
 import core.metamodel.value.IValue;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.util.IList;
 import spll.algo.ISPLRegressionAlgo;
 import spll.algo.exception.IllegalRegressionException;
 import spll.datamapper.exception.GSMapperException;
@@ -44,21 +46,21 @@ import spll.util.SpllUtil;
  */
 public abstract class ASPLMapperBuilder<V extends ISPLVariable, T> {
 	
-	protected final IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> mainFile;
+	protected final IList<IShape> mainEntities;
 	private final String mainAttribute;
 	
-	protected List<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaryFiles;
+	protected IList<IList<IShape>> ancillaryEntities;
 	protected ISPLMatcherFactory<V, T> matcherFactory;
 	
 	protected ISPLRegressionAlgo<V, T> regressionAlgorithm;
 	
 	protected ASPLNormalizer normalizer;
 	
-	public ASPLMapperBuilder(IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> mainFile, String mainAttribute, 
-			List<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaryFiles) {
-		this.mainFile = mainFile;
+	public ASPLMapperBuilder(IList<IShape> mainEntities, String mainAttribute, 
+			IList<IList<IShape>> ancillaryEntities) {
+		this.mainEntities = mainEntities;
 		this.mainAttribute = mainAttribute;
-		this.ancillaryFiles = ancillaryFiles;
+		this.ancillaryEntities = ancillaryEntities;
 	}
 	
 	////////////////////////////////////////////////////////////////
@@ -98,23 +100,16 @@ public abstract class ASPLMapperBuilder<V extends ISPLVariable, T> {
 	 * 
 	 * @param outputFormat
 	 */
-	public void setOutputFormat(IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> outputFormat){
-		if(!ancillaryFiles.contains(outputFormat))
-			throw new IllegalArgumentException("output format must be one of ancillary files");
-		ancillaryFiles.add(0, ancillaryFiles.remove(ancillaryFiles.indexOf(outputFormat)));
+	public void setOutputFormat(IList<IShape> outputFormat){
+		if(ancillaryEntities.contains(outputFormat))
+			ancillaryEntities.remove(outputFormat);
+		ancillaryEntities.add(0,outputFormat);
 	}
 	
 	///////////////////////////////////////////////////////////////
 	// ------------------------ GETTERS ------------------------ //
 	///////////////////////////////////////////////////////////////
 	
-	public List<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> getAncillaryFiles(){
-		return Collections.unmodifiableList(ancillaryFiles);
-	}
-	
-	public IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> getMainFile(){
-		return mainFile;
-	}
 	
 	public String getMainAttribute(){
 		return mainAttribute;
