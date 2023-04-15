@@ -1,36 +1,19 @@
 package spll.datamapper;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import org.geotools.feature.SchemaException;
-import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.operation.TransformException;
 
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.io.IGSGeofile;
-import core.metamodel.value.IValue;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.IList;
+import msi.gama.util.matrix.GamaFloatMatrix;
 import spll.algo.ISPLRegressionAlgo;
 import spll.algo.exception.IllegalRegressionException;
 import spll.datamapper.exception.GSMapperException;
 import spll.datamapper.matcher.ISPLMatcherFactory;
 import spll.datamapper.normalizer.ASPLNormalizer;
 import spll.datamapper.variable.ISPLVariable;
-import spll.entity.SpllFeature;
-import spll.io.SPLGeofileBuilder;
-import spll.io.SPLRasterFile;
-import spll.io.SPLVectorFile;
-import spll.io.exception.InvalidGeoFormatException;
-import spll.util.SpllUtil;
 
 /**
  * The mapper is the main concept of SPLL algorithm. It matches main geographical features
@@ -136,69 +119,8 @@ public abstract class ASPLMapperBuilder<V extends ISPLVariable, T> {
 	/*
 	 * The method to implement to compute regression output with raster output format
 	 */
-	protected abstract float[][] buildOutput(SPLRasterFile formatFile, boolean intersect, boolean integer, Number targetPopulation) 
+	protected abstract float[][] buildOutput(GamaFloatMatrix data, boolean intersect, boolean integer, Number targetPopulation) 
 			throws IllegalRegressionException, TransformException, IndexOutOfBoundsException, IOException, GSMapperException;
 	
-	/**
-	 * build the output of spll regression based localization as pixel based format output.
-	 * Format file argument {@code formatFile} must be an ancillaryFiles, see {@link #getAncillaryFiles()}
-	 * 
-	 * @param outputFile
-	 * @param formatFile
-	 * @return
-	 * @throws IllegalRegressionException
-	 * @throws TransformException
-	 * @throws IndexOutOfBoundsException
-	 * @throws IOException
-	 * @throws GSMapperException 
-	 * @throws InvalidGeoFormatException 
-	 * @throws IllegalArgumentException 
-	 * @throws MismatchedDimensionException 
-	 */
-	public SPLRasterFile buildOutput(File output, SPLRasterFile formatFile, 
-			boolean intersect, boolean integer, Number targetPopulation) 
-			throws IllegalRegressionException, TransformException, IndexOutOfBoundsException, IOException, 
-			GSMapperException, MismatchedDimensionException, IllegalArgumentException, InvalidGeoFormatException {
-		float[][] pixels = this.buildOutput(formatFile, intersect, integer, targetPopulation);
-		return new SPLGeofileBuilder()
-				.setFile(output)
-				.setRasterBands(pixels)
-				.setNoData(SPLRasterFile.DEF_NODATA.doubleValue())
-				.setReferenceEnvelope(new ReferencedEnvelope(formatFile.getEnvelope(), SpllUtil.getCRSfromWKT(formatFile.getWKTCoordinateReferentSystem())))
-				.buildRasterfile();
-	}
-	
-	/*
-	 * The method to implement to compute regression output with vector output format
-	 */
-	protected abstract Map<SpllFeature, Number> buildOutput(SPLVectorFile formatFile, boolean intersect, boolean integer, Number tagetPopulation);
-	
-	/**
-	 * build the output of Spll regression based localization as vector based format output.
-	 * Format file argument {@code formatFile} must be an ancillaryFiles, see {@link #getAncillaryFiles()}
-	 * 
-	 * FIXME: create an empty shapefile
-	 * 
-	 * @param outputFile
-	 * @param formatFile
-	 * @return
-	 * @throws SchemaException 
-	 * @throws IOException 
-	 * @throws InvalidGeoFormatException 
-	 */
-	public SPLVectorFile buildOutput(File output, SPLVectorFile formatFile, 
-			boolean intersect, boolean integer, Number tagetPopulation) 
-			throws IOException, SchemaException, InvalidGeoFormatException{
-		@SuppressWarnings("unused")
-		Map<SpllFeature, Number> map = this.buildOutput(formatFile, intersect, integer, tagetPopulation);
-		Collection<SpllFeature> features = new ArrayList<>();
-		
-		// TODO compute feature from map
-		
-		return new SPLGeofileBuilder()
-				.setFile(output)
-				.setFeatures(features)
-				.buildShapeFile();
-	}
-	
+
 }

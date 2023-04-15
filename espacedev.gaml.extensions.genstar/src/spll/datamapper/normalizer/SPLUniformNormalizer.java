@@ -5,12 +5,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import core.util.stats.GSBasicStats;
 import core.util.stats.GSEnumStats;
-import spll.entity.SpllFeature;
+import msi.gama.metamodel.shape.IShape;
 
 public class SPLUniformNormalizer extends ASPLNormalizer {
 	
@@ -18,7 +17,7 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 		super(floorValue, noData);
 	}
 
-	/**
+	/** 
 	 * {@inheritDoc}
 	 * <p>
 	 * Two step upscale:
@@ -96,7 +95,7 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 	 * 
 	 */
 	@Override
-	public Map<SpllFeature, Double> normalize(Map<SpllFeature, Double> featureOutput, double output) {
+	public Map<IShape, Double> normalize(Map<IShape, Double> featureOutput, double output) {
 
 		// Two step upscale: (1) up values below floor (2) normalize to fit targeted total output
 		if(featureOutput.values()
@@ -125,8 +124,8 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 	 * 
 	 */
 	@Override
-	public Map<SpllFeature, Integer> round(Map<SpllFeature, Double> featureOutput, double output) {
-		Map<SpllFeature, Integer> featOut = new HashMap<>();
+	public Map<IShape, Integer> round(Map<IShape, Double> featureOutput, double output) {
+		Map<IShape, Integer> featOut = new HashMap<>();
 		// summed residue is spread to all non floor value
 		featureOutput.keySet().parallelStream()
 			.forEach(feature -> featOut.put(feature, (int) normalizedToInt(featureOutput.get(feature))));
@@ -136,18 +135,18 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 		
 		// uniformally spread overload (can visit pixel multiple time)
 		int iter = 0;
-		List<SpllFeature> feats = featureOutput.entrySet()
+		List<IShape> feats = featureOutput.entrySet()
 				.parallelStream().filter(e -> e.getValue() != noData.doubleValue())
 				.map(e -> e.getKey())
 				.toList();
 		while(Math.round(errorload) != 0 || iter++ > ITER_LIMIT + Math.abs(errorload)){
-			SpllFeature feat = feats.get(super.random.nextInt(feats.size()));
+			IShape feat = feats.get(super.random.nextInt(feats.size()));
 			int update = errorload < 0 ? -1 : 1;
 			featureOutput.put(feat, featureOutput.get(feat) + update);
 			errorload -= update;
 		}
 		return featOut;
-	}
+	} 
 
 	// ---------------------- inner utility ---------------------- //
 

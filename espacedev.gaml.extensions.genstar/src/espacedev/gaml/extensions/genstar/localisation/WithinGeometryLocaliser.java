@@ -30,12 +30,16 @@ public class WithinGeometryLocaliser implements IGenstarLocaliser {
 	public void localise(IScope scope, final IContainer<?, IAgent> pop, Object nests, LocaliseStatement locStatement) {
 		String nestAtt = locStatement.getNestAttribute() != null ? Cast.asString(scope, locStatement.getNestAttribute().value(scope)) : null;
 		IList<IShape> nestList = Cast.asList(scope, nests).listValue(scope, Types.GEOMETRY, false);
-		System.out.println("Debut localize : " + pop.length(scope) + " nests:" + nestList.size());
 		
 		SPLocalizer loc = new SPLocalizer(scope, nestList, nestAtt);
 		Map matcherMap =  (locStatement.getMatcher() != null) ? Cast.asMap(scope, locStatement.getMatcher().value(scope), false) : null;
 		if (matcherMap != null) 
 			loc.setMatcher(Cast.asList(scope, matcherMap.get("entities")),Cast.asString(scope, matcherMap.get("pop_id")),  Cast.asString(scope, matcherMap.get("data_id")));
+	
+		Map mapperMap =  (locStatement.getMapper() != null) ? Cast.asMap(scope, locStatement.getMapper().value(scope), false) : null;
+		if (mapperMap != null) 
+			loc.setMapper(Cast.asList(scope, mapperMap.get("entities")),Cast.asString(scope, mapperMap.get("data_id")));
+	
 		if (locStatement.getDistribution() != null) {
 			String di = Cast.asString(scope, locStatement.getDistribution().value(scope));
 			switch(di) {
@@ -48,7 +52,6 @@ public class WithinGeometryLocaliser implements IGenstarLocaliser {
 
 			}
 		}
-		System.out.println("Debut init");
 		
 		if (locStatement.getMinDist() != null) {
 			loc.setMinDistance(Cast.asFloat(scope, locStatement.getMinDist().value(scope)));
@@ -60,7 +63,6 @@ public class WithinGeometryLocaliser implements IGenstarLocaliser {
 		if (locStatement.getMinDist() != null || locStatement.getMaxDist() != null ) {
 			loc.computeMinMaxDistance(scope, nestList);
 		}
-		System.out.println("Min Max computed");
 		
 		loc.localisePopulation(scope, pop);
 		// TODO : transpose the Gama population of agent into Genstar IPopulation / with potential explicit link between them

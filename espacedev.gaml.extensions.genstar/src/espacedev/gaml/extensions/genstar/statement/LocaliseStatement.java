@@ -114,7 +114,17 @@ import msi.gaml.types.Types;
 										'data_id': name of the property that contains the id of the census spatial areas in the shapefile;
 										'pop_id': name of the property that contains the id of the census spatial areas in the population
 										 """)),
-				
+			@facet (
+					name = GenStarConstant.MAPPER,
+					type = IType.MAP,
+					optional = true,
+					doc = @doc (
+							value = """
+									To specify the a matcher, map with three elements: 
+									'entities': list of entities with the ; 
+									'data_id': name of the property that contains the id of the census spatial areas in the shapefile;
+									 """)),
+		
 				@facet (
 						name = GenStarConstant.GSFEATURE,
 						type = { IType.STRING },
@@ -147,6 +157,9 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 	/** The matcher. */
 	private final IExpression matcher;
 	
+	/** The mapper. */
+	private final IExpression mapper;
+	
 	/** The distribution. */
 	private final IExpression distribution;
 	
@@ -173,6 +186,7 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 		this.species = getFacet(IKeyword.SPECIES);
 		this.feature = getFacet(GenStarConstant.GSFEATURE);
 		this.matcher = getFacet(GenStarConstant.MATCHER);
+		this.mapper = getFacet(GenStarConstant.MAPPER);
 		this.nestAttribute = getFacet(GenStarConstant.NESTATTRIBUTES);
 		this.distribution = getFacet(GenStarConstant.DISTRIBUTION);
 		this.minDist = getFacet(GenStarConstant.MINDIST);
@@ -229,7 +243,9 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 		return matcher;
 	}
 
-
+	public IExpression getMapper() {
+		return mapper;
+	}
 
 	public IExpression getMinDist() {
 		return minDist;

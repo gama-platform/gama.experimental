@@ -23,7 +23,7 @@ public class ComplexSpatialDistribution<N extends Number> implements ISpatialDis
 
 	private ISpatialComplexFunction<N> function;
 	
-	private IList<IShape> candidates;
+	private IList<? extends IShape> candidates;
 	private Map<IShape, ARouletteWheelSelection<N, ? extends IShape>> roulettes;
 	
 	public ComplexSpatialDistribution(ISpatialComplexFunction<N> function) {
@@ -31,7 +31,7 @@ public class ComplexSpatialDistribution<N extends Number> implements ISpatialDis
 	}
 	
 	@Override
-	public IShape getCandidate(IScope scope, IAgent entity, IList<IShape> candidates) {
+	public IShape getCandidate(IScope scope, IAgent entity, IList<? extends IShape> candidates){
 		return RouletteWheelSelectionFactory.getRouletteWheel(candidates.stream()
 				.map(candidate -> function.apply(entity,candidate)).toList(), candidates)
 			.drawObject();
@@ -52,13 +52,19 @@ public class ComplexSpatialDistribution<N extends Number> implements ISpatialDis
 	}
 
 	@Override
-	public void setCandidate(IList<IShape> candidates) {
+	public void setCandidate(IList<? extends IShape> candidates) {
 		this.candidates = candidates;
 	}
 
 	@Override
-	public IList<IShape> getCandidates(IScope scope) {
-		return candidates.copy(scope);
+	public  IList<IShape> getCandidates(IScope scope) {
+		return (IList<IShape>) candidates.copy(scope);
+	}
+
+	@Override
+	public void removeNest(IShape n) {
+		for (ARouletteWheelSelection roulette : roulettes.values())
+			roulette.remove(n);
 	}
 
 

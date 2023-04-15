@@ -12,8 +12,6 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 import org.apache.commons.math3.stat.regression.GLSMultipleLinearRegression;
 
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.value.IValue;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaMapFactory;
 import spll.datamapper.matcher.ISPLMatcher;

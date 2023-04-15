@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Random;
 
 import core.util.random.GenstarRandom;
-import spll.entity.SpllFeature;
+import msi.gama.metamodel.shape.IShape;
 
 /**
  * TODO: make top value control, not just floor value 
@@ -58,8 +58,8 @@ public abstract class ASPLNormalizer {
 	 * @param integer
 	 * @return
 	 */
-	public Map<SpllFeature, ? extends Number> process(Map<SpllFeature, Double> featureOutput, double output, boolean integer){
-		Map<SpllFeature, Double> outputMap = this.normalize(featureOutput, output);
+	public Map<IShape, ? extends Number> process(Map<IShape, Double> featureOutput, double output, boolean integer){
+		Map<IShape, Double> outputMap = this.normalize(featureOutput, output);
 		if(integer)
 			return this.round(featureOutput, output);
 		return outputMap;
@@ -92,7 +92,7 @@ public abstract class ASPLNormalizer {
 	 * @param output
 	 * @return
 	 */
-	public abstract Map<SpllFeature, Double> normalize(Map<SpllFeature, Double> featureOutput, double output);
+	public abstract Map<IShape, Double> normalize(Map<IShape, Double> featureOutput, double output);
 	
 	/**
 	 * Round double values to integer and control sum to fit required output
@@ -101,7 +101,7 @@ public abstract class ASPLNormalizer {
 	 * @param output
 	 * @return
 	 */
-	public abstract Map<SpllFeature, Integer> round(Map<SpllFeature, Double> featureOutput, double output);
+	public abstract Map<IShape, Integer> round(Map<IShape, Double> featureOutput, double output);
 	
 	// ------------------ shared utility ------------------ //
 	

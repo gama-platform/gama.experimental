@@ -8,7 +8,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import core.metamodel.value.IValue;
+import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
+import msi.gama.util.GamaListFactory;
+import msi.gama.util.IContainer;
+import msi.gama.util.IList;
+import msi.gaml.operators.Spatial.Queries;
+import msi.gaml.operators.Spatial.Transformations;
+import msi.gaml.types.Types;
 
 /**
  * Function that computes probability based on the gravity model
@@ -38,11 +46,11 @@ public class GravityFunction implements ISpatialComplexFunction<Double> {
 	 * @param frictionCoeff
 	 * @param entities
 	 */
-	public GravityFunction( Collection<? extends AGeoEntity<? extends IValue>> candidates, double frictionCoeff, SpllEntity... entities) {
+	public GravityFunction( Collection<? extends IShape> candidates, double frictionCoeff, IAgent entities) {
 		this();
 		this.frictionCoeff = frictionCoeff;
 		this.mass = candidates.stream().collect(Collectors.toMap(Function.identity(), se -> Arrays.asList(entities).stream()
-				.mapToDouble(e -> se.getGeometry().distance(e.getLocation())).sum()));
+				.mapToDouble(e -> se.euclidianDistanceTo(e.getLocation())).sum()));
 	}
 
 	/**
@@ -53,11 +61,14 @@ public class GravityFunction implements ISpatialComplexFunction<Double> {
 	 * @param buffer
 	 * @param entities
 	 */
-	public GravityFunction(Collection<? extends AGeoEntity<? extends IValue>> candidates, 
-			double frictionCoeff, double buffer, SpllEntity... entities) {
+	public GravityFunction(IScope scope, Collection<? extends IShape> candidates, 
+			double frictionCoeff, double buffer, IAgent... entities) {
 		this();
-		this.mass = candidates.stream().collect(Collectors.toMap(Function.identity(), spacEntity -> (double) Arrays.asList(entities).stream()
-				.filter(e -> spacEntity.getGeometry().buffer(buffer).contains(e.getLocation())).count()));
+		IList<IAgent> agents = GamaListFactory.createWithoutCasting(Types.AGENT,entities);
+		
+		this.mass = candidates.stream().collect(
+				Collectors.toMap(Function.identity(), 
+						spacEntity -> (double) Queries.overlapping(scope,agents, Transformations.enlarged_by(scope, spacEntity, buffer)).length(scope)));
 		this.buffer = buffer;
 		this.frictionCoeff = frictionCoeff;
 	}
@@ -77,31 +88,32 @@ public class GravityFunction implements ISpatialComplexFunction<Double> {
 	 * Add / Replace the recorded mass of spatial entity
 	 * @param mass
 	 */
-	public void setSpatialEntityMass(Map<AGeoEntity<? extends IValue>, Double> mass) {
-		this.mass.putAll(mass);
+	public void setSpatialEntityMass(Map<? extends IShape, Double> mass) {
+		this.mass.putAll(mass); 
 	}
 	
 	// ------------------------------------------ //
 
 	@Override
-	public Double apply(AGeoEntity<? extends IValue> spatialEntity, SpllEntity entity) {
-		return function.apply(mass.get(spatialEntity), spatialEntity.getGeometry().distance(entity.getLocation()));
+	public Double apply(IAgent spatialEntity, IShape entity) {
+		return function.apply(mass.get(spatialEntity), spatialEntity.euclidianDistanceTo(entity.getLocation()));
 	}
 
 	@Override
-	public void updateFunctionState(Collection<SpllEntity> entities,
-			Collection<AGeoEntity<? extends IValue>> candidates) {
+	public void updateFunctionState(IScope scope, IList<IAgent> entities, IList<IShape> candidates) {
 		if(buffer <= 0)
-			for(AGeoEntity<? extends IValue> se : candidates)
-				mass.put(se, entities.stream().mapToDouble(e -> se.getGeometry().distance(e.getLocation())).sum());
+			for(IShape se : candidates)
+				mass.put(se, entities.stream().mapToDouble(e -> se.euclidianDistanceTo(e.getLocation())).sum());
 		else
-			for(AGeoEntity<? extends IValue> se : candidates)
-				mass.put(se, (double) entities.stream().filter(e -> se.getGeometry().contains(e.getLocation())).count());
+			for(IShape se : candidates)
+				mass.put(se, (double) Queries.overlapping(scope,entities, Transformations.enlarged_by(scope, se.getLocation(), buffer)).length(scope));
 	}
 
 	@Override
 	public void clear() {
 		mass.clear();
 	}
+
+	
 
 }

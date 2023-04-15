@@ -15,6 +15,8 @@ import org.opengis.referencing.operation.TransformException;
 import core.metamodel.entity.AGeoEntity;
 import core.metamodel.io.IGSGeofile;
 import core.metamodel.value.IValue;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.util.file.GamaGridFile;
 import spll.algo.ISPLRegressionAlgo;
 import spll.algo.exception.IllegalRegressionException;
 import spll.datamapper.matcher.ISPLMatcher;
@@ -45,7 +47,7 @@ public class SPLMapper<Variable extends ISPLVariable, T> {
 	
 	private ISPLMatcherFactory<Variable, T> matcherFactory;
 
-	private IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> mainSPLFile;
+	private GamaGridFile mainSPLFile;
 	private String targetProp;
 
 	private Set<ISPLMatcher<Variable, T>> mapper = new HashSet<>();
@@ -64,7 +66,7 @@ public class SPLMapper<Variable extends ISPLVariable, T> {
 		this.matcherFactory = matcherFactory;
 	}
 
-	protected void setMainSPLFile(IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> mainSPLFile){
+	protected void setMainSPLFile(GamaGridFile mainSPLFile){
 		this.mainSPLFile = mainSPLFile;
 	}
 
@@ -72,7 +74,7 @@ public class SPLMapper<Variable extends ISPLVariable, T> {
 		this.targetProp = propertyName;
 	}
 
-	protected boolean insertMatchedVariable(IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> regressorsFiles) 
+	protected boolean insertMatchedVariable(GamaGridFile regressorsFiles) 
 			throws IOException, TransformException, InterruptedException, ExecutionException{
 		boolean result = true;
 		for(ISPLMatcher<Variable, T> matchedVariable : matcherFactory
@@ -138,7 +140,7 @@ public class SPLMapper<Variable extends ISPLVariable, T> {
 	 * @throws IllegalRegressionException
 	 * @throws IOException 
 	 */
-	public Map<AGeoEntity<? extends IValue>, Double> getResidual() throws IllegalRegressionException, IOException {
+	public Map<IShape, Double> getResidual() throws IllegalRegressionException, IOException {
 		this.setupRegression();
 		return regFunction.getResidual();
 	}
@@ -146,12 +148,10 @@ public class SPLMapper<Variable extends ISPLVariable, T> {
 	// ------------------- Inner utilities ------------------- //
 	
 	private void setupRegression() throws IllegalRegressionException, IOException{
-		if(mapper.stream().anyMatch(var -> !var.getEntity().getPropertiesAttribute().contains(this.targetProp)))
+		if(mapper.stream().anyMatch(var -> !var.getEntity().getOrCreateAttributes().containsKey(this.targetProp)))
 			throw new IllegalRegressionException("Property "+this.targetProp+" is not present in each Feature of the main SPLMapper");
-		if(mapper.stream().anyMatch(var -> !var.getEntity().getValueForAttribute(this.targetProp).getType().isNumericValue()))
-			throw new IllegalArgumentException("Property value must be of numerical type in order to setup regression on");
 		if(!setupReg){
-			Collection<? extends AGeoEntity<? extends IValue>> geoData = mainSPLFile.getGeoEntity();
+			Collection<? extends IShape> geoData = mainSPLFile.getGeoEntity();
 			regFunction.setupData(geoData.stream().collect(Collectors.toMap(feat -> feat, 
 					feat -> feat.getNumericValueForAttribute(this.targetProp).doubleValue())), mapper);
 			setupReg = true;

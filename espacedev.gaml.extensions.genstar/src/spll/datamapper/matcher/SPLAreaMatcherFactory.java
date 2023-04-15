@@ -2,19 +2,14 @@ package spll.datamapper.matcher;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 import org.opengis.referencing.operation.TransformException;
 
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.io.IGSGeofile;
-import core.metamodel.value.IValue;
 import core.util.GSPerformanceUtil;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaListFactory;
@@ -25,9 +20,9 @@ public class SPLAreaMatcherFactory implements ISPLMatcherFactory<SPLVariable, Do
 
 	private int matcherCount = 0;
 
-	private Collection<? extends IValue> variables;
+	private Collection<SPLVariable> variables;
 
-	public SPLAreaMatcherFactory(Collection<? extends IValue> variables) {
+	public SPLAreaMatcherFactory(Collection<SPLVariable> variables) {
 		this.variables = variables;
 	}
 
@@ -59,12 +54,12 @@ public class SPLAreaMatcherFactory implements ISPLMatcherFactory<SPLVariable, Do
 	/*
 	 * TODO: could be optimise
 	 */
-	private List<ISPLMatcher<SPLVariable, Double>> getMatchers(AGeoEntity<? extends IValue> entity,
-			Iterator<? extends AGeoEntity<? extends IValue>> geoData, 
-					Collection<? extends IValue> variables, GSPerformanceUtil gspu) {
+	private List<ISPLMatcher<SPLVariable, Double>> getMatchers(IShape entity,
+			Iterator<? extends IShape> geoData, 
+					Collection<SPLVariable> variables, GSPerformanceUtil gspu) {
 		List<ISPLMatcher<SPLVariable, Double>> areaMatcherList = new ArrayList<>();
 		while(geoData.hasNext()){
-			AGeoEntity<? extends IValue> geoEntity = geoData.next(); 
+			IShape geoEntity = geoData.next(); 
 			for(String prop : geoEntity.getPropertiesAttribute()){
 				IValue value = geoEntity.getValueForAttribute(prop);
 				

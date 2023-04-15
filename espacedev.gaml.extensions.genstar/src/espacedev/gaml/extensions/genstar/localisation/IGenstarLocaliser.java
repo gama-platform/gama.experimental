@@ -12,10 +12,8 @@ package espacedev.gaml.extensions.genstar.localisation;
 
 import espacedev.gaml.extensions.genstar.statement.LocaliseStatement;
 import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
 import msi.gama.util.IContainer;
-import msi.gama.util.IList;
 
 /**
  * Main interface to define new localisation process based on Genstar

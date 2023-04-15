@@ -49,6 +49,9 @@ public class GenStarConstant {
 	/** The matcher for the localization of the agents */
 	public static final String MATCHER = "matcher"; 
 	
+	/** The mapper for the localization of the agents */
+	public static final String MAPPER ="mapper";
+	
 	/** The maximal distance to the nest geometry */
 	public static final String MAXDIST = "max_dist";
 	
