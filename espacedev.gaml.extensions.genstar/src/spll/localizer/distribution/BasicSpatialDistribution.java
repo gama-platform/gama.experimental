@@ -1,20 +1,14 @@
 package spll.localizer.distribution;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
-import core.metamodel.value.IValue;
 import core.util.random.roulette.ARouletteWheelSelection;
 import core.util.random.roulette.RouletteWheelSelectionFactory;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
-import msi.gama.util.GamaList;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IList;
-
-import msi.gaml.operators.Containers;
-import msi.gaml.operators.Random;
 import msi.gaml.types.Types;
 import spll.localizer.distribution.function.ISpatialEntityFunction;
 
@@ -29,15 +23,21 @@ import spll.localizer.distribution.function.ISpatialEntityFunction;
 public class BasicSpatialDistribution<N extends Number,E extends IShape> implements ISpatialDistribution<IShape> {
 	
 	private ISpatialEntityFunction<N> function;
-	private ARouletteWheelSelection<N, ? extends IShape> roulette;
-
+	private ARouletteWheelSelection<N,IShape> roulette;
+	
 	public BasicSpatialDistribution(ISpatialEntityFunction<N> function) {
 		this.function = function;
 	} 
 	
 	@Override 
-	public IShape getCandidate(IScope scope, IAgent entity, IList<IShape> candidates) {
-		return candidates.anyValue(scope);
+	public IShape getCandidate(IScope scope, IAgent entity, IList<? extends IShape> candidates) {
+		if (roulette != null && roulette.getKeys().equals(candidates)) {
+			return roulette.drawObject();
+		}
+		return RouletteWheelSelectionFactory.getRouletteWheel(candidates.stream()
+				.map(a -> function.apply(a)).collect(Collectors.toList()), candidates)
+			.drawObject();
+		
 	}
 
 	@Override
@@ -48,8 +48,8 @@ public class BasicSpatialDistribution<N extends Number,E extends IShape> impleme
 	}
 
 	@Override
-	public void setCandidate(IList<IShape> candidates) {
-		this.roulette = RouletteWheelSelectionFactory.getRouletteWheel(candidates.stream()
+	public void setCandidate(IList<? extends IShape> candidates) {
+		this.roulette = (ARouletteWheelSelection<N, IShape>) RouletteWheelSelectionFactory.getRouletteWheel(candidates.stream()
 			.map(a -> function.apply(a)).toList(), candidates);
 	}
 
@@ -57,6 +57,12 @@ public class BasicSpatialDistribution<N extends Number,E extends IShape> impleme
 	public IList<IShape> getCandidates(IScope scope) {
 		return (IList<IShape>) GamaListFactory.createWithoutCasting(Types.GEOMETRY,roulette.getKeys());
 	}
+	
+	@Override
+	public void removeNest(IShape n) {
+		roulette.remove(n);
+	}
+
 
 	
 }

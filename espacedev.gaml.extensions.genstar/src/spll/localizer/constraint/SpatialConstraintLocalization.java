@@ -4,8 +4,11 @@ import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaListFactory;
+import msi.gama.util.IContainer;
 import msi.gama.util.IList;
+import msi.gaml.operators.Cast;
 import msi.gaml.operators.Containers;
+import msi.gaml.operators.Spatial.Creation;
 import msi.gaml.operators.Spatial.Queries;
 import msi.gaml.operators.Spatial.Transformations;
 import msi.gaml.types.Types;
@@ -13,7 +16,7 @@ import msi.gaml.types.Types;
 public class SpatialConstraintLocalization extends ASpatialConstraint {
 
 	IShape bounds;
-	protected IList<IShape> geoms;
+	protected IContainer<?, ? extends IShape> geoms;
 	
 	public SpatialConstraintLocalization(IShape bounds) {
 		super();
@@ -21,19 +24,20 @@ public class SpatialConstraintLocalization extends ASpatialConstraint {
 	}
 
 	@Override
-	public IList<IShape> getCandidates(IScope scope, IList<IShape> nests) {
-		if (bounds == null) return nests;
-		
-		//System.out.println("nests: " + nests.size());
+	public IList<IShape> getCandidates(IScope scope, IContainer<?, ? extends IShape> nests) {
+		if (bounds == null) return (nests == null ? null : (IList<IShape>) (nests.listValue(scope, Types.GEOMETRY, false)));
 		IList<IShape> cands = null;
-		if (geoms != null && !geoms.isEmpty()) {
-			cands = (IList<IShape>) Queries.overlapping(null, geoms, bounds);
-			cands.removeIf(a -> !a.getGeometry().getLocation().intersects(bounds));
+		if (geoms != null ) {
+			cands = (IList<IShape>) Queries.overlapping(scope, geoms, bounds);
+			if (cands.isEmpty()) return cands;
+			
+			IShape cu= Transformations.convex_hull(scope, bounds);
+			cands.removeIf(a -> !a.getGeometry().getLocation().intersects(cu));
 			if (nests != null) {
 				cands = Containers.inter(GAMA.getRuntimeScope(), cands, nests);
 			}
 		} else {
-			cands = GamaListFactory.createWithoutCasting(Types.GEOMETRY, nests.stream().filter(a -> a.getLocation().intersects(bounds)).toList());
+			cands = (IList<IShape>) GamaListFactory.createWithoutCasting(Types.GEOMETRY, nests.listValue(scope, Types.GEOMETRY, false).stream().filter(a -> a.getLocation().intersects(bounds)).toList());
 		}
 		return cands;
 	}
@@ -63,11 +67,11 @@ public class SpatialConstraintLocalization extends ASpatialConstraint {
 		constraintLimitReach = false;
 	}
 
-	public IList<IShape> getGeoms() {
+	public IContainer<?, ? extends IShape> getGeoms() {
 		return geoms;
 	}
 
-	public void setGeoms(IList<IShape> geoms) {
+	public void setGeoms(IContainer<?, ? extends IShape> geoms) {
 		this.geoms = geoms;
 	}
 

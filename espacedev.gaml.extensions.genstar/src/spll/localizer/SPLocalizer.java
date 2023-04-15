@@ -10,58 +10,34 @@
  ********************************************************************************************************/
 package spll.localizer;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.geotools.feature.SchemaException;
-import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.locationtech.jts.geom.Geometry;
-import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.operation.TransformException;
 
-import core.metamodel.IPopulation;
 import core.metamodel.attribute.Attribute;
-import core.metamodel.attribute.AttributeFactory;
-import core.metamodel.entity.ADemoEntity;
-import core.metamodel.value.IValue;
-import core.metamodel.value.numeric.IntegerValue;
 import core.util.GSPerformanceUtil;
-import core.util.exception.GenstarException;
-import core.util.random.GenstarRandom;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaListFactory;
+import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import msi.gaml.operators.Cast;
 import msi.gaml.operators.Containers;
-import msi.gaml.operators.Spatial.Queries;
+import msi.gaml.operators.Spatial.Operators;
+import msi.gaml.operators.Spatial.Transformations;
+import msi.gaml.types.Types;
 import spll.algo.LMRegressionOLS;
 import spll.algo.exception.IllegalRegressionException;
-import spll.datamapper.ASPLMapperBuilder;
-import spll.datamapper.SPLAreaMapperBuilder;
 import spll.datamapper.exception.GSMapperException;
 import spll.datamapper.normalizer.SPLUniformNormalizer;
-import spll.datamapper.variable.ISPLVariable;
-import spll.entity.GeoEntityFactory;
-import spll.entity.SpllPixel;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.constraint.SpatialConstraintLocalization;
 import spll.localizer.distribution.ISpatialDistribution;
@@ -70,7 +46,6 @@ import spll.localizer.linker.ISPLinker;
 import spll.localizer.linker.SPLinker;
 import spll.localizer.pointInalgo.PointInLocalizer;
 import spll.localizer.pointInalgo.RandomPointInLocalizer;
-import spll.util.SpllUtil;
 
 /**
  * The Class SPLocalizer.
@@ -91,7 +66,7 @@ public class SPLocalizer implements ISPLocalizer {
 	// gives the number of entities per area (e.g. regression cells)
 	protected IList<IShape> map;
 
-	/** The linker. */
+		/** The linker. */
 	protected ISPLinker<IShape> linker; // Encapsulate spatial distribution and constraints to link entity and
 
 	/** The localization constraint. */
@@ -112,6 +87,11 @@ public class SPLocalizer implements ISPLocalizer {
 	protected String keyAttMatch; // name of the attribute that is used to store the id of the referenced area in the
 									// match file
 
+	protected String nestAttribute;
+	
+	protected Double minDist = null;
+	
+	protected Double maxDist = null;
 	/**
 	 * Private constructor to setup random engine
 	 */
@@ -125,11 +105,12 @@ public class SPLocalizer implements ISPLocalizer {
 	 *
 	 * @param population
 	 */
-	public SPLocalizer(final IScope scope, IList<IShape> geoms) {
+	public SPLocalizer(final IScope scope, IContainer<?, ? extends IShape> geoms, String nestAttribute) {
 		this(scope);
 		this.localizationConstraint = new SpatialConstraintLocalization(null);
 		this.localizationConstraint.setGeoms(geoms);
 		this.linker.addConstraints(localizationConstraint);
+		this.nestAttribute = nestAttribute;
 	}
 
 	///////////////////////////////////////////////////////////
@@ -137,7 +118,7 @@ public class SPLocalizer implements ISPLocalizer {
 	///////////////////////////////////////////////////////////
 
 	@Override
-	public void localisePopulation(IScope scope, IList<IAgent> population) {
+	public void localisePopulation(IScope scope, final IContainer<?, IAgent> population) {
 		try {
 			// case where the referenced file is not defined
 			if (match == null) {
@@ -148,24 +129,23 @@ public class SPLocalizer implements ISPLocalizer {
 				}
 				// case where we have information about the number of entities per specific areas (entityNbAreas)
 				else {
-					//localizationInNestWithNumbers(scope, population, null);
+					localizationInNestWithNumbers(scope, population, null);
 				}
 			}
 			// case where the referenced file is defined
 			else {
-				/*for (AGeoEntity<? extends IValue> globalfeature : match.getGeoEntity()) {
-					String valKeyAtt = globalfeature.getValueForAttribute(keyAttMatch).getStringValue();
+				for (IShape globalfeature : match) {
+					String valKeyAtt = Cast.asString(scope, globalfeature.getAttribute(keyAttMatch));
 
-					List<SpllEntity> entities = outputPopulation.stream()
-							.filter(s -> s.getValueForAttribute(keyAttPop).getStringValue().equals(valKeyAtt)).toList();
-
+					IList<IAgent> entities = GamaListFactory.createWithoutCasting(Types.AGENT,population.listValue(scope, Types.AGENT, false).stream()
+							.filter(s -> s.getAttribute(keyAttPop).equals(valKeyAtt)).toList());
 					if (keyAttMap == null || map == null) {
-						localizationInNest(entities, globalfeature.getProxyGeometry());
+						localizationInNest(scope, entities, globalfeature);
 					} else {
-						localizationInNestWithNumbers(entities, globalfeature.getProxyGeometry());
+						localizationInNestWithNumbers(scope, entities, globalfeature);
 					}
 
-				}*/
+				}
 			}
 			//outputPopulation.removeIf(a -> a.getLocation() == null);
 		} catch (IOException e) {
@@ -215,6 +195,8 @@ public class SPLocalizer implements ISPLocalizer {
 		this.localizationConstraint.setIncreaseStep(releaseStep);
 		this.localizationConstraint.setPriority(priority);
 	}
+	
+	
 
 	/*@Override
 	public IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> estimateMatcher(final File destination)
@@ -419,15 +401,13 @@ public class SPLocalizer implements ISPLocalizer {
 	 * @throws IOException
 	 * @throws TransformException
 	 */
-	private void localizationInNest(final IScope scope, final IList<IAgent> entities, final IShape spatialBounds)
+	private void localizationInNest(final IScope scope, final IContainer<?, IAgent> entities, final IShape spatialBounds)
 			throws IOException {
-
 		localizationConstraint.setBounds(spatialBounds);
-		IList<IShape> possibleNests = localizationConstraint.getCandidates(scope,
-				localizationConstraint.getGeoms());
 		
+		IList<IShape> possibleNests = localizationConstraint.getCandidates(scope,null);
+		System.out.println("Possibles nest computed");
 		if (linker.getConstraints().isEmpty()) {
-
 			localizationInNestOp(scope, entities, possibleNests, null);
 
 		} else {
@@ -436,17 +416,17 @@ public class SPLocalizer implements ISPLocalizer {
 					Stream.concat(linker.getConstraints().stream(), Stream.of(localizationConstraint))
 							.sorted(Comparator.comparing(ISpatialConstraint::getPriority)).toList();
 
-			IList<IAgent> remainingEntities = entities.copy(scope);
+			IContainer<?,IAgent> remainingEntities = entities.listValue(scope, Types.AGENT, true);
 			for (ISpatialConstraint cr : otherConstraints) {
 				while (!cr.isConstraintLimitReach()) {
 
-					IList<IShape> candidates =localizationConstraint.getGeoms().copy(scope);
+					IList<IShape> candidates =(IList<IShape>) localizationConstraint.getGeoms().listValue(scope, Types.GEOMETRY, true);
 					for (ISpatialConstraint constraint : otherConstraints) {
 						candidates = constraint.getCandidates(scope, candidates);
 					}
 
 					remainingEntities = localizationInNestOp(scope, remainingEntities, candidates, null);
-					if (remainingEntities == null || remainingEntities.isEmpty()) return;
+					if (remainingEntities == null || (remainingEntities.length(scope) ==0)) return;
 					cr.relaxConstraint(possibleNests);
 
 				}
@@ -467,17 +447,24 @@ public class SPLocalizer implements ISPLocalizer {
 	 */
 	
 	
-	private IList<IAgent> localizationInNestOp(final IScope scope, final IList<IAgent> entities,
+	private IContainer<?, IAgent> localizationInNestOp(final IScope scope, final IContainer<?, IAgent> entities,
 			final IList<IShape> possibleNests, Long val) {
-		IList<IAgent> chosenEntities = null;
-		IList<IAgent> entityToLocalize = entities.copy(scope);
+		IContainer<?, IAgent>  chosenEntities = null;
+		IList<IAgent>  entityToLocalize = entities.listValue(scope, Types.AGENT, true);
 		if (val != null) {
-			val = Math.min(val, entities.size());
+			val = Math.min(val, entities.length(scope));
 			chosenEntities = Containers.among(scope, val.intValue(), entities);
 		} else {
 			chosenEntities = entities;
 		}
-		for (IAgent entity : chosenEntities) {
+		if(possibleNests.isEmpty()) return chosenEntities;
+		linker.getDistribution().setCandidate(possibleNests);
+		int cpt = 0;
+		System.out.println("ici: "+ possibleNests.size());
+		for (IAgent entity : chosenEntities.iterable(scope)) {
+			cpt ++;
+			if (cpt % 100 == 0)
+				System.out.println("fait: " + cpt + "/" + chosenEntities.length(scope));
 			if (possibleNests.isEmpty()) { break; }
 			Optional<IShape> oNest = linker.getCandidate(scope, entity, possibleNests);
 			boolean removeObject = false;
@@ -486,8 +473,16 @@ public class SPLocalizer implements ISPLocalizer {
 				for (ISpatialConstraint constraint : linker.getConstraints()) {
 					removeObject = removeObject || constraint.updateConstraint(nest);
 				}
-				if (removeObject) { possibleNests.remove(0); }
-				//entity.setNest(nest);
+				if (removeObject) { 
+					IShape n = possibleNests.remove(0);
+					linker.getDistribution().removeNest(n);
+				}
+				if (nestAttribute != null) {
+					/*if (proxyNest != null)
+						entity.setAttribute(nestAttribute, proxyNest.get(nest));
+					else*/
+						entity.setAttribute(nestAttribute, nest);
+				}
 				entityToLocalize.remove(entity);
 				entity.setLocation(pointInLocalizer.pointIn(scope, nest));
 				
@@ -546,10 +541,10 @@ public class SPLocalizer implements ISPLocalizer {
 	 *             the transform exception
 	 */
 	// NOTE: if no nest is located inside the area, not entities will be located inside.
-/*	@SuppressWarnings ("unchecked")
-	private void localizationInNestWithNumbers(IScope scope, final List<IAgent> entities, final IShape spatialBounds)
+	@SuppressWarnings ("unchecked")
+	private void localizationInNestWithNumbers(IScope scope, final IContainer<?, IAgent> entities, final IShape spatialBounds)
 			throws IOException {
-		List<ISpatialConstraint> otherConstraints = new ArrayList<>(linker.getConstraints());
+	/*	List<ISpatialConstraint> otherConstraints = new ArrayList<>(linker.getConstraints());
 
 		IList<IShape> areas = spatialBounds == null ? map.copy(scope) : (IList<IShape>) Queries.overlapping(scope, map, spatialBounds);
 		areas = msi.gaml.operators.Random.opShuffle(scope, areas);
@@ -593,9 +588,41 @@ public class SPLocalizer implements ISPLocalizer {
 				}
 				if (remainingEntities.isEmpty()) { break; }
 			}
-		}
-	}*/
+		}*/
+	}
 
+	public void setMinDistance(Double mind) {
+		minDist = mind;
+	}
+	
+	public void setMaxDistance(Double maxd) {
+		maxDist = maxd;
+	}
+	
+	
+	/**
+	 * Associate a proxy geometry to each spatial entity (#SpllFeature) that correspond to the area
+	 * at minDist and maxDist from the original geometry
+	 * 
+	 * @param minDist
+	 * @param maxDist
+	 * @param avoidOverlapping
+	 */
+	public void computeMinMaxDistance(IScope scope, IList<IShape> nests)  {
+		IShape u = Operators.union(scope, nests);
+		IShape s = null;
+		if (maxDist != null) {
+			s = Transformations.enlarged_by(scope, u, maxDist);
+			if (minDist != null) {
+				s = Operators.minus(scope, s, Transformations.enlarged_by(scope, u, minDist));
+			}
+		} else if (minDist != null) {
+			s = Operators.minus(scope,  scope.getSimulation().getGeometry(), Transformations.enlarged_by(scope, u, minDist));
+		}
+		this.localizationConstraint.setGeoms((IList<IShape>) s.getGeometries());
+	}
+	
+	
 	// ----------------------------- MOVE PART OF THESE METHOD INTO FACTORY / BUILDER
 
 	/**

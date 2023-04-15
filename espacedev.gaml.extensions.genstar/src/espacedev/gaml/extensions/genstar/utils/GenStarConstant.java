@@ -34,13 +34,26 @@ public class GenStarConstant {
 	/** The Constant representing the feature of a shapefile / geometry **/
 	public static final String GSFEATURE = "feature";
 
+	/** The Constant representing the name of attribute where to save the nest  **/
+	public static final String NESTATTRIBUTES = "nest_attribute";
+
+	/** The Constant representing the type of distribution **/
+	public static final String DISTRIBUTION = "distribution";
+	
 	/** The Constant EPSILON. */
 	public static final Double EPSILON = Math.pow(10, -6);
 
-
-	/** The constant GSLOCALISE represents the main gaml operator to localise agents based on genstar */
+	/** The nests on which to localize the agents */
 	public static final String NESTS = "nests"; 
 	
+	/** The matcher for the localization of the agents */
+	public static final String MATCHER = "matcher"; 
+	
+	/** The maximal distance to the nest geometry */
+	public static final String MAXDIST = "max_dist";
+	
+	/** The maximal distance to the nest geometry */
+	public static final String MINDIST = "min_dist";
 	/**
 	 * Interface to deal with aliases
 	 *

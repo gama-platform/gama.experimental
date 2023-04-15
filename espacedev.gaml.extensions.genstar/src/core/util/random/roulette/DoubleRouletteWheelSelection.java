@@ -35,6 +35,12 @@ public class DoubleRouletteWheelSelection<K> extends ARouletteWheelSelection<Dou
 	protected Double computeDistributionSum(final List<Double> dist) {
 		return dist.stream().collect(Collectors.summingDouble(n -> n));
 	}
+	
+	@Override
+	protected void decreaseTotal(Double val) {
+		total -= val;
+	}
+
 
 	@Override
 	public int drawIndex() throws IllegalStateException {

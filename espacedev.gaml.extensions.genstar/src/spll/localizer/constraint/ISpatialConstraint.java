@@ -4,6 +4,7 @@ import java.util.List;
 
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
+import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 
 /**
@@ -20,7 +21,7 @@ public interface ISpatialConstraint {
 	 * @param filteredCandidates : a set of geography to locate synthetic entities in
 	 * @return
 	 */
-	public IList<IShape> getCandidates(IScope scope, IList<IShape> filteredCandidates);
+	public IList<IShape> getCandidates(IScope scope,IContainer<?, ? extends IShape> filteredCandidates);
 	
 	/**
 	 * A way to update the constraint considering a set of possible spatial entities to locate synthetic entities in.

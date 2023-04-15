@@ -71,6 +71,7 @@ public final class RouletteWheelSelectionFactory {
 		return res;
 	}
 
+	
 	/**
 	 * Instantiates a new roulette wheel selection factory.
 	 */

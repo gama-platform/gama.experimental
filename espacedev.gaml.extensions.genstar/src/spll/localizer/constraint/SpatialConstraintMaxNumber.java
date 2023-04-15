@@ -7,6 +7,7 @@ import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaListFactory;
+import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import msi.gaml.operators.Cast;
 import msi.gaml.operators.Maths;
@@ -46,8 +47,8 @@ public class SpatialConstraintMaxNumber extends ASpatialConstraint {
 
 
 	@Override
-	public IList<IShape> getCandidates(IScope scope, IList<IShape> nests) {
-		return GamaListFactory.createWithoutCasting(Types.GEOMETRY, nests.stream().filter(a -> nestCapacities.get(a) > 0).toList());
+	public IList<IShape> getCandidates(IScope scope, IContainer<?, ? extends IShape> nests) {
+		return (IList<IShape>) GamaListFactory.createWithoutCasting(Types.GEOMETRY, nests.listValue(scope, Types.GEOMETRY, false).stream().filter(a -> nestCapacities.get(a) > 0).toList());
 	}
 	
 	@Override

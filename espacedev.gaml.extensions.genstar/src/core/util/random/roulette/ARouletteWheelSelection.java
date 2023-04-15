@@ -40,6 +40,15 @@ public abstract class ARouletteWheelSelection<T extends Number, K> {
 		this.setDistribution(distribution);
 	}
 
+	public void remove(K element) {
+		int index = keys.indexOf(element);
+		keys.remove(index);
+		T val = distribution.remove(index);
+		decreaseTotal(val);
+	}
+	
+	protected abstract void decreaseTotal(T val);
+
 	/**
 	 * Return unmodifiable view of the keys to return when call {@link #drawObject()}
 	 *
