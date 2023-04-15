@@ -13,6 +13,7 @@ import msi.gama.common.interfaces.IValue;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
+import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import spll.algo.LMRegressionOLS;
 import spll.algo.exception.IllegalRegressionException;
@@ -59,7 +60,7 @@ public interface ISPLocalizer {
 	 * @param population
 	 * @return
 	 */
-	public void localisePopulation(IScope scope, IList<IAgent> population);
+	public void localisePopulation(IScope scope,  final IContainer<?, IAgent>  population);
 	
 	/**
 	 * Link entity of a population to a spatial entity using provided linker

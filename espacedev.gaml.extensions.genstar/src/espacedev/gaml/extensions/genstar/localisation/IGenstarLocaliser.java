@@ -12,7 +12,9 @@ package espacedev.gaml.extensions.genstar.localisation;
 
 import espacedev.gaml.extensions.genstar.statement.LocaliseStatement;
 import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
+import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 
 /**
@@ -30,6 +32,6 @@ public interface IGenstarLocaliser {
 	 * @param scope
 	 * @param locStatement
 	 */
-	void localise(IScope scope, IList<? extends IAgent> pop, Object nest, LocaliseStatement locStatement);
+	void localise(IScope scope, final IContainer<?, IAgent>  pop, Object nest, LocaliseStatement locStatement);
 	
 }

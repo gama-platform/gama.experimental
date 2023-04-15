@@ -19,7 +19,7 @@ public interface ISpatialDistribution<IShape> {
 	 * @param candidates
 	 * @return
 	 */
-	public IShape getCandidate(IScope scope, IAgent entity, IList<IShape> candidates);
+	public IShape getCandidate(IScope scope, IAgent entity, IList<? extends IShape> candidates);
 		
 	/**
 	 * Draw a spatial entity from a pre-determined set of candidate to be bind with given population entity
@@ -32,12 +32,15 @@ public interface ISpatialDistribution<IShape> {
 	 * 
 	 * @param candidates
 	 */
-	public void setCandidate(IList<IShape> candidates);
+	public void setCandidate(IList<? extends IShape> candidates);
 	
 	/**
 	 * 
 	 * @return
 	 */
 	public IList<IShape> getCandidates(IScope scope);
+
+	
+	public void removeNest(IShape n);
 
 }

@@ -27,7 +27,7 @@ import spll.localizer.distribution.ISpatialDistribution;
  *
  */
 public class SPLinker implements ISPLinker<IShape> {
-	
+	 
 	private ISpatialDistribution<IShape> distribution;
 	private List<ISpatialConstraint> constraints;
 	private ConstraintsReleaseRule rule;

@@ -35,6 +35,11 @@ public class IntegerRouletteWheelSelection<K> extends ARouletteWheelSelection<In
 	protected Integer computeDistributionSum(final List<Integer> dist) {
 		return dist.stream().collect(Collectors.summingInt(n -> n));
 	}
+	
+	@Override
+	protected void decreaseTotal(Integer val) {
+		total -= val;
+	}
 
 	@Override
 	public int drawIndex() throws IllegalStateException {

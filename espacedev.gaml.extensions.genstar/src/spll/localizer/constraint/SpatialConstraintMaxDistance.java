@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaListFactory;
+import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import msi.gaml.types.Types;
 
@@ -25,8 +26,8 @@ public class SpatialConstraintMaxDistance extends ASpatialConstraint {
 	}
 	
 	@Override
-	public IList<IShape> getCandidates(IScope scope, IList<IShape> nests) {
-		return GamaListFactory.createWithoutCasting(Types.GEOMETRY,nests.stream().filter(nest -> distanceToEntities.keySet()
+	public IList<IShape> getCandidates(IScope scope,IContainer<?, ? extends IShape> nests) {
+		return (IList<IShape>) GamaListFactory.createWithoutCasting(Types.GEOMETRY,nests.listValue(scope, Types.GEOMETRY, false).stream().filter(nest -> distanceToEntities.keySet()
 				.stream().anyMatch(entity -> entity.euclidianDistanceTo(nest) <= distanceToEntities.get(entity))).toList());
 		
 		/*		.sorted((c1, c2) -> Double.compare(

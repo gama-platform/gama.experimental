@@ -78,21 +78,7 @@ public class SpatialDistributionFactory {
 		return distribution;
 	}
 	
-	/**
-	 * General factory method to build distribution with cached candidates from a {@link IGSGeofile}
-	 * 
-	 * @param function
-	 * @param geofile
-	 * @return
-	 */
-	public <N extends Number, E extends IShape> ISpatialDistribution<E> getDistribution(IScope scope, ISpatialEntityFunction<N> function,
-			IList<IShape> geoms){
-		IList<IShape> candidates = null;
-		candidates = geoms.copy(scope);
-		
-		return this.getDistribution(scope, function, candidates);
-	}
-	
+
 	/////////////////////////////////////////////////////////////////////////////////
 	//							Example distribution                              //
 	/////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +109,7 @@ public class SpatialDistributionFactory {
 	 * @return
 	 */
 	public <IAgent> ISpatialDistribution<IShape> getAreaBasedDistribution(IScope scope, IList<IShape> candidates){
-		return this.getDistribution(scope, new AreaFunction(), candidates);
+		return this.getDistribution(new AreaFunction(), candidates);
 	}
 	
 	

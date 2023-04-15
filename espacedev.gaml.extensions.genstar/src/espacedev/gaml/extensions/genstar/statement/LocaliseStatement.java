@@ -7,7 +7,6 @@ import java.util.Arrays;
 
 import espacedev.gaml.extensions.genstar.localisation.IGenstarLocaliser;
 import espacedev.gaml.extensions.genstar.statement.LocaliseStatement.LocaliseValidator;
-import espacedev.gaml.extensions.genstar.type.GamaPopGeneratorType;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant;
 import espacedev.gaml.extensions.genstar.utils.GenStarGamaUtils;
 import msi.gama.common.interfaces.IKeyword;
@@ -56,13 +55,12 @@ import msi.gaml.types.Types;
 @facets (
 		value = { @facet (
 						name = SPECIES,
-						type = { IType.SPECIES, IType.AGENT },
+						type = { IType.SPECIES, IType.AGENT, IType.CONTAINER },
 						optional = false,
 						doc = @doc ("The species of the agents to be localised.")),
 				@facet (
 						name = GenStarConstant.NESTS,
-						type = IType.CONTAINER,
-						of = IType.GEOMETRY,
+						type = {IType.CONTAINER, IType.SPECIES},
 						optional = false,
 						doc = @doc (
 								value = """
@@ -70,6 +68,53 @@ import msi.gaml.types.Types;
 										 * a list of geometry <br/>
 										 * a shapefile or a rasterfile
 										 """)),
+				@facet (
+						name = GenStarConstant.NESTATTRIBUTES,
+						type = IType.STRING,
+						optional = true,
+						doc = @doc (
+								value = """
+										To specify the attribute of the nest
+										 """)),
+			
+				@facet (
+						name = GenStarConstant.DISTRIBUTION,
+						type = IType.STRING,
+						optional = true,
+						doc = @doc (
+								value = """
+										The type of distribution to use ('area', 'uniform',)
+										 """)),
+				@facet (
+						name = GenStarConstant.MINDIST,
+						type = IType.FLOAT,
+						optional = true,
+						doc = @doc (
+								value = """
+										The min distance to the nest geometry
+										 """)),
+				@facet (
+						name = GenStarConstant.MAXDIST,
+						type = IType.FLOAT,
+						optional = true,
+						doc = @doc (
+								value = """
+										The max distance to the nest geometry
+										 """)),
+			
+			
+			@facet (
+						name = GenStarConstant.MATCHER,
+						type = IType.MAP,
+						optional = true,
+						doc = @doc (
+								value = """
+										To specify the a matcher, map with three elements: 
+										'entities': list of entities with the ; 
+										'data_id': name of the property that contains the id of the census spatial areas in the shapefile;
+										'pop_id': name of the property that contains the id of the census spatial areas in the population
+										 """)),
+				
 				@facet (
 						name = GenStarConstant.GSFEATURE,
 						type = { IType.STRING },
@@ -92,8 +137,18 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 	
 	// ----------------
 	
-	/** The algorithm. */
+	/** The nests. */
 	private final IExpression nests;
+	
+
+	/** The nest attibute. */
+	private final IExpression nestAttribute;
+	
+	/** The matcher. */
+	private final IExpression matcher;
+	
+	/** The distribution. */
+	private final IExpression distribution;
 	
 	/** The species. */
 	private final IExpression species;
@@ -101,6 +156,11 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 	/** The feature within a geometry to custom the localisation process **/
 	private final IExpression feature;
 	
+	/** Min dist to the geometry of the nest. */
+	private final IExpression minDist;
+	
+	/** Max dist to the geometry of the nest. */
+	private final IExpression maxDist;
 	
 	// -----------------
 	
@@ -112,7 +172,12 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 		this.nests = getFacet(GenStarConstant.NESTS);
 		this.species = getFacet(IKeyword.SPECIES);
 		this.feature = getFacet(GenStarConstant.GSFEATURE);
-				
+		this.matcher = getFacet(GenStarConstant.MATCHER);
+		this.nestAttribute = getFacet(GenStarConstant.NESTATTRIBUTES);
+		this.distribution = getFacet(GenStarConstant.DISTRIBUTION);
+		this.minDist = getFacet(GenStarConstant.MINDIST);
+		this.maxDist = getFacet(GenStarConstant.MAXDIST);
+		
 		sequence = new RemoteSequence(description);
 		sequence.setName("commands for the localisation");
 		setName(GenStarConstant.GSLOCALISE);
@@ -153,6 +218,32 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 	
 	@Override
 	public void setFormalArgs(Arguments args) { init = args; }
+
+	
+	
+	public IExpression getDistribution() {
+		return distribution;
+	}
+
+	public IExpression getMatcher() {
+		return matcher;
+	}
+
+
+
+	public IExpression getMinDist() {
+		return minDist;
+	}
+
+	public IExpression getMaxDist() {
+		return maxDist;
+	}
+
+	public IExpression getNestAttribute() {
+		return nestAttribute;
+	}
+
+
 
 	public static class LocaliseValidator implements IDescriptionValidator<StatementDescription> {
 
