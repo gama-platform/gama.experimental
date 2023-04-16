@@ -1,24 +1,16 @@
 package spll.localizer;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import org.geotools.feature.SchemaException;
-import org.opengis.geometry.MismatchedDimensionException;
-import org.opengis.referencing.operation.TransformException;
 
 import core.metamodel.attribute.Attribute;
+import core.metamodel.entity.ADemoEntity;
 import msi.gama.common.interfaces.IValue;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
 import msi.gama.util.IContainer;
 import msi.gama.util.IList;
-import spll.algo.LMRegressionOLS;
-import spll.algo.exception.IllegalRegressionException;
-import spll.datamapper.exception.GSMapperException;
-import spll.datamapper.normalizer.SPLUniformNormalizer;
+import msi.gama.util.matrix.GamaField;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.distribution.ISpatialDistribution;
 import spll.localizer.linker.ISPLinker;
@@ -103,22 +95,7 @@ public interface ISPLocalizer {
 	public void setMatcher(IList<IShape> match, 
 			String keyAttPop, String keyAttMatch, double releaseLimit, double releaseStep, int priority);
 	
-	/**
-	 * This method must setup matcher variable (i.e. the number of entity) in
-	 * the proper output format geofile
-	 * 
-	 * @return
-	 * @throws TransformException 
-	 * @throws IOException 
-	 * @throws IllegalArgumentException 
-	 * @throws MismatchedDimensionException 
-	 * @throws SchemaException 
-	 */
-	//public IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> estimateMatcher(File destination) 
-	//		throws MismatchedDimensionException, IllegalArgumentException, IOException, TransformException, SchemaException;
-	
-	
-	///////////////////////////////////////////////
+///////////////////////////////////////////////
 	// -------------- MAPPER PART -------------- //
 	// 	  Mapper part corresponds to the Areal   // 
 	// 	  Interpolation phase of localization    //
@@ -133,62 +110,8 @@ public interface ISPLocalizer {
 	 * @param numberProperty
 	 */
 	public void setMapper(IList<IShape> map, 
-			String numberProperty);
+			String numberProperty, GamaField field);
 	
-	/**
-	 * Setup a density map - from the result of spatial interpolation: this interpolation
-	 * is based on the previous match setup !
-	 * <p>
-	 * WARNING: will throw a Exception if no match have been set before
-	 * 
-	 * @param endogeneousVarFile
-	 * @param varList
-	 * @param lmRegressionOLS
-	 * @param splUniformNormalizer
-	 * @throws IOException
-	 * @throws TransformException
-	 * @throws InterruptedException
-	 * @throws ExecutionException
-	 * @throws IllegalRegressionException
-	 * @throws IndexOutOfBoundsException
-	 * @throws GSMapperException
-	 * @throws SchemaException 
-	 * @throws InvalidGeoFormatException 
-	 * @throws IllegalArgumentException 
-	 * @throws MismatchedDimensionException 
-	 */
-	public void setMapper(IList<IList<IShape>> endogeneousEntities, 
-			List<? extends IValue> varList, LMRegressionOLS lmRegressionOLS, SPLUniformNormalizer splUniformNormalizer) 
-					throws IOException, TransformException, InterruptedException, ExecutionException, IllegalRegressionException, 
-					IndexOutOfBoundsException, GSMapperException, SchemaException, MismatchedDimensionException, IllegalArgumentException;
-	
-	/**
-	 * Setup a density map - from the result of spatial interpolation: this interpolation
-	 * is based on a given match file 
-	 * 
-	 * @param mainMapper
-	 * @param mainAttribute
-	 * @param endogeneousVarFile
-	 * @param varList
-	 * @param lmRegressionOLS
-	 * @param splUniformNormalizer
-	 * @throws IOException
-	 * @throws TransformException
-	 * @throws InterruptedException
-	 * @throws ExecutionException
-	 * @throws IllegalRegressionException
-	 * @throws IndexOutOfBoundsException
-	 * @throws GSMapperException
-	 * @throws SchemaException 
-	 * @throws InvalidGeoFormatException 
-	 * @throws IllegalArgumentException 
-	 * @throws MismatchedDimensionException 
-	 */
-	public void setMapper(IList<IShape> mainMapper, 
-			String mainAttribute, IList<IList<IShape>> endogeneousdata, 
-			List<? extends IValue> varList, LMRegressionOLS lmRegressionOLS, SPLUniformNormalizer splUniformNormalizer) 
-					throws IOException, TransformException, InterruptedException, ExecutionException, IllegalRegressionException, 
-					IndexOutOfBoundsException, GSMapperException, SchemaException, MismatchedDimensionException, IllegalArgumentException;
 	
 	///////////////////////////////////////////////////
 	// -------------- CONSTRAINT PART -------------- //

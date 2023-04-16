@@ -8,6 +8,7 @@ import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
 import msi.gama.util.IContainer;
 import msi.gama.util.IList;
+import msi.gama.util.matrix.GamaField;
 import msi.gaml.operators.Cast;
 import msi.gaml.types.Types;
 import spll.localizer.SPLocalizer;
@@ -38,7 +39,9 @@ public class WithinGeometryLocaliser implements IGenstarLocaliser {
 	
 		Map mapperMap =  (locStatement.getMapper() != null) ? Cast.asMap(scope, locStatement.getMapper().value(scope), false) : null;
 		if (mapperMap != null) 
-			loc.setMapper(Cast.asList(scope, mapperMap.get("entities")),Cast.asString(scope, mapperMap.get("data_id")));
+			loc.setMapper(mapperMap.containsKey("entities") ? Cast.asList(scope, mapperMap.get("entities")) : null,
+					mapperMap.containsKey("data_id") ? Cast.asString(scope, mapperMap.get("data_id")) : null, 
+					(GamaField) mapperMap.get("field"));
 	
 		if (locStatement.getDistribution() != null) {
 			String di = Cast.asString(scope, locStatement.getDistribution().value(scope));
