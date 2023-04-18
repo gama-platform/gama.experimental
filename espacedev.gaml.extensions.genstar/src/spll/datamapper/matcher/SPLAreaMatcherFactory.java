@@ -12,36 +12,38 @@ import org.opengis.referencing.operation.TransformException;
 
 import core.util.GSPerformanceUtil;
 import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IList;
-import spll.datamapper.variable.SPLVariable;
+import msi.gama.util.matrix.GamaField;
+import msi.gaml.operators.Cast;
 
-public class SPLAreaMatcherFactory implements ISPLMatcherFactory<SPLVariable, Double> {
+public class SPLAreaMatcherFactory implements ISPLMatcherFactory<String, Double> {
 
 	private int matcherCount = 0;
 
-	private Collection<SPLVariable> variables;
+	private Collection<String> variables;
 
-	public SPLAreaMatcherFactory(Collection<SPLVariable> variables) {
+	public SPLAreaMatcherFactory(Collection<String> variables) {
 		this.variables = variables;
 	}
 
 	@Override
-	public List<ISPLMatcher<V, T>> getMatchers(IShape geoData, 
-			IList<IList<IShape>> ancillaryEntities) 
-					throws IOException, TransformException, InterruptedException, ExecutionException { 
+	public List<ISPLMatcher<String, Double>> getMatchers(IScope scope, IShape geoData, 
+			GamaField regressorsField)  
+			throws IOException, TransformException, InterruptedException, ExecutionException { 
 		IList l = GamaListFactory.create();
 		l.add(geoData);
-		return getMatchers(l, ancillaryEntities);
+		return getMatchers(scope, l, regressorsField);
 	}
 
 	@Override
-	public List<ISPLMatcher<V, T>> getMatchers(IList<IShape> entities,IList<IList<IShape>> regressorsEntities) 			throws IOException, TransformException, InterruptedException, ExecutionException {
+	public List<ISPLMatcher<String, Double>> getMatchers(IScope scope, IList<IShape> entities,GamaField regressorsField) { 
 		GSPerformanceUtil gspu = new GSPerformanceUtil("Start processing regressors' data");
 		gspu.setObjectif(entities.size());
-		List<ISPLMatcher<SPLVariable, Double>> varList = entities
-				.stream().map(entity -> getMatchers(entity, 
-						regressorsFile.getGeoEntityIteratorWithin(entity.getGeometry()), 
+		List<ISPLMatcher<String, Double>> varList = entities
+				.stream().map(entity -> getMatchers(scope, entity, 
+						regressorsField.getCellsIntersecting(scope, entity).iterator(), 
 						this.variables, gspu))
 				.flatMap(list -> list.stream()).toList();
 		gspu.sysoStempMessage("-------------------------\n"
@@ -54,28 +56,25 @@ public class SPLAreaMatcherFactory implements ISPLMatcherFactory<SPLVariable, Do
 	/*
 	 * TODO: could be optimise
 	 */
-	private List<ISPLMatcher<SPLVariable, Double>> getMatchers(IShape entity,
+	private List<ISPLMatcher<String, Double>> getMatchers(IScope scope, IShape entity,
 			Iterator<? extends IShape> geoData, 
-					Collection<SPLVariable> variables, GSPerformanceUtil gspu) {
-		List<ISPLMatcher<SPLVariable, Double>> areaMatcherList = new ArrayList<>();
+					Collection<String> variables, GSPerformanceUtil gspu) {
+		List<ISPLMatcher<String, Double>> areaMatcherList = new ArrayList<>();
 		while(geoData.hasNext()){
 			IShape geoEntity = geoData.next(); 
-			for(String prop : geoEntity.getPropertiesAttribute()){
-				IValue value = geoEntity.getValueForAttribute(prop);
-				
-				if(!variables.isEmpty() && !variables.contains(value))
-					continue;
-				Optional<ISPLMatcher<SPLVariable, Double>> potentialMatch = areaMatcherList
-						.stream().filter(varMatcher -> varMatcher.getVariable().getName().equals(prop.toString()) &&
-								varMatcher.getVariable().getValue().equals(value)).findFirst();
+			for(String prop : variables){
+				if (!geoEntity.hasAttribute(prop)) continue;
+				Double value = Cast.asFloat(scope, geoEntity.getAttribute(prop));
+				if (value == null) continue;
+				Optional<ISPLMatcher<String, Double>> potentialMatch = areaMatcherList
+						.stream().filter(varMatcher -> varMatcher.getVariable().equals(prop)).findFirst();
 				if(potentialMatch.isPresent()){
 					// IF Variable is already matched, update area
 					potentialMatch.get().expandValue(geoEntity.getArea());
 				} else {
 					// ELSE create Variable based on the feature and create SPLAreaMatcher with basic area
 					//if(!geoEntity.getPropertyAttribute(prop).equals(value))
-					areaMatcherList.add(new SPLAreaMatcher(entity, 
-							new SPLVariable(value, prop.toString()), geoEntity.getArea()));
+					areaMatcherList.add(new SPLAreaMatcher(entity, prop, geoEntity.getArea()));
 				}
 			}
 		}

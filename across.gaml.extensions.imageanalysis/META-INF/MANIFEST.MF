@@ -114,4 +114,5 @@ Export-Package: across.gaml.extensions.imageanalysis.boofcv;
    msi.gama.runtime,
    msi.gaml.expressions,
    msi.gaml.types,
-   msi.gama.metamodel.shape"
+   msi.gama.metamodel.shape",
+ boofcv.struct.flow

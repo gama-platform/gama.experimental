@@ -12,30 +12,29 @@ package spll.datamapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.PrecisionModel;
-import org.locationtech.jts.operation.buffer.BufferParameters;
-import org.locationtech.jts.precision.GeometryPrecisionReducer;
 import org.opengis.referencing.operation.TransformException;
 
-import core.metamodel.entity.AGeoEntity;
-import core.metamodel.io.IGSGeofile;
-import core.metamodel.value.IValue;
-import core.metamodel.value.numeric.ContinuousValue;
 import core.util.GSPerformanceUtil;
+import msi.gama.metamodel.shape.GamaPoint;
+import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.GAMA;
+import msi.gama.runtime.IScope;
+import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gama.util.IList;
+import msi.gama.util.matrix.GamaField;
+import msi.gama.util.matrix.IField;
+import msi.gaml.operators.Spatial.Operators;
+import msi.gaml.operators.Spatial.Queries;
+import msi.gaml.types.Types;
 import spll.algo.ISPLRegressionAlgo;
 import spll.algo.LMRegressionOLS;
 import spll.algo.exception.IllegalRegressionException;
@@ -43,11 +42,6 @@ import spll.datamapper.exception.GSMapperException;
 import spll.datamapper.matcher.SPLAreaMatcherFactory;
 import spll.datamapper.normalizer.ASPLNormalizer;
 import spll.datamapper.normalizer.SPLUniformNormalizer;
-import spll.datamapper.variable.SPLVariable;
-import spll.entity.SpllFeature;
-import spll.entity.SpllPixel;
-import spll.io.SPLRasterFile;
-import spll.io.SPLVectorFile;
 
 /**
  * TODO: javadoc
@@ -55,10 +49,10 @@ import spll.io.SPLVectorFile;
  * @author kevinchapuis
  *
  */
-public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double> {
+public class SPLAreaMapperBuilder extends ASPLMapperBuilder<String, Double> {
 
 	/** The mapper. */
-	private SPLMapper<SPLVariable, Double> mapper;
+	private SPLMapper<String, Double> mapper;
 
 	/**
 	 * Simplest constructor that define default regression and normalizer algorithm
@@ -67,12 +61,14 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 	 * @param ancillaryFiles
 	 * @param variables
 	 */
-	public SPLAreaMapperBuilder(final IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> mainFile,
+	
+	
+	public SPLAreaMapperBuilder(final IScope scope, final IList<IShape> mainEntities,
 			final String mainAttribute,
-			final List<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaryFiles,
-			final Collection<? extends IValue> variables) {
-		this(mainFile, mainAttribute, ancillaryFiles, variables, new LMRegressionOLS());
-	}
+			final IList<GamaField> ancillaryFields,
+			final Collection<String> variables) {
+		this(scope, mainEntities, mainAttribute, ancillaryFields, variables, new LMRegressionOLS());
+	} 
 
 	/**
 	 * Constructor that enable custom regression algorithm
@@ -82,12 +78,12 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 	 * @param variables
 	 * @param regAlgo
 	 */
-	public SPLAreaMapperBuilder(final IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> mainFile,
+	public SPLAreaMapperBuilder(final IScope scope, final IList<IShape> mainEntities,
 			final String mainAttribute,
-			final List<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaryFiles,
-			final Collection<? extends IValue> variables, final ISPLRegressionAlgo<SPLVariable, Double> regAlgo) {
-		this(mainFile, mainAttribute, ancillaryFiles, variables, regAlgo,
-				new SPLUniformNormalizer(0, SPLRasterFile.DEF_NODATA));
+			final IList<GamaField> ancillaryFields,
+			final Collection<String> variables, final ISPLRegressionAlgo<String, Double> regAlgo) {
+		this(scope, mainEntities, mainAttribute, ancillaryFields, variables, regAlgo,
+				new SPLUniformNormalizer(0, ancillaryFields.isEmpty() ? null : ancillaryFields.get(0).getNoData(scope)));
 	}
 
 	/**
@@ -99,12 +95,12 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 	 * @param regAlgo
 	 * @param normalizer
 	 */
-	public SPLAreaMapperBuilder(final IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> mainFile,
+	public SPLAreaMapperBuilder(final IScope scope, final IList<IShape> mainEntities,
 			final String mainAttribute,
-			final List<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaryFiles,
-			final Collection<? extends IValue> variables, final ISPLRegressionAlgo<SPLVariable, Double> regAlgo,
+			final IList<GamaField> ancillaryFields,
+			final Collection<String> variables, final ISPLRegressionAlgo<String, Double> regAlgo,
 			final ASPLNormalizer normalizer) {
-		super(mainFile, mainAttribute, ancillaryFiles);
+		super( mainEntities, mainAttribute, ancillaryFields);
 		super.setRegressionAlgorithm(regAlgo);
 		super.setMatcherFactory(new SPLAreaMatcherFactory(variables));
 		super.setNormalizer(normalizer);
@@ -115,16 +111,16 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 	/////////////////////////////////////////////////////
 
 	@Override
-	public SPLMapper<SPLVariable, Double> buildMapper()
+	public SPLMapper<String, Double> buildMapper(IScope scope)
 			throws IOException, TransformException, InterruptedException, ExecutionException {
 		if (mapper == null) {
 			mapper = new SPLMapper<>();
-			mapper.setMainSPLFile(mainEntities);
+			mapper.setMainSPLData(mainEntities);
 			mapper.setMainProperty(super.getMainAttribute());
 			mapper.setRegAlgo(regressionAlgorithm);
-			mapper.setMatcherFactory(matcherFactory);
-			for (IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> file : ancillaryFiles) {
-				mapper.insertMatchedVariable(file);
+		 	mapper.setMatcherFactory(matcherFactory);
+			for (GamaField field : ancillaryFields) {
+				mapper.insertMatchedVariable(scope, field);
 			}
 		}
 		return mapper;
@@ -134,53 +130,48 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 	 * {@inheritDoc}
 	 * <p>
 	 * WARNING: for performance purpose parallel stream are used !
+	 * @throws IllegalRegressionException 
 	 *
 	 * @throws GSMapperException
 	 * @throws IOException
 	 *
 	 */
 	@Override
-	protected float[][] buildOutput(final SPLRasterFile outputFormat, final boolean intersect, final boolean integer,
-			final Number targetPop) throws IllegalRegressionException, TransformException, IndexOutOfBoundsException,
-			GSMapperException, IOException {
+	protected float[][] buildOutput(final IScope scope, final GamaField outputFormat, final boolean intersect, final boolean integer,
+			final Number targetPop) throws IllegalRegressionException, IOException { 
 		if (mapper == null)
 			throw new IllegalAccessError("Cannot create output before a SPLMapper has been built and regression done");
-		if (!ancillaryFiles.contains(outputFormat)) throw new IllegalArgumentException(
-				"output format file must be one of ancillary files use to proceed regression");
+		if (!ancillaryFields.contains(outputFormat)) throw new IllegalArgumentException(
+				"output format field must be one of ancillary field use to proceed regression");
 
 		GSPerformanceUtil gspu = new GSPerformanceUtil("Start processing regression data to output raster");
 
 		// Define output format
-		int rows = outputFormat.getRowNumber();
-		int columns = outputFormat.getColumnNumber();
+		int rows = outputFormat.getRows(null);
+		int columns = outputFormat.getCols(scope);
 		float[][] pixels = new float[columns][rows];
 
 		// Store regression result
-		Map<SPLVariable, Double> regCoef = mapper.getRegression();
-		double intercept = mapper.getIntercept();
+		Map<String, Double> regCoef = mapper.getRegression(scope);
+		double intercept = mapper.getIntercept(scope);
 
 		// Correction for each pixel (does not exclude noData pixels)
-		Map<AGeoEntity<? extends IValue>, Double> pixCorrection = mapper.getResidual().entrySet().stream()
-				.collect(Collectors.toMap(Entry::getKey, e -> (e.getValue() + intercept)
-						/ outputFormat.getGeoEntityWithin(e.getKey().getGeometry()).size()));
+		Map<IShape, Double> pixCorrection = mapper.getResidual(scope).entrySet().stream()
+				.collect(Collectors.toMap(k-> k.getKey(), e -> (outputFormat.get(scope, ((IShape) e).getLocation()) + intercept)
+						/ outputFormat.getValuesIntersecting(scope, (IShape) e).size()));
 
 		if (pixCorrection.values().stream().anyMatch(value -> value.isInfinite() || value.isNaN()))
-			throw new GSMapperException(
-					outputFormat.toString() + " output format file does not cover all geographical entity !\n"
-							+ Arrays.toString(pixCorrection.entrySet().stream()
-									.filter(e -> e.getValue().isInfinite() || e.getValue().isNaN())
-									.map(e -> e.getKey().getGenstarName() + " - " + e.getValue()).toArray()));
-
+			GAMA.reportError(scope, GamaRuntimeException.error("The ouput format field does not cover all geographical entity !\n"
+					, scope), true);
 		// Define utilities
-		Collection<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaries =
-				new ArrayList<>(super.ancillaryFiles);
-		Collection<? extends AGeoEntity<? extends IValue>> mainGeoData = super.mainEntities.getGeoEntity();
+		Collection<GamaField> ancillaries =
+				new ArrayList<>(super.ancillaryFields);
 		ancillaries.remove(outputFormat);
 
 		// Iterate over pixels to apply regression coefficient
 		IntStream.range(0, columns).parallel().forEach(
-				x -> IntStream.range(0, rows).forEach(y -> pixels[x][y] = (float) this.computePixelWithinOutput(x, y,
-						outputFormat, ancillaries, mainGeoData, regCoef, pixCorrection, gspu, intersect)));
+				x -> IntStream.range(0, rows).forEach(y -> pixels[x][y] = (float) this.computePixelWithinOutput(scope, x, y,
+						outputFormat, ancillaries, super.mainEntities, regCoef, pixCorrection, gspu, intersect)));
 
 		// debug purpose
 		pixelRendered = 0;
@@ -190,19 +181,7 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 		return pixels;
 	}
 
-	@Override
-	protected Map<SpllFeature, Number> buildOutput(final SPLVectorFile formatFile, final boolean intersect,
-			final boolean integer, final Number tagetPopulation) {
-		
-
-		if (mapper == null)
-			throw new IllegalAccessError("Cannot create output before a SPLMapper has been built and regression done");
-		if (!ancillaryFiles.contains(formatFile)) throw new IllegalArgumentException(
-				"output format file must be one of ancillary files use to proceed regression");
-
-		return null;
-	}
-
+	
 	/////////////////////////////////////////////////////////////////////////////
 	// --------------------------- INNER UTILITIES --------------------------- //
 	/////////////////////////////////////////////////////////////////////////////
@@ -235,36 +214,33 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 	 * @return the double
 	 */
 	@SuppressWarnings ("null")
-	private double computePixelWithinOutput(final int x, final int y, final SPLRasterFile geotiff,
-			final Collection<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaries,
-			final Collection<? extends AGeoEntity<? extends IValue>> mainFeatures,
-			final Map<SPLVariable, Double> regCoef, final Map<AGeoEntity<? extends IValue>, Double> pixResidual,
+	private double computePixelWithinOutput(final IScope scope, final int x, final int y, final GamaField geofield,
+			final Collection<GamaField> ancillaries,
+			final IList<IShape> mainFeatures,
+			final Map<String, Double> regCoef, final Map<IShape, Double> pixResidual,
 			final GSPerformanceUtil gspu, final boolean intersect) {
 		// Output progression
-		int prop10for100 = Math.round(Math.round(geotiff.getRowNumber() * geotiff.getColumnNumber() * 0.1d));
+		int prop10for100 = Math.round(Math.round(geofield.numRows * geofield.numCols * 0.1d));
 		if ((++pixelRendered + 1) % prop10for100 == 0) {
 			gspu.sysoStempPerformance((pixelRendered + 1) / (prop10for100 * 10.0), this);
 		}
 
 		// Get the current pixel value
-		SpllPixel refPixel = null;
-		try {
-			refPixel = geotiff.getPixel(x, y);
-		} catch (TransformException e1) {
-			e1.printStackTrace();
-		}
-
+		IShape refPixel = null;
+		refPixel = geofield.getCellShapeAt(scope, x,y);
+		
 		// Get the related feature in main space features
-		Point pixelLocation = refPixel.getLocation();
-		Optional<? extends AGeoEntity<? extends IValue>> opFeature =
-				mainFeatures.stream().filter(ft -> pixelLocation.within(ft.getGeometry())).findFirst();
+		GamaPoint pixelLocation = refPixel.getLocation();
+		Optional<IShape> opFeature =
+				mainFeatures.stream().filter(ft -> pixelLocation.intersects(ft)).findFirst();
 
-		if (!opFeature.isPresent()) return SPLRasterFile.DEF_NODATA.floatValue();
+		if (!opFeature.isPresent()) return geofield.getNoData(scope);
 		if (intersect)
-			return computePixelIntersectOutput(refPixel, geotiff, ancillaries, mainFeatures, regCoef, pixResidual);
-		return computePixelWithin(refPixel, geotiff, ancillaries, opFeature.get(), regCoef,
+			return computePixelIntersectOutput(scope, refPixel, geofield, ancillaries, mainFeatures, regCoef, pixResidual);
+		
+		
+		return computePixelWithin(scope, refPixel, geofield, ancillaries, opFeature.get(), regCoef,
 				pixResidual.get(opFeature.get()));
-
 	}
 
 	// --------------------------- INNER ALGORITHM --------------------------- //
@@ -290,31 +266,28 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 	 * WARNING: the within function used define inclusion as: centroide of {@code refPixel} geometry is within the
 	 * referent geometry
 	 */
-	private double computePixelWithin(final SpllPixel refPixel, final SPLRasterFile geotiff,
-			final Collection<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaries,
-			final AGeoEntity<? extends IValue> entity, final Map<SPLVariable, Double> regCoef, final double corCoef) {
+	private double computePixelWithin(final IScope scope, final IShape refPixel, final GamaField geoField,
+			final Collection<GamaField> ancillaries,
+			final IShape entity, final Map<String, Double> regCoef, final double corCoef) {
 
 		// Retain info about pixel and his context
-		Geometry pixGeom = refPixel.getGeometry();
-		Collection<ContinuousValue> pixData = refPixel.getValues();
-		Collection<IValue> coefVal = regCoef.keySet().stream().map(SPLVariable::getValue).collect(Collectors.toSet());
-		if (pixData.stream().allMatch(val -> val.getActualValue() == geotiff.getNoDataValue() || !coefVal.contains(val))
+		Collection<Double> pixData = (Collection<Double>) geoField.getBands(scope).stream().map(f -> f.get(scope, refPixel.getLocation()));
+		if (pixData.stream().allMatch(val ->val == geoField.getNoData(scope))
 				&& ancillaries.isEmpty())
-			return SPLRasterFile.DEF_NODATA.floatValue();
+			return geoField.getNoData(scope);
 		double pixArea = refPixel.getArea();
 
 		// Setup output value for the pixel based on pixels' band values
-		double output = regCoef.entrySet().stream().filter(var -> pixData.contains(var.getKey().getValue()))
-				.mapToDouble(var -> var.getValue() * pixArea).sum();
+		double output = pixData.stream().mapToDouble(Double::doubleValue).sum() * pixArea;
 
 		// Iterate over other explanatory variables to update pixels value
-		for (IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> otherExplanVarFile : ancillaries) {
-			Iterator<? extends AGeoEntity<? extends IValue>> otherItt =
-					otherExplanVarFile.getGeoEntityIteratorWithin(pixGeom);
+		for (GamaField otherExplanVarField : ancillaries) {
+			Iterator<IShape> otherItt =
+					otherExplanVarField.getCellsIntersecting(scope, refPixel).iterator();
 			while (otherItt.hasNext()) {
-				AGeoEntity<? extends IValue> other = otherItt.next();
-				Set<SPLVariable> otherValues = regCoef.keySet().stream()
-						.filter(var -> other.getValues().contains(var.getValue())).collect(Collectors.toSet());
+				IShape other = otherItt.next();
+				Set<String> otherValues = regCoef.keySet().stream()
+						.filter(var -> other.hasAttribute(var)).collect(Collectors.toSet());
 				output += otherValues.stream().mapToDouble(val -> regCoef.get(val) * pixArea).sum();
 			}
 		}
@@ -342,35 +315,31 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 	/*
 	 * WARNING: intersection area calculation is very computation demanding, so this method is pretty slow
 	 */
-	private double computePixelIntersectOutput(final SpllPixel refPixel, final SPLRasterFile geotiff,
-			final Collection<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaries,
-			final Collection<? extends AGeoEntity<? extends IValue>> mainFeatures,
-			final Map<SPLVariable, Double> regCoef, final Map<AGeoEntity<? extends IValue>, Double> pixResidual) {
+	private double computePixelIntersectOutput(IScope scope, IShape refPixel, GamaField geoField, 
+			Collection<GamaField> ancillaries,
+			IList<IShape> mainFeatures, 
+			Map<String, Double> regCoef, Map<IShape, Double> pixResidual) {
 
 		// Retain main feature the pixel is within
-		Geometry pixGeom = refPixel.getGeometry();
-		List<? extends AGeoEntity<? extends IValue>> feats =
-				mainFeatures.stream().filter(ft -> ft.getGeometry().intersects(pixGeom)).toList();
-		if (feats.isEmpty()) return SPLRasterFile.DEF_NODATA.floatValue();
+		IList<IShape> feats = (IList<IShape>) Queries.overlapping(scope, mainFeatures, refPixel).listValue(scope, Types.GEOMETRY, false);
+		if (feats.isEmpty()) return geoField.getNoData(scope);
 
 		// Get the values contain in the pixel bands
-		Collection<ContinuousValue> pixData = refPixel.getValues();
+		Collection<Double> pixData = (Collection<Double>) geoField.getBands(scope).stream().map(f -> f.get(scope, refPixel.getLocation()));
 		double pixArea = refPixel.getArea();
-
 		// Setup output value for the pixel based on pixels' band values
-		double output = regCoef.entrySet().stream().filter(var -> pixData.contains(var.getKey().getValue()))
-				.mapToDouble(var -> var.getValue() * pixArea).sum();
+		double output = pixData.stream().mapToDouble(Double::doubleValue).sum() * pixArea;
 
 		// Iterate over other explanatory variables to update pixels value
-		for (IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> otherExplanVarFile : ancillaries) {
-			Iterator<? extends AGeoEntity<? extends IValue>> otherItt =
-					otherExplanVarFile.getGeoEntityIteratorIntersect(pixGeom);
+		for (IField otherExplanVarFile : ancillaries) {
+			Iterator<IShape> otherItt =
+					otherExplanVarFile.getCellsIntersecting(scope, refPixel).iterator();
 			while (otherItt.hasNext()) {
-				AGeoEntity<? extends IValue> other = otherItt.next();
-				Set<SPLVariable> otherValues = regCoef.keySet().stream()
-						.filter(var -> other.getValues().contains(var.getValue())).collect(Collectors.toSet());
+				IShape other = otherItt.next();
+				Set<String> otherValues = regCoef.keySet().stream()
+						.filter(var -> other.hasAttribute(var)).collect(Collectors.toSet());
 				output += otherValues.stream()
-						.mapToDouble(val -> regCoef.get(val) * other.getGeometry().intersection(pixGeom).getArea())
+						.mapToDouble(val -> regCoef.get(val) * Operators.inter(scope, other, refPixel).getArea())
 						.sum();
 			}
 		}
@@ -378,31 +347,11 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<SPLVariable, Double>
 		// Compute corrected value based on output data (to balanced for unknown determinant information)
 		// Intersection correction try /catch clause come from GAMA
 		double correctedOutput = 0d;
-		for (AGeoEntity<? extends IValue> entity : feats) {
-			Geometry fGeom = entity.getGeometry();
-			Geometry intersectGeom = null;
-			try {
-				intersectGeom = fGeom.intersection(pixGeom);
-			} catch (final Exception ex) {
-				try {
-					final PrecisionModel pm = new PrecisionModel(PrecisionModel.FLOATING_SINGLE);
-					intersectGeom = GeometryPrecisionReducer.reducePointwise(fGeom, pm)
-							.intersection(GeometryPrecisionReducer.reducePointwise(pixGeom, pm));
-				} catch (final Exception e) {
-					// AD 12/04/13 : Addition of a third method in case of
-					// exception
-					try {
-						intersectGeom = fGeom
-								.buffer(0.01, BufferParameters.DEFAULT_QUADRANT_SEGMENTS, BufferParameters.CAP_FLAT)
-								.intersection(pixGeom.buffer(0.01, BufferParameters.DEFAULT_QUADRANT_SEGMENTS,
-										BufferParameters.CAP_FLAT));
-					} catch (final Exception e2) {
-						return correctedOutput;
-					}
-				}
-			}
+		for (IShape entity : feats) {
+			IShape intersectGeom = Operators.inter(scope, entity, refPixel);
+			
 			correctedOutput +=
-					Math.round(output * intersectGeom.getArea() / pixGeom.getArea() + pixResidual.get(entity));
+					Math.round(output * intersectGeom.getArea() / refPixel.getArea() + pixResidual.get(entity));
 		}
 		return correctedOutput;
 	}

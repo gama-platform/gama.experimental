@@ -15,7 +15,6 @@ import org.apache.commons.math3.stat.regression.GLSMultipleLinearRegression;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.util.GamaMapFactory;
 import spll.datamapper.matcher.ISPLMatcher;
-import spll.datamapper.variable.SPLVariable;
 
 /**
  * WARNING: not functional
@@ -24,17 +23,17 @@ import spll.datamapper.variable.SPLVariable;
  * @author kevinchapuis
  *
  */
-public class LMRegressionGLS extends GLSMultipleLinearRegression implements ISPLRegressionAlgo<SPLVariable, Double> {
+public class LMRegressionGLS extends GLSMultipleLinearRegression implements ISPLRegressionAlgo<String, Double> {
 
-	private List<SPLVariable> regVars;
+	private List<String> regVars;
 	private List<IShape> observation;
 	
-	private Map<SPLVariable, Double> regression;
+	private Map<String, Double> regression;
 	private double intercept;
 
 	@Override
 	public void setupData(Map<IShape, Double> observations, 
-			Set<ISPLMatcher<SPLVariable, Double>> regressors){
+			Set<ISPLMatcher<String, Double>> regressors){
 		this.regVars = new ArrayList<>(regressors
 				.parallelStream().map(varfm -> varfm.getVariable())
 				.collect(Collectors.toSet()));
@@ -46,7 +45,7 @@ public class LMRegressionGLS extends GLSMultipleLinearRegression implements ISPL
 			instances[instanceCount++] = observations.get(geoEntity);
 			for(int i = 0; i < regVars.size(); i++){
 				int idx = i;
-				Optional<ISPLMatcher<SPLVariable, Double>> optVar = regressors.parallelStream()
+				Optional<ISPLMatcher<String, Double>> optVar = regressors.parallelStream()
 						.filter(varfm -> varfm.getEntity().equals(geoEntity) 
 								&& varfm.getVariable().equals(regVars.get(idx)))
 						.findFirst();
@@ -58,7 +57,7 @@ public class LMRegressionGLS extends GLSMultipleLinearRegression implements ISPL
 	}
 
 	@Override
-	public Map<SPLVariable, Double> getRegressionParameter() {
+	public Map<String, Double> getRegressionParameter() {
 		if(regression == null){
 			regression = new HashMap<>();
 			double[] rVec = super.estimateRegressionParameters();

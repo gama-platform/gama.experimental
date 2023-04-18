@@ -14,19 +14,18 @@ import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 
 import msi.gama.metamodel.shape.IShape;
 import spll.datamapper.matcher.ISPLMatcher;
-import spll.datamapper.variable.SPLVariable;
 
-public class LMRegressionOLS extends OLSMultipleLinearRegression implements ISPLRegressionAlgo<SPLVariable, Double> {
+public class LMRegressionOLS extends OLSMultipleLinearRegression implements ISPLRegressionAlgo<String, Double> {
 
-	private List<SPLVariable> regVars;
+	private List<String> regVars;
 	private List<IShape> observation;
 	
-	private Map<SPLVariable, Double> regression;
+	private Map<String, Double> regression;
 	private double intercept;
 
 	@Override
 	public void setupData(Map<IShape, Double> observations,
-			Set<ISPLMatcher<SPLVariable, Double>> regressors){
+			Set<ISPLMatcher<String, Double>> regressors){
 		// Reset regression if already been calculated with another setup
 		this.regression = null;
 		this.regVars = new ArrayList<>(regressors
@@ -42,7 +41,7 @@ public class LMRegressionOLS extends OLSMultipleLinearRegression implements ISPL
 			x[observationIdx] = new double[regVars.size()];
 			for(int i = 0; i < regVars.size(); i++){
 				int index = i;
-				Optional<ISPLMatcher<SPLVariable, Double>> optVar = regressors.parallelStream()
+				Optional<ISPLMatcher<String, Double>> optVar = regressors.parallelStream()
 						.filter(varfm -> varfm.getEntity().equals(geoEntity) 
 								&& varfm.getVariable().equals(regVars.get(index)))
 						.findFirst();
@@ -54,7 +53,7 @@ public class LMRegressionOLS extends OLSMultipleLinearRegression implements ISPL
 	}
 
 	@Override
-	public Map<SPLVariable, Double> getRegressionParameter() {
+	public Map<String, Double> getRegressionParameter() {
 		if(regression == null){
 			regression = new HashMap<>();
 			double[] rVec = super.estimateRegressionParameters();

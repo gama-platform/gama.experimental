@@ -6,14 +6,14 @@ import java.util.concurrent.ExecutionException;
 import org.opengis.referencing.operation.TransformException;
 
 import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
 import msi.gama.util.IList;
-import msi.gama.util.matrix.GamaFloatMatrix;
+import msi.gama.util.matrix.GamaField;
+import msi.gama.util.matrix.IField;
 import spll.algo.ISPLRegressionAlgo;
 import spll.algo.exception.IllegalRegressionException;
-import spll.datamapper.exception.GSMapperException;
 import spll.datamapper.matcher.ISPLMatcherFactory;
 import spll.datamapper.normalizer.ASPLNormalizer;
-import spll.datamapper.variable.ISPLVariable;
 
 /**
  * The mapper is the main concept of SPLL algorithm. It matches main geographical features
@@ -27,12 +27,12 @@ import spll.datamapper.variable.ISPLVariable;
  * @param <V>
  * @param <T>
  */
-public abstract class ASPLMapperBuilder<V extends ISPLVariable, T> {
+public abstract class ASPLMapperBuilder<V, T> {
 	
 	protected final IList<IShape> mainEntities;
 	private final String mainAttribute;
 	
-	protected IList<IList<IShape>> ancillaryEntities;
+	protected IList<GamaField> ancillaryFields;
 	protected ISPLMatcherFactory<V, T> matcherFactory;
 	
 	protected ISPLRegressionAlgo<V, T> regressionAlgorithm;
@@ -40,12 +40,11 @@ public abstract class ASPLMapperBuilder<V extends ISPLVariable, T> {
 	protected ASPLNormalizer normalizer;
 	
 	public ASPLMapperBuilder(IList<IShape> mainEntities, String mainAttribute, 
-			IList<IList<IShape>> ancillaryEntities) {
+			IList<GamaField> ancillaryFields) {
 		this.mainEntities = mainEntities;
-		this.mainAttribute = mainAttribute;
-		this.ancillaryEntities = ancillaryEntities;
+		this.mainAttribute = mainAttribute; 
+		this.ancillaryFields = ancillaryFields;
 	}
-	
 	////////////////////////////////////////////////////////////////
 	// ------------------------- SETTERS ------------------------ //
 	////////////////////////////////////////////////////////////////
@@ -72,21 +71,10 @@ public abstract class ASPLMapperBuilder<V extends ISPLVariable, T> {
 	/**
 	 * Setup the object that will ensure output value format to fit built-in normalizer requirements
 	 * 
-	 * @param normalizer
+	 * @param normalizer 
 	 */
 	public void setNormalizer(ASPLNormalizer normalizer){
 		this.normalizer = normalizer;
-	}
-	
-	/**
-	 * Setup the output format to fit given geographic file
-	 * 
-	 * @param outputFormat
-	 */
-	public void setOutputFormat(IList<IShape> outputFormat){
-		if(ancillaryEntities.contains(outputFormat))
-			ancillaryEntities.remove(outputFormat);
-		ancillaryEntities.add(0,outputFormat);
 	}
 	
 	///////////////////////////////////////////////////////////////
@@ -114,13 +102,9 @@ public abstract class ASPLMapperBuilder<V extends ISPLVariable, T> {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public abstract SPLMapper<V, T> buildMapper() throws IOException, TransformException, InterruptedException, ExecutionException;
+	public abstract SPLMapper<V, T> buildMapper(IScope scope) throws IOException, TransformException, InterruptedException, ExecutionException;
 	
-	/*
-	 * The method to implement to compute regression output with raster output format
-	 */
-	protected abstract float[][] buildOutput(GamaFloatMatrix data, boolean intersect, boolean integer, Number targetPopulation) 
-			throws IllegalRegressionException, TransformException, IndexOutOfBoundsException, IOException, GSMapperException;
-	
+	protected abstract float[][] buildOutput(final IScope scope, final GamaField outputFormat, final boolean intersect, final boolean integer,
+			final Number targetPop) throws IllegalRegressionException, IOException ;
 
 }

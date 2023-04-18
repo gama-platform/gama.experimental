@@ -5,7 +5,6 @@ import java.util.Set;
 
 import msi.gama.metamodel.shape.IShape;
 import spll.datamapper.matcher.ISPLMatcher;
-import spll.datamapper.variable.ISPLVariable;
 
 /**
  * Encapsulate spatial regression algorithm
@@ -14,7 +13,7 @@ import spll.datamapper.variable.ISPLVariable;
  * @param <V>
  * @param <T>
  */
-public interface ISPLRegressionAlgo<V extends ISPLVariable, T> {
+public interface ISPLRegressionAlgo<V, T> {
 	
 	/**
 	 * Retrieve regression parameter for each variable

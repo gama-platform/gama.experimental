@@ -1,21 +1,20 @@
 package spll.datamapper.matcher;
 
 import msi.gama.metamodel.shape.IShape;
-import spll.datamapper.variable.SPLVariable;
 
-public class SPLAreaMatcher implements ISPLMatcher<SPLVariable, Double> {
+public class SPLAreaMatcher implements ISPLMatcher<String, Double> {
 
 	private double area;
 	
-	private final SPLVariable variable;
+	private final String variable;
 
 	private IShape entity;
 	
-	protected SPLAreaMatcher(IShape entity, SPLVariable variable){
+	protected SPLAreaMatcher(IShape entity, String variable){
 		this(entity, variable, 1d);
 	}
 	
-	protected SPLAreaMatcher(IShape entity, SPLVariable variable, double area){
+	protected SPLAreaMatcher(IShape entity, String variable, double area){
 		this.entity = entity;
 		this.variable = variable;
 		this.area = area;
@@ -33,13 +32,8 @@ public class SPLAreaMatcher implements ISPLMatcher<SPLVariable, Double> {
 	}
 	
 	@Override
-	public SPLVariable getVariable(){
+	public String getVariable(){
 		return variable;
-	}
-
-	@Override
-	public String getName() {
-		return variable.getName();
 	}
 
 	@Override

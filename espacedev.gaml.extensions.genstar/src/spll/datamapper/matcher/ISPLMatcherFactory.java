@@ -7,16 +7,17 @@ import java.util.concurrent.ExecutionException;
 import org.opengis.referencing.operation.TransformException;
 
 import msi.gama.metamodel.shape.IShape;
+import msi.gama.runtime.IScope;
 import msi.gama.util.IList;
-import spll.datamapper.variable.ISPLVariable;
+import msi.gama.util.matrix.GamaField;
 
-public interface ISPLMatcherFactory<V extends ISPLVariable, T> {
+public interface ISPLMatcherFactory<V, T> { 
 
-	public List<ISPLMatcher<V, T>> getMatchers(IShape geoData, 
-			IList<IList<IShape>> ancillaryEntities) 
+	public List<ISPLMatcher<V, T>> getMatchers(IScope scope, IShape geoData, 
+			GamaField  regressorsField) 
 					throws IOException, TransformException, InterruptedException, ExecutionException;
 
-	public List<ISPLMatcher<V, T>> getMatchers(IList<IShape> entities,IList<IList<IShape>> regressorsEntities) 
-					throws IOException, TransformException, InterruptedException, ExecutionException;
+	public List<ISPLMatcher<V, T>> getMatchers(IScope scope,IList<IShape> entities,GamaField regressorsField) 
+			 		throws IOException, TransformException, InterruptedException, ExecutionException;
 	
 }

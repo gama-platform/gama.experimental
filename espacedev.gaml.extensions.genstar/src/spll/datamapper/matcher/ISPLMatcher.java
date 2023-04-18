@@ -1,12 +1,9 @@
 package spll.datamapper.matcher;
 
 import msi.gama.metamodel.shape.IShape;
-import spll.datamapper.variable.ISPLVariable;
 
-public interface ISPLMatcher<V extends ISPLVariable, T> {
+public interface ISPLMatcher<V, T> {
 
-	public String getName();
-	
 	public T getValue();
 	
 	public boolean expandValue(T expand);
