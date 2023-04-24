@@ -59,6 +59,16 @@ public abstract class ASPLMapperBuilder<V, T> {
 		this.regressionAlgorithm = regressionAlgorithm;
 	}
 	
+	public IList<IShape> getMainEntities() {
+		return mainEntities;
+	}
+
+
+	public IList<GamaField> getAncillaryFields() {
+		return ancillaryFields;
+	}
+
+
 	/**
 	 * Setup the matcher factory, i.e. the object whose responsible for variable matching
 	 * 

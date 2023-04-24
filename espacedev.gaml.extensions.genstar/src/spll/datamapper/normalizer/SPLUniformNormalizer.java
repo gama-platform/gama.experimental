@@ -31,21 +31,21 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 	 * 
 	 */
 	@Override
-	public float[][] normalize(float[][] matrix, float output) {
-		if((float) new GSBasicStats<>(GSBasicStats.transpose(matrix), 
-				Arrays.asList(noData.doubleValue())).getStat(GSEnumStats.min)[0] < floorValue){
+	public double[][] normalize(double[][] matrix, double output) {
+		if((double) new GSBasicStats<>(GSBasicStats.transpose(matrix), 
+				Arrays.asList(noData.doubleValue())).getStat(GSEnumStats.min)[0] < doubleValue){
 			IntStream.range(0, matrix.length).parallel()
 				.forEach(col -> IntStream.range(0, matrix[col].length)
 					.forEach(row -> matrix[col][row] = normalizedFloor(matrix[col][row]))
 			);
 
-			float floorSum = GSBasicStats.transpose(matrix)
-					.parallelStream().filter(val -> val == floorValue)
-					.reduce(0d, Double::sum).floatValue();
-			float nonFloorSum = GSBasicStats.transpose(matrix)
-					.parallelStream().filter(val -> val > floorValue && val != noData.floatValue())
-					.reduce(0d, Double::sum).floatValue();
-			float normalizer = (output - floorSum) / nonFloorSum;
+			double floorSum = GSBasicStats.transpose(matrix)
+					.parallelStream().filter(val -> val == doubleValue)
+					.reduce(0d, Double::sum).doubleValue();
+			double nonFloorSum = GSBasicStats.transpose(matrix)
+					.parallelStream().filter(val -> val > doubleValue && val != noData.floatValue())
+					.reduce(0d, Double::sum).doubleValue();
+			double normalizer = (output - floorSum) / nonFloorSum;
 
 			IntStream.range(0, matrix.length).parallel()
 				.forEach(col -> IntStream.range(0, matrix[col].length)
@@ -63,7 +63,7 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 	 * 
 	 */
 	@Override
-	public float[][] round(float[][] matrix, float output){
+	public double[][] round(double[][] matrix, double output){
 		// normalize to int: values are rounded to feet most proximal integer & overload are summed
 		IntStream.range(0, matrix.length).parallel()
 			.forEach(col -> IntStream.range(0, matrix[col].length)
@@ -77,16 +77,16 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 		int iter = 0;
 		while(Math.round(errorload) != 0 || iter++ > ITER_LIMIT + Math.abs(errorload)){
 			int intX, intY;
-			float currentVal;
+			double currentVal;
 			int update = errorload < 0 ? -1 : 1;
 			do {
 				intX = super.random.nextInt(matrix.length);
 				intY = super.random.nextInt(matrix[intX].length);
 				currentVal = matrix[intX][intY];
-			} while(currentVal == noData.floatValue()
-					|| currentVal == floorValue && errorload < 0);
+			} while(currentVal == noData.doubleValue()
+					|| currentVal == doubleValue && errorload < 0);
 			matrix[intX][intY] = currentVal + update;
-			errorload -= update;
+			errorload -= update; 
 		}
 		return matrix;
 	}
@@ -99,17 +99,17 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 
 		// Two step upscale: (1) up values below floor (2) normalize to fit targeted total output
 		if(featureOutput.values()
-				.parallelStream().min((v1, v2) -> v1.compareTo(v2)).get() < floorValue){
+				.parallelStream().min((v1, v2) -> v1.compareTo(v2)).get() < doubleValue){
 			featureOutput.keySet().parallelStream()
 			.forEach(feature -> featureOutput.put(feature, 
 					normalizedFloor(featureOutput.get(feature))));
 			
-			float floorSum = featureOutput.values()
-					.parallelStream().filter(val -> val == floorValue)
-					.reduce(0d, Double::sum).floatValue();
-			float nonFloorSum = featureOutput.values()
-					.parallelStream().filter(val -> val > floorValue && val != noData.floatValue())
-					.reduce(0d, Double::sum).floatValue();
+			double floorSum = featureOutput.values()
+					.parallelStream().filter(val -> val == doubleValue)
+					.reduce(0d, Double::sum).doubleValue();
+			double nonFloorSum = featureOutput.values()
+					.parallelStream().filter(val -> val > doubleValue && val != noData.doubleValue())
+					.reduce(0d, Double::sum).doubleValue();
 			double normalizer = (output - floorSum) / nonFloorSum;
 
 			featureOutput.keySet().parallelStream()
@@ -150,44 +150,25 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 
 	// ---------------------- inner utility ---------------------- //
 
-	private float normalizedFloor(float value) {
-		if(value < floorValue && value != noData.floatValue())
-			return (float) floorValue;
-		return value;
-	}
-
 	private double normalizedFloor(double value) {
-		if(value < floorValue && value != noData.floatValue())
-			return floorValue;
+		if(value < doubleValue && value != noData.doubleValue())
+			return (double) doubleValue;
 		return value;
 	}
-	
-	private float normalizedFactor(float value, float factor){
-		if(value > floorValue && value != noData.floatValue())
-			return value * factor;
-		return value;
-	}
-	
+
+
 	private double normalizedFactor(double value, double factor){
-		if(value > floorValue && value != noData.floatValue())
+		if(value > doubleValue && value != noData.doubleValue())
 			return value * factor;
 		return value;
 	}
 
-	private float normalizedToInt(float value){
-		if(value == noData.floatValue())
-			return value;
-		float newValue = Math.round(value); 
-		if(newValue < floorValue)
-			newValue = (int) value + 1;
-		return newValue;
-	}
-
+	
 	private double normalizedToInt(double value){
 		if(value == noData.doubleValue())
 			return value;
 		double newValue = Math.round(value); 
-		if(newValue < floorValue)
+		if(newValue < doubleValue)
 			newValue = (int) value + 1;
 		return newValue;
 	}

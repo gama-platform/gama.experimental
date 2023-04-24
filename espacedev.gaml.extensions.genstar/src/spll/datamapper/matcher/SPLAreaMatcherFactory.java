@@ -22,10 +22,7 @@ public class SPLAreaMatcherFactory implements ISPLMatcherFactory<String, Double>
 
 	private int matcherCount = 0;
 
-	private Collection<String> variables;
-
-	public SPLAreaMatcherFactory(Collection<String> variables) {
-		this.variables = variables;
+	public SPLAreaMatcherFactory() {
 	}
 
 	@Override
@@ -39,7 +36,7 @@ public class SPLAreaMatcherFactory implements ISPLMatcherFactory<String, Double>
 
 	@Override
 	public List<ISPLMatcher<String, Double>> getMatchers(IScope scope, IList<IShape> entities,GamaField regressorsField) { 
-		GSPerformanceUtil gspu = new GSPerformanceUtil("Start processing regressors' data");
+	/*	GSPerformanceUtil gspu = new GSPerformanceUtil("Start processing regressors' data");
 		gspu.setObjectif(entities.size());
 		List<ISPLMatcher<String, Double>> varList = entities
 				.stream().map(entity -> getMatchers(scope, entity, 
@@ -48,7 +45,8 @@ public class SPLAreaMatcherFactory implements ISPLMatcherFactory<String, Double>
 				.flatMap(list -> list.stream()).toList();
 		gspu.sysoStempMessage("-------------------------\n"
 				+ "process ends up with "+varList.size()+" collected matches");
-		return varList;
+		return varList;*/
+		return null;
 	}
 
 	// ----------------------------------------------------------- //
@@ -58,11 +56,11 @@ public class SPLAreaMatcherFactory implements ISPLMatcherFactory<String, Double>
 	 */
 	private List<ISPLMatcher<String, Double>> getMatchers(IScope scope, IShape entity,
 			Iterator<? extends IShape> geoData, 
-					Collection<String> variables, GSPerformanceUtil gspu) {
+					GSPerformanceUtil gspu) {
 		List<ISPLMatcher<String, Double>> areaMatcherList = new ArrayList<>();
 		while(geoData.hasNext()){
 			IShape geoEntity = geoData.next(); 
-			for(String prop : variables){
+			/*for(String prop : variables){
 				if (!geoEntity.hasAttribute(prop)) continue;
 				Double value = Cast.asFloat(scope, geoEntity.getAttribute(prop));
 				if (value == null) continue;
@@ -76,7 +74,7 @@ public class SPLAreaMatcherFactory implements ISPLMatcherFactory<String, Double>
 					//if(!geoEntity.getPropertyAttribute(prop).equals(value))
 					areaMatcherList.add(new SPLAreaMatcher(entity, prop, geoEntity.getArea()));
 				}
-			}
+			}*/
 		}
 		if(gspu != null && ((++matcherCount+1)/gspu.getObjectif() * 100) % 10 == 0d)
 			gspu.sysoStempPerformance((matcherCount+1)/gspu.getObjectif(), this);

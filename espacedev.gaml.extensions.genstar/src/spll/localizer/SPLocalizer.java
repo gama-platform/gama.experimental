@@ -10,23 +10,33 @@
  ********************************************************************************************************/
 package spll.localizer;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.math3.stat.regression.AbstractMultipleLinearRegression;
+import org.apache.commons.math3.stat.regression.GLSMultipleLinearRegression;
+import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
+import org.geotools.feature.SchemaException;
+import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.operation.TransformException;
 
 import core.metamodel.attribute.Attribute;
 import core.util.GSPerformanceUtil;
 import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaListFactory;
+import msi.gama.util.GamaMapFactory;
 import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import msi.gama.util.matrix.GamaField;
@@ -36,6 +46,10 @@ import msi.gaml.operators.Spatial.Operators;
 import msi.gaml.operators.Spatial.Queries;
 import msi.gaml.operators.Spatial.Transformations;
 import msi.gaml.types.Types;
+import spll.algo.exception.IllegalRegressionException;
+import spll.datamapper.exception.GSMapperException;
+import spll.datamapper.normalizer.ASPLNormalizer;
+import spll.datamapper.normalizer.SPLUniformNormalizer;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.constraint.SpatialConstraintLocalization;
 import spll.localizer.distribution.ISpatialDistribution;
@@ -208,44 +222,9 @@ public class SPLocalizer implements ISPLocalizer {
 	 *
 	 * @return the mapper output
 	 */
-	//public IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> getMapperOutput() { return map; }
+	public IList<IShape> getMapperOutput() { return map; }
 
-	/*@Override
-	public void setMapper(IList<IShape> map, 
-			String mapAttribute) {
-		this.map = map;
-		this.keyAttMap = mapAttribute;
-	}
 
-	@Override
-	public void setMapper(
-			final List<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaryFileList,
-			final List<? extends IValue> varList, final LMRegressionOLS lmRegressionOLS,
-			final SPLUniformNormalizer splUniformNormalizer) throws IndexOutOfBoundsException, IOException,
-			TransformException, InterruptedException, ExecutionException, IllegalRegressionException, GSMapperException,
-			SchemaException, MismatchedDimensionException, IllegalArgumentException, InvalidGeoFormatException {
-		String keyAttribute = "count";
-		File tmp = File.createTempFile("match", "." + (GeoGSFileType.VECTOR.equals(match.getGeoGSFileType())
-				? SPLGisFileExtension.shp.toString() : SPLGisFileExtension.tif.toString()));
-		tmp.deleteOnExit();
-
-		this.setMapper(this.estimateMatcher(tmp), keyAttribute, ancillaryFileList, varList, lmRegressionOLS,
-				splUniformNormalizer);
-
-	}
-
-	@Override
-	public void setMapper(final IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue> mainMapper,
-			final String mainAttribute,
-			final List<IGSGeofile<? extends AGeoEntity<? extends IValue>, ? extends IValue>> ancillaryFileList,
-			final List<? extends IValue> varList, final LMRegressionOLS lmRegressionOLS,
-			final SPLUniformNormalizer splUniformNormalizer) throws IndexOutOfBoundsException, IOException,
-			TransformException, InterruptedException, ExecutionException, IllegalRegressionException, GSMapperException,
-			SchemaException, MismatchedDimensionException, IllegalArgumentException, InvalidGeoFormatException {
-		this.setMapper(new SPLAreaMapperBuilder(mainMapper, mainAttribute, ancillaryFileList, varList, lmRegressionOLS,
-				splUniformNormalizer));
-
-	}*/
 
 	/**
 	 * Sets the mapper.
@@ -275,36 +254,184 @@ public class SPLocalizer implements ISPLocalizer {
 	 * @throws InvalidGeoFormatException
 	 *             the invalid geo format exception
 	 */
-	/*
-	 * Inner utility set mapper from regression
-	 *
-	 */
-	/*private void setMapper(final ASPLMapperBuilder<? extends ISPLVariable, ? extends Number> splMapperBuilder)
-			throws IOException, TransformException, InterruptedException, ExecutionException,
-			IllegalRegressionException, IndexOutOfBoundsException, GSMapperException, MismatchedDimensionException,
-			IllegalArgumentException, InvalidGeoFormatException {
-		splMapperBuilder.buildMapper();
-		switch (splMapperBuilder.getAncillaryFiles().get(0).getGeoGSFileType()) {
-			case RASTER:
-				File tmpRaster = Files.createTempFile("regression_raster_output", ".tif").toFile();
-				tmpRaster.deleteOnExit();
-				this.setMapper(splMapperBuilder.buildOutput(tmpRaster,
-						(SPLRasterFile) splMapperBuilder.getAncillaryFiles().get(0), false, true,
-						(double) population.size()), GeoEntityFactory.ATTRIBUTE_PIXEL_BAND + 0);
-				break;
-			case VECTOR:
-				File tmpVector = Files.createTempFile("regression_vector_output", ".shp").toFile();
-				tmpVector.deleteOnExit();
-				this.setMapper(splMapperBuilder.buildOutput(tmpVector,
-						(SPLRasterFile) splMapperBuilder.getAncillaryFiles().get(0), false, true,
-						(double) population.size()), splMapperBuilder.getMainAttribute());
+	
+	
+	public void buildMapField(IScope scope, IList<IShape> mainEntities, String mainAttribute, 
+			IList<GamaField> fields, String regressionAlgo, String normalizerType, 
+			double floorValue, int popTargetSize ) {
+		List data =  buildMapFieldData(scope, mainEntities, mainAttribute, fields);
+		if (data == null) {
+			return;
+		}
+		GamaField field = fields.get(0).copy(scope, fields.get(0).getDimensions(), true);
+		field.setNoData(scope, -1.0);
+		field.setAllValues(scope, -1.0);
+		
+		AbstractMultipleLinearRegression reg = null;
+		switch(regressionAlgo) {
+			case "GLS" :
+				reg = new GLSMultipleLinearRegression();
 				break;
 			default:
-				throw new IllegalArgumentException(
-						"Ancillary could not be resolve to a proper geo file type (" + GeoGSFileType.values() + ")");
+				reg = new OLSMultipleLinearRegression();
+				((OLSMultipleLinearRegression)reg).newSampleData((double[])data.get(0),(double[][])data.get(1));
+				
 		}
-	}*/
+		double[] d = (double[])data.get(0);
+		double[] coe = reg.estimateRegressionParameters(); 
+		double intercept = coe[0];
+		double [] res = reg.estimateResiduals();
+		List<IList<Double>> possiblesValues = (List<IList<Double>>) data.get(2);
+		Map<IShape,Integer> refObjects = (Map<IShape, Integer>) data.get(3);
+		
+		for (int i = 0; i < coe.length; i++) {
+			coe[i] += intercept;
+		}
+		double[][] pixels = new double[field.numCols][field.numRows];
+		for (int i = 0; i < field.numRows; i++) {
+			for (int j = 0; j < field.numCols; j++) {
+				double output = 0.0;
+				
+				IShape s = field.getCellShapeAt(scope, j, i);
+				Integer index = refObjects.get(s);
+				if (index == null) {
+				//	System.out.println("i: " + i + " j: " + j);
+					continue;
+				}
+				System.out.println("index: " + index);
+				double cor = res[index];
+				int cpt = 0;
+				for (int k = 0; k < possiblesValues.size(); k++) {
+					GamaField f = fields.get(k);
+					
+					IList<Double> possibleVals = possiblesValues.get(k);
+					IList<Double> cellVals = f.getValuesIntersecting(scope, s);
+					if (k == 0) {
+						cellVals = GamaListFactory.EMPTY_LIST;
+						cellVals.add(f.get(scope, j, i));
+					} else {
+						cellVals = f.getValuesIntersecting(scope, s);
+					}
+					GamaPoint spt = f.getCellSize(scope);
+					double area = spt.x * spt.y;
+					
+					for (int l = 0; l < possibleVals.length(scope); l++) {
+						Double v = possibleVals.get(l);
+						System.out.println("freq: " + Collections.frequency(cellVals, v) + " coe[l+cpt]: " + coe[l+cpt]);
+						
+						output +=Collections.frequency(cellVals, v) *coe[l+cpt] * area; 
+					}
+					
+					cpt += possibleVals.size();
+				}
+				if (output > 0)
+					System.out.println("output: " + output + " cor: " + cor);
+				pixels[i][j] = output + cor;
+			}
+				
+		}
 
+		saveDouble(pixels,"pixel");
+		ASPLNormalizer normalizer;
+		switch(normalizerType) {
+			default:
+				normalizer = new SPLUniformNormalizer(floorValue, field.getNoData(scope)); 
+			
+		}
+				
+		double[][] afterNorm = normalizer.process(pixels, popTargetSize, true);
+		
+		for(int i = 0; i < field.numCols; i++)
+			for(int j = 0; j < field.numRows; j++)
+				field.set(scope, i, j, afterNorm[i][j]);
+		mapField = field;
+		
+		saveDouble(afterNorm,"afterNorm");
+		//System.out.println("mapField: " + mapField);
+	}
+	
+	private void saveDouble(double[][] tab, String name) {
+		FileWriter myWriter = null;
+		try {
+			myWriter = new FileWriter("C:\\Users\\admin_ptaillandie\\Desktop\\" + name + ".asc");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String v = "ncols        295\nnrows        172\nxllcorner    557070.341329975170\nyllcorner    6925932.962285792455\ncellsize     30.0\nNODATA_value 0\n";
+		try {
+			myWriter.write(v);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		for (int i = 0; i < tab.length; i++) {
+			String t = "";
+	    	for (int j = 0; j < tab[i].length; j++) {
+				t += " " +tab[i][j];
+			}
+			try {
+				myWriter.write(t);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    }
+		
+		try {
+			myWriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private List buildMapFieldData(IScope scope, IList<IShape> mainEntities, String mainAttribute, IList<GamaField> fields) {
+		if (fields.isEmpty() || mainEntities.isEmpty() || !mainEntities.get(0).hasAttribute(mainAttribute))
+			return null;
+		Map<Double,IList<Double>> associations = GamaMapFactory.create();
+		double x[] = new double[mainEntities.size()];
+		List<IList<Double>> possiblesValues = new ArrayList<>();
+		int nbVar = 0;
+		for (GamaField f : fields) {
+			IList vars = Containers.remove_duplicates(scope, f.listValue(scope, Types.FLOAT, false));
+			possiblesValues.add(vars);
+			nbVar += vars.size();
+		}
+		double y[][] = new double[mainEntities.size()][nbVar];
+		Map<IShape,Integer> refObjects = GamaMapFactory.create();
+		
+		int fs = fields.size(); 
+		for(int i = 0; i < x.length;i++) {
+			IShape s = mainEntities.get(i);
+			x[i] = Cast.asFloat(scope, s.getAttribute(mainAttribute));
+			int cpt = 0;
+			for (int j = 0; j < fs; j++) {  
+				GamaField field = fields.get(j);
+				GamaPoint spt = field.getCellSize(scope);
+				double area = spt.x * spt.y;
+				if (j == 0) {
+					IList<IShape> cells = field.getCellsIntersecting(scope, s);
+					for (IShape c: cells) {
+						refObjects.put(c, i);
+					}
+				}
+				List<Double> cellVals = field.getValuesIntersecting(scope, s);
+				IList<Double> possibleVals = possiblesValues.get(j);
+				for(Double v : possibleVals) {
+					y[i][cpt] = Collections.frequency(cellVals, v) * area; 
+					cpt++;
+					
+				}
+			}
+		}
+		List al = new ArrayList<>();
+		al.add(x);
+		al.add(y);
+		al.add(possiblesValues);
+		al.add(refObjects); 
+		return al;
+	}
+	
+	
+	
 	/**
 	 * Clear map cache.
 	 */
@@ -522,20 +649,35 @@ public class SPLocalizer implements ISPLocalizer {
 	private void localizationInNestWithNumbersField(IScope scope, final IContainer<?, IAgent> entities, final IShape spatialBounds)
 			throws IOException {
 		List<ISpatialConstraint> otherConstraints = new ArrayList<>(linker.getConstraints());
-		IList<IShape> areas = mapField.getCellsIntersecting(scope, spatialBounds == null ? scope.getSimulation().getGeometry() : spatialBounds) ;
-		IList<Double> valsMap =  spatialBounds == null ? mapField.listValue(scope, Types.FLOAT, false) : mapField.getValuesIntersecting(scope, spatialBounds);
+		IList<IShape> areas = null;
+		if (spatialBounds == null) {
+			areas = GamaListFactory.create();
+			for (int i = 0; i <mapField.numCols; i++) {
+				for (int j = 0; j <mapField.numRows; j++) {
+					IShape s = mapField.getCellShapeAt(scope, i, j);
+					areas.add(s);
+				}
+			}
+		} else areas = mapField.getCellsIntersecting(scope, spatialBounds) ;
+		
+		
 		double unknowVal = mapField.getNoData(scope);
 		Double	tot = mapField.listValue(scope, Types.FLOAT, false).stream().mapToDouble(s -> ( s == unknowVal  ? 0 : s)).sum();
+		System.out.println("tot: " + tot);
 		if (tot == 0) return;
 		
 		IContainer<?, IAgent>  remainingEntities = (IContainer<?, IAgent>) entities.copy(scope);
+		long totV = 0;
 		for (int i = 0; i < areas.size(); i++) { 
-			Double val = valsMap.get(i);
+			IShape s = areas.get(i);
+			Double val = mapField.get(scope, s.getLocation());
+		//	System.out.println("val:" + val);
 			if (val == unknowVal) continue;
 			IShape feature = areas.get(i);
 			localizationConstraint.setBounds(feature);
 			long valR = Math.round(entities.length(scope) * val / tot );
-
+			if (valR == 0) continue;
+			totV += valR;
 			if (entities.isEmpty(scope))  { break; }
 			for (ISpatialConstraint cr : linker.getConstraints()) {
 				while (!remainingEntities.isEmpty(scope) && !cr.isConstraintLimitReach()) {
@@ -552,6 +694,7 @@ public class SPLocalizer implements ISPLocalizer {
 				if (remainingEntities.isEmpty(scope)) { break; }
 			}
 		}
+		System.out.println("totV: " + totV);
 	}
 
 	

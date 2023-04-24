@@ -65,9 +65,8 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<String, Double> {
 	
 	public SPLAreaMapperBuilder(final IScope scope, final IList<IShape> mainEntities,
 			final String mainAttribute,
-			final IList<GamaField> ancillaryFields,
-			final Collection<String> variables) {
-		this(scope, mainEntities, mainAttribute, ancillaryFields, variables, new LMRegressionOLS());
+			final IList<GamaField> ancillaryFields) {
+		this(scope, mainEntities, mainAttribute, ancillaryFields, new LMRegressionOLS());
 	} 
 
 	/**
@@ -80,9 +79,8 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<String, Double> {
 	 */
 	public SPLAreaMapperBuilder(final IScope scope, final IList<IShape> mainEntities,
 			final String mainAttribute,
-			final IList<GamaField> ancillaryFields,
-			final Collection<String> variables, final ISPLRegressionAlgo<String, Double> regAlgo) {
-		this(scope, mainEntities, mainAttribute, ancillaryFields, variables, regAlgo,
+			final IList<GamaField> ancillaryFields,final ISPLRegressionAlgo<String, Double> regAlgo) {
+		this(scope, mainEntities, mainAttribute, ancillaryFields,  regAlgo,
 				new SPLUniformNormalizer(0, ancillaryFields.isEmpty() ? null : ancillaryFields.get(0).getNoData(scope)));
 	}
 
@@ -97,12 +95,11 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<String, Double> {
 	 */
 	public SPLAreaMapperBuilder(final IScope scope, final IList<IShape> mainEntities,
 			final String mainAttribute,
-			final IList<GamaField> ancillaryFields,
-			final Collection<String> variables, final ISPLRegressionAlgo<String, Double> regAlgo,
+			final IList<GamaField> ancillaryFields, final ISPLRegressionAlgo<String, Double> regAlgo,
 			final ASPLNormalizer normalizer) {
 		super( mainEntities, mainAttribute, ancillaryFields);
 		super.setRegressionAlgorithm(regAlgo);
-		super.setMatcherFactory(new SPLAreaMatcherFactory(variables));
+		super.setMatcherFactory(new SPLAreaMatcherFactory());
 		super.setNormalizer(normalizer);
 	}
 
@@ -176,7 +173,7 @@ public class SPLAreaMapperBuilder extends ASPLMapperBuilder<String, Double> {
 		// debug purpose
 		pixelRendered = 0;
 
-		super.normalizer.process(pixels, targetPop.floatValue(), integer);
+	//	super.normalizer.process(pixels, targetPop.floatValue(), integer);
 
 		return pixels;
 	}

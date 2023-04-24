@@ -18,7 +18,7 @@ public abstract class ASPLNormalizer {
 	protected static final double EPSILON = 0.001;
 	public static boolean LOGSYSO = true;
 	
-	protected double floorValue;
+	protected double doubleValue;
 	
 	protected Number noData;
 	
@@ -31,7 +31,7 @@ public abstract class ASPLNormalizer {
 	 * @param noData
 	 */
 	public ASPLNormalizer(double floorValue, Number noData){
-		this.floorValue = floorValue;
+		this.doubleValue = floorValue;
 		this.noData = noData;
 	}
 	
@@ -43,7 +43,7 @@ public abstract class ASPLNormalizer {
 	 * @param integer
 	 * @return
 	 */
-	public float[][] process(float[][] matrix, float output, boolean integer){
+	public double[][] process(double[][] matrix, float output, boolean integer){
 		this.normalize(matrix, output);
 		if(integer)
 			this.round(matrix, output);
@@ -74,7 +74,7 @@ public abstract class ASPLNormalizer {
 	 * @param output
 	 * @return
 	 */
-	public abstract float[][] normalize(float[][] matrix, float output);
+	public abstract double[][] normalize(double[][] matrix, double output);
 	
 	/**
 	 * Round the value of pixels to fit integer value (stay in float format)
@@ -83,7 +83,7 @@ public abstract class ASPLNormalizer {
 	 * @param output
 	 * @return
 	 */
-	public abstract float[][] round(float[][] matrix, float output);
+	public abstract double[][] round(double[][] matrix, double output);
 	
 	/**
 	 * TODO
@@ -105,12 +105,10 @@ public abstract class ASPLNormalizer {
 	
 	// ------------------ shared utility ------------------ //
 	
-	protected boolean equalEpsilon(float value, double target) {
-		return Math.abs(value - target) < EPSILON ? true : false;
-	}
-
 	protected boolean equalEpsilon(double value, double target) {
 		return Math.abs(value - target) < EPSILON ? true : false;
 	}
+
+	
 	
 }

@@ -38,11 +38,23 @@ public class WithinGeometryLocaliser implements IGenstarLocaliser {
 			loc.setMatcher(Cast.asList(scope, matcherMap.get("entities")),Cast.asString(scope, matcherMap.get("pop_id")),  Cast.asString(scope, matcherMap.get("data_id")));
 	
 		Map mapperMap =  (locStatement.getMapper() != null) ? Cast.asMap(scope, locStatement.getMapper().value(scope), false) : null;
-		if (mapperMap != null) 
-			loc.setMapper(mapperMap.containsKey("entities") ? Cast.asList(scope, mapperMap.get("entities")) : null,
-					mapperMap.containsKey("data_id") ? Cast.asString(scope, mapperMap.get("data_id")) : null, 
+		if (mapperMap != null) {
+			IList<IShape> entities = mapperMap.containsKey("entities") ? Cast.asList(scope, mapperMap.get("entities")) : null;
+			String dataId = mapperMap.containsKey("data_id") ? Cast.asString(scope, mapperMap.get("data_id")) : null; 
+					
+			loc.setMapper(entities,dataId,
 					(GamaField) mapperMap.get("field"));
-	
+			IList<GamaField> fields = (IList<GamaField>) mapperMap.get("fields");
+			String regAlgo = mapperMap.containsKey("regression_algo") ? Cast.asString(scope, mapperMap.get("regression_algo")) : ""; 
+			String normalizerType = mapperMap.containsKey("normalizer_type") ? Cast.asString(scope, mapperMap.get("normalizer_type")) : ""; 
+			Double floorValue = mapperMap.containsKey("floor_value") ? Cast.asFloat(scope, mapperMap.get("floor_value")) : 0.0; 
+			Integer popTargetSize = pop.length(scope);
+			if (entities != null && !entities.isEmpty() && !dataId.equals("") && !fields.isEmpty())
+				loc.buildMapField(scope, entities, dataId, 
+						fields, regAlgo, normalizerType, 
+						floorValue, popTargetSize );
+				
+		}
 		if (locStatement.getDistribution() != null) {
 			String di = Cast.asString(scope, locStatement.getDistribution().value(scope));
 			switch(di) {
