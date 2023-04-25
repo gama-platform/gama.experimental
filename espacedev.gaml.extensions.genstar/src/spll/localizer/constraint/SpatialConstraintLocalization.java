@@ -29,6 +29,7 @@ public class SpatialConstraintLocalization extends ASpatialConstraint {
 		IList<IShape> cands = null;
 		if (geoms != null ) {
 			cands = (IList<IShape>) Queries.overlapping(scope, geoms, bounds);
+			//System.out.println("bounds "+ bounds);
 			if (cands.isEmpty()) return cands;
 			
 			IShape cu= Transformations.convex_hull(scope, bounds);

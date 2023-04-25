@@ -31,8 +31,10 @@ public class WithinGeometryLocaliser implements IGenstarLocaliser {
 	public void localise(IScope scope, final IContainer<?, IAgent> pop, Object nests, LocaliseStatement locStatement) {
 		String nestAtt = locStatement.getNestAttribute() != null ? Cast.asString(scope, locStatement.getNestAttribute().value(scope)) : null;
 		IList<IShape> nestList = Cast.asList(scope, nests).listValue(scope, Types.GEOMETRY, false);
+		Double maxValLocCst = locStatement.getMaxDistLocCst() != null? Cast.asFloat(scope, locStatement.getMaxDistLocCst().value(scope)) : null; 
+		Double stepValLocCst = locStatement.getStepDistLocCst() != null? Cast.asFloat(scope, locStatement.getStepDistLocCst().value(scope)) : null; 
 		
-		SPLocalizer loc = new SPLocalizer(scope, nestList, nestAtt);
+		SPLocalizer loc = new SPLocalizer(scope, nestList, nestAtt,maxValLocCst,stepValLocCst);
 		Map matcherMap =  (locStatement.getMatcher() != null) ? Cast.asMap(scope, locStatement.getMatcher().value(scope), false) : null;
 		if (matcherMap != null) 
 			loc.setMatcher(Cast.asList(scope, matcherMap.get("entities")),Cast.asString(scope, matcherMap.get("pop_id")),  Cast.asString(scope, matcherMap.get("data_id")));

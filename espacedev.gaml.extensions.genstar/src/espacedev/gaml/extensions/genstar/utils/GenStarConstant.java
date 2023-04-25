@@ -57,6 +57,13 @@ public class GenStarConstant {
 	
 	/** The maximal distance to the nest geometry */
 	public static final String MINDIST = "min_dist";
+	
+	/** The maximal distance to the nest geometry */
+	public static final String MAXDISTLOCALIZATIONCST = "max_dist_loc";
+	
+	/** The maximal distance to the nest geometry */
+	public static final String STEPISTLOCALIZATIONCST = "step_dist_loc";
+	
 	/**
 	 * Interface to deal with aliases
 	 *

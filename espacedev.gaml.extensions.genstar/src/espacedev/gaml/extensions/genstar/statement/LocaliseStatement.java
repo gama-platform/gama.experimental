@@ -69,6 +69,22 @@ import msi.gaml.types.Types;
 										 * a shapefile or a rasterfile
 										 """)),
 				@facet (
+						name = GenStarConstant.MAXDISTLOCALIZATIONCST,
+						type = IType.FLOAT,
+						optional = true,
+						doc = @doc (
+								value = """
+										The maximal distance acceptable for the relaxation of the localization constraint
+										 """)),
+				@facet (
+						name = GenStarConstant.STEPISTLOCALIZATIONCST,
+						type = IType.FLOAT,
+						optional = true,
+						doc = @doc (
+								value = """
+										The distance added at each step for the relaxation of the localization constraint
+										 """)),
+				@facet (
 						name = GenStarConstant.NESTATTRIBUTES,
 						type = IType.STRING,
 						optional = true,
@@ -175,6 +191,13 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 	/** Max dist to the geometry of the nest. */
 	private final IExpression maxDist;
 	
+	/** Max dist for the localization constraint. */
+	private final IExpression maxDistLocCst ;
+	
+	/** Step dist for the localization constraint. */
+	private final IExpression stepDistLocCst;
+	
+	
 	// -----------------
 	
 	/** The sequence. */
@@ -191,6 +214,9 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 		this.distribution = getFacet(GenStarConstant.DISTRIBUTION);
 		this.minDist = getFacet(GenStarConstant.MINDIST);
 		this.maxDist = getFacet(GenStarConstant.MAXDIST);
+		
+		this.maxDistLocCst = getFacet(GenStarConstant.MAXDISTLOCALIZATIONCST);
+		this.stepDistLocCst = getFacet(GenStarConstant.STEPISTLOCALIZATIONCST);
 		
 		sequence = new RemoteSequence(description);
 		sequence.setName("commands for the localisation");
@@ -257,6 +283,15 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 
 	public IExpression getNestAttribute() {
 		return nestAttribute;
+	}
+
+
+	public IExpression getMaxDistLocCst() {
+		return maxDistLocCst;
+	}
+
+	public IExpression getStepDistLocCst() {
+		return stepDistLocCst;
 	}
 
 

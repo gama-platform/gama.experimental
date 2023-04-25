@@ -10,7 +10,7 @@ model Localization
 global {
 	shape_file buildings_residential_shape_file <- shape_file("../includes/shp/buildings_residential.shp");
 	shape_file Rouen_iris_shape_file <- shape_file("../includes/shp/Rouen_iris_number.shp");
-	grid_file occsol_rouen_grid_file <- grid_file("../includes/raster/occsol_rouen.tif");
+	grid_file occsol_rouen_grid_file <- grid_file("../includes/raster/occ-sol_rouen2.tif");
 	geometry shape <- envelope(buildings_residential_shape_file);
 	
 
@@ -29,7 +29,7 @@ global {
 						"Sexe"::["Hommes", "Femmes"]];
 		
 		
-		localize species: people nests: building nest_attribute: "nest" distribution: "area" mapper:["entities"::iris, "data_id"::number_property]; 
+		localize species: people nests: building nest_attribute: "nest" max_dist_loc: 500.0 step_dist_loc: 100.0 distribution: "area" mapper:["entities"::iris, "data_id"::number_property, "fields"::[field(occsol_rouen_grid_file)]]; 
 	}
 }
 
@@ -60,7 +60,6 @@ species people {
 }
 
 experiment Localization type: gui {
-	/** Insert here the definition of the input and output of the model */
 	output {
 		display map {
 			species iris;

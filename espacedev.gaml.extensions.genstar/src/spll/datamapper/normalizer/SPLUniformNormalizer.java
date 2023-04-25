@@ -32,16 +32,18 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 	 */
 	@Override
 	public double[][] normalize(double[][] matrix, double output) {
-		if((double) new GSBasicStats<>(GSBasicStats.transpose(matrix), 
-				Arrays.asList(noData.doubleValue())).getStat(GSEnumStats.min)[0] < doubleValue){
+
+		//if((double) new GSBasicStats<>(GSBasicStats.transpose(matrix), 
+		//		Arrays.asList(noData.doubleValue())).getStat(GSEnumStats.min)[0] < doubleValue){
+
 			IntStream.range(0, matrix.length).parallel()
 				.forEach(col -> IntStream.range(0, matrix[col].length)
 					.forEach(row -> matrix[col][row] = normalizedFloor(matrix[col][row]))
 			);
-
 			double floorSum = GSBasicStats.transpose(matrix)
 					.parallelStream().filter(val -> val == doubleValue)
 					.reduce(0d, Double::sum).doubleValue();
+
 			double nonFloorSum = GSBasicStats.transpose(matrix)
 					.parallelStream().filter(val -> val > doubleValue && val != noData.floatValue())
 					.reduce(0d, Double::sum).doubleValue();
@@ -51,7 +53,8 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 				.forEach(col -> IntStream.range(0, matrix[col].length)
 					.forEach(row -> matrix[col][row] = normalizedFactor(matrix[col][row], normalizer))
 			);
-		}
+		//}
+		
 		return matrix;
 	}
 
@@ -65,13 +68,15 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 	@Override
 	public double[][] round(double[][] matrix, double output){
 		// normalize to int: values are rounded to feet most proximal integer & overload are summed
+		
 		IntStream.range(0, matrix.length).parallel()
 			.forEach(col -> IntStream.range(0, matrix[col].length)
 				.forEach(row -> matrix[col][row] = normalizedToInt(matrix[col][row]))
 		);
-
+		
 		double errorload = output - new GSBasicStats<>(GSBasicStats.transpose(matrix), 
 				Arrays.asList(noData.doubleValue())).getStat(GSEnumStats.sum)[0];
+		
 		
 		// uniformally spread errorload (can visit pixel multiple time)
 		int iter = 0;
@@ -88,6 +93,7 @@ public class SPLUniformNormalizer extends ASPLNormalizer {
 			matrix[intX][intY] = currentVal + update;
 			errorload -= update; 
 		}
+		
 		return matrix;
 	}
 

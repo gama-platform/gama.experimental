@@ -119,10 +119,14 @@ public class SPLocalizer implements ISPLocalizer {
 	 *
 	 * @param population
 	 */
-	public SPLocalizer(final IScope scope, IContainer<?, ? extends IShape> geoms, String nestAttribute) {
+	public SPLocalizer(final IScope scope, IContainer<?, ? extends IShape> geoms, String nestAttribute, Double maxDistCst, Double stepDistCst) {
 		this(scope);
 		this.localizationConstraint = new SpatialConstraintLocalization(null);
 		this.localizationConstraint.setGeoms(geoms);
+		if (maxDistCst != null)
+			localizationConstraint.setMaxIncrease(maxDistCst);
+		if (stepDistCst != null)
+			localizationConstraint.setIncreaseStep(stepDistCst);
 		this.linker.addConstraints(localizationConstraint);
 		this.nestAttribute = nestAttribute;
 	}
@@ -271,13 +275,13 @@ public class SPLocalizer implements ISPLocalizer {
 		switch(regressionAlgo) {
 			case "GLS" :
 				reg = new GLSMultipleLinearRegression();
+				((GLSMultipleLinearRegression) reg).newSampleData((double[])data.get(0),(double[][])data.get(1), null);
 				break;
 			default:
 				reg = new OLSMultipleLinearRegression();
 				((OLSMultipleLinearRegression)reg).newSampleData((double[])data.get(0),(double[][])data.get(1));
 				
 		}
-		double[] d = (double[])data.get(0);
 		double[] coe = reg.estimateRegressionParameters(); 
 		double intercept = coe[0];
 		double [] res = reg.estimateResiduals();
@@ -287,18 +291,19 @@ public class SPLocalizer implements ISPLocalizer {
 		for (int i = 0; i < coe.length; i++) {
 			coe[i] += intercept;
 		}
-		double[][] pixels = new double[field.numCols][field.numRows];
+		double[][] pixels = new double[field.numRows][field.numCols];
 		for (int i = 0; i < field.numRows; i++) {
 			for (int j = 0; j < field.numCols; j++) {
 				double output = 0.0;
 				
 				IShape s = field.getCellShapeAt(scope, j, i);
-				Integer index = refObjects.get(s);
+				//System.out.println("refObjects: " + refObjects.keySet());
+				//System.out.println("s: " + s.getLocation());
+				Integer index = refObjects.get(new GamaPoint(s.getLocation().x,s.getLocation().y));
 				if (index == null) {
 				//	System.out.println("i: " + i + " j: " + j);
 					continue;
 				}
-				System.out.println("index: " + index);
 				double cor = res[index];
 				int cpt = 0;
 				for (int k = 0; k < possiblesValues.size(); k++) {
@@ -307,7 +312,7 @@ public class SPLocalizer implements ISPLocalizer {
 					IList<Double> possibleVals = possiblesValues.get(k);
 					IList<Double> cellVals = f.getValuesIntersecting(scope, s);
 					if (k == 0) {
-						cellVals = GamaListFactory.EMPTY_LIST;
+						cellVals = GamaListFactory.create();
 						cellVals.add(f.get(scope, j, i));
 					} else {
 						cellVals = f.getValuesIntersecting(scope, s);
@@ -317,7 +322,6 @@ public class SPLocalizer implements ISPLocalizer {
 					
 					for (int l = 0; l < possibleVals.length(scope); l++) {
 						Double v = possibleVals.get(l);
-						System.out.println("freq: " + Collections.frequency(cellVals, v) + " coe[l+cpt]: " + coe[l+cpt]);
 						
 						output +=Collections.frequency(cellVals, v) *coe[l+cpt] * area; 
 					}
@@ -325,35 +329,36 @@ public class SPLocalizer implements ISPLocalizer {
 					cpt += possibleVals.size();
 				}
 				if (output > 0)
-					System.out.println("output: " + output + " cor: " + cor);
+					
 				pixels[i][j] = output + cor;
 			}
 				
 		}
-
-		saveDouble(pixels,"pixel");
+		//saveDouble(pixels,"pixel");
 		ASPLNormalizer normalizer;
 		switch(normalizerType) {
 			default:
 				normalizer = new SPLUniformNormalizer(floorValue, field.getNoData(scope)); 
 			
 		}
-				
+		
 		double[][] afterNorm = normalizer.process(pixels, popTargetSize, true);
 		
-		for(int i = 0; i < field.numCols; i++)
-			for(int j = 0; j < field.numRows; j++)
-				field.set(scope, i, j, afterNorm[i][j]);
+		for(int i = 0; i < field.numRows; i++)
+			for(int j = 0; j < field.numCols; j++)
+				field.set(scope, j, i, afterNorm[i][j]);
 		mapField = field;
 		
-		saveDouble(afterNorm,"afterNorm");
+		//saveDouble(afterNorm,"afterNorm");
+		//System.out.println("fin creation field");
+		
 		//System.out.println("mapField: " + mapField);
 	}
 	
 	private void saveDouble(double[][] tab, String name) {
 		FileWriter myWriter = null;
 		try {
-			myWriter = new FileWriter("C:\\Users\\admin_ptaillandie\\Desktop\\" + name + ".asc");
+			myWriter = new FileWriter("/Users/patricktaillandier/Documents/" + name + ".asc");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -410,7 +415,7 @@ public class SPLocalizer implements ISPLocalizer {
 				if (j == 0) {
 					IList<IShape> cells = field.getCellsIntersecting(scope, s);
 					for (IShape c: cells) {
-						refObjects.put(c, i);
+						refObjects.put(new GamaPoint(c.getLocation().x, c.getLocation().y), i);
 					}
 				}
 				List<Double> cellVals = field.getValuesIntersecting(scope, s);
@@ -562,21 +567,20 @@ public class SPLocalizer implements ISPLocalizer {
 	private IContainer<?, IAgent> localizationInNestOp(final IScope scope, final IContainer<?, IAgent> entities,
 			final IList<IShape> possibleNests, Long val) {
 		IContainer<?, IAgent>  chosenEntities = null;
-		IList<IAgent>  entityToLocalize = entities.listValue(scope, Types.AGENT, true);
+		IList<IAgent>  entitylocalized = GamaListFactory.create();
 		if (val != null) {
 			val = Math.min(val, entities.length(scope));
 			chosenEntities = Containers.among(scope, val.intValue(), entities);
 		} else {
 			chosenEntities = entities;
 		}
-		if(possibleNests.isEmpty()) return chosenEntities;
+		if(possibleNests.isEmpty()) return entitylocalized;
 		linker.getDistribution().setCandidate(possibleNests);
 		int cpt = 0;
-		System.out.println("ici: "+ possibleNests.size());
 		for (IAgent entity : chosenEntities.iterable(scope)) {
 			cpt ++;
 			if (cpt % 100 == 0)
-				System.out.println("fait: " + cpt + "/" + chosenEntities.length(scope));
+				System.out.println("done: " + cpt + "/" + chosenEntities.length(scope));
 			if (possibleNests.isEmpty()) { break; }
 			Optional<IShape> oNest = linker.getCandidate(scope, entity, possibleNests);
 			boolean removeObject = false;
@@ -595,12 +599,12 @@ public class SPLocalizer implements ISPLocalizer {
 					else*/
 						entity.setAttribute(nestAttribute, nest);
 				}
-				entityToLocalize.remove(entity);
+				entitylocalized.add(entity);
 				entity.setLocation(pointInLocalizer.pointIn(scope, nest));
 				
 			}
 		}
-		return entityToLocalize;
+		return entitylocalized;
 	}
 
 	@Override
@@ -662,39 +666,48 @@ public class SPLocalizer implements ISPLocalizer {
 		
 		
 		double unknowVal = mapField.getNoData(scope);
-		Double	tot = mapField.listValue(scope, Types.FLOAT, false).stream().mapToDouble(s -> ( s == unknowVal  ? 0 : s)).sum();
-		System.out.println("tot: " + tot);
+		Double	tot = mapField.listValue(scope, Types.FLOAT, false).stream().mapToDouble(s -> ( ((s <= 0)||(s == unknowVal))  ? 0 : s)).sum();
+		//System.out.println("tot: " + tot + " entities:" + entities.length(scope));
 		if (tot == 0) return;
+		int t = 0;
 		
-		IContainer<?, IAgent>  remainingEntities = (IContainer<?, IAgent>) entities.copy(scope);
+		IList<IAgent>  remainingEntities = (IList<IAgent>) entities.copy(scope);
 		long totV = 0;
 		for (int i = 0; i < areas.size(); i++) { 
 			IShape s = areas.get(i);
 			Double val = mapField.get(scope, s.getLocation());
-		//	System.out.println("val:" + val);
-			if (val == unknowVal) continue;
+			if (val <= 0 || val == unknowVal) continue;
+			//System.out.println(i + "/" + areas.size() + " remainingEntities: " + remainingEntities.length(scope) + " val: " + val);
+			
 			IShape feature = areas.get(i);
 			localizationConstraint.setBounds(feature);
 			long valR = Math.round(entities.length(scope) * val / tot );
 			if (valR == 0) continue;
 			totV += valR;
-			if (entities.isEmpty(scope))  { break; }
+			if (remainingEntities.isEmpty(scope))  { break; }
+			//System.out.println("la: "+ linker.getConstraints());
 			for (ISpatialConstraint cr : linker.getConstraints()) {
+				//System.out.println("remainingEntities: "+ remainingEntities.length(scope) + " " + cr.isConstraintLimitReach() );
 				while (!remainingEntities.isEmpty(scope) && !cr.isConstraintLimitReach()) {
 					IList<IShape> possibleNestsInit = localizationConstraint.getCandidates(scope, null);
 					IList<IShape> possibleNests = possibleNestsInit.copy(scope);
+					
 					for (ISpatialConstraint constraint : otherConstraints) {
 						possibleNests = constraint.getCandidates(scope, possibleNests);
 					}
-					remainingEntities = localizationInNestOp(scope, remainingEntities, possibleNests, valR);
+					IList<IAgent>  localizedAgents = (IList<IAgent>) localizationInNestOp(scope, remainingEntities, possibleNests, valR);
+					valR -= localizedAgents.length(scope);
+					t += localizedAgents.length(scope);
+					remainingEntities.removeAll(localizedAgents);
+					if (valR == 0) break;
 					if (!remainingEntities.isEmpty(scope)) {
 						cr.relaxConstraint((IList<IShape>) localizationConstraint.getGeoms());
 					}
 				}
-				if (remainingEntities.isEmpty(scope)) { break; }
+				if (remainingEntities.isEmpty(scope)|| valR == 0) { break; }
 			}
 		}
-		System.out.println("totV: " + totV);
+		//System.out.println("totV: " + totV + " t: " + t);
 	}
 
 	
@@ -717,26 +730,31 @@ public class SPLocalizer implements ISPLocalizer {
 		if (tot == 0) return;
 		
 		IContainer<?, IAgent>  remainingEntities = (IContainer<?, IAgent>) entities.copy(scope);
-		if (areas != null)
-		for (IShape feature : areas) {
+		if (areas != null) {
 			
-			localizationConstraint.setBounds(feature);
-			long val = Math.round(entities.length(scope) * vals.get(feature) / tot );
 			
-			if (entities.isEmpty(scope))  { break; }
-			for (ISpatialConstraint cr : linker.getConstraints()) {
-				while (!remainingEntities.isEmpty(scope) && !cr.isConstraintLimitReach()) {
-					IList<IShape> possibleNestsInit = localizationConstraint.getCandidates(scope, null);
-					IList<IShape> possibleNests = possibleNestsInit.copy(scope);
-					for (ISpatialConstraint constraint : otherConstraints) {
-						possibleNests = constraint.getCandidates(scope, possibleNests);
+			for (IShape feature : areas) {
+				localizationConstraint.setBounds(feature);
+				long val = Math.round(entities.length(scope) * vals.get(feature) / tot );
+				
+				if (entities.isEmpty(scope))  { break; }
+				for (ISpatialConstraint cr : linker.getConstraints()) {
+					while (!remainingEntities.isEmpty(scope) && !cr.isConstraintLimitReach()) {
+						IList<IShape> possibleNestsInit = localizationConstraint.getCandidates(scope, null);
+						IList<IShape> possibleNests = possibleNestsInit.copy(scope);
+						for (ISpatialConstraint constraint : otherConstraints) {
+							possibleNests = constraint.getCandidates(scope, possibleNests);
+						}
+						IContainer<?, IAgent>  localizedAgents = localizationInNestOp(scope, remainingEntities, possibleNests, val);
+						val -= localizedAgents.length(scope);
+						if (val == 0) break;
+						remainingEntities = Containers.minus(scope, remainingEntities, localizedAgents);
+						if (!remainingEntities.isEmpty(scope)) {
+							cr.relaxConstraint((IList<IShape>) localizationConstraint.getGeoms());
+						}
 					}
-					remainingEntities = localizationInNestOp(scope, remainingEntities, possibleNests, val);
-					if (!remainingEntities.isEmpty(scope)) {
-						cr.relaxConstraint((IList<IShape>) localizationConstraint.getGeoms());
-					}
+					if (remainingEntities.isEmpty(scope) || val == 0) { break; }
 				}
-				if (remainingEntities.isEmpty(scope)) { break; }
 			}
 		}
 	}

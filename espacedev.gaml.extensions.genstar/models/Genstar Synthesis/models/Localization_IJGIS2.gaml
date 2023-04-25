@@ -37,7 +37,6 @@ species people {
 }
 
 experiment Localization type: gui {
-	/** Insert here the definition of the input and output of the model */
 	output {
 		display map {
 			graphics "nest"{
