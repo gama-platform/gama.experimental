@@ -29,7 +29,8 @@ global {
 						"Sexe"::["Hommes", "Femmes"]];
 		
 		
-		localize species: people nests: building nest_attribute: "nest" max_dist_loc: 500.0 step_dist_loc: 100.0 distribution: "area" mapper:["entities"::iris, "data_id"::number_property, "fields"::[field(occsol_rouen_grid_file)]]; 
+		localize species: people nests: building nest_attribute: "nest" max_dist_loc: 500.0 step_dist_loc: 100.0 distribution: "area" 
+			mapper:["entities"::iris, "data_id"::number_property, "fields"::[field(occsol_rouen_grid_file)]]; 
 	}
 }
 

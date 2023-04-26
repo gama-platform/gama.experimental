@@ -54,18 +54,6 @@ public interface ISPLocalizer {
 	 */
 	public void localisePopulation(IScope scope,  final IContainer<?, IAgent>  population);
 	
-	/**
-	 * Link entity of a population to a spatial entity using provided linker
-	 * 
-	 * @param linkedPlaces
-	 * @param attribute
-	 * @param linker
-	 * @return
-	 */
-	public void linkPopulation(IList<IAgent> population, ISPLinker<IShape> linker, 
-			IList<IShape> linkedPlaces, 
-			Attribute<? extends IValue> attribute);
-	
 	////////////////////////////////////////////////
 	// -------------- MATCHER PART -------------- //
 	//  Matcher part corresponds to the matching  // 

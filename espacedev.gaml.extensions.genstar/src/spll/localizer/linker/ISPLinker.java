@@ -29,6 +29,7 @@ public interface ISPLinker<IShape> {
 		PRIORITY, LINEAR;
 	}
 	
+	public void assignLink(IScope scope, IList<IAgent> entities, IList<? extends IShape> candidates, String attributeName);
 	/**
 	 * Main method to link an entity to one candidate draw from a IList. There is two aspect involve:
 	 * <ul>

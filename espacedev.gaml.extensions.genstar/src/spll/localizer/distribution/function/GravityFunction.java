@@ -1,18 +1,14 @@
 package spll.localizer.distribution.function;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import core.metamodel.value.IValue;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
 import msi.gama.util.GamaListFactory;
-import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import msi.gaml.operators.Spatial.Queries;
 import msi.gaml.operators.Spatial.Transformations;
@@ -46,10 +42,10 @@ public class GravityFunction implements ISpatialComplexFunction<Double> {
 	 * @param frictionCoeff
 	 * @param entities
 	 */
-	public GravityFunction( Collection<? extends IShape> candidates, double frictionCoeff, IAgent entities) {
+	public GravityFunction( IList<? extends IShape> candidates, double frictionCoeff, IList<IAgent> entities) {
 		this();
 		this.frictionCoeff = frictionCoeff;
-		this.mass = candidates.stream().collect(Collectors.toMap(Function.identity(), se -> Arrays.asList(entities).stream()
+		this.mass = candidates.stream().collect(Collectors.toMap(Function.identity(), se -> entities.stream()
 				.mapToDouble(e -> se.euclidianDistanceTo(e.getLocation())).sum()));
 	}
 
@@ -61,8 +57,8 @@ public class GravityFunction implements ISpatialComplexFunction<Double> {
 	 * @param buffer
 	 * @param entities
 	 */
-	public GravityFunction(IScope scope, Collection<? extends IShape> candidates, 
-			double frictionCoeff, double buffer, IAgent... entities) {
+	public GravityFunction(IScope scope, IList<? extends IShape> candidates, 
+			double frictionCoeff, double buffer, IList<IAgent> entities) {
 		this();
 		IList<IAgent> agents = GamaListFactory.createWithoutCasting(Types.AGENT,entities);
 		
@@ -95,7 +91,7 @@ public class GravityFunction implements ISpatialComplexFunction<Double> {
 	// ------------------------------------------ //
 
 	@Override
-	public Double apply(IAgent spatialEntity, IShape entity) {
+	public Double apply(IAgent entity , IShape spatialEntity) {
 		return function.apply(mass.get(spatialEntity), spatialEntity.euclidianDistanceTo(entity.getLocation()));
 	}
 

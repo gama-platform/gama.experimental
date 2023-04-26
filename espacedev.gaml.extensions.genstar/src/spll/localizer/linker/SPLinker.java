@@ -42,7 +42,7 @@ public class SPLinker implements ISPLinker<IShape> {
 		this(distribution);
 		this.rule = rule;
 	}
-
+ 
 	@Override 
 	public Optional<IShape> getCandidate(IScope scope, IAgent entity,
 			IList<IShape> candidates) {
@@ -178,6 +178,20 @@ public class SPLinker implements ISPLinker<IShape> {
 	@Override
 	public void setConstraintsReleaseRule(ConstraintsReleaseRule rule) {
 		this.rule = rule;
+	}
+
+	@Override
+	public void assignLink(IScope scope, IList<IAgent> entities, IList<? extends IShape> candidates, String attributeName) {
+		for(IAgent ag : entities) {
+			Optional<IShape> c = this.getCandidate(scope, ag, (IList<IShape>) candidates);
+			if (c.isPresent()) {
+				ag.setAttribute(attributeName, c.get());
+			} else {
+				ag.setAttribute(attributeName, null);
+			}
+			
+		}
+		
 	}
 
 }

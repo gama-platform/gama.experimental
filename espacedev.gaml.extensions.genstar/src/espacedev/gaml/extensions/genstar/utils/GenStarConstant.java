@@ -31,6 +31,9 @@ public class GenStarConstant {
 	/** The constant GSLOCALISE represents the main gaml operator to localise agents based on genstar */
 	public static final String GSLOCALISE = "localize"; 
 	
+	/** The constant GSLINK represents the main gaml operator to link agents to spatial entities based on genstar */
+	public static final String GSLINK = "link"; 
+	
 	/** The Constant representing the feature of a shapefile / geometry **/
 	public static final String GSFEATURE = "feature";
 
@@ -43,6 +46,9 @@ public class GenStarConstant {
 	/** The Constant EPSILON. */
 	public static final Double EPSILON = Math.pow(10, -6);
 
+	/** The agents to localize/link  */
+	public static final String ENTITIES = "entities"; 
+	
 	/** The nests on which to localize the agents */
 	public static final String NESTS = "nests"; 
 	

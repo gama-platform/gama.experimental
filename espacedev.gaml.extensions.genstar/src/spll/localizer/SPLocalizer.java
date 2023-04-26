@@ -46,10 +46,6 @@ import msi.gaml.operators.Spatial.Operators;
 import msi.gaml.operators.Spatial.Queries;
 import msi.gaml.operators.Spatial.Transformations;
 import msi.gaml.types.Types;
-import spll.algo.exception.IllegalRegressionException;
-import spll.datamapper.exception.GSMapperException;
-import spll.datamapper.normalizer.ASPLNormalizer;
-import spll.datamapper.normalizer.SPLUniformNormalizer;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.constraint.SpatialConstraintLocalization;
 import spll.localizer.distribution.ISpatialDistribution;
@@ -58,6 +54,8 @@ import spll.localizer.linker.ISPLinker;
 import spll.localizer.linker.SPLinker;
 import spll.localizer.pointInalgo.PointInLocalizer;
 import spll.localizer.pointInalgo.RandomPointInLocalizer;
+import spll.normalizer.ASPLNormalizer;
+import spll.normalizer.SPLUniformNormalizer;
 
 /**
  * The Class SPLocalizer.
@@ -270,23 +268,38 @@ public class SPLocalizer implements ISPLocalizer {
 		GamaField field = fields.get(0).copy(scope, fields.get(0).getDimensions(), true);
 		field.setNoData(scope, -1.0);
 		field.setAllValues(scope, -1.0);
+		List<IList<Double>> possiblesValues = (List<IList<Double>>) data.get(2);
+		double[] observations = (double[])data.get(0);
+		double[][] dataTable = (double[][]) data.get(1);
 		
+		Map<IShape,Integer> refObjects = (Map<IShape, Integer>) data.get(3);
+		int nbVars =  dataTable[0].length;
 		AbstractMultipleLinearRegression reg = null;
 		switch(regressionAlgo) {
 			case "GLS" :
 				reg = new GLSMultipleLinearRegression();
-				((GLSMultipleLinearRegression) reg).newSampleData((double[])data.get(0),(double[][])data.get(1), null);
+				double[] instances = new double[ dataTable.length * nbVars+ observations.length];
+				int instanceCount = 0;
+				for(int i = 0; i < dataTable.length; i++){
+					instances[instanceCount++] = observations[i];
+					for(int j = 0; j < nbVars; j++){
+						instances[instanceCount++] = dataTable[i][j];
+					}
+				}
+				
+				((GLSMultipleLinearRegression) reg).newSampleData(instances,observations.length, nbVars);
+				
 				break;
 			default:
 				reg = new OLSMultipleLinearRegression();
-				((OLSMultipleLinearRegression)reg).newSampleData((double[])data.get(0),(double[][])data.get(1));
+				((OLSMultipleLinearRegression)reg).newSampleData(observations,dataTable);
+				
 				
 		}
+		
 		double[] coe = reg.estimateRegressionParameters(); 
 		double intercept = coe[0];
 		double [] res = reg.estimateResiduals();
-		List<IList<Double>> possiblesValues = (List<IList<Double>>) data.get(2);
-		Map<IShape,Integer> refObjects = (Map<IShape, Integer>) data.get(3);
 		
 		for (int i = 0; i < coe.length; i++) {
 			coe[i] += intercept;
@@ -605,13 +618,6 @@ public class SPLocalizer implements ISPLocalizer {
 			}
 		}
 		return entitylocalized;
-	}
-
-	@Override
-	public void linkPopulation(IList<IAgent> population, ISPLinker<IShape> linker, IList<IShape> linkedPlaces,
-			Attribute<? extends msi.gama.common.interfaces.IValue> attribute) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

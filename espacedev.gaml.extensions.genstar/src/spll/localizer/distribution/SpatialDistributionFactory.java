@@ -1,9 +1,6 @@
 package spll.localizer.distribution;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.IShape;
@@ -170,12 +167,12 @@ public class SpatialDistributionFactory {
 	 * @param entities
 	 * @return
 	 */
-	/*public ISpatialDistribution getGravityModelDistribution(
+	public ISpatialDistribution getGravityModelDistribution(
 			IList<IShape> candidates, 
-			double frictionCoeff,
-			IAgent... entities){ 
+			double frictionCoeff,  
+			IList<IAgent> entities){ 
 		return new ComplexSpatialDistribution<>(new GravityFunction(candidates, frictionCoeff, entities));
-	}*/
+	}
 	
 	/**
 	 * Gravity model that associate probability (the mass in gravity model) to each candidates according to gravity model, 
@@ -185,12 +182,12 @@ public class SpatialDistributionFactory {
 	 * @param frictionCoeff
 	 * @param buffer
 	 * @param entities
-	 * @return
+	 * @return 
 	 */
-	/*public ISpatialDistribution<IAgent> getGravityModelDistribution(
-			IList<IShape> candidates, 
-			double frictionCoeff, double buffer, IAgent... entities){
-		return new ComplexSpatialDistribution<>(new GravityFunction(candidates, frictionCoeff, buffer, entities));
-	}*/
+	public ISpatialDistribution<IAgent> getGravityModelDistribution(
+			IScope scope, IList<IShape> candidates, 
+			double frictionCoeff, double buffer, IList<IAgent> entities){ 
+		return new ComplexSpatialDistribution(new GravityFunction(scope, candidates, frictionCoeff, buffer, entities));
+	}
 	
 }

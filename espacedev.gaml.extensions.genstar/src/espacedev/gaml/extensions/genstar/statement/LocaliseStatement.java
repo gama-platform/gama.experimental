@@ -3,8 +3,6 @@ package espacedev.gaml.extensions.genstar.statement;
 import static msi.gama.common.interfaces.IKeyword.SPECIES;
 import static msi.gama.precompiler.ISymbolKind.SEQUENCE_STATEMENT;
 
-import java.util.Arrays;
-
 import espacedev.gaml.extensions.genstar.localisation.IGenstarLocaliser;
 import espacedev.gaml.extensions.genstar.statement.LocaliseStatement.LocaliseValidator;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant;
@@ -24,11 +22,12 @@ import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.precompiler.ISymbolKind;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gama.util.GamaListFactory;
+import msi.gama.util.IContainer;
 import msi.gama.util.IList;
 import msi.gaml.compilation.IDescriptionValidator;
 import msi.gaml.compilation.annotations.validator;
 import msi.gaml.descriptions.IDescription;
-import msi.gaml.descriptions.SpeciesDescription;
 import msi.gaml.descriptions.StatementDescription;
 import msi.gaml.expressions.IExpression;
 import msi.gaml.operators.Cast;
@@ -38,7 +37,6 @@ import msi.gaml.statements.Arguments;
 import msi.gaml.statements.IStatement.WithArgs;
 import msi.gaml.statements.RemoteSequence;
 import msi.gaml.types.IType;
-import msi.gaml.types.Types;
 
 @symbol (
 		name = GenStarConstant.GSLOCALISE,
@@ -225,14 +223,23 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 
 	@SuppressWarnings ({ "rawtypes", "unchecked" })
 	@Override
-	public IList<? extends IAgent> privateExecuteIn(final IScope scope) throws GamaRuntimeException {
+	public IContainer<?, IAgent> privateExecuteIn(final IScope scope) throws GamaRuntimeException {
 		// Just retrieve the population of agent to be localised
 		// TODO : see if we can transfer this to any geometry
-		IPopulation pop = null;
-		if (species == null) pop = scope.getAgent().getPopulationFor(description.getSpeciesContext().getName());
-		else {
-			ISpecies s = Cast.asSpecies(scope, species.value(scope));
-			if (s == null) {// A last attempt in order to fix #2466
+		IContainer<?, IAgent> pop = null;
+		Object obj = species.value(scope);
+		
+		if (obj instanceof ISpecies) {
+			pop = (IPopulation) ((ISpecies) obj).getPopulation(scope);
+		} if (obj instanceof IAgent) {
+			IAgent ag = Cast.asAgent(scope, obj);
+			pop = GamaListFactory.create();
+			((IList) pop).add(ag);
+		} else {
+			pop = Cast.asList(scope, obj);
+		}
+		/*ISpecies s = Cast.asSpecies(scope, species.value(scope));
+		if (s == null) {// A last attempt in order to fix #2466
 				final String potentialSpeciesName = species.getDenotedType().getSpeciesName();
 				if (potentialSpeciesName != null) { s = scope.getModel().getSpecies(potentialSpeciesName); }
 			}
@@ -241,7 +248,7 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 					scope);
 			pop = scope.getAgent().getPopulationFor(s);
 			
-		}
+		}*/
 		
 		// TODO select among several localiser when they will be defined
 		IGenstarLocaliser genl = GenStarGamaUtils.getGamaLocaliser()[0]; 
@@ -304,7 +311,7 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 			// ****** 
 			// Minimal check on species - not taking into account all the specific cases copy/past from CreateStatement 
 			
-			final IExpression species = description.getFacetExpr(SPECIES);
+		/*	final IExpression species = description.getFacetExpr(SPECIES);
 			// If the species cannot be determined, issue an error and leave validation
 			if (species == null) {
 				description.error("The species is not found", UNKNOWN_SPECIES, SPECIES);
@@ -339,7 +346,7 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 							WRONG_TYPE, FROM);
 					
 				}
-			}
+			}*/
 			
 		}
 		

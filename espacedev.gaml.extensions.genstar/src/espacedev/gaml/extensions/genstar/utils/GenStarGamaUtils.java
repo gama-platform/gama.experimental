@@ -25,6 +25,8 @@ import espacedev.gaml.extensions.genstar.generator.FileBasedGenerator;
 import espacedev.gaml.extensions.genstar.generator.IGenstarGenerator;
 import espacedev.gaml.extensions.genstar.generator.MatrixBasedGenerator;
 import espacedev.gaml.extensions.genstar.generator.OldGenstarGenerator;
+import espacedev.gaml.extensions.genstar.localisation.BasicSpatialLinker;
+import espacedev.gaml.extensions.genstar.localisation.IGenstarLinker;
 import espacedev.gaml.extensions.genstar.localisation.IGenstarLocaliser;
 import espacedev.gaml.extensions.genstar.localisation.WithinGeometryLocaliser;
 import espacedev.gaml.extensions.genstar.type.GamaRange;
@@ -228,6 +230,10 @@ public class GenStarGamaUtils {
 	 */
 	public static IGenstarLocaliser[] getGamaLocaliser() {
 		return new IGenstarLocaliser[] { WithinGeometryLocaliser.getInstance() };
+	}
+	
+	public static IGenstarLinker[] getGamaLinker() {
+		return new IGenstarLinker[] { BasicSpatialLinker.getInstance() };
 	}
  
 }
