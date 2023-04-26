@@ -123,7 +123,7 @@ import msi.gaml.types.IType;
 						optional = true,
 						doc = @doc (
 								value = """
-										To specify the a matcher, map with three elements: 
+										To specify the matcher, map with three elements: 
 										'entities': list of entities with the ; 
 										'data_id': name of the property that contains the id of the census spatial areas in the shapefile;
 										'pop_id': name of the property that contains the id of the census spatial areas in the population
@@ -134,9 +134,17 @@ import msi.gaml.types.IType;
 					optional = true,
 					doc = @doc (
 							value = """
-									To specify the a matcher, map with three elements: 
+									To specify the mapper, map with three elements: 
 									'entities': list of entities with the ; 
 									'data_id': name of the property that contains the id of the census spatial areas in the shapefile;
+									 """)),
+			@facet (
+					name = GenStarConstant.CONSTRAINTS,
+					type = IType.LIST,
+					optional = true,
+					doc = @doc (
+							value = """
+									To specify the constraints, a list of maps, each map representing a constraint with its own parameters
 									 """)),
 		
 				@facet (
@@ -177,6 +185,9 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 	/** The distribution. */
 	private final IExpression distribution;
 	
+	/** The constraints. */
+	private final IExpression constraints;
+	
 	/** The species. */
 	private final IExpression species;
 	
@@ -212,7 +223,7 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 		this.distribution = getFacet(GenStarConstant.DISTRIBUTION);
 		this.minDist = getFacet(GenStarConstant.MINDIST);
 		this.maxDist = getFacet(GenStarConstant.MAXDIST);
-		
+		this.constraints = getFacet(GenStarConstant.CONSTRAINTS);
 		this.maxDistLocCst = getFacet(GenStarConstant.MAXDISTLOCALIZATIONCST);
 		this.stepDistLocCst = getFacet(GenStarConstant.STEPISTLOCALIZATIONCST);
 		
@@ -300,6 +311,11 @@ public class LocaliseStatement extends AbstractStatementSequence implements With
 	public IExpression getStepDistLocCst() {
 		return stepDistLocCst;
 	}
+
+	public IExpression getConstraints() {
+		return constraints;
+	}
+
 
 
 

@@ -43,6 +43,9 @@ public class GenStarConstant {
 	/** The Constant representing the type of distribution **/
 	public static final String DISTRIBUTION = "distribution";
 	
+	/** The Constant representing a list of constraints. */
+	public static final String CONSTRAINTS = "constraints";
+
 	/** The Constant EPSILON. */
 	public static final Double EPSILON = Math.pow(10, -6);
 
@@ -69,6 +72,10 @@ public class GenStarConstant {
 	
 	/** The maximal distance to the nest geometry */
 	public static final String STEPISTLOCALIZATIONCST = "step_dist_loc";
+	
+	/** The maximal distance to the nest geometry */
+	public static final String PARAMETERS = "parameters";
+	
 	
 	/**
 	 * Interface to deal with aliases

@@ -74,7 +74,12 @@ import msi.gaml.types.IType;
 						doc = @doc (
 								value = """
 										The type of distribution to use ('area', 'uniform',)
-										 """)) })
+										 """)),
+				 @facet (
+							name = GenStarConstant.PARAMETERS,
+							type = IType.MAP ,
+							optional = true,
+							doc = @doc ("The parameters of the linker"))})
 @doc (
 		value = "Allows to localise a set of agent within a given set of geometries",
 		usages = { @usage (
@@ -101,6 +106,10 @@ public class SpatialLinkerStatement extends AbstractStatementSequence implements
 	/** The nest attibute. */
 	private final IExpression nestAttribute;
 	
+
+	/** The parameters of the linker. */
+	private final IExpression parameters;
+	
 	// -----------------
 	
 	/** The sequence. */
@@ -112,6 +121,7 @@ public class SpatialLinkerStatement extends AbstractStatementSequence implements
 		this.entities = getFacet(GenStarConstant.ENTITIES);
 		this.distribution = getFacet(GenStarConstant.DISTRIBUTION);
 		this.nestAttribute = getFacet(GenStarConstant.NESTATTRIBUTES);
+		this.parameters = getFacet(GenStarConstant.PARAMETERS);
 		
 		sequence = new RemoteSequence(description);
 		sequence.setName("commands for the localisation");
@@ -192,6 +202,10 @@ public class SpatialLinkerStatement extends AbstractStatementSequence implements
 
 
 
+
+	public IExpression getParameters() {
+		return parameters;
+	}
 
 	public IExpression getNestAttribute() {
 		return nestAttribute;

@@ -185,7 +185,7 @@ public class GenStarGamaConstraintBuilder {
 	}
 
 	/**
-	 * Build and return a density constraint based on variables passed by mehtod
+	 * Build and return a density constraint based on variables passed by methÒod
 	 * {@link #addDensityConstraint(double, double, int)}
 	 *
 	 * @param nests

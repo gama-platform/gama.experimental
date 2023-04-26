@@ -8,15 +8,12 @@
 model Localization
 
 global {
-	shape_file buildings_residential_shape_file <- shape_file("../includes/shp/buildings_residential.shp");
 	shape_file Rouen_iris_shape_file <- shape_file("../includes/shp/Rouen_iris_number.shp");
-	grid_file occsol_rouen_grid_file <- grid_file("../includes/raster/occ-sol_rouen2.tif");
-	geometry shape <- envelope(buildings_residential_shape_file);
+	geometry shape <- envelope(Rouen_iris_shape_file);
 	
+		
+	shape_file buildings_residential_shape_file <- shape_file("../includes/shp/buildings_residential.shp");
 	shape_file schools_shape_file <- shape_file("../includes/shp/schools_fusion.shp");
-
-
-	string number_property <-  "POP";
 	
 	init {
 		create residential_building from: buildings_residential_shape_file;
@@ -24,7 +21,7 @@ global {
 		create iris from: Rouen_iris_shape_file;
 		
 		generate species:people number: 10000 
-		from:[csv_file("../includes/Age & Sexe-Tableau 1.csv",";"), csv_file("../includes/Rouen_iris.csv",";")] 
+		from:[csv_file("../includes/Age & Sexe-Tableau 1.csv",";")] 
 		attributes:["Age"::["Moins de 5 ans", "5 à 9 ans", "10 à 14 ans", "15 à 19 ans", "20 à 24 ans", 
 					  				"25 à 29 ans", "30 à 34 ans", "35 à 39 ans", "40 à 44 ans", "45 à 49 ans", 
 									"50 à 54 ans", "55 à 59 ans", "60 à 64 ans", "65 à 69 ans", "70 à 74 ans", "75 à 79 ans", 
@@ -32,12 +29,19 @@ global {
 						"Sexe"::["Hommes", "Femmes"]];
 		
 		
-		localize species: people nests: residential_building nest_attribute: "nest" max_dist_loc: 500.0 step_dist_loc: 100.0 distribution: "area" 
-			mapper:["entities"::iris, "data_id"::number_property, "fields"::[field(occsol_rouen_grid_file)]]; 
+		
+		
+		localize species: people nests: residential_building nest_attribute: "home"  
+			mapper: ["entities"::iris, "data_id"::"POP"]
+			constraints:[["type"::"density", "priority"::10, "step_increase"::0.002, "max_increase"::0.01, "max_density"::0.0005]]; 
+		
 			
 		list<people> children <- people where (each.Age >= 3 and each.Age <= 18); 
-		write sample(length(children));
-		link entities: children nests: school nest_attribute: "my_school" distribution: "gravity";
+		link entities: children nests: school nest_attribute: "my_school" distribution: "gravity" parameters:["friction_coeff"::3.0];
+		ask children {
+			color <- #yellow;
+			location <- any_location_in(my_school);
+		}
 	}
 } 
    
@@ -58,17 +62,16 @@ species school {
 
 
 species iris {
-	string CODE_IRIS;
+	int POP;
 	aspect default {
-		draw shape color: #lightgray;
+		draw shape color: #lightgray border:#gray;
 	}
 }
 
 species people {
 	int Age;
-	geometry nest;
+	building home;
 	string Sexe;
-	string iris_id;
 	building my_school;
 	rgb color <- #red;
 	

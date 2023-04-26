@@ -732,17 +732,19 @@ public class SPLocalizer implements ISPLocalizer {
 			
 		Double tot = vals.values().stream().mapToDouble(s -> s).sum();
 		//Double tot2 = vals2.values().stream().mapToDouble(s -> s).sum();
-		
 		if (tot == 0) return;
 		
+		int totV = 0;
 		IContainer<?, IAgent>  remainingEntities = (IContainer<?, IAgent>) entities.copy(scope);
 		if (areas != null) {
 			
-			
-			for (IShape feature : areas) {
+			for(int i = 0; i < areas.length(scope); i++) {
+				IShape feature = areas.get(i);
 				localizationConstraint.setBounds(feature);
 				long val = Math.round(entities.length(scope) * vals.get(feature) / tot );
-				
+				totV += val;
+				if (i == (areas.length(scope) -1)) 
+					val += (entities.length(scope) - totV );
 				if (entities.isEmpty(scope))  { break; }
 				for (ISpatialConstraint cr : linker.getConstraints()) {
 					while (!remainingEntities.isEmpty(scope) && !cr.isConstraintLimitReach()) {
@@ -753,8 +755,9 @@ public class SPLocalizer implements ISPLocalizer {
 						}
 						IContainer<?, IAgent>  localizedAgents = localizationInNestOp(scope, remainingEntities, possibleNests, val);
 						val -= localizedAgents.length(scope);
-						if (val == 0) break;
 						remainingEntities = Containers.minus(scope, remainingEntities, localizedAgents);
+						if (val == 0) break;
+						
 						if (!remainingEntities.isEmpty(scope)) {
 							cr.relaxConstraint((IList<IShape>) localizationConstraint.getGeoms());
 						}

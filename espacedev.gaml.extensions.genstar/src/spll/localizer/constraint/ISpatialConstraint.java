@@ -1,7 +1,5 @@
 package spll.localizer.constraint;
 
-import java.util.List;
-
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.runtime.IScope;
 import msi.gama.util.IContainer;

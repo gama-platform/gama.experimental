@@ -11,7 +11,7 @@ global {
 	shape_file buildings_residential_shape_file <- shape_file("../includes/shp/buildings_residential.shp");
 	shape_file Rouen_iris_shape_file <- shape_file("../includes/shp/Rouen_iris_number.shp");
 	grid_file occsol_rouen_grid_file <- grid_file("../includes/raster/occ-sol_rouen2.tif");
-	geometry shape <- envelope(buildings_residential_shape_file);
+	geometry shape <- envelope(occsol_rouen_grid_file);
 	
 
 	string number_property <-  "POP";

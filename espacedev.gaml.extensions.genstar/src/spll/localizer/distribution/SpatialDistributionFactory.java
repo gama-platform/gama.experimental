@@ -184,7 +184,7 @@ public class SpatialDistributionFactory {
 	 * @param entities
 	 * @return 
 	 */
-	public ISpatialDistribution<IAgent> getGravityModelDistribution(
+	public ISpatialDistribution getGravityModelDistribution(
 			IScope scope, IList<IShape> candidates, 
 			double frictionCoeff, double buffer, IList<IAgent> entities){ 
 		return new ComplexSpatialDistribution(new GravityFunction(scope, candidates, frictionCoeff, buffer, entities));

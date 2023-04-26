@@ -12,6 +12,11 @@ import msi.gama.util.matrix.GamaField;
 import msi.gaml.operators.Cast;
 import msi.gaml.types.Types;
 import spll.localizer.SPLocalizer;
+import spll.localizer.constraint.ASpatialConstraint;
+import spll.localizer.constraint.SpatialConstraintLocalization;
+import spll.localizer.constraint.SpatialConstraintMaxDensity;
+import spll.localizer.constraint.SpatialConstraintMaxDistance;
+import spll.localizer.constraint.SpatialConstraintMaxNumber;
 import spll.localizer.distribution.SpatialDistributionFactory;
 
 public class WithinGeometryLocaliser implements IGenstarLocaliser {
@@ -51,7 +56,7 @@ public class WithinGeometryLocaliser implements IGenstarLocaliser {
 			String normalizerType = mapperMap.containsKey("normalizer_type") ? Cast.asString(scope, mapperMap.get("normalizer_type")) : ""; 
 			Double floorValue = mapperMap.containsKey("floor_value") ? Cast.asFloat(scope, mapperMap.get("floor_value")) : 0.0; 
 			Integer popTargetSize = pop.length(scope);
-			if (entities != null && !entities.isEmpty() && !dataId.equals("") && !fields.isEmpty())
+			if (entities != null && !entities.isEmpty() && !dataId.equals("") && fields != null && !fields.isEmpty())
 				loc.buildMapField(scope, entities, dataId, 
 						fields, regAlgo, normalizerType, 
 						floorValue, popTargetSize );
@@ -68,6 +73,68 @@ public class WithinGeometryLocaliser implements IGenstarLocaliser {
 			    break;
 
 			}
+		}
+		
+		if (locStatement.getConstraints() != null) {
+			IList constraints = Cast.asList(scope, loc.getConstraints());
+			if (constraints != null && !constraints.isEmpty()) {
+				for (Object el : constraints) {
+					Map m = Cast.asMap(scope, el, false);
+					if (m == null) continue;
+					String type = (String) m.get("type");
+					if (type == null) continue;
+					ASpatialConstraint c = null;
+					switch(type) {
+					  case "density":
+						  Double maxDensity = (Double) m.get("max_density");
+						  if (maxDensity != null) 
+							  c = new SpatialConstraintMaxDensity(nestList, maxDensity);
+						  else {
+							  String densityFeature = (String) m.get("density_attribute");
+							  if (densityFeature != null)
+								  c = new SpatialConstraintMaxDensity(nestList, densityFeature);
+						  }
+						  break;
+					  case "number":
+						  Double maxNumber = (Double) m.get("max_number");
+						  if (maxNumber != null) 
+							  c = new SpatialConstraintMaxNumber(nestList, maxNumber);
+						  else {
+							  String numberFeature = (String) m.get("density_attribute");
+							  if (numberFeature != null)
+								  c = new SpatialConstraintMaxNumber(nestList, numberFeature);
+						  }
+						  
+						  break;
+					  case "distance":
+						  Map<IShape,Double> distanceEntity = (Map) m.get("distance_entity");
+						  if (distanceEntity != null && !distanceEntity.isEmpty())
+							  c = new SpatialConstraintMaxDistance(distanceEntity);
+						  break;
+					  case "localization":
+						  IShape bounds = (IShape) m.get("bounds");
+						  if (bounds != null)
+							  c = new SpatialConstraintLocalization(bounds);
+						  break;
+
+					}
+					if (c != null) {
+						Integer priority = (Integer) m.get("priority");
+						if (priority != null)
+							c.setPriority(priority);
+						Integer maxIncrease = (Integer) m.get("max_increase");
+						if (maxIncrease != null)
+							c.setPriority(maxIncrease);
+						Integer increaseStep = (Integer) m.get("step_increase");
+						if (increaseStep != null)
+							c.setPriority(increaseStep);
+
+						loc.addConstraint(c);
+					}
+						
+				}
+			}
+			
 		}
 		
 		if (locStatement.getMinDist() != null) {

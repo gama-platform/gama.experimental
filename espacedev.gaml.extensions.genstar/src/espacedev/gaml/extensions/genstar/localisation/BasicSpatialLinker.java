@@ -1,5 +1,7 @@
 package espacedev.gaml.extensions.genstar.localisation;
 
+import java.util.Map;
+
 import espacedev.gaml.extensions.genstar.statement.SpatialLinkerStatement;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.IShape;
@@ -29,7 +31,7 @@ public class BasicSpatialLinker implements IGenstarLinker {
 	public void link(IScope scope, IContainer<?, IAgent> pop, IContainer<?, IShape> candidates, SpatialLinkerStatement linkStatement) {
 		String nestAtt = linkStatement.getNestAttribute() != null ? Cast.asString(scope, linkStatement.getNestAttribute().value(scope)) : null;
 		IList<IShape> nestList = Cast.asList(scope, candidates).listValue(scope, Types.GEOMETRY, false); 
-		
+		Map parameters = linkStatement.getParameters() != null ? Cast.asMap(scope, linkStatement.getParameters().value(scope), false) : null;
 		ISpatialDistribution<IShape> distribution = null;
 			
 		String di = linkStatement.getDistribution() != null ? 
@@ -37,8 +39,15 @@ public class BasicSpatialLinker implements IGenstarLinker {
 					"uniform";
 		switch(di) {
 			case "gravity":
-				distribution =  SpatialDistributionFactory.getInstance()
-							.getGravityModelDistribution(nestList, 3.0,(IList<IAgent>) pop);
+				Double buffer = (Double) parameters.get("buffer");
+				Double frictionCoeff =  (Double) parameters.get("friction_coeff");
+				if (frictionCoeff == null) frictionCoeff = 1.0;
+				if (buffer != null)
+					distribution =  SpatialDistributionFactory.getInstance().
+							getGravityModelDistribution(scope, nestList, frictionCoeff, buffer, (IList<IAgent>) pop);
+				else
+					distribution =  SpatialDistributionFactory.getInstance()
+							.getGravityModelDistribution(nestList, frictionCoeff,(IList<IAgent>) pop);
 				break;
 			case "area":
 				distribution = SpatialDistributionFactory.getInstance().getAreaBasedDistribution(scope, nestList);
