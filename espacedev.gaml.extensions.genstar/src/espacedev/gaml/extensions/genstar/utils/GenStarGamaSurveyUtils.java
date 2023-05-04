@@ -23,8 +23,8 @@ import core.metamodel.value.IValue;
 import msi.gama.common.util.FileUtils;
 import msi.gama.runtime.IScope;
 import msi.gama.util.file.GamaCSVFile;
+import msi.gama.util.file.GamaCSVFile.CSVInfo;
 import msi.gama.util.file.csv.CsvReader;
-import msi.gama.util.file.csv.CsvReader.Stats;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 import ummisco.gama.dev.utils.DEBUG;
@@ -53,12 +53,12 @@ public class GenStarGamaSurveyUtils {
 	public GenStarGamaSurveyUtils(final IScope scope, final GamaCSVFile survey,
 			final List<Attribute<? extends IValue>> atts) {
 		this.path = Paths.get(FileUtils.constructAbsoluteFilePath(scope, survey.getPath(scope), false));
-		this.stats = CsvReader.getStats(this.path.toString(), null);
-		this.atts = atts;
+		this.stats = survey.getInfo(scope, null);
+		this.atts = atts; 
 	}
 
 	/** The stats. */
-	private final Stats stats;
+	private final CSVInfo stats;
 
 	/** The path. */
 	private final Path path;
