@@ -44,7 +44,7 @@ global {
 experiment qrcode_usage type: gui {
 	output {
 		display image_from_webcam {
-			image matrix:img;
+			image image(img);
 		}
 		
 		display image_decoded_simple {
