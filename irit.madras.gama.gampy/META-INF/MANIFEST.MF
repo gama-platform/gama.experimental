@@ -4,7 +4,7 @@ Bundle-Name: Gampy
 Bundle-SymbolicName: irit.madras.gama.gampy;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: irit.madras.gama.gampy
-Require-Bundle: msi.gama.core;bundle-version="1.9.0",
- msi.gama.ext;bundle-version="1.9.0"
+Require-Bundle: msi.gama.core,
+ msi.gama.ext
 Automatic-Module-Name: irit.madras.gama.gampy
 Bundle-RequiredExecutionEnvironment: JavaSE-17

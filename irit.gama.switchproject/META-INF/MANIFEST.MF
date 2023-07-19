@@ -5,8 +5,8 @@ Bundle-SymbolicName: irit.gama.switchproject;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: irit.gama.switchproject
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: msi.gama.core;bundle-version="1.8.1",
- msi.gama.ext;bundle-version="1.8.1"
+Require-Bundle: msi.gama.core,
+ msi.gama.ext
 Export-Package: irit.gama.common.interfaces,
  irit.gama.util.deque,
  irit.gama.util.event_manager,

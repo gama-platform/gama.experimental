@@ -5,8 +5,8 @@ Bundle-SymbolicName: miat.gaml.extensions.argumentation;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: miat.gaml.extensions.argumentation
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: msi.gama.core;bundle-version="1.9.0",
- msi.gama.ext;bundle-version="1.9.0"
+Require-Bundle: msi.gama.core,
+ msi.gama.ext
 Export-Package: miat.gaml.extensions.argumentation.skills,
  miat.gaml.extensions.argumentation.types
 Bundle-ClassPath: lib/jArgSemSAT.jar,

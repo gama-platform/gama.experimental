@@ -5,13 +5,13 @@ Bundle-SymbolicName: across.gaml.extensions.webcam;singleton:=true
 Bundle-Version: 1.9.0.qualifier
 Export-Package: across.gaml.extensions.webcam.operators,
  across.gaml.extensions.webcam.types
-Require-Bundle: msi.gama.core;bundle-version="1.9.0",
+Require-Bundle: msi.gama.core,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.equinox.p2.core,
  org.eclipse.equinox.p2.metadata,
  org.eclipse.equinox.p2.operations,
- msi.gama.ext;bundle-version="1.9.0",
+ msi.gama.ext,
  org.apache.commons.compress,
  org.apache.commons.jxpath,
  org.apache.commons.io,

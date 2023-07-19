@@ -5,8 +5,8 @@ Bundle-SymbolicName: ummisco.gama.extensions.matlab;singleton:=true
 Bundle-Version: 1.9.0.qualifier
 Automatic-Module-Name: ummisco.gama.extensions.matlab
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: msi.gama.core;bundle-version="1.9.0",
- msi.gama.ext;bundle-version="1.9.0"
+Require-Bundle: msi.gama.core,
+ msi.gama.ext
 Export-Package: ummisco.matlab.gaml.files,
  ummisco.matlab.gaml.species
 Bundle-ClassPath: libs/engine.jar,
