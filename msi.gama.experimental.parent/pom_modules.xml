@@ -12,6 +12,7 @@
  <module>../idees.gama.weka</module> 
  <module>../irit.gama.feature.switchproject</module> 
  <module>../irit.gama.switchproject</module> 
+ <module>../irit.madras.gama.gampy</module> 
  <module>../miat.gama.extension.ifcfile</module> 
  <module>../miat.gama.extension.qrcode</module> 
  <module>../miat.gama.feature.ifcfile</module> 

@@ -1,12 +1,4 @@
 
-	<properties>
-		<tycho.version>3.0.3</tycho.version>
-		<jdk.version>17</jdk.version>
-		<gama.version>1.9.1</gama.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<wagon.version>3.5.3</wagon.version>
-	</properties>
-
 	<build>
 		<extensions>
 			<extension>
@@ -90,9 +82,6 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho.version}</version>
 				<configuration>
-					<!-- <target> <artifact> <groupId>msi.gama</groupId> <artifactId>gama.target.platform</artifactId> 
-						<version>1.9.0-SNAPSHOT</version> </artifact> </target> -->
-
 					<dependency-resolution>
 						<optionalDependencies>ignore</optionalDependencies>
 					</dependency-resolution>

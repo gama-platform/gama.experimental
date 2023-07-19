@@ -2,7 +2,7 @@
 <feature
       id="across.gaml.feature.webcam"
       label="Webcam"
-      version="1.9.0.qualifier">
+      version="1.9.1.qualifier">
 
    <description url="http://www.example.com/description">
       Enables webcam handling in GAMA by adding a new type and operators.
