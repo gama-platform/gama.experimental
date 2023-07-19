@@ -3,14 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>msi.gama</groupId>
 	<artifactId>msi.gama.experimental.parent</artifactId>
-	<version>1.9.0-SNAPSHOT</version>
+	<version>${gama.version}-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<repositories>
 		<repository>
 			<id>p2Repo</id>
 			<name>p2Repo</name>
-			<url>https://updates.gama-platform.org/1.9.0</url>
+			<url>https://updates.gama-platform.org/${gama.version}</url>
 			<layout>p2</layout>
 			<snapshots>
 				<enabled>true</enabled>
@@ -24,7 +24,7 @@
 		<repository>
 			<id>gamaRepo</id>
 			<name>gamaRepo</name>
-			<url>https://updates.gama-platform.org/1.9.0</url>
+			<url>https://updates.gama-platform.org/${gama.version}</url>
 			<layout>default</layout>
 			<snapshots>
 				<enabled>true</enabled>
@@ -52,96 +52,96 @@
 		<dependency>
 			<groupId>ummisco.gama</groupId>
 			<artifactId>ummisco.gama.annotations</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.processor</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.core</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.ext</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.application</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.headless</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gama.ui.navigator</groupId>
 			<artifactId>ummisco.gama.ui.navigator</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gama.ui.experiment</groupId>
 			<artifactId>ummisco.gama.ui.experiment</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>ummisco.gama.ui.modeling</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>ummisco.gama.ui.shared</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gama</groupId>
 			<artifactId>msi.gama.lang.gaml</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gama.opengl</groupId>
 			<artifactId>ummisco.gama.opengl</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gaml.extensions.maths</groupId>
 			<artifactId>ummisco.gaml.extensions.maths</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>msi.gaml.architecture.simplebdi</groupId>
 			<artifactId>msi.gaml.architecture.simplebdi</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>irit.gaml.extensions.database</groupId>
 			<artifactId>irit.gaml.extensions.database</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gama.network</groupId>
 			<artifactId>ummisco.gama.network</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ummisco.gama.serialize</groupId>
 			<artifactId>ummisco.gama.serialize</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>simtools.gaml.extensions.physics</groupId>
 			<artifactId>simtools.gaml.extensions.physics</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>simtools.gaml.extensions.traffic</groupId>
 			<artifactId>simtools.gaml.extensions.traffic</artifactId>
-			<version>1.9.0-SNAPSHOT</version>
+			<version>${gama.version}</version>
 		</dependency>
 	</dependencies>
