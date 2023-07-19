@@ -6,7 +6,7 @@ name: Github Travis
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ GAMA_1.9.1 ]
+    branches: [ GAMA_1.9.2 ]
   workflow_dispatch:  # For manual trigger
 
 jobs:
@@ -61,25 +61,4 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           TRAVIS_COMMIT: ${ GITHUB_SHA }
           TRAVIS_EVENT_TYPE: ${{ github.event_name }}
-              
-
-      - name: Check if it's a manual trigger and should deploy
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-             echo "The action will continue and deploy new artifacts"
-             echo "MSG=ci deploy" >> $GITHUB_ENV
-          fi
-
-      - name: Publish to Github
-        shell: bash
-        run: $GITHUB_WORKSPACE/publish.sh
-        env:  
-          SSH_USER_PWD: ${{ secrets.USER_PWD }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          GITHUB_TOKEN: ${{ github.token }}
-          SSHPASS: ${{ secrets.USER_PWD }}
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          TRAVIS_COMMIT: ${ GITHUB_SHA }
-          TRAVIS_EVENT_TYPE: ${{ github.event_name }}
-          MSG: ${{ env.MSG }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          
