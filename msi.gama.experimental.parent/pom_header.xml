@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>msi.gama</groupId>
 	<artifactId>msi.gama.experimental.parent</artifactId>
-	<version>1.9.1-SNAPSHOT</version>
+	<version>1.9.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<properties>
 		<tycho.version>3.0.3</tycho.version>
 		<jdk.version>17</jdk.version>
-		<gama.version>1.9.1</gama.version>
+		<gama.version>1.9.2-SNAPSHOT</gama.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<wagon.version>3.5.3</wagon.version>
 	</properties>

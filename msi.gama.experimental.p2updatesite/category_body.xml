@@ -1,6 +1,6 @@
 
  
- <feature url="features/across.gaml.feature.imageanalysis_.jar" id="across.gaml.feature.imageanalysis" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/across.gaml.feature.imageanalysis_1.0.0.qualifier.jar" id="across.gaml.feature.imageanalysis" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/across.gaml.feature.webcam_.jar" id="across.gaml.feature.webcam" version=""> <category name="gama.optional"/> </feature> 
  <feature url="features/espacedev.gaml.feature.genstar_.jar" id="espacedev.gaml.feature.genstar" version=""> <category name="gama.optional"/> </feature> 
  <feature url="features/femto_st.gama.feature.mpi_1.0.0.qualifier.jar" id="femto_st.gama.feature.mpi" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 

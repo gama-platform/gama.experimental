@@ -6,6 +6,8 @@
  <module>../across.gaml.feature.webcam</module> 
  <module>../cict.feature.netcdf</module> 
  <module>../cict.gaml.extensions.netcdf</module> 
+ <module>../espacedev.gaml.extensions.genstar</module> 
+ <module>../espacedev.gaml.feature.genstar</module> 
  <module>../femto_st.gama.feature.mpi</module> 
  <module>../femto_st.gama.mpi</module> 
  <module>../idees.gama.features.weka</module> 
