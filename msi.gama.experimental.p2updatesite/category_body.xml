@@ -4,7 +4,6 @@
  <feature url="features/across.gaml.feature.webcam_.jar" id="across.gaml.feature.webcam" version=""> <category name="gama.optional"/> </feature> 
  <feature url="features/espacedev.gaml.feature.genstar_.jar" id="espacedev.gaml.feature.genstar" version=""> <category name="gama.optional"/> </feature> 
  <feature url="features/femto_st.gama.feature.mpi_1.0.0.qualifier.jar" id="femto_st.gama.feature.mpi" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/irit.gama.feature.switchproject_1.0.0.qualifier.jar" id="irit.gama.feature.switchproject" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/miat.gama.feature.qrcode_1.0.0.qualifier.jar" id="miat.gama.feature.qrcode" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/mit.feature.launchpad_1.0.0.qualifier.jar" id="mit.feature.launchpad" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/ummisco.gama.feature.camisole_.jar" id="ummisco.gama.feature.camisole" version=""> <category name="gama.optional"/> </feature> 

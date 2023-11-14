@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>msi.gama</groupId>
 	<artifactId>msi.gama.experimental.parent</artifactId>
-	<version>1.9.2-SNAPSHOT</version>
+	<version>1.9.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<properties>
 		<tycho.version>3.0.3</tycho.version>
 		<jdk.version>17</jdk.version>
-		<gama.version>1.9.2-SNAPSHOT</gama.version>
+		<gama.version>1.9.3-SNAPSHOT</gama.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<wagon.version>3.5.3</wagon.version>
 	</properties>
@@ -18,7 +18,7 @@
 		<repository>
 			<id>p2Repo</id>
 			<name>p2Repo</name>
-			<url>https://updates.gama-platform.org/${gama.version}</url>
+			<url>https://updates.gama-platform.org/1.9.3</url>
 			<layout>p2</layout>
 			<snapshots>
 				<enabled>true</enabled>
@@ -32,7 +32,7 @@
 		<repository>
 			<id>gamaRepo</id>
 			<name>gamaRepo</name>
-			<url>https://updates.gama-platform.org/${gama.version}</url>
+			<url>https://updates.gama-platform.org/1.9.3</url>
 			<layout>default</layout>
 			<snapshots>
 				<enabled>true</enabled>
@@ -45,7 +45,7 @@
 		</repository>
 		<repository>
 			<id>eclipse-swt</id>
-			<url>https://download.eclipse.org/releases/2022-12</url>
+			<url>https://download.eclipse.org/releases/2023-09</url>
 			<layout>p2</layout>
 			<releases>
 				<enabled>true</enabled>
