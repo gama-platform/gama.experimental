@@ -1,11 +1,11 @@
- <feature url="features/ummisco.gama.feature.gaming_1.9.2.qualifier.jar" id="ummisco.gama.feature.gaming" version="1.9.2.qualifier"> <category name="gama.optional.participative"/> </feature> 
- <feature url="features/ummisco.gama.feature.remote.gui_1.9.2.qualifier.jar" id="ummisco.gama.feature.remote.gui" version="1.9.2.qualifier"> <category name="gama.optional.participative"/> </feature> 
+ <feature url="features/ummisco.gama.feature.gaming_1.9.3.qualifier.jar" id="ummisco.gama.feature.gaming" version="1.9.3.qualifier"> <category name="gama.optional.participative"/> </feature> 
+ <feature url="features/ummisco.gama.feature.remote.gui_1.9.3.qualifier.jar" id="ummisco.gama.feature.remote.gui" version="1.9.3.qualifier"> <category name="gama.optional.participative"/> </feature> 
  <feature url="features/idees.gama.features.weka_1.7.0.qualifier.jar" id="idees.gama.features.weka" version="1.7.0.qualifier"> <category name="gama.optional.connectors.math"/> </feature> 
- <feature url="features/ummisco.gama.feature.matlab_1.9.2.qualifier.jar" id="ummisco.gama.feature.matlab" version="1.9.2.qualifier"> <category name="gama.optional.connectors.math"/> </feature> 
- <feature url="features/ummisco.gaml.feature.rjava_1.9.2.qualifier.jar" id="ummisco.gaml.feature.rjava" version="1.9.2.qualifier"> <category name="gama.optional.connectors.math"/> </feature> 
+ <feature url="features/ummisco.gama.feature.matlab_1.9.3.qualifier.jar" id="ummisco.gama.feature.matlab" version="1.9.3.qualifier"> <category name="gama.optional.connectors.math"/> </feature> 
+ <feature url="features/ummisco.gaml.feature.rjava_1.9.3.qualifier.jar" id="ummisco.gaml.feature.rjava" version="1.9.3.qualifier"> <category name="gama.optional.connectors.math"/> </feature> 
  <feature url="features/miat.gama.feature.ifcfile_1.0.0.qualifier.jar" id="miat.gama.feature.ifcfile" version="1.0.0.qualifier"> <category name="gama.optional.file.formats"/> </feature> 
  <feature url="features/cict.feature.netcdf_1.0.0.qualifier.jar" id="cict.feature.netcdf" version="1.0.0.qualifier"> <category name="gama.optional.file.formats"/> </feature> 
  <feature url="features/miat.gaml.extension.bayesiannetwork.feature_1.0.0.qualifier.jar" id="miat.gaml.extension.bayesiannetwork.feature" version="1.0.0.qualifier"> <category name="gama.optional.classical.ia"/> </feature> 
  <feature url="features/miat.gaml.extensions.argumentation.feature_1.0.0.qualifier.jar" id="miat.gaml.extensions.argumentation.feature" version="1.0.0.qualifier"> <category name="gama.optional.classical.ia"/> </feature> 
- <feature url="features/ummisco.gaml.feature.fuzzylogic_1.9.2.qualifier.jar" id="ummisco.gaml.feature.fuzzylogic" version="1.9.2.qualifier"> <category name="gama.optional.classical.ia"/> </feature> 
+ <feature url="features/ummisco.gaml.feature.fuzzylogic_1.9.3.qualifier.jar" id="ummisco.gaml.feature.fuzzylogic" version="1.9.3.qualifier"> <category name="gama.optional.classical.ia"/> </feature> 
  
