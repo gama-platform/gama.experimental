@@ -46,7 +46,7 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaColor;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IList;
-import msi.gama.util.file.GamaImageFile;
+import ummisco.gaml.extensions.image.GamaImageFile;
 import msi.gaml.skills.Skill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.types.IType;
