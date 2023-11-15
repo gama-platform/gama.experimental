@@ -2,8 +2,6 @@ package across.gaml.extensions.webcam.types;
 
 import java.awt.Dimension;
 
-import com.github.sarxos.webcam.Webcam;
-
 import msi.gama.common.interfaces.IValue;
 import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.variable;
@@ -13,6 +11,8 @@ import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaPair;
 import msi.gama.util.IList;
+import msi.gama.util.file.json.Json;
+import msi.gama.util.file.json.JsonValue; 
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
@@ -63,13 +63,10 @@ public class GamaWebcam implements IValue {
 	
 	@Override
 	public String toString() {
-		return serialize(true);
+		return "" +id;
 	}
 
-	@Override
-	public String serialize(final boolean includingBuiltIn) {
-		return ""+id;
-	}
+	
 	
 	@Override
 	public String stringValue(final IScope scope) throws GamaRuntimeException {
@@ -78,6 +75,12 @@ public class GamaWebcam implements IValue {
 
 	@Override
 	public IValue copy(IScope scope) throws GamaRuntimeException {
+		return null;
+	}
+
+	@Override
+	public JsonValue serializeToJson(Json json) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
