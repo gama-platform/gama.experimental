@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Webcam plugin
 Bundle-SymbolicName: across.gaml.extensions.webcam;singleton:=true
-Bundle-Version: 1.9.2.qualifier
+Bundle-Version: 1.9.3.qualifier
 Export-Package: across.gaml.extensions.webcam.operators,
  across.gaml.extensions.webcam.types
 Require-Bundle: msi.gama.core,
