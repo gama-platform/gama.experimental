@@ -20,18 +20,18 @@ import boofcv.struct.image.GrayS16;
 import boofcv.struct.image.GrayS32;
 import boofcv.struct.image.GrayU8;
 import georegression.struct.point.Point2D_I32;
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.runtime.IScope;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gama.util.matrix.GamaIntMatrix;
-import msi.gama.util.matrix.IMatrix;
-import msi.gaml.operators.Spatial.Creation;
-import msi.gaml.types.IType;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.core.metamodel.shape.IShape;
+import gama.annotations.precompiler.IOperatorCategory;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.core.runtime.IScope;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.core.util.matrix.GamaIntMatrix;
+import gama.core.util.matrix.IMatrix;
+import gama.gaml.operators.Spatial.Creation;
+import gama.gaml.types.IType;
 
 public class GeneralOperators {
 

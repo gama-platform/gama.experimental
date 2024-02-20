@@ -39,21 +39,21 @@ import boofcv.struct.image.ImageType;
 import boofcv.struct.image.Planar;
 import georegression.struct.point.Point2D_F64;
 import georegression.struct.point.Point2D_I32;
-import msi.gama.common.geometry.Envelope3D;
-import msi.gama.common.util.FileUtils;
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.runtime.GAMA;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.GamaPair;
-import msi.gama.util.IList;
-import msi.gama.util.matrix.GamaIntMatrix;
-import msi.gama.util.matrix.IMatrix;
+import gama.core.common.geometry.Envelope3D;
+import gama.core.common.util.FileUtils;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.core.metamodel.shape.IShape;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.annotations.precompiler.IOperatorCategory;
+import gama.core.runtime.GAMA;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaListFactory;
+import gama.core.util.GamaPair;
+import gama.core.util.IList;
+import gama.core.util.matrix.GamaIntMatrix;
+import gama.core.util.matrix.IMatrix;
 
 public class PatternMatching {
 	// hdtrung - save 4 selected points of map: top-left, top-right, bottom-right, bottom-left

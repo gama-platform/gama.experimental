@@ -12,8 +12,8 @@ import javax.imageio.ImageIO;
 
 import across.gaml.extensions.webcam.types.GamaWebcam;
 import msi.gama.common.util.FileUtils;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.operator;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.IOperatorCategory;
 import msi.gama.runtime.GAMA;
 import msi.gama.runtime.IScope;
