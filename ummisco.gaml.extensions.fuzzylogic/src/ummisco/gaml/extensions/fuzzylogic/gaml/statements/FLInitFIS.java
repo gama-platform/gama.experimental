@@ -2,27 +2,27 @@ package ummisco.gaml.extensions.fuzzylogic.gaml.statements;
 
 import java.util.Map;
 
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.ISymbolKind;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.facet;
-import msi.gama.precompiler.GamlAnnotations.facets;
-import msi.gama.precompiler.GamlAnnotations.inside;
-import msi.gama.precompiler.GamlAnnotations.symbol;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaMapFactory;
-import msi.gama.util.file.GamaFile;
-import msi.gaml.compilation.annotations.serializer;
-import msi.gaml.compilation.annotations.validator;
-import msi.gaml.descriptions.IDescription;
-import msi.gaml.descriptions.StatementDescription;
-import msi.gaml.descriptions.SymbolDescription;
-import msi.gaml.descriptions.SymbolSerializer;
-import msi.gaml.expressions.IExpression;
-import msi.gaml.statements.AbstractStatement;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.annotations.precompiler.ISymbolKind;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.facet;
+import gama.annotations.precompiler.GamlAnnotations.facets;
+import gama.annotations.precompiler.GamlAnnotations.inside;
+import gama.annotations.precompiler.GamlAnnotations.symbol;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaMapFactory;
+import gama.core.util.file.GamaFile;
+import gama.gaml.compilation.annotations.serializer;
+import gama.gaml.compilation.annotations.validator;
+import gama.gaml.descriptions.IDescription;
+import gama.gaml.descriptions.StatementDescription;
+import gama.gaml.descriptions.SymbolDescription;
+import gama.gaml.descriptions.SymbolSerializer;
+import gama.gaml.expressions.IExpression;
+import gama.gaml.statements.AbstractStatement;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 
 import net.sourceforge.jFuzzyLogic.FIS;
 

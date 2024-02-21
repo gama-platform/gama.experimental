@@ -1,19 +1,18 @@
 package ummisco.gaml.extensions.fuzzylogic.gaml;
 
-import msi.gama.precompiler.IConcept;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-
-import msi.gama.common.geometry.Envelope3D;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.file;
-import msi.gama.util.IList;
-import msi.gama.util.file.GamaFile;
-import msi.gama.util.file.GamaFileMetaData;
-import msi.gaml.operators.Strings;
-import msi.gaml.types.IContainerType;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.file;
+import gama.annotations.precompiler.IConcept;
+import gama.core.common.geometry.Envelope3D;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.IList;
+import gama.core.util.file.GamaFile;
+import gama.core.util.file.GamaFileMetaData;
+import gama.gaml.operators.Strings;
+import gama.gaml.types.IContainerType;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 import net.sourceforge.jFuzzyLogic.FIS;
 import net.sourceforge.jFuzzyLogic.FunctionBlock;
 import net.sourceforge.jFuzzyLogic.rule.RuleBlock;
