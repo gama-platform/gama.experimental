@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Weka plug-in
-Bundle-SymbolicName: idees.gama.weka;singleton:=true
+Bundle-SymbolicName: gama.experimental.weka;singleton:=true
 Bundle-Version: 1.7.0.qualifier
-Require-Bundle: msi.gama.core,
- msi.gama.ext
+Require-Bundle: gama.core,
+ gama.dependencies
 Bundle-ClassPath: lib/weka.jar,
  .
 Export-Package: idees.gama.operators

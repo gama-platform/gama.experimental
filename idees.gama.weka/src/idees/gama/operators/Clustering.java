@@ -1,16 +1,17 @@
 package idees.gama.operators;
 
 
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.*;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.*;
-import msi.gaml.operators.Cast;
-import msi.gaml.types.*;
+import gama.core.metamodel.agent.IAgent;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.annotations.precompiler.*;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.*;
+import gama.gaml.operators.Cast;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 import weka.clusterers.*;
 import weka.clusterers.forOPTICSAndDBScan.DataObjects.ManhattanDataObject;
 import weka.core.*;

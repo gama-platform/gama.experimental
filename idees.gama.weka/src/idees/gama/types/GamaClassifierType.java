@@ -1,11 +1,11 @@
 package idees.gama.types;
 
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.GamlAnnotations.type;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gaml.types.GamaType;
-import msi.gaml.types.IType;
+import gama.annotations.precompiler.IConcept;
+import gama.annotations.precompiler.GamlAnnotations.type;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.gaml.types.GamaType;
+import gama.gaml.types.IType;
 
 @type(name = "classifier", id = GamaClassifierType.id, wraps = { GamaClassifier.class }, concept = { IConcept.TYPE, IConcept.STATISTIC })
 public class GamaClassifierType extends GamaType<GamaClassifier> {
