@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Webcam plugin
+Bundle-SymbolicName: gama.experimental.webcam;singleton:=true
+Bundle-Vendor: ACROSS - IRD - TLU
+Bundle-Version: 1.9.2.qualifier
+Export-Package: gama.experimental.webcam.operators,
+ gama.experimental.webcam.types
+Require-Bundle: gama.core,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.equinox.p2.core,
+ org.eclipse.equinox.p2.metadata,
+ org.eclipse.equinox.p2.operations,
+ gama.dependencies,
+ org.apache.commons.compress,
+ org.apache.commons.jxpath,
+ org.apache.commons.io,
+ org.eclipse.xsd,
+ com.google.guava;bundle-version="30.1.0"
+Automatic-Module-Name: across.gaml.extensions.webcam
+Bundle-ClassPath: lib/webcam-capture-0.3.13-SNAPSHOT.jar,
+ lib/bridj-0.7.0.jar,
+ lib/slf4j-nop-1.7.2.jar,
+ lib/slf4j-api-1.7.2.jar,
+ lib/aalto-xml-1.3.2.jar,
+ lib/stax2-api-4.2.jar,
+ lib/webcam-capture-driver-native-1.0.0-SNAPSHOT.jar,
+ lib/jna-5.12.1.jar,
+ lib/jna-platform-5.12.1.jar,
+ .
+Bundle-RequiredExecutionEnvironment: JavaSE-17

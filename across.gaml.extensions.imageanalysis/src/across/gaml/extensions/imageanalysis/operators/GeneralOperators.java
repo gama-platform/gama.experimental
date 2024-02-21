@@ -3,7 +3,6 @@ package across.gaml.extensions.imageanalysis.operators;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import across.gaml.extensions.webcam.operators.WebcamOperators;
 import boofcv.alg.feature.detect.edge.CannyEdge;
 import boofcv.alg.feature.detect.edge.EdgeContour;
 import boofcv.alg.filter.binary.BinaryImageOps;
@@ -30,6 +29,7 @@ import gama.core.util.GamaListFactory;
 import gama.core.util.IList;
 import gama.core.util.matrix.GamaIntMatrix;
 import gama.core.util.matrix.IMatrix;
+import gama.experimental.webcam.operators.WebcamOperators;
 import gama.gaml.operators.Spatial.Creation;
 import gama.gaml.types.IType;
 

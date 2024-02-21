@@ -8,7 +8,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: gama.dependencies,
  gama.core,
- across.gaml.extensions.webcam,
+ gama.experimental.webcam,
  com.google.guava;bundle-version="30.1.0"
 Bundle-ClassPath: lib/boofcv-core-0.40.1.jar,
  lib/boofcv-io-0.40.1.jar,
