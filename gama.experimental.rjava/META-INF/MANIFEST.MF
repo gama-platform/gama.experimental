@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: RJava extension
+Bundle-SymbolicName: gama.experimental.rjava;singleton:=true
+Bundle-Vendor: UMMISCO
+Bundle-Version: 1.9.2.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: gama.core;visibility:=reexport,
+ gama.dependencies;visibility:=reexport,
+ gama.extension.image;visibility:=reexport
+Bundle-ActivationPolicy: lazy
+Export-Package: gama.experimental.rjava,
+ org.rosuda.JRI,
+ org.rosuda.REngine,
+ org.rosuda.REngine.JRI
+Bundle-ClassPath: .,
+ lib/JRI.jar,
+ lib/JRIEngine.jar,
+ lib/REngine.jar
+Automatic-Module-Name: gama.experimental.rjava

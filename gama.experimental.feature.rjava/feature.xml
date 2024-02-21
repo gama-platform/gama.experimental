@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ummisco.gaml.feature.rjava"
+      id="gama.experimental.feature.rjava"
       label="RJava"
-      version="1.9.2.qualifier">
+      version="1.9.2.qualifier"
+      provider-name="UMMISCO">
 
    <description url="http://www.example.com/description">
       Adds to the gaml language the skill and operators necessary to bind agents to R.
@@ -21,9 +22,7 @@
    </url>
 
    <plugin
-         id="ummisco.gaml.extensions.rjava"
-         download-size="0"
-         install-size="0"
+         id="gama.experimental.rjava"
          version="0.0.0"/>
 
 </feature>

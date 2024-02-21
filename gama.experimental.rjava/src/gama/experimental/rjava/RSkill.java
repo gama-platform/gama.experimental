@@ -8,7 +8,7 @@
  * Visit https://github.com/gama-platform/gama for license information and contacts.
  *
  ********************************************************************************************************/
-package ummisco.gaml.extensions.rjava.skill;
+package gama.experimental.rjava;
 
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -28,29 +28,29 @@ import org.rosuda.JRI.RMainLoopCallbacks;
 import org.rosuda.JRI.RVector;
 import org.rosuda.JRI.Rengine;
 
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.GamaShape;
-import msi.gama.precompiler.GamlAnnotations.action;
-import msi.gama.precompiler.GamlAnnotations.arg;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.precompiler.ITypeProvider;
-import msi.gama.runtime.GAMA;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaColor;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import ummisco.gaml.extensions.image.GamaImageFile;
-import msi.gaml.skills.Skill;
-import msi.gaml.species.ISpecies;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.core.metamodel.shape.GamaShape;
+import gama.annotations.precompiler.GamlAnnotations.action;
+import gama.annotations.precompiler.GamlAnnotations.arg;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.annotations.precompiler.GamlAnnotations.skill;
+import gama.annotations.precompiler.IConcept;
+import gama.annotations.precompiler.IOperatorCategory;
+import gama.annotations.precompiler.ITypeProvider;
+import gama.core.runtime.GAMA;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaColor;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.extension.image.GamaImageFile;
+import gama.gaml.skills.Skill;
+import gama.gaml.species.ISpecies;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 
 /**
  * The Class RSkill.

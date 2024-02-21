@@ -8,7 +8,7 @@
  * 
  *
  **********************************************************************************************/
-package ummisco.gaml.extensions.rjava.skill;
+package gama.experimental.rjava;
 
 import java.awt.FileDialog;
 import java.awt.Frame;
