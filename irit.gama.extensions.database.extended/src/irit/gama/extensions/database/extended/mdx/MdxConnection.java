@@ -23,10 +23,10 @@ import org.olap4j.OlapStatement;
 import org.olap4j.Position;
 import org.olap4j.metadata.Member;
 
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
 
 /**
  * The Class MdxConnection.

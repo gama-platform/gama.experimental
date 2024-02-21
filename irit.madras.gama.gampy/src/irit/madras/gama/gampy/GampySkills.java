@@ -10,24 +10,24 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.onnxruntime.runner.OnnxRuntimeRunner;
 
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.GamlAnnotations.action;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.getter;
-import msi.gama.precompiler.GamlAnnotations.setter;
-import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.GamlAnnotations.variable;
-import msi.gama.precompiler.GamlAnnotations.vars;
-import msi.gama.precompiler.GamlAnnotations.arg;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gaml.skills.Skill;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.core.metamodel.agent.IAgent;
+import gama.annotations.precompiler.IConcept;
+import gama.annotations.precompiler.GamlAnnotations.action;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.annotations.precompiler.GamlAnnotations.getter;
+import gama.annotations.precompiler.GamlAnnotations.setter;
+import gama.annotations.precompiler.GamlAnnotations.skill;
+import gama.annotations.precompiler.GamlAnnotations.variable;
+import gama.annotations.precompiler.GamlAnnotations.vars;
+import gama.annotations.precompiler.GamlAnnotations.arg;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.gaml.skills.Skill;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 
 @skill (name = "gampy",
 	concept = { IConcept.SKILL },

@@ -17,9 +17,9 @@ import java.sql.SQLException;
 import org.olap4j.OlapConnection;
 import org.olap4j.OlapWrapper;
 
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import ummisco.gama.dev.utils.DEBUG;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.dev.DEBUG;
 
 /**
  * The Class MondrianConnection.

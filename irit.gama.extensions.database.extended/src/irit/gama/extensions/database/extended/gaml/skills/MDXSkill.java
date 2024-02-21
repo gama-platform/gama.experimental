@@ -12,18 +12,19 @@ package irit.gama.extensions.database.extended.gaml.skills;
 
 import org.olap4j.OlapConnection;
 
+import gama.annotations.precompiler.GamlAnnotations.action;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.skill;
+import gama.annotations.precompiler.GamlAnnotations.arg;
+import gama.annotations.precompiler.IConcept;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.IList;
+import gama.gaml.skills.Skill;
+import gama.gaml.types.IType;
 import irit.gama.extensions.database.extended.mdx.MdxConnection;
 import irit.gama.extensions.database.extended.mdx.MdxUtils;
-import msi.gama.precompiler.GamlAnnotations.action;
-import msi.gama.precompiler.GamlAnnotations.arg;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.IConcept;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.IList;
-import msi.gaml.skills.Skill;
-import msi.gaml.types.IType;
+
 
 /**
  * The Class MDXSkill.

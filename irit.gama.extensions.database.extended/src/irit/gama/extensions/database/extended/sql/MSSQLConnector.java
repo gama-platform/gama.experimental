@@ -3,9 +3,9 @@ package irit.gama.extensions.database.extended.sql;
 import java.util.HashMap;
 import java.util.Map;
 
-import irit.gaml.extensions.database.utils.sql.ISqlConnector;
-import irit.gaml.extensions.database.utils.sql.SqlConnection;
-import msi.gama.runtime.IScope;
+import gama.extension.database.utils.sql.ISqlConnector;
+import gama.extension.database.utils.sql.SqlConnection;
+import gama.core.runtime.IScope;
 
 public class MSSQLConnector implements ISqlConnector {
 

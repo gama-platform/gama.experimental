@@ -12,10 +12,10 @@ package irit.gama.extensions.database.extended.mdx;
 
 import java.util.Map;
 
-import msi.gama.common.util.FileUtils;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import ummisco.gama.dev.utils.DEBUG;
+import gama.core.common.util.FileUtils;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.dev.DEBUG;
 
 /**
  * The Class MdxUtils.
