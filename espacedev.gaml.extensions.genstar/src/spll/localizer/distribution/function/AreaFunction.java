@@ -10,7 +10,7 @@
  ********************************************************************************************************/
 package spll.localizer.distribution.function;
 
-import msi.gama.metamodel.shape.IShape;
+import gama.core.metamodel.shape.IShape;
 
 /**
  * The Class AreaFunction.

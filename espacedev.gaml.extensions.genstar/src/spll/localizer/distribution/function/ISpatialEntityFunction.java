@@ -12,8 +12,7 @@ package spll.localizer.distribution.function;
 
 import java.util.function.Function;
 
-import core.metamodel.value.IValue;
-import msi.gama.metamodel.shape.IShape;
+import gama.core.metamodel.shape.IShape;
 
 /**
  *

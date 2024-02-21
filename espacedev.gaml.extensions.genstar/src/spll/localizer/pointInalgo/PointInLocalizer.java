@@ -3,9 +3,9 @@ package spll.localizer.pointInalgo;
 import java.util.List;
 
 
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.IScope;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.IScope;
 
 public interface PointInLocalizer {
 

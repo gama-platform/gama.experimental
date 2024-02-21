@@ -17,7 +17,7 @@ import core.metamodel.attribute.Attribute;
 import core.metamodel.value.IValue;
 import gospl.GosplPopulation;
 import gospl.distribution.matrix.INDimensionalMatrix;
-import ummisco.gama.dev.utils.DEBUG;
+import gama.dev.DEBUG;
 
 /**
  * The Class YangComposerAlgo.

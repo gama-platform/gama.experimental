@@ -5,14 +5,14 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.IScope;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gaml.operators.Spatial.Queries;
-import msi.gaml.operators.Spatial.Transformations;
-import msi.gaml.types.Types;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.IScope;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.gaml.operators.Spatial.Queries;
+import gama.gaml.operators.Spatial.Transformations;
+import gama.gaml.types.Types;
 
 /**
  * Function that computes probability based on the gravity model

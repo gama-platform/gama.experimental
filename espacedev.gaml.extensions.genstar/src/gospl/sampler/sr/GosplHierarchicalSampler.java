@@ -32,7 +32,7 @@ import gospl.distribution.matrix.ISegmentedNDimensionalMatrix;
 import gospl.distribution.matrix.coordinate.ACoordinate;
 import gospl.distribution.matrix.coordinate.GosplCoordinate;
 import gospl.sampler.IHierarchicalSampler;
-import ummisco.gama.dev.utils.DEBUG;
+import gama.dev.DEBUG;
 
 /**
  * A Hierarchical sampler explores the variables in a given order to generate the individuals.

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
-import ummisco.gama.dev.utils.DEBUG;
+import gama.dev.DEBUG;
 
 /**
  * The Class GSDisplayUtil.

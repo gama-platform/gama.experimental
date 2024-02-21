@@ -32,7 +32,7 @@ import gospl.distribution.matrix.control.ControlFrequency;
 import gospl.distribution.matrix.coordinate.ACoordinate;
 import gospl.sampler.IDistributionSampler;
 import gospl.sampler.IEntitySampler;
-import ummisco.gama.dev.utils.DEBUG;
+import gama.dev.DEBUG;
 
 /**
  *

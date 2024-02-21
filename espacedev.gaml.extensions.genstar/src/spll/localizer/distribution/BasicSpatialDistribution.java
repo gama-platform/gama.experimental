@@ -4,12 +4,12 @@ import java.util.stream.Collectors;
 
 import core.util.random.roulette.ARouletteWheelSelection;
 import core.util.random.roulette.RouletteWheelSelectionFactory;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.IScope;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gaml.types.Types;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.IScope;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.gaml.types.Types;
 import spll.localizer.distribution.function.ISpatialEntityFunction;
 
 /**

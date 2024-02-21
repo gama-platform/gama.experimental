@@ -1,14 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Genstar
-Bundle-SymbolicName: espacedev.gaml.extensions.genstar;singleton:=true
+Bundle-SymbolicName: gama.experimental.genstar;singleton:=true
 Bundle-Version: 1.9.2.qualifier
 Automatic-Module-Name: espacedev.gaml.extensions.genstar
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: msi.gama.core,
- msi.gama.ext,
- org.apache.commons.io,
- com.google.guava;bundle-version="30.1.0"
+Require-Bundle: com.google.guava;bundle-version="30.1.0",
+ gama.dependencies,
+ gama.core;bundle-version="0.0.0"
 Bundle-ClassPath: .,
  lib/jackson-annotations-2.13.2.jar,
  lib/jackson-core-2.13.2.jar,
@@ -25,3 +24,27 @@ Export-Package: com.fasterxml.jackson.annotation,
  espacedev.gaml.extensions.genstar.utils,
  org.apache.poi,
  org.apache.poi.ss.usermodel
+Import-Package: gama.annotations.precompiler,
+ gama.core.common.interfaces,
+ gama.core.kernel.experiment,
+ gama.core.kernel.model,
+ gama.core.kernel.simulation,
+ gama.core.metamodel.agent,
+ gama.core.metamodel.population,
+ gama.core.runtime,
+ gama.core.runtime.exceptions,
+ gama.core.util,
+ gama.core.util.file,
+ gama.dev,
+ gama.gaml.compilation,
+ gama.gaml.compilation.annotations,
+ gama.gaml.descriptions,
+ gama.gaml.expressions,
+ gama.gaml.expressions.types,
+ gama.gaml.interfaces,
+ gama.gaml.operators,
+ gama.gaml.species,
+ gama.gaml.statements,
+ gama.gaml.types,
+ gaml.compiler.gaml,
+ org.apache.commons.text.similarity

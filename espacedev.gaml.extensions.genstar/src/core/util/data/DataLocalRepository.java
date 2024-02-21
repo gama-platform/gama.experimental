@@ -21,7 +21,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.Base64;
 
 import core.util.exception.GenstarException;
-import ummisco.gama.dev.utils.DEBUG;
+import gama.dev.DEBUG;
 
 /**
  * Manages a local repository of data; it enables to downloading distant resources only once, and then keep them in a

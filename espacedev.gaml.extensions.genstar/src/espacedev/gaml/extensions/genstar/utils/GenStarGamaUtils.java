@@ -35,9 +35,9 @@ import espacedev.gaml.extensions.genstar.utils.GenStarConstant.GenerationAlgorit
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant.InputDataType;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant.SpatialDistribution;
 import gospl.algo.IGosplConcept;
-import msi.gama.runtime.IScope;
-import msi.gama.util.file.GamaCSVFile;
-import msi.gaml.types.IType;
+import gama.core.runtime.IScope;
+import gama.core.util.file.GamaCSVFile;
+import gama.gaml.types.IType;
 
 /**
  * The Class GenStarGamaUtils.

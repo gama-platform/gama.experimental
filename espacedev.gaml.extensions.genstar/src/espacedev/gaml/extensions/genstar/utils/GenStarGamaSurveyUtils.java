@@ -20,15 +20,15 @@ import java.util.Optional;
 
 import core.metamodel.attribute.Attribute;
 import core.metamodel.value.IValue;
-import msi.gama.common.util.FileUtils;
-import msi.gama.runtime.IScope;
-import msi.gama.util.file.GamaCSVFile;
-import msi.gama.util.file.GamaCSVFile.CSVInfo;
-import msi.gama.util.file.csv.CsvReader;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
-import ummisco.gama.dev.utils.DEBUG;
-import ummisco.gama.dev.utils.STRINGS;
+import gama.core.common.util.FileUtils;
+import gama.core.runtime.IScope;
+import gama.core.util.file.GamaCSVFile;
+import gama.core.util.file.GamaCSVFile.CSVInfo;
+import gama.core.util.file.csv.CsvReader;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
+import gama.dev.DEBUG;
+import gama.dev.STRINGS;
 
 /**
  * The Class GenStarGamaSurveyUtils.

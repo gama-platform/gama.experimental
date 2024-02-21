@@ -32,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import au.com.bytecode.opencsv.CSVReader;
 import core.metamodel.io.GSSurveyType;
-import ummisco.gama.dev.utils.DEBUG;
+import gama.dev.DEBUG;
 
 /**
  * A wrapper of OpenCSV to read csv based data

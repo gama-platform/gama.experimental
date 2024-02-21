@@ -3,10 +3,10 @@ package spll.localizer.constraint;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.GAMA;
-import msi.gama.util.IList;
-import msi.gaml.operators.Cast;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.GAMA;
+import gama.core.util.IList;
+import gama.gaml.operators.Cast;
 
 public class SpatialConstraintMaxDensity extends SpatialConstraintMaxNumber {
 

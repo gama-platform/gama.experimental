@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import core.metamodel.entity.IEntity;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.runtime.IScope;
-import msi.gama.util.IList;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.runtime.IScope;
+import gama.core.util.IList;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.distribution.ISpatialDistribution;
 

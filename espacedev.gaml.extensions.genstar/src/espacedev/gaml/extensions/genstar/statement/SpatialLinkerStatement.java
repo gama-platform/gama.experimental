@@ -1,38 +1,38 @@
 package espacedev.gaml.extensions.genstar.statement;
 
-import static msi.gama.precompiler.ISymbolKind.SEQUENCE_STATEMENT;
+import static gama.annotations.precompiler.ISymbolKind.SEQUENCE_STATEMENT;
 
 import espacedev.gaml.extensions.genstar.localisation.IGenstarLinker;
 import espacedev.gaml.extensions.genstar.statement.SpatialLinkerStatement.LocaliseValidator;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant;
 import espacedev.gaml.extensions.genstar.utils.GenStarGamaUtils;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.facet;
-import msi.gama.precompiler.GamlAnnotations.facets;
-import msi.gama.precompiler.GamlAnnotations.inside;
-import msi.gama.precompiler.GamlAnnotations.symbol;
-import msi.gama.precompiler.GamlAnnotations.usage;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.precompiler.ISymbolKind;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.IList;
-import msi.gaml.compilation.IDescriptionValidator;
-import msi.gaml.compilation.annotations.validator;
-import msi.gaml.descriptions.IDescription;
-import msi.gaml.descriptions.StatementDescription;
-import msi.gaml.expressions.IExpression;
-import msi.gaml.operators.Cast;
-import msi.gaml.species.ISpecies;
-import msi.gaml.statements.AbstractStatementSequence;
-import msi.gaml.statements.Arguments;
-import msi.gaml.statements.IStatement.WithArgs;
-import msi.gaml.statements.RemoteSequence;
-import msi.gaml.types.IType;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.shape.IShape;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.annotations.precompiler.GamlAnnotations.facet;
+import gama.annotations.precompiler.GamlAnnotations.facets;
+import gama.annotations.precompiler.GamlAnnotations.inside;
+import gama.annotations.precompiler.GamlAnnotations.symbol;
+import gama.annotations.precompiler.GamlAnnotations.usage;
+import gama.annotations.precompiler.IConcept;
+import gama.annotations.precompiler.IOperatorCategory;
+import gama.annotations.precompiler.ISymbolKind;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.IList;
+import gama.gaml.compilation.IDescriptionValidator;
+import gama.gaml.compilation.annotations.validator;
+import gama.gaml.descriptions.IDescription;
+import gama.gaml.descriptions.StatementDescription;
+import gama.gaml.expressions.IExpression;
+import gama.gaml.operators.Cast;
+import gama.gaml.species.ISpecies;
+import gama.gaml.statements.AbstractStatementSequence;
+import gama.gaml.statements.Arguments;
+import gama.gaml.statements.IStatement.WithArgs;
+import gama.gaml.statements.RemoteSequence;
+import gama.gaml.types.IType;
 
 @symbol (
 		name = GenStarConstant.GSLINK,

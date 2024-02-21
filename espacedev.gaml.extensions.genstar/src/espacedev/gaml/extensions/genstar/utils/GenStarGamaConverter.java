@@ -10,15 +10,15 @@ import core.metamodel.value.IValue;
 import core.util.data.GSEnumDataType;
 import core.util.exception.GSIllegalRangedData;
 import gospl.GosplEntity;
-import msi.gama.common.interfaces.IKeyword;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.runtime.IScope;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gaml.descriptions.SpeciesDescription;
-import msi.gaml.descriptions.VariableDescription;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.core.common.interfaces.IKeyword;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.runtime.IScope;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.gaml.descriptions.SpeciesDescription;
+import gama.gaml.descriptions.VariableDescription;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 /**
  * 
  * Meant to be a class with utils methods to convert Genstar object into Gama object

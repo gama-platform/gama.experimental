@@ -28,21 +28,23 @@ import core.metamodel.io.GSSurveyWrapper;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant.GenerationAlgorithm;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant.SpatialDistribution;
 import espacedev.gaml.extensions.genstar.utils.GenStarGamaConstraintBuilder;
-import msi.gama.common.interfaces.IValue;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.getter;
-import msi.gama.precompiler.GamlAnnotations.setter;
-import msi.gama.precompiler.GamlAnnotations.variable;
-import msi.gama.precompiler.GamlAnnotations.vars;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IContainer;
-import msi.gama.util.IList;
-import msi.gaml.operators.Strings;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.core.common.interfaces.IValue;
+import gama.core.metamodel.agent.IAgent;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.getter;
+import gama.annotations.precompiler.GamlAnnotations.setter;
+import gama.annotations.precompiler.GamlAnnotations.variable;
+import gama.annotations.precompiler.GamlAnnotations.vars;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IContainer;
+import gama.core.util.IList;
+import gama.core.util.file.json.Json;
+import gama.core.util.file.json.JsonValue;
+import gama.gaml.operators.Strings;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.constraint.SpatialConstraintMaxDensity;
 import spll.localizer.constraint.SpatialConstraintMaxNumber;
@@ -242,8 +244,10 @@ public class GamaPopGenerator implements IValue {
 
 	// IValue constract
 
+
 	@Override
-	public String serialize(final boolean includingBuiltIn) {
+	public JsonValue serializeToJson(Json json) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -777,5 +781,6 @@ public class GamaPopGenerator implements IValue {
 	 * @return the agents
 	 */
 	public Collection<IAgent> getAgents() { return mapEntitiesAgent.values(); }
+
 
 }

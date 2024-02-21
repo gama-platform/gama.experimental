@@ -33,7 +33,8 @@ import core.configuration.jackson.GenstarConfigurationFileSerializer;
 import core.metamodel.attribute.Attribute;
 import core.metamodel.io.GSSurveyWrapper;
 import core.metamodel.value.IValue;
-import ummisco.gama.dev.utils.DEBUG;
+
+import gama.dev.DEBUG;
 
 /**
  * Data configuration consist in a base directory where to find resources, plus a list of wrapped file that encapsulate

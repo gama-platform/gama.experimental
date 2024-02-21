@@ -1,9 +1,8 @@
 package spll.localizer.distribution;
 
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.IScope;
-import msi.gama.util.IList;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.runtime.IScope;
+import gama.core.util.IList;
 
 /**
  * Define the higher order concept to define and to draw a spatial entity from a discret distribution of spatial candidates

@@ -38,13 +38,13 @@ import gospl.generator.DistributionBasedGenerator;
 import gospl.io.exception.InvalidSurveyFormatException;
 import gospl.sampler.ISampler;
 import gospl.sampler.sr.GosplBasicSampler;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaMapFactory;
-import msi.gaml.statements.Arguments;
-import msi.gaml.types.IType;
-import msi.gaml.variables.IVariable;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaMapFactory;
+import gama.gaml.statements.Arguments;
+import gama.gaml.types.IType;
+import gama.gaml.variables.IVariable;
 
 /**
  * The Class OldGenstarGenerator.
@@ -89,7 +89,7 @@ public class OldGenstarGenerator implements IGenstarGenerator {
 			final Object source, final Object attributes, final Object algo, final Arguments init,
 			final GenerateStatement generateStatement) {
 		IAgent executor = scope.getAgent();
-		msi.gama.metamodel.population.IPopulation<? extends IAgent> gamaPop =
+		gama.core.metamodel.population.IPopulation<? extends IAgent> gamaPop =
 				executor.getPopulationFor(generateStatement.getDescription().getSpeciesContext().getName());
 
 		// Main object of the generation process

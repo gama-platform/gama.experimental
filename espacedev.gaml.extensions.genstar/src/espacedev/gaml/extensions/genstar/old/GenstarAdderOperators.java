@@ -12,7 +12,6 @@ package espacedev.gaml.extensions.genstar.old;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
 
 import core.metamodel.attribute.Attribute;
 import core.metamodel.attribute.AttributeFactory;
@@ -23,16 +22,16 @@ import espacedev.gaml.extensions.genstar.type.GamaPopGenerator;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant.GenerationAlgorithm;
 import espacedev.gaml.extensions.genstar.utils.GenStarGamaUtils;
-import msi.gama.common.util.FileUtils;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.no_test;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaMap;
-import msi.gama.util.IList;
-import msi.gaml.types.IType;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.annotations.precompiler.GamlAnnotations.no_test;
+import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.core.common.util.FileUtils;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaMap;
+import gama.core.util.IList;
+import gama.gaml.types.IType;
 
 /**
  * The Class GenstarAdderOperators.

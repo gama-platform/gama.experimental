@@ -5,10 +5,10 @@ import java.util.Map;
 
 import core.util.random.roulette.ARouletteWheelSelection;
 import core.util.random.roulette.RouletteWheelSelectionFactory;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.IScope;
-import msi.gama.util.IList;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.IScope;
+import gama.core.util.IList;
 import spll.localizer.distribution.function.ISpatialComplexFunction;
 
 /**
@@ -33,7 +33,7 @@ public class ComplexSpatialDistribution<N extends Number> implements ISpatialDis
 	@Override
 	public IShape getCandidate(IScope scope, IAgent entity, IList<? extends IShape> candidates){
 		return RouletteWheelSelectionFactory.getRouletteWheel(candidates.stream()
-				.map(candidate -> function.apply(entity,candidate)).toList(), candidates)
+				.map(candidate -> function.apply(entity, candidate)).toList(), candidates)
 			.drawObject();
 	} 
 		

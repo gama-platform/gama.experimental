@@ -1,11 +1,11 @@
 package spll.localizer.pointInalgo;
 
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.IScope;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gaml.operators.Spatial.Punctal;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.IScope;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.gaml.operators.Spatial.Punctal;
 
 public class RandomPointInLocalizer implements PointInLocalizer{
 	

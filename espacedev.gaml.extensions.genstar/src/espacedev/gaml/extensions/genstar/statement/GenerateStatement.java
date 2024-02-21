@@ -10,14 +10,6 @@
  ********************************************************************************************************/
 package espacedev.gaml.extensions.genstar.statement;
 
-import static msi.gama.common.interfaces.IKeyword.FROM;
-import static msi.gama.common.interfaces.IKeyword.GENERATE;
-import static msi.gama.common.interfaces.IKeyword.NUMBER;
-import static msi.gama.common.interfaces.IKeyword.RETURNS;
-import static msi.gama.common.interfaces.IKeyword.SPECIES;
-import static msi.gama.precompiler.ISymbolKind.SEQUENCE_STATEMENT;
-import static msi.gama.runtime.exceptions.GamaRuntimeException.error;
-
 import java.util.List;
 import java.util.Map;
 
@@ -25,53 +17,53 @@ import espacedev.gaml.extensions.genstar.generator.IGenstarGenerator;
 import espacedev.gaml.extensions.genstar.statement.GenerateStatement.GenerateValidator;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant;
 import espacedev.gaml.extensions.genstar.utils.GenStarGamaUtils;
-import msi.gama.common.interfaces.IKeyword;
-import msi.gama.kernel.experiment.ExperimentAgent;
-import msi.gama.kernel.simulation.SimulationPopulation;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.population.IPopulation;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.facet;
-import msi.gama.precompiler.GamlAnnotations.facets;
-import msi.gama.precompiler.GamlAnnotations.inside;
-import msi.gama.precompiler.GamlAnnotations.symbol;
-import msi.gama.precompiler.GamlAnnotations.usage;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.precompiler.ISymbolKind;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gaml.compilation.IDescriptionValidator;
-import msi.gaml.compilation.ISymbol;
-import msi.gaml.compilation.annotations.validator;
-import msi.gaml.descriptions.ExperimentDescription;
-import msi.gaml.descriptions.IDescription;
-import msi.gaml.descriptions.ModelDescription;
-import msi.gaml.descriptions.SpeciesDescription;
-import msi.gaml.descriptions.StatementDescription;
-import msi.gaml.expressions.IExpression;
-import msi.gaml.expressions.types.SpeciesConstantExpression;
-import msi.gaml.operators.Cast;
-import msi.gaml.species.ISpecies;
-import msi.gaml.statements.AbstractStatementSequence;
-import msi.gaml.statements.Arguments;
-import msi.gaml.statements.Facets;
-import msi.gaml.statements.Facets.Facet;
-import msi.gaml.statements.IStatement;
-import msi.gaml.statements.RemoteSequence;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.core.common.interfaces.IKeyword;
+import gama.annotations.precompiler.IConcept;
+import gama.annotations.precompiler.IOperatorCategory;
+import gama.annotations.precompiler.ISymbolKind;
+import gama.annotations.precompiler.GamlAnnotations.facet;
+import gama.annotations.precompiler.GamlAnnotations.facets;
+import gama.annotations.precompiler.GamlAnnotations.inside;
+import gama.annotations.precompiler.GamlAnnotations.symbol;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.usage;
+import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.core.kernel.experiment.ExperimentAgent;
+import gama.core.kernel.simulation.SimulationPopulation;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.population.IPopulation;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.gaml.compilation.IDescriptionValidator;
+import gama.gaml.compilation.annotations.validator;
+import gama.gaml.descriptions.ExperimentDescription;
+import gama.gaml.descriptions.IDescription;
+import gama.gaml.descriptions.ModelDescription;
+import gama.gaml.descriptions.SpeciesDescription;
+import gama.gaml.descriptions.StatementDescription;
+import gama.gaml.expressions.IExpression;
+import gama.gaml.expressions.types.SpeciesConstantExpression;
+import gama.gaml.operators.Cast;
+import gama.gaml.species.ISpecies;
+import gama.gaml.statements.AbstractStatementSequence;
+import gama.gaml.statements.Arguments;
+import gama.gaml.statements.Facets;
+import gama.gaml.statements.IStatement;
+import gama.gaml.statements.RemoteSequence;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
+import gaml.compiler.gaml.Facet;
+
 import one.util.streamex.StreamEx;
 
 /**
  * The Class GenerateStatement.
  */
 @symbol (
-		name = GENERATE,
-		kind = SEQUENCE_STATEMENT,
+		name = IKeyword.GENERATE,
+		kind = ISymbolKind.SEQUENCE_STATEMENT,
 		with_sequence = true,
 		breakable = true,
 		continuable = true,
@@ -80,15 +72,15 @@ import one.util.streamex.StreamEx;
 		concept = { IConcept.SPECIES },
 		remote_context = true)
 @inside (
-		kinds = { ISymbolKind.BEHAVIOR, SEQUENCE_STATEMENT })
+		kinds = { ISymbolKind.BEHAVIOR, ISymbolKind.SEQUENCE_STATEMENT })
 @facets (
 		value = { @facet (
-						name = SPECIES,
+						name = IKeyword.SPECIES,
 						type = { IType.SPECIES, IType.AGENT },
 						optional = true,
 						doc = @doc ("The species of the agents to be created.")),
 				@facet (
-						name = FROM,
+						name = IKeyword.FROM,
 						type = IType.NONE,
 						optional = false,
 						doc = @doc (
@@ -107,7 +99,7 @@ import one.util.streamex.StreamEx;
 						optional = false,
 						doc = @doc ("To specify the explicit link between agent attributes and file based attributes")),
 				@facet (
-						name = NUMBER,
+						name = IKeyword.NUMBER,
 						type = IType.INT,
 						optional = true,
 						doc = @doc (
@@ -171,17 +163,17 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 	 */
 	public GenerateStatement(final IDescription desc) {
 		super(desc);
-		returns = getLiteral(RETURNS);
-		from = getFacet(FROM);
-		number = getFacet(NUMBER);
-		species = getFacet(SPECIES);
+		returns = getLiteral(IKeyword.RETURN);
+		from = getFacet(IKeyword.FROM);
+		number = getFacet(IKeyword.NUMBER);
+		species = getFacet(IKeyword.SPECIES);
 
 		attributes = getFacet(GenStarConstant.GSATTRIBUTES);
 		algorithm = getFacet(GenStarConstant.GSGENERATOR);
 
 		sequence = new RemoteSequence(description);
 		sequence.setName("commands of generate ");
-		setName(GENERATE);
+		setName(IKeyword.GENERATE);
 	}
 
 	@SuppressWarnings ({ "rawtypes", "unchecked" })
@@ -260,7 +252,7 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 			if (potentialSpeciesName != null) { s = scope.getModel().getSpecies(potentialSpeciesName); }
 		}
 		if (s == null) throw GamaRuntimeException.error(
-				"No population of " + species.serialize(false) + " is accessible in the context of " + executor + ".",
+				"No population of " + species.serializeToGaml(false) + " is accessible in the context of " + executor + ".",
 				scope);
 		return executor.getPopulationFor(s);
 	}
@@ -275,11 +267,11 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 	@SuppressWarnings ("rawtypes")
 	private void checkPopulationValidity(final IPopulation pop, final IScope scope) throws GamaRuntimeException {
 		if (pop instanceof SimulationPopulation && !(scope.getAgent() instanceof ExperimentAgent))
-			throw error("Simulations can only be created within experiments", scope);
+			throw GamaRuntimeException.error("Simulations can only be created within experiments", scope);
 		final SpeciesDescription sd = pop.getSpecies().getDescription();
 		final String error = sd.isAbstract() ? "abstract" : sd.isMirror() ? "a mirror" : sd.isBuiltIn() ? "built-in"
 				: sd.isGrid() ? "a grid" : null;
-		if (error != null) throw error(sd.getName() + "is " + error + " and cannot be instantiated.", scope);
+		if (error != null) throw GamaRuntimeException.error(sd.getName() + "is " + error + " and cannot be instantiated.", scope);
 	}
 
 	/**
@@ -368,15 +360,15 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 					}
 				}
 			}
-
-			final Facets facets = description.getPassedArgs();
-			for (final Facet att : facets.getFacets()) {
-				if (!sd.isExperiment() && !sd.hasAttribute(att.key)) {
-					description.error("Attribute " + att + " is not defined in species " + species.getName(),
-							UNKNOWN_VAR);
-					return;
+			
+			final Arguments facets = description.getPassedArgs();
+			facets.forEachFacet((s, e) -> {
+				boolean error = !sd.isExperiment() && !sd.hasAttribute(s);
+				if (error) {
+					description.error("Attribute " + s + " is not defined in species " + species.getName(), UNKNOWN_VAR);
 				}
-			}
+				return !error;
+			});
 
 		}
 
@@ -385,10 +377,6 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 	@Override
 	public void setFormalArgs(final Arguments args) { init = args; }
 
-	@Override
-	public void setChildren(final Iterable<? extends ISymbol> com) {
-		sequence.setChildren(com);
-	}
 
 	@Override
 	public void enterScope(final IScope scope) {

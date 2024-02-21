@@ -1,9 +1,9 @@
 package spll.localizer.distribution;
 
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.IScope;
-import msi.gama.util.IList;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.IScope;
+import gama.core.util.IList;
 
 /**
  * Uniform Spatial Distribution: each candidate has the same probability to be chosen 

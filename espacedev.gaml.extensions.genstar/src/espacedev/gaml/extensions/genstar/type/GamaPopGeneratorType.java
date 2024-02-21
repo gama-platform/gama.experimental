@@ -11,12 +11,12 @@
 
 package espacedev.gaml.extensions.genstar.type;
 
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.type;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.ISymbolKind;
-import msi.gama.runtime.IScope;
-import msi.gaml.types.GamaType;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.type;
+import gama.annotations.precompiler.IConcept;
+import gama.annotations.precompiler.ISymbolKind;
+import gama.core.runtime.IScope;
+import gama.gaml.types.GamaType;
 
 /**
  * The Class GamaPopGeneratorType.

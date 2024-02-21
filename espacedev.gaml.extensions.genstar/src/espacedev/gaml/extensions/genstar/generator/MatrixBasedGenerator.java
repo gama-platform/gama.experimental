@@ -20,20 +20,21 @@ import java.util.stream.Collectors;
 import com.google.common.base.Functions;
 
 import espacedev.gaml.extensions.genstar.statement.GenerateStatement;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaMapFactory;
-import msi.gama.util.IList;
-import msi.gama.util.IMap;
-import msi.gama.util.matrix.GamaFloatMatrix;
-import msi.gama.util.matrix.GamaIntMatrix;
-import msi.gama.util.matrix.IMatrix;
-import msi.gaml.operators.Maths;
-import msi.gaml.operators.Random;
-import msi.gaml.statements.Arguments;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaMapFactory;
+import gama.core.util.IList;
+import gama.core.util.IMap;
+import gama.core.util.matrix.GamaFloatMatrix;
+import gama.core.util.matrix.GamaIntMatrix;
+import gama.core.util.matrix.IMatrix;
+import gama.gaml.operators.Maths;
+import gama.gaml.operators.Random;
+import gama.gaml.statements.Arguments;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
+
 
 /**
  * A generator that uses a gama matrix to register a distribution over two attributes
@@ -81,7 +82,7 @@ public class MatrixBasedGenerator implements IGenstarGenerator {
 			final GenerateStatement generateStatement) {
 
 		IAgent executor = scope.getAgent();
-		msi.gama.metamodel.population.IPopulation<? extends IAgent> gamaPop =
+		gama.core.metamodel.population.IPopulation<? extends IAgent> gamaPop =
 				executor.getPopulationFor(generateStatement.getDescription().getSpeciesContext().getName());
 
 		IMap<String, IList<String>> atts = (IMap<String, IList<String>>) attributes;

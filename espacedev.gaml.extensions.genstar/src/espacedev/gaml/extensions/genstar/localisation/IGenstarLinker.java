@@ -11,10 +11,10 @@
 package espacedev.gaml.extensions.genstar.localisation;
 
 import espacedev.gaml.extensions.genstar.statement.SpatialLinkerStatement;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.IScope;
-import msi.gama.util.IContainer;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.IScope;
+import gama.core.util.IContainer;
 
 /**
  * Main interface to define new spatial linker process based on Genstar

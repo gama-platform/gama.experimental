@@ -2,18 +2,15 @@ package spll.localizer;
 
 import java.util.List;
 
-import core.metamodel.attribute.Attribute;
 import core.metamodel.entity.ADemoEntity;
-import msi.gama.common.interfaces.IValue;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.IScope;
-import msi.gama.util.IContainer;
-import msi.gama.util.IList;
-import msi.gama.util.matrix.GamaField;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.IScope;
+import gama.core.util.IContainer;
+import gama.core.util.IList;
+import gama.core.util.matrix.GamaField;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.distribution.ISpatialDistribution;
-import spll.localizer.linker.ISPLinker;
 
 /**
  * This is the main object to localize population. It is the main ressource in Spll process.

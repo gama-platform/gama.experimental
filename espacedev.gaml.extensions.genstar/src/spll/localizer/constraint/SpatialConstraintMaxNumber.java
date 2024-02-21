@@ -3,15 +3,15 @@ package spll.localizer.constraint;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.GAMA;
-import msi.gama.runtime.IScope;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IContainer;
-import msi.gama.util.IList;
-import msi.gaml.operators.Cast;
-import msi.gaml.operators.Maths;
-import msi.gaml.types.Types;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.GAMA;
+import gama.core.runtime.IScope;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IContainer;
+import gama.core.util.IList;
+import gama.gaml.operators.Cast;
+import gama.gaml.operators.Maths;
+import gama.gaml.types.Types;
 
 public class SpatialConstraintMaxNumber extends ASpatialConstraint {
 

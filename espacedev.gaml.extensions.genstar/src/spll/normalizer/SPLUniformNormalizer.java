@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 
 import core.util.stats.GSBasicStats;
 import core.util.stats.GSEnumStats;
-import msi.gama.metamodel.shape.IShape;
+import gama.core.metamodel.shape.IShape;
 
 public class SPLUniformNormalizer extends ASPLNormalizer {
 	

@@ -10,7 +10,7 @@
  ********************************************************************************************************/
 package core.util;
 
-import ummisco.gama.dev.utils.DEBUG;
+import gama.dev.DEBUG;
 
 /**
  * Should be called with the logger of the caller; for instance if the caller logger is "gospl.sampler.hierarchical",

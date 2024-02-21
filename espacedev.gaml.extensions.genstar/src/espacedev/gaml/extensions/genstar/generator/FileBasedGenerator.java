@@ -33,6 +33,17 @@ import core.util.exception.GSIllegalRangedData;
 import core.util.random.GenstarRandom;
 import espacedev.gaml.extensions.genstar.statement.GenerateStatement;
 import espacedev.gaml.extensions.genstar.utils.GenStarGamaUtils;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaMapFactory;
+import gama.core.util.IList;
+import gama.core.util.IMap;
+import gama.core.util.file.GamaCSVFile;
+import gama.gaml.statements.Arguments;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
+import gama.gaml.variables.IVariable;
 import gospl.GosplPopulation;
 import gospl.algo.IGosplConcept.EGosplAlgorithm;
 import gospl.algo.sr.ds.DirectSamplingAlgo;
@@ -48,17 +59,6 @@ import gospl.io.exception.InvalidSurveyFormatException;
 import gospl.io.util.ReadDictionaryUtils;
 import gospl.sampler.ISampler;
 import gospl.sampler.sr.GosplBasicSampler;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaMapFactory;
-import msi.gama.util.IList;
-import msi.gama.util.IMap;
-import msi.gama.util.file.GamaCSVFile;
-import msi.gaml.statements.Arguments;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
-import msi.gaml.variables.IVariable;
 
 /**
  *
@@ -109,7 +109,7 @@ public class FileBasedGenerator implements IGenstarGenerator {
 			final Object source, final Object attributes, final Object algo, final Arguments init,
 			final GenerateStatement generateStatement) {
 		IAgent executor = scope.getAgent();
-		msi.gama.metamodel.population.IPopulation<? extends IAgent> gamaPop =
+		gama.core.metamodel.population.IPopulation<? extends IAgent> gamaPop =
 				executor.getPopulationFor(generateStatement.getDescription().getSpeciesContext().getName());
 
 		// --------

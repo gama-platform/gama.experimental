@@ -32,7 +32,7 @@ import gospl.distribution.exception.IllegalDistributionCreation;
 import gospl.distribution.matrix.AFullNDimensionalMatrix;
 import gospl.distribution.matrix.ASegmentedNDimensionalMatrix;
 import gospl.generator.ISyntheticGosplPopGenerator;
-import ummisco.gama.dev.utils.DEBUG;
+import gama.dev.DEBUG;
 
 /**
  * Util class to generate population from a dictionary using either a custom generator or, if not provided, a random

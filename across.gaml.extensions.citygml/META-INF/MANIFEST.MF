@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Citygml
-Bundle-SymbolicName: across.gaml.extensions.citygml;singleton:=true
+Bundle-SymbolicName: gama.experimental.citygml;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: .,
  across.gaml.extensions.citygml.files,
@@ -54,7 +54,6 @@ Export-Package: .,
  com.sun.xml.xsom.parser,
  com.sun.xml.xsom.util,
  com.sun.xml.xsom.visitor,
- gaml.additions.citygml,
  org.atteo.classindex,
  org.atteo.classindex.processor,
  org.citygml4j.cityjson,
@@ -237,8 +236,8 @@ Export-Package: .,
  org.xmlobjects.xal.util,
  org.xmlobjects.xal.visitor,
  org.xmlobjects.xml
-Require-Bundle: msi.gama.ext;bundle-version="1.9.3",
- msi.gama.core;bundle-version="1.9.3"
+Require-Bundle: gama.dependencies,
+ gama.core;bundle-version="0.0.0"
 Automatic-Module-Name: across.gaml.extensions.citygml
 Bundle-ClassPath: lib/jackson-core-2.16.1.jar,
  lib/citygml4j-cityjson-3.2.0.jar,
@@ -254,3 +253,10 @@ Bundle-ClassPath: lib/jackson-core-2.16.1.jar,
  lib/xsom-4.0.4.jar,
  .
 Bundle-RequiredExecutionEnvironment: JavaSE-17
+Import-Package: gama.annotations.precompiler,
+ gama.core.metamodel.shape,
+ gama.core.runtime,
+ gama.core.runtime.exceptions,
+ gama.core.util,
+ gama.core.util.file,
+ gama.gaml.types

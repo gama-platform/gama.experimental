@@ -42,7 +42,7 @@ import core.metamodel.value.IValue;
 import core.metamodel.value.binary.BinarySpace;
 import core.metamodel.value.binary.BooleanValue;
 import core.util.exception.GenstarException;
-import ummisco.gama.dev.utils.DEBUG;
+import gama.dev.DEBUG;
 
 /**
  * Stores a population in database; provides quick access.

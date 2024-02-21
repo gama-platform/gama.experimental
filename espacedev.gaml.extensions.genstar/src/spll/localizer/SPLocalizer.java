@@ -31,21 +31,21 @@ import org.opengis.referencing.operation.TransformException;
 
 import core.metamodel.attribute.Attribute;
 import core.util.GSPerformanceUtil;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.runtime.IScope;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.GamaMapFactory;
-import msi.gama.util.IContainer;
-import msi.gama.util.IList;
-import msi.gama.util.matrix.GamaField;
-import msi.gaml.operators.Cast;
-import msi.gaml.operators.Containers;
-import msi.gaml.operators.Spatial.Operators;
-import msi.gaml.operators.Spatial.Queries;
-import msi.gaml.operators.Spatial.Transformations;
-import msi.gaml.types.Types;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.core.metamodel.shape.IShape;
+import gama.core.runtime.IScope;
+import gama.core.util.GamaListFactory;
+import gama.core.util.GamaMapFactory;
+import gama.core.util.IContainer;
+import gama.core.util.IList;
+import gama.core.util.matrix.GamaField;
+import gama.gaml.operators.Cast;
+import gama.gaml.operators.Containers;
+import gama.gaml.operators.Spatial.Operators;
+import gama.gaml.operators.Spatial.Queries;
+import gama.gaml.operators.Spatial.Transformations;
+import gama.gaml.types.Types;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.constraint.SpatialConstraintLocalization;
 import spll.localizer.distribution.ISpatialDistribution;
@@ -723,7 +723,7 @@ public class SPLocalizer implements ISPLocalizer {
 			throws IOException {
 		List<ISpatialConstraint> otherConstraints = new ArrayList<>(linker.getConstraints());
 		IList<IShape> areas = spatialBounds == null ? map.copy(scope) : (IList<IShape>) Queries.overlapping(scope, map, spatialBounds);
-			areas = msi.gaml.operators.Random.opShuffle(scope, areas);
+			areas = gama.gaml.operators.Random.opShuffle(scope, areas);
 			Map<IShape, Double> vals = map.stream().collect(Collectors.toMap(a ->a,
 					e -> Cast.asFloat(scope, e.getAttribute(keyAttMap))));
 			//Map<IShape, Double> vals2 = areas.stream().collect(Collectors.toMap(a->a,

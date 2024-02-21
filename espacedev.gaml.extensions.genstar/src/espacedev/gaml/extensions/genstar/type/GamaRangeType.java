@@ -12,16 +12,16 @@ package espacedev.gaml.extensions.genstar.type;
 
 import java.util.Arrays;
 
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.type;
-import msi.gama.precompiler.IConcept;
-import msi.gama.runtime.IScope;
-import msi.gama.util.GamaList;
-import msi.gama.util.GamaPair;
-import msi.gaml.operators.Cast;
-import msi.gaml.types.GamaType;
-import msi.gaml.types.IType;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.type;
+import gama.annotations.precompiler.IConcept;
+import gama.core.runtime.IScope;
+import gama.core.util.GamaList;
+import gama.core.util.GamaPair;
+import gama.gaml.operators.Cast;
+import gama.gaml.types.GamaType;
+import gama.gaml.types.IType;
 
 /**
  * The Class GamaRangeType.

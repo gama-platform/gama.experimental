@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Random;
 
 import core.util.random.GenstarRandom;
-import msi.gama.metamodel.shape.IShape;
+import gama.core.metamodel.shape.IShape;
 
 /**
  * TODO: make top value control, not just floor value 
