@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ummisco.gama.feature.markdown.documentation"
+      id="gama.experimental.feature.markdown"
       label="Markdown Documentation"
-      version="1.9.2.qualifier">
+      version="1.9.2.qualifier"
+      provider-name="UMMISCO">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -17,10 +18,7 @@
    </license>
 
    <plugin
-         id="ummisco.gama.markdown.documentation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="gama.experimental.markdown"
+         version="0.0.0"/>
 
 </feature>

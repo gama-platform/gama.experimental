@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ummisco.gaml.feature.fuzzylogic"
+      id="gama.experimental.feature.fuzzylogic"
       label="Fuzzy logic"
-      version="1.9.2.qualifier">
+      version="1.9.2.qualifier"
+      provider-name="IRIT">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -17,10 +18,7 @@
    </license>
 
    <plugin
-         id="ummisco.gaml.extensions.fuzzylogic"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="gama.experimental.fuzzylogic"
+         version="0.0.0"/>
 
 </feature>

@@ -2,11 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Fuzzy logic extension
 Bundle-SymbolicName: gama.experimental.fuzzylogic;singleton:=true
+Bundle-Vendor: UTC-IRIT
 Bundle-Version: 1.9.2.qualifier
-Automatic-Module-Name: ummisco.gaml.extensions.fuzzylogic
+Automatic-Module-Name: gama.experimental.fuzzylogic
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: gama.core,
  gama.dependencies
 Bundle-ClassPath: lib/jFuzzyLogic.jar,
  .
-Export-Package: ummisco.gaml.extensions.fuzzylogic.gaml
+Export-Package: gama.experimental.fuzzylogic.gaml

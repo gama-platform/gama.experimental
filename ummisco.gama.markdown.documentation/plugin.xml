@@ -48,7 +48,7 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="markdownSyntactic.GenerateMDHandler"
+            defaultHandler="gama.experimental.markdown.markdownSyntactic.GenerateMDHandler"
             id="ummisco.gamadelio.generateMD"
             name="Generate Markdown Documentation from GAML">
       </command>

@@ -7,7 +7,7 @@ Require-Bundle: gama.core,
  gama.dependencies
 Bundle-ClassPath: lib/weka.jar,
  .
-Export-Package: idees.gama.operators
+Export-Package: gama.experimental.weka.operators
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: IDEES
 Bundle-RequiredExecutionEnvironment: JavaSE-17

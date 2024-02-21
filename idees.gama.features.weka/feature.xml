@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="idees.gama.features.weka"
+      id="gama.experimental.feature.weka"
       label="Weka"
-      version="1.7.0.qualifier">
+      version="1.7.0.qualifier"
+      provider-name="IDEES">
 
    <description url="http://www.example.com/description">
       Plug-in allowing to use Weka Clustring algorithms through GAML
@@ -22,9 +23,7 @@ operators.
    </url>
 
    <plugin
-         id="idees.gama.weka"
-         download-size="0"
-         install-size="0"
+         id="gama.experimental.weka"
          version="0.0.0"/>
 
 </feature>
