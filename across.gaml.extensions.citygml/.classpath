@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.16.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/citygml4j-cityjson-3.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/citygml4j-core-3.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/citygml4j-xml-3.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/classindex-3.13.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/gml-objects-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-annotations-2.16.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.16.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/relaxng-datatype-4.0.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xal-objects-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xml-objects-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xsom-4.0.4.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gaml">
+		<attributes>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
