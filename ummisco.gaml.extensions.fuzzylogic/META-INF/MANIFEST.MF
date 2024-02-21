@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Fuzzy logic extension
-Bundle-SymbolicName: gama.extension.fuzzylogic;singleton:=true
+Bundle-SymbolicName: gama.experimental.fuzzylogic;singleton:=true
 Bundle-Version: 1.9.2.qualifier
 Automatic-Module-Name: ummisco.gaml.extensions.fuzzylogic
 Bundle-RequiredExecutionEnvironment: JavaSE-17

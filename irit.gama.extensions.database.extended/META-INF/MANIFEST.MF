@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Other Databases formats
-Bundle-SymbolicName: gama.extension.database.extended;singleton:=true
+Bundle-SymbolicName: gama.experimental.database.extended;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: irit.gama.extensions.database.extended
 Bundle-RequiredExecutionEnvironment: JavaSE-17
