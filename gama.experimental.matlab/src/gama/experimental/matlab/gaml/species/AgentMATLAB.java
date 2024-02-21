@@ -1,4 +1,4 @@
-package ummisco.matlab.gaml.species;
+package gama.experimental.matlab.gaml.species;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -6,26 +6,24 @@ import java.util.concurrent.Future;
 
 import com.mathworks.engine.MatlabEngine;
 
-import msi.gama.metamodel.agent.GamlAgent;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.metamodel.population.IPopulation;
-import msi.gama.precompiler.GamlAnnotations.action;
-import msi.gama.precompiler.GamlAnnotations.arg;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.getter;
-import msi.gama.precompiler.GamlAnnotations.setter;
-import msi.gama.precompiler.GamlAnnotations.species;
-import msi.gama.precompiler.GamlAnnotations.variable;
-import msi.gama.precompiler.GamlAnnotations.vars;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.file.GamaFile;
-import msi.gaml.types.IType;
-
-import ummisco.matlab.gama.matlabengine.MatlabEngineInteraction;
-import ummisco.matlab.gama.matlabengine.MatlabEngineManager;
-import ummisco.matlab.gama.utils.IMatlabKeyword;
-// import ummisco.matlab.gama.utils.ManagePaths;
+import gama.core.metamodel.agent.GamlAgent;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.population.IPopulation;
+import gama.annotations.precompiler.GamlAnnotations.action;
+import gama.annotations.precompiler.GamlAnnotations.arg;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.getter;
+import gama.annotations.precompiler.GamlAnnotations.setter;
+import gama.annotations.precompiler.GamlAnnotations.species;
+import gama.annotations.precompiler.GamlAnnotations.variable;
+import gama.annotations.precompiler.GamlAnnotations.vars;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.file.GamaFile;
+import gama.experimental.matlab.gama.matlabengine.MatlabEngineInteraction;
+import gama.experimental.matlab.gama.matlabengine.MatlabEngineManager;
+import gama.experimental.matlab.gama.utils.IMatlabKeyword;
+import gama.gaml.types.IType;
 
 @species (
 		name = "agent_MATLAB",

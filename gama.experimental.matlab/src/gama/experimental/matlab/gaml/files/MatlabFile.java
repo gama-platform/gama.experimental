@@ -1,23 +1,23 @@
-package ummisco.matlab.gaml.files;
+package gama.experimental.matlab.gaml.files;
 
-import msi.gama.precompiler.IConcept;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
+import gama.annotations.precompiler.IConcept;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import msi.gama.common.geometry.Envelope3D;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.file;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gama.util.file.GamaFile;
-import msi.gaml.operators.Strings;
-import msi.gaml.types.IContainerType;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.file;
+import gama.core.common.geometry.Envelope3D;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.core.util.file.GamaFile;
+import gama.gaml.operators.Strings;
+import gama.gaml.types.IContainerType;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 
 @file (
 	name = "matlab",

@@ -1,4 +1,4 @@
-package ummisco.matlab.gama.matlabengine;
+package gama.experimental.matlab.gama.matlabengine;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -6,8 +6,8 @@ import java.util.concurrent.Future;
 import com.mathworks.engine.EngineException;
 import com.mathworks.engine.MatlabEngine;
 
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
 
 public class MatlabEngineManager {
 	public static MatlabEngine startMatlabEngine(final IScope scope, final boolean isAsync) {

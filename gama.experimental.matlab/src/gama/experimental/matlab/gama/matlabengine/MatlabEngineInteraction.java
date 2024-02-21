@@ -1,13 +1,13 @@
-package ummisco.matlab.gama.matlabengine;
+package gama.experimental.matlab.gama.matlabengine;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 import com.mathworks.engine.MatlabEngine;
 
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import ummisco.matlab.gama.utils.TypeConverter;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.experimental.matlab.gama.utils.TypeConverter;
 
 public class MatlabEngineInteraction {
 	

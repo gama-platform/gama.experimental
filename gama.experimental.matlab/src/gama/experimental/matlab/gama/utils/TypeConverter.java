@@ -1,12 +1,12 @@
-package ummisco.matlab.gama.utils;
+package gama.experimental.matlab.gama.utils;
 
 import java.util.ArrayList;
 
-import msi.gama.runtime.IScope;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gaml.types.GamaMatrixType;
-import msi.gaml.types.Types;
+import gama.core.runtime.IScope;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.gaml.types.GamaMatrixType;
+import gama.gaml.types.Types;
 
 public class TypeConverter {
 	public static Object Matlab2GamaType(IScope scope, Object output) {

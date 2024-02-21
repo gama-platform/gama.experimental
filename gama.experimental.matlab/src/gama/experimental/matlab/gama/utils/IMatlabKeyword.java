@@ -1,4 +1,4 @@
-package ummisco.matlab.gama.utils;
+package gama.experimental.matlab.gama.utils;
 
 public interface IMatlabKeyword {
 	public static final String MATLAB_PATH = "path_to_matlab";
