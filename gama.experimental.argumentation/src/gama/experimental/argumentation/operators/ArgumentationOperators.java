@@ -1,33 +1,31 @@
-package miat.gaml.extensions.argumentation.operators;
+package gama.experimental.argumentation.operators;
 
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import miat.gaml.extensions.argumentation.types.GamaArgument;
-import miat.gaml.extensions.argumentation.types.GamaArgumentType;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.GamlAnnotations.action;
-import msi.gama.precompiler.GamlAnnotations.arg;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.GamaMap;
-import msi.gama.util.GamaMapFactory;
-import msi.gama.util.IList;
-import msi.gama.util.file.GamaFile;
-import msi.gama.util.graph.GamaGraph;
-import msi.gama.util.graph.IGraph;
-import msi.gama.util.matrix.IMatrix;
-import msi.gaml.descriptions.ConstantExpressionDescription;
-import msi.gaml.species.ISpecies;
-import msi.gaml.statements.Arguments;
-import msi.gaml.statements.IStatement;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.experimental.argumentation.types.GamaArgument;
+import gama.experimental.argumentation.types.GamaArgumentType;
+import gama.core.metamodel.agent.IAgent;
+import gama.annotations.precompiler.GamlAnnotations.action;
+import gama.annotations.precompiler.GamlAnnotations.arg;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaListFactory;
+import gama.core.util.GamaMap;
+import gama.core.util.GamaMapFactory;
+import gama.core.util.IList;
+import gama.core.util.file.GamaFile;
+import gama.core.util.graph.GamaGraph;
+import gama.core.util.graph.IGraph;
+import gama.core.util.matrix.IMatrix;
+import gama.gaml.statements.Arguments;
+import gama.gaml.statements.IStatement;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 
 public class ArgumentationOperators {
 

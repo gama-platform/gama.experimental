@@ -1,14 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Argumentation
-Bundle-SymbolicName: miat.gaml.extensions.argumentation;singleton:=true
+Bundle-SymbolicName: gama.experimental.argumentation;singleton:=true
+Bundle-Vendor: MIAT INRAE
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: miat.gaml.extensions.argumentation
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: msi.gama.core,
- msi.gama.ext
-Export-Package: miat.gaml.extensions.argumentation.skills,
- miat.gaml.extensions.argumentation.types
+Require-Bundle: gama.core;bundle-version="0.0.0",
+ gama.dependencies;bundle-version="0.0.0"
+Export-Package: gama.experimental.argumentation.skills,
+ gama.experimental.argumentation.types
 Bundle-ClassPath: lib/jArgSemSAT.jar,
  lib/org.sat4j.core-2.3.1.jar,
  .

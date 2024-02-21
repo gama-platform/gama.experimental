@@ -1,15 +1,17 @@
-package miat.gaml.extensions.argumentation.types;
+package gama.experimental.argumentation.types;
 
-import msi.gama.common.interfaces.IValue;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.GamlAnnotations.getter;
-import msi.gama.precompiler.GamlAnnotations.variable;
-import msi.gama.precompiler.GamlAnnotations.vars;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.IMap;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.core.common.interfaces.IValue;
+import gama.core.metamodel.agent.IAgent;
+import gama.annotations.precompiler.GamlAnnotations.getter;
+import gama.annotations.precompiler.GamlAnnotations.variable;
+import gama.annotations.precompiler.GamlAnnotations.vars;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.IMap;
+import gama.core.util.file.json.Json;
+import gama.core.util.file.json.JsonValue;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 
 @vars({ @variable(name = "id", type = IType.STRING), 
 		@variable(name = "option", type = IType.STRING),
@@ -82,10 +84,14 @@ public class GamaArgument  implements IValue{
 		return sourceType;
 	}
 
-	@Override
 	public String serialize(boolean includingBuiltIn) {
 		return id;
 	}
+	
+	@Override
+	public JsonValue serializeToJson(Json json) {
+		return null;
+	} 	
 
 	@Override
 	public IType<?> getGamlType() {
@@ -126,5 +132,5 @@ public class GamaArgument  implements IValue{
 		int result = 1;
 		result = prime * result + (id == null ? 0 : id.hashCode());
 		return result;
-	} 
+	}
 }

@@ -1,14 +1,15 @@
-package miat.gaml.extensions.argumentation.types;
+package gama.experimental.argumentation.types;
 
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.GamlAnnotations.type;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaMap;
-import msi.gama.util.GamaMapFactory;
-import msi.gaml.types.GamaType;
-import msi.gaml.types.IType;
+import gama.core.metamodel.agent.IAgent;
+import gama.annotations.precompiler.IConcept;
+import gama.annotations.precompiler.GamlAnnotations.type;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaMap;
+import gama.core.util.GamaMapFactory;
+import gama.gaml.types.GamaType;
+import gama.gaml.types.IType;
+
 
 @type(name = "argument", id = GamaArgumentType.id, wraps = { GamaArgument.class }, concept = { IConcept.TYPE, "Argumentation" })
 public class GamaArgumentType extends GamaType<GamaArgument> {
