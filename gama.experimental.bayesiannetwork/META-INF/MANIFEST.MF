@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Bayesiannetwork
+Bundle-SymbolicName: gama.experimental.bayesiannetwork;singleton:=true
+Bundle-Vendor: MIAT INRAE
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: gama.experimental.bayesiannetwork
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: gama.core;bundle-version="0.0.0",
+ gama.dependencies;bundle-version="0.0.0"
+Bundle-ClassPath: lib/jayes-0.0.2.jar,
+ .
+Export-Package: gama.experimental.bayesiannetwork.operators,
+ gama.experimental.bayesiannetwork.types

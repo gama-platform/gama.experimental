@@ -1,18 +1,18 @@
-package miat.gaml.extension.bayesiannetwork.operators;
+package gama.experimental.bayesiannetwork.operators;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import cc.kave.repackaged.jayes.BayesNode;
-import miat.gaml.extension.bayesiannetwork.types.GamaBayesianNetwork;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.GamaMap;
-import msi.gama.util.GamaMapFactory;
-import msi.gaml.operators.Cast;
+import gama.experimental.bayesiannetwork.types.GamaBayesianNetwork;
+import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaListFactory;
+import gama.core.util.GamaMap;
+import gama.core.util.GamaMapFactory;
+import gama.gaml.operators.Cast;
 
 public class BayesianNetworkOperator {
 
