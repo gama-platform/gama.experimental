@@ -31,12 +31,12 @@
 		              <or>
 			             <with variable="activeMenuSelection">
 			            	 <iterate>
-			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedGamaFile"/>
+			            	 	<adapt type="gama.ui.navigator.contents.WrappedGamaFile"/>
 			             	</iterate>
 			             </with>
 			             <with variable="activeMenuSelection">
 			            	 <iterate>
-			            	 	<adapt type="ummisco.gama.ui.navigator.contents.WrappedProject"/>
+			            	 	<adapt type="gama.ui.navigator.contents.WrappedProject"/>
 			             	</iterate>
 			             </with>
 		             </or>

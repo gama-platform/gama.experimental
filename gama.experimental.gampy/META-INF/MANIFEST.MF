@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Gampy
+Bundle-SymbolicName: gama.experimental.gampy;singleton:=true
+Bundle-Vendor: IRIT - UTC
+Bundle-Version: 1.0.0.qualifier
+Export-Package: gama.experimental.gampy
+Require-Bundle: gama.core,
+ gama.dependencies
+Automatic-Module-Name: irit.madras.gama.gampy
+Bundle-RequiredExecutionEnvironment: JavaSE-17

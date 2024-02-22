@@ -31,17 +31,18 @@ import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryType;
 import org.xmlobjects.gml.model.geometry.AbstractGeometry;
 import org.xmlobjects.gml.model.geometry.GeometryProperty;
+import org.xmlobjects.gml.model.geometry.Envelope;
 
 import gama.annotations.precompiler.GamlAnnotations.doc;
-import gama.annotations.precompiler.GamlAnnotations.example;
 import gama.annotations.precompiler.GamlAnnotations.file;
 import gama.annotations.precompiler.IConcept;
+import gama.core.common.geometry.Envelope3D;
 import gama.core.metamodel.shape.IShape;
 import gama.core.runtime.IScope;
 import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaListFactory;
-import gama.core.util.IList;
-import gama.core.util.file.GamaGisFile;
+import gama.core.util.file.GamaGeometryFile;
+import gama.gaml.types.GamaGeometryType;
 import gama.gaml.types.IType;
 import gama.gaml.types.Types;
 
@@ -57,131 +58,18 @@ import gama.gaml.types.Types;
 		buffer_index = IType.INT,
 		concept = { IConcept.GIS, IConcept.FILE },
 		doc = @doc ("Represents geospatial files written using the GeoJSON format. The internal representation is a list of geometries"))
-public class GamaCityJsonFile extends GamaGisFile {
+public class GamaCityJsonFile extends GamaGeometryFile {
 	
-	/** 
-	 * Instantiates a new gama geo json file.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @param pathName
-	 *            the path name
-	 * @throws GamaRuntimeException
-	 *             the gama runtime exception
-	 */
-	@doc (
-			value = "This file constructor allows to read a cityjson file (https://www.cityjson.org)",
-			examples = { @example (
-					value = "file f <- geojson_file(\"file.json\");",
-					isExecutable = false) })
-	public GamaCityJsonFile(final IScope scope, final String pathName) throws GamaRuntimeException {
-		super(scope, pathName, (Integer) null);
-		
+	Envelope3D envelope;
+
+	public GamaCityJsonFile(IScope scope, String pathName) throws GamaRuntimeException {
+		super(scope, pathName);
 		
 	}
-
-	/**
-	 * Instantiates a new gama geo json file.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @param pathName
-	 *            the path name
-	 * @param code
-	 *            the code
-	 */
-	@doc (
-			value = "This file constructor allows to read a cityjson file and specifying the coordinates system code, as an int",
-			examples = { @example (
-					value = "file f <- geojson_file(\"file.json\", 32648);",
-					isExecutable = false) })
-	public GamaCityJsonFile(final IScope scope, final String pathName, final Integer code) {
-		super(scope, pathName, code);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * Instantiates a new gama geo json file.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @param pathName
-	 *            the path name
-	 * @param code
-	 *            the code
-	 */
-	@doc (
-			value = "This file constructor allows to read a geojson file and specifying the coordinates system code (epg,...,), as a string",
-			examples = { @example (
-					value = "file f <- geojson_file(\"file.json\", \"EPSG:32648\");",
-					isExecutable = false) })
-	public GamaCityJsonFile(final IScope scope, final String pathName, final String code) {
-		super(scope, pathName, code);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * Instantiates a new gama geo json file.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @param pathName
-	 *            the path name
-	 * @param withZ
-	 *            the with Z
-	 */
-	@doc (
-			value = "This file constructor allows to read a geojson file and take a potential z value (not taken in account by default)",
-			examples = { @example (
-					value = "file f <- geojson_file(\"file.json\", true);",
-					isExecutable = false) })
-	public GamaCityJsonFile(final IScope scope, final String pathName, final boolean withZ) {
-		super(scope, pathName, (Integer) null, withZ);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * Instantiates a new gama geo json file.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @param pathName
-	 *            the path name
-	 * @param code
-	 *            the code
-	 * @param withZ
-	 *            the with Z
-	 */
-	@doc (
-			value = "This file constructor allows to read a geojson file, specifying the coordinates system code, as an int and take a potential z value (not taken in account by default)",
-			examples = { @example (
-					value = "file f <- geojson_file(\"file.json\",32648, true);",
-					isExecutable = false) })
-	public GamaCityJsonFile(final IScope scope, final String pathName, final Integer code, final boolean withZ) {
-		super(scope, pathName, code, withZ);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * Instantiates a new gama geo json file.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @param pathName
-	 *            the path name
-	 * @param code
-	 *            the code
-	 * @param withZ
-	 *            the with Z
-	 */
-	@doc (
-			value = "This file constructor allows to read a geojson file, specifying the coordinates system code (epg,...,), as a string and take a potential z value (not taken in account by default",
-			examples = { @example (
-					value = "file f <- geojson_file(\"file.json\", \"EPSG:32648\",true);",
-					isExecutable = false) })
-	public GamaCityJsonFile(final IScope scope, final String pathName, final String code, final boolean withZ) {
-		super(scope, pathName, code, withZ);
-		// TODO Auto-generated constructor stub
+	
+	@Override
+	protected IShape buildGeometry(final IScope scope) {
+		return GamaGeometryType.geometriesToGeometry(scope, getBuffer());
 	}
 
 	@Override
@@ -192,27 +80,16 @@ public class GamaCityJsonFile extends GamaGisFile {
 	}
 
 	@Override
-	public IList<String> getAttributes(final IScope scope) {
-		final Map<String, String> attributes = new LinkedHashMap<>();
-		final SimpleFeatureCollection store = getFeatureCollection(scope);
-		final java.util.List<AttributeDescriptor> att_list = store.getSchema().getAttributeDescriptors();
-		for (final AttributeDescriptor desc : att_list) {
-			String type;
-			if (desc.getType() instanceof GeometryType) {
-				type = "geometry";
-			} else {
-				type = Types.get(desc.getType().getBinding()).toString();
-			}
-			attributes.put(desc.getName().getLocalPart(), type);
-		}
-
-		return GamaListFactory.wrap(Types.STRING, attributes.keySet());
+	public Envelope3D computeEnvelope(final IScope scope) {
+		fillBuffer(scope);
+		return envelope;
 	}
 
-	@Override
-	protected SimpleFeatureCollection getFeatureCollection(final IScope scope) {
+	
+	protected void readShapes(final IScope scope) {
 		try {
-				
+			
+			
 	        CityJSONContext context = CityJSONContext.newInstance();
 			
 	        CityJSONInputFactory in = context.createCityJSONInputFactory();
@@ -222,13 +99,20 @@ public class GamaCityJsonFile extends GamaGisFile {
 	        try (CityJSONReader reader = in.createCityJSONReader(getFile(scope).toPath())) {
 	            cityModel = (CityModel) reader.next();
 	        } catch (CityJSONReadException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+	        
 	        cityModel.getFeatureMembers().forEach(i -> System.out.println(i));
+	        Envelope env =  cityModel.getBoundedBy().getEnvelope();
+	        
+	        List<Double> lcp =  env.getLowerCorner().getValue();
+	        List<Double> ucp =  env.getUpperCorner().getValue();
+		       
+	        envelope = Envelope3D.of(lcp.get(0), ucp.get(0), lcp.get(1), ucp.get(1),lcp.get(2), ucp.get(2));
 	        
 	        Map<String, Integer> cityObjects = new TreeMap<>();
+	       
+	       
 	        for (AbstractCityObjectProperty cityObjectMember : cityModel.getCityObjectMembers()) {
 	            AbstractCityObject cityObject = cityObjectMember.getObject();
 	            
@@ -271,7 +155,8 @@ public class GamaCityJsonFile extends GamaGisFile {
 				e.printStackTrace();
 		}
 
-		return null;
 	}
+	
+	
 
 }
