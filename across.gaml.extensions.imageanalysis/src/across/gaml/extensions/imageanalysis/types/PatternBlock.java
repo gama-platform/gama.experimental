@@ -6,6 +6,8 @@ import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gama.util.file.json.Json;
+import msi.gama.util.file.json.JsonValue;
 import msi.gama.util.matrix.GamaIntMatrix;
 import msi.gaml.expressions.IExpression;
 import msi.gaml.types.GamaMatrixType;
@@ -58,16 +60,11 @@ public class PatternBlock implements IValue {
 		return Types.get(PatternBlockType.id);
 	}
 	
-	
-	@Override
-	public String toString() {
-		return serialize(true);
-	}
-
-	@Override
-	public String serialize(final boolean includingBuiltIn) {
-		return id + ":"+matrix.serialize(includingBuiltIn);
-	}
+//	Don't think it's actually used outside of debugging
+//	@Override
+//	public String toString() {
+//		return id + ":" +matrix.serialize(true);
+//	}
 	
 	@Override
 	public String stringValue(final IScope scope) throws GamaRuntimeException {
@@ -79,6 +76,10 @@ public class PatternBlock implements IValue {
 		PatternBlock p = new PatternBlock(this.id);
 		p.setMatrix((GamaIntMatrix) getMatrix().copy(scope));
 		return p;
+	}
+	@Override
+	public JsonValue serializeToJson(Json json) {
+		return json.object(id, matrix.serializeToJson(json));
 	}
 
 	

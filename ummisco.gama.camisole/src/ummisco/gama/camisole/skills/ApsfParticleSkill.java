@@ -5,7 +5,6 @@ import javax.vecmath.Point3d;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.ILocation;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.setter;
@@ -103,7 +102,7 @@ public class ApsfParticleSkill extends Skill {
 		if (p == null) { return null; }
 		final Point3d loc3D = p.getLocation().getAbsoluteCoordinate();
 		final IAgent agt = p.getWorld().getUnderworldAgent();
-		final ILocation lc = agt.getLocation();
+		final GamaPoint lc = agt.getLocation();
 		final double width = p.getWorld().getDimension() / 200;
 		final double sz = p.getAbsoluteSize() / 2;
 		return new GamaPoint((loc3D.x + sz) / 100.0 - width + lc.getX(), (loc3D.y + sz) / 100.0 - width + lc.getY(),

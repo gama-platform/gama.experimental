@@ -7,6 +7,8 @@ import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
+import msi.gama.util.file.json.Json;
+import msi.gama.util.file.json.JsonValue;
 import msi.gaml.expressions.IExpression;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
@@ -58,15 +60,30 @@ public class PhysicalBlock implements IValue {
 		return Types.get(PhysicalBlockType.id);
 	}
 	
-	
-	@Override
-	public String toString() {
-		return serialize(true);
-	}
+//	Don't think it's used outside of debuging
+//	@Override
+//	public String toString() {
+//		return serialize(true);
+//	}
+
+//	@Override
+//	public String serialize(final boolean includingBuiltIn) {
+//		return (pattern == null ? "": pattern.serialize(includingBuiltIn)) + ":" + (shape == null ? "" : shape.serialize(includingBuiltIn)) ;
+//	}
 
 	@Override
-	public String serialize(final boolean includingBuiltIn) {
-		return (pattern == null ? "": pattern.serialize(includingBuiltIn)) + ":" + (shape == null ? "" : shape.serialize(includingBuiltIn)) ;
+	public JsonValue serializeToJson(Json json) {
+		if (pattern != null ) {
+			if (shape == null) {
+				return pattern.serializeToJson(json);
+			}
+			else {
+				return json.object(pattern.serializeToJson(json).asString(), shape.serializeToJson(json));
+			}
+		}
+		else {
+			return json.valueOf("");			
+		}
 	}
 	
 	@Override

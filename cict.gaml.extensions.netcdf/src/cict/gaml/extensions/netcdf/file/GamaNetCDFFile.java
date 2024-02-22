@@ -22,20 +22,16 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.geotools.coverage.grid.GridCoverage2D;
-import org.geotools.coverage.grid.io.AbstractGridCoverage2DReader;
 import org.geotools.data.DataSourceException;
-import org.geotools.data.PrjFileReader; 
-import org.geotools.gce.arcgrid.ArcGridReader;
+import org.geotools.data.PrjFileReader;
 import org.geotools.gce.geotiff.GeoTiffReader;
 import org.locationtech.jts.geom.Envelope;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
- 
 
 import msi.gama.common.geometry.Envelope3D;
 import msi.gama.metamodel.shape.GamaPoint;
 import msi.gama.metamodel.shape.GamaShape;
-import msi.gama.metamodel.shape.ILocation;
 import msi.gama.metamodel.shape.IShape;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
@@ -464,7 +460,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 		return null;
 	}
 
-	public Double valueOf(final IScope scope, final ILocation loc) {
+	public Double valueOf(final IScope scope, final GamaPoint loc) {
 		if (getBuffer() == null) {
 			fillBuffer(scope);
 		}

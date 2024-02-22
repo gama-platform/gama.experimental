@@ -250,7 +250,7 @@ public class PatternMatching {
 	            if (saveImage) {
 	            	 File outputfile = new File(scope.getModel().getProjectPath() +"\\models\\generated\\blocks\\image_"+cpt2+".jpg" );
 	                 ImageIO.write(img, "jpg", outputfile);
-	                 System.out.println("image_" + cpt2 +  " -> l : " + l.serialize(false) + "  x_g: " + x_g+ "  y_g: " + x_g);
+	               //  System.out.println("image_" + cpt2 +  " -> l : " + l.serialize(false) + "  x_g: " + x_g+ "  y_g: " + x_g);
 	            }
 	            
                 for (PatternBlock pb : patterns) {

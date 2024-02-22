@@ -8,6 +8,8 @@ import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.IMap;
+import msi.gama.util.file.json.Json;
+import msi.gama.util.file.json.JsonValue;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
 
@@ -82,10 +84,6 @@ public class GamaArgument  implements IValue{
 		return sourceType;
 	}
 
-	@Override
-	public String serialize(boolean includingBuiltIn) {
-		return id;
-	}
 
 	@Override
 	public IType<?> getGamlType() {
@@ -94,7 +92,7 @@ public class GamaArgument  implements IValue{
 
 	@Override
 	public String stringValue(IScope scope) throws GamaRuntimeException {
-		return serialize(true);
+		return id;
 	}
 
 	@Override
@@ -126,5 +124,10 @@ public class GamaArgument  implements IValue{
 		int result = 1;
 		result = prime * result + (id == null ? 0 : id.hashCode());
 		return result;
+	}
+
+	@Override
+	public JsonValue serializeToJson(Json json) {
+		return json.valueOf(id);
 	} 
 }

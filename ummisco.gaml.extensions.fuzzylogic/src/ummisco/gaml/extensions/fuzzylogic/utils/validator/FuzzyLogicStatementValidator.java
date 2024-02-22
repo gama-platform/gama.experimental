@@ -1,11 +1,11 @@
 package ummisco.gaml.extensions.fuzzylogic.utils.validator;
 
-import msi.gama.common.interfaces.IGamlIssue;
 import msi.gaml.compilation.IDescriptionValidator;
 import msi.gaml.descriptions.IDescription;
 import msi.gaml.descriptions.SkillDescription;
 import msi.gaml.descriptions.SpeciesDescription;
 import msi.gaml.descriptions.StatementDescription;
+import msi.gaml.interfaces.IGamlIssue;
 import ummisco.gaml.extensions.fuzzylogic.gaml.skills.FuzzylogicSkill;
 
 public class FuzzyLogicStatementValidator implements IDescriptionValidator<StatementDescription> {

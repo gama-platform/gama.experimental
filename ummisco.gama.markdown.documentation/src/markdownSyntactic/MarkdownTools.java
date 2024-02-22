@@ -6,8 +6,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
-
-import msi.gama.lang.gaml.ui.hover.GamlDocumentationProvider;
 /**
  * 
  * @author damienphilippon
@@ -31,8 +29,8 @@ public class MarkdownTools {
 	 */
 	public static String getCommentsFromElement(EObject element)
 	{
-		GamlDocumentationProvider p = (GamlDocumentationProvider)IResourceServiceProvider.Registry.INSTANCE.getResourceServiceProvider(URI.createFileURI("toto.gaml")).get(IEObjectDocumentationProvider.class);
-		String comments = p.getOnlyComment(element);
+		IEObjectDocumentationProvider op = (IEObjectDocumentationProvider)IResourceServiceProvider.Registry.INSTANCE.getResourceServiceProvider(URI.createFileURI("toto.gaml")).get(IEObjectDocumentationProvider.class);
+		String comments = op.getDocumentation(element);
 		return comments==null?"":comments;
 	}
 	/**

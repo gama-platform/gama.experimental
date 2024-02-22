@@ -1,7 +1,6 @@
 package mit.gaml.extension.launchpad.skills;
 
 import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.ILocation;
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
@@ -48,7 +47,7 @@ public class LaunchPadSkill extends Skill {
 	}
 
 	@getter ("padPressed")
-	public ILocation getPadPressed() {
+	public GamaPoint getPadPressed() {
 		final GamaPoint p = new GamaPoint(LaunchPadEventLayer.pressedPad.getX(), LaunchPadEventLayer.pressedPad.getY());
 		return p;
 	}

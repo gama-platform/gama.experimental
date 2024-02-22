@@ -14,6 +14,8 @@ import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IList;
+import msi.gama.util.file.json.Json;
+import msi.gama.util.file.json.JsonValue;
 import msi.gaml.types.IType;
 
 @vars({ @variable(name = "id", type = IType.STRING),
@@ -76,6 +78,11 @@ public class GamaBayesianNetwork  implements IValue{
 	public IValue copy(IScope scope) throws GamaRuntimeException {
 		GamaBayesianNetwork bayes = new GamaBayesianNetwork(this.network);
 		return bayes;
+	}
+
+	@Override
+	public JsonValue serializeToJson(Json json) {
+		return json.valueOf(stringValue(null));
 	}
 		
 }

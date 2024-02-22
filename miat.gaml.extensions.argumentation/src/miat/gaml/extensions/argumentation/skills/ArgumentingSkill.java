@@ -1,11 +1,9 @@
 package miat.gaml.extensions.argumentation.skills;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,15 +16,12 @@ import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
 import msi.gama.precompiler.GamlAnnotations.getter;
-import msi.gama.precompiler.GamlAnnotations.operator;
 import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaList;
-import msi.gama.util.GamaListCollectionWrapper;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.GamaMap;
 import msi.gama.util.GamaMapFactory;
@@ -36,16 +31,13 @@ import msi.gama.util.IMap;
 import msi.gama.util.graph.GamaGraph;
 import msi.gama.util.graph.IGraph;
 import msi.gaml.descriptions.ConstantExpressionDescription;
-import msi.gaml.operators.Graphs;
 import msi.gaml.operators.Random;
 import msi.gaml.skills.Skill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.statements.Arguments;
 import msi.gaml.statements.IStatement;
-import msi.gaml.types.GamaAttributesType;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
-import net.sf.jargsemsat.jargsemsat.alg.Misc;
 import net.sf.jargsemsat.jargsemsat.datastructures.DungAF;
 
 @skill(name = "argumenting")

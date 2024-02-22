@@ -1,9 +1,5 @@
 package ummisco.gama.extension.hecras.skill;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
 //import com.jacob.activeX.*;
 //import com.jacob.com.*;
 /**
