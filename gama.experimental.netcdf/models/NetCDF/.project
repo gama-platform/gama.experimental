@@ -16,11 +16,4 @@
 		<nature>gama.ui.application.gamaNature</nature>
 		<nature>gama.ui.application.pluginNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>external/RESULT2015.res11</name>
-			<type>1</type>
-			<location>/Applications/Eclipse.app/Contents/MacOS/C::/git/HydraulicTools/RESULT2015.res11</location>
-		</link>
-	</linkedResources>
 </projectDescription>

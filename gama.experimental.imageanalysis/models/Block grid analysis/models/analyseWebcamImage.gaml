@@ -106,13 +106,13 @@ experiment test {
             }
          	image image(img);
 			species cell position: {0,0,0.01};
-			event "p" action: define_distorsions_points;
-			event "d" action: define_code;
-			event "b" action: define_black_subblock;
-			event "w" action: define_white_subblock;
-			event "g" action: define_bounds;
-			event #mouse_move action: define_mouse_loc;
-			event #mouse_down action: mouse_click;
+			event "p" {ask simulation { do define_distorsions_points;}}
+			event "d" {ask simulation { do define_code;}}
+			event "b" {ask simulation { do define_black_subblock;}}
+			event "w" {ask simulation { do  define_white_subblock;}}
+			event "g" {ask simulation { do define_bounds;}}
+			event #mouse_move {ask simulation { do define_mouse_loc;}}
+			event #mouse_down {ask simulation { do mouse_click;}}
 			graphics "mouse_loc" {
 				draw circle(5) at: mouse_location;
 			}
