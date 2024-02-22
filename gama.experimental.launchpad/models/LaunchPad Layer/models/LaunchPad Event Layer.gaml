@@ -44,7 +44,7 @@ experiment Displays type: gui
 		display View_change_color 
 		{
 			grid cell border: #black;
-			event "pad_down" type: "launchpad" action: updateGrid;
+			event "pad_down" type: "launchpad" {ask simulation {do updateGrid;}}
 		}
 	}
 }

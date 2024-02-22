@@ -1,11 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: mit.gaml.extension.launchpad
-Bundle-SymbolicName: mit.gaml.extension.launchpad;singleton:=true
+Bundle-Name: gama.experimental.launchpad
+Bundle-SymbolicName: gama.experimental.launchpad;singleton:=true
+Bundle-Vendor: MIT MEDIA Lab
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Require-Bundle: msi.gama.core,
- msi.gama.ext
+Require-Bundle: gama.core,
+ gama.dependencies
 Bundle-ClassPath: libs/lib/hazelcast-2.6.jar,
  libs/lib/jackson-annotations-2.2.2.jar,
  libs/lib/jackson-core-2.2.2.jar,
@@ -71,6 +72,7 @@ Export-Package: com.fasterxml.jackson.annotation,
  com.hazelcast.security,
  com.hazelcast.util,
  com.hazelcast.util.concurrent,
+ gama.experimental.launchpad.skills,
  gaml.additions.launchpad,
  io.netty.bootstrap,
  io.netty.buffer,
@@ -114,7 +116,6 @@ Export-Package: com.fasterxml.jackson.annotation,
  io.netty.util.internal,
  io.netty.util.internal.chmv8,
  io.netty.util.internal.logging,
- mit.gaml.extension.launchpad.skills,
  net.thecodersbreakfast.lp4j.api,
  net.thecodersbreakfast.lp4j.emulator,
  net.thecodersbreakfast.lp4j.midi,

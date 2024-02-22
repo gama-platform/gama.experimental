@@ -7,7 +7,7 @@
 <extension
          point="gama.event_layer">
       <implementation
-            class="mit.gaml.extension.launchpad.skills.LaunchPadEventLayer">
+            class="gama.experimental.launchpad.skills.LaunchPadEventLayer">
       </implementation>
    </extension>
 </plugin>

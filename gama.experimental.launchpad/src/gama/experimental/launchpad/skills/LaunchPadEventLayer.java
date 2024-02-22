@@ -7,7 +7,7 @@
  * 
  *
  **********************************************************************************************/
-package mit.gaml.extension.launchpad.skills;
+package gama.experimental.launchpad.skills;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -15,21 +15,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import msi.gama.common.interfaces.IDisplaySurface;
-import msi.gama.common.interfaces.IEventLayerDelegate;
-import msi.gama.common.interfaces.IGraphics;
-import msi.gama.common.interfaces.ILayer;
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.outputs.layers.AbstractLayer;
-import msi.gama.outputs.layers.EventLayerStatement;
-import msi.gama.outputs.layers.ILayerData;
-import msi.gama.outputs.layers.ILayerStatement;
-import msi.gama.outputs.layers.LayerData;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.IScope.IGraphicsScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gaml.descriptions.StatementDescription;
-import msi.gaml.statements.IExecutable;
+import gama.core.common.interfaces.IDisplaySurface;
+import gama.core.common.interfaces.IEventLayerDelegate;
+import gama.core.common.interfaces.IGraphics;
+import gama.core.common.interfaces.ILayer;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.outputs.layers.EventLayerStatement;
+import gama.core.outputs.layers.ILayerData;
+import gama.core.outputs.layers.ILayerStatement;
+import gama.core.outputs.layers.LayerData;
+import gama.core.runtime.IScope;
+import gama.core.runtime.IScope.IGraphicsScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.gaml.statements.IExecutable;
 import net.thecodersbreakfast.lp4j.api.BackBufferOperation;
 import net.thecodersbreakfast.lp4j.api.Button;
 import net.thecodersbreakfast.lp4j.api.Color;
