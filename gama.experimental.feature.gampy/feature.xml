@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="irit.madras.gama.gampy.feature"
+      id="gama.experimental.feature.gampy"
       label="Gampy"
-      version="1.0.0.qualifier">
+      version="1.0.0.qualifier"
+      provider-name="IRIT - UTC">
 
    <description url="http://www.example.com/description">
       [Plug-in for using pre-trained model from Python.]
@@ -17,10 +18,7 @@
    </license>
 
    <plugin
-         id="irit.madras.gama.gampy"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="gama.experimental.gampy"
+         version="0.0.0"/>
 
 </feature>

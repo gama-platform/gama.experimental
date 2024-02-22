@@ -1,4 +1,4 @@
-package irit.madras.gama.gampy;
+package gama.experimental.gampy;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
