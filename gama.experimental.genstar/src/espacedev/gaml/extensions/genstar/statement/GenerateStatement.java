@@ -17,19 +17,17 @@ import espacedev.gaml.extensions.genstar.generator.IGenstarGenerator;
 import espacedev.gaml.extensions.genstar.statement.GenerateStatement.GenerateValidator;
 import espacedev.gaml.extensions.genstar.utils.GenStarConstant;
 import espacedev.gaml.extensions.genstar.utils.GenStarGamaUtils;
-import gama.core.common.interfaces.IKeyword;
-import gama.annotations.precompiler.IConcept;
-import gama.annotations.precompiler.IOperatorCategory;
-import gama.annotations.precompiler.ISymbolKind;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.example;
 import gama.annotations.precompiler.GamlAnnotations.facet;
 import gama.annotations.precompiler.GamlAnnotations.facets;
 import gama.annotations.precompiler.GamlAnnotations.inside;
 import gama.annotations.precompiler.GamlAnnotations.symbol;
-import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.usage;
-import gama.annotations.precompiler.GamlAnnotations.example;
-import gama.core.kernel.experiment.ExperimentAgent;
-import gama.core.kernel.simulation.SimulationPopulation;
+import gama.annotations.precompiler.IConcept;
+import gama.annotations.precompiler.IOperatorCategory;
+import gama.annotations.precompiler.ISymbolKind;
+import gama.core.common.interfaces.IKeyword;
 import gama.core.metamodel.agent.IAgent;
 import gama.core.metamodel.population.IPopulation;
 import gama.core.runtime.IScope;
@@ -37,6 +35,7 @@ import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaListFactory;
 import gama.core.util.IList;
 import gama.gaml.compilation.IDescriptionValidator;
+import gama.gaml.compilation.ISymbol;
 import gama.gaml.compilation.annotations.validator;
 import gama.gaml.descriptions.ExperimentDescription;
 import gama.gaml.descriptions.IDescription;
@@ -46,16 +45,11 @@ import gama.gaml.descriptions.StatementDescription;
 import gama.gaml.expressions.IExpression;
 import gama.gaml.expressions.types.SpeciesConstantExpression;
 import gama.gaml.operators.Cast;
-import gama.gaml.species.ISpecies;
-import gama.gaml.statements.AbstractStatementSequence;
 import gama.gaml.statements.Arguments;
-import gama.gaml.statements.Facets;
-import gama.gaml.statements.IStatement;
+import gama.gaml.statements.CreateStatement;
 import gama.gaml.statements.RemoteSequence;
 import gama.gaml.types.IType;
 import gama.gaml.types.Types;
-import gaml.compiler.gaml.Facet;
-
 import one.util.streamex.StreamEx;
 
 /**
@@ -129,7 +123,7 @@ import one.util.streamex.StreamEx;
 								"Sexe"::["Hommes", "Femmes"]];""",
 						isExecutable = false) }) })
 @validator (GenerateValidator.class)
-public class GenerateStatement extends AbstractStatementSequence implements IStatement.WithArgs {
+public class GenerateStatement extends CreateStatement {//extends AbstractStatementSequence implements IStatement.WithArgs {
 
 	/** The init. */
 	private Arguments init;
@@ -139,9 +133,6 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 	
 	/** The number. */
 	private final IExpression number;
-	
-	/** The species. */
-	private final IExpression species;
 	
 	/** The attributes. */
 	private final IExpression attributes;
@@ -166,7 +157,6 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 		returns = getLiteral(IKeyword.RETURN);
 		from = getFacet(IKeyword.FROM);
 		number = getFacet(IKeyword.NUMBER);
-		species = getFacet(IKeyword.SPECIES);
 
 		attributes = getFacet(GenStarConstant.GSATTRIBUTES);
 		algorithm = getFacet(GenStarConstant.GSGENERATOR);
@@ -184,7 +174,7 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 		if (from == null && max != null && max <= 0) return GamaListFactory.EMPTY_LIST;
 
 		// Next, we compute the species to instantiate
-		final IPopulation pop = findPopulation(scope);
+		final IPopulation pop = super.findPopulation(scope);
 		// A check is made in order to address issues #2621 and #2611
 		if (pop == null || pop.getSpecies() == null)
 			throw GamaRuntimeException.error("Impossible to determine the species of the agents to generate", scope);
@@ -203,75 +193,6 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 		final IList<? extends IAgent> agents = pop.createAgents(scope, inits.size(), inits, false, false, sequence);
 		if (returns != null) { scope.setVarValue(returns, agents); }
 		return agents;
-	}
-
-	/**
-	 * Fill with user init.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @param values
-	 *            the values
-	 */
-	@SuppressWarnings ({ "unchecked", "rawtypes" })
-	public void fillWithUserInit(final IScope scope, final Map values) {
-		if (init == null) return;
-		scope.pushReadAttributes(values);
-		try {
-			init.forEachFacet((k, v) -> {
-				values.put(k, v.getExpression().value(scope));
-				return true;
-			});
-		} finally {
-			scope.popReadAttributes();
-		}
-	}
-
-	// ------------------------------------------------------------------------------------------------ //
-	// ------------------------------------------------------------------------------------------------ //
-	// //
-	// Copy pasted from the CreateStatement way to init agents //
-	// //
-	// ------------------------------------------------------------------------------------------------ //
-	// ------------------------------------------------------------------------------------------------ //
-
-	/**
-	 * Find population.
-	 *
-	 * @param scope
-	 *            the scope
-	 * @return the i population
-	 */
-	@SuppressWarnings ("rawtypes")
-	private IPopulation findPopulation(final IScope scope) {
-		final IAgent executor = scope.getAgent();
-		if (species == null) return executor.getPopulationFor(description.getSpeciesContext().getName());
-		ISpecies s = Cast.asSpecies(scope, species.value(scope));
-		if (s == null) {// A last attempt in order to fix #2466
-			final String potentialSpeciesName = species.getDenotedType().getSpeciesName();
-			if (potentialSpeciesName != null) { s = scope.getModel().getSpecies(potentialSpeciesName); }
-		}
-		if (s == null) throw GamaRuntimeException.error(
-				"No population of " + species.serializeToGaml(false) + " is accessible in the context of " + executor + ".",
-				scope);
-		return executor.getPopulationFor(s);
-	}
-
-	/**
-	 * A check made in order to address issues #2621 and #2611
-	 *
-	 * @param pop
-	 * @param scope
-	 * @throws GamaRuntimeException
-	 */
-	@SuppressWarnings ("rawtypes")
-	private void checkPopulationValidity(final IPopulation pop, final IScope scope) throws GamaRuntimeException {
-		if (pop instanceof SimulationPopulation && !(scope.getAgent() instanceof ExperimentAgent))
-			throw GamaRuntimeException.error("Simulations can only be created within experiments", scope);
-		final SpeciesDescription sd = pop.getSpecies().getDescription();
-		final String error = sd.isAbstract() ? "abstract" : sd.isMirror() ? "a mirror" : sd.isBuiltIn() ? "built-in"
-				: sd.isGrid() ? "a grid" : null;
-		if (error != null) throw GamaRuntimeException.error(sd.getName() + "is " + error + " and cannot be instantiated.", scope);
 	}
 
 	/**
@@ -373,15 +294,10 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 		}
 
 	}
-
+	
 	@Override
-	public void setFormalArgs(final Arguments args) { init = args; }
-
-
-	@Override
-	public void enterScope(final IScope scope) {
-		if (returns != null) { scope.addVarWithValue(returns, null); }
-		super.enterScope(scope);
+	public void setChildren(final Iterable<? extends ISymbol> com) {
+		sequence.setChildren(com);
 	}
 
 }
