@@ -127,13 +127,12 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 				IList<IShape> faces = GamaListFactory.create();
 				IShape gShape = null;
 				for (Integer lod : cityObject.getGeometryInfo().getLods()) {
-					
 					List<GeometryProperty<?>> lodgeom = cityObject.getGeometryInfo().getGeometries(lod);
 					lodgeom.forEach(g -> g.getObject().accept(
 							new ObjectWalker() {
 								@Override
 								public void visit(AbstractGeometry geometry) {
-									//System.out.println("- child "+geometry.getClass().getSimpleName()); 
+									System.out.println("- child "+geometry.getClass().getSimpleName()); 
 									
 									if (geometry instanceof LinearRing) {
 										LinearRing lr = (LinearRing) geometry;
@@ -148,14 +147,18 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 									super.visit(geometry);
 								}
 							}));
+					
 					IShape lodShape = Creation.geometryCollection(scope, faces);
 					if (gShape == null) {
 						gShape = lodShape;
 					}
-					gShape.getOrCreateAttributes().put("lod"+lod, lodShape);
+					faces.clear();
+					
+					gShape.getOrCreateAttributes().put("lod"+lod, lodShape.copy(scope));
 					
 				}
-				shapes.add(gShape);
+				if (gShape != null)
+					shapes.add(gShape);
 				 String sn = cityObject.getClass().getSimpleName();
 	            switch (sn) {
 				case "Building" -> { 
