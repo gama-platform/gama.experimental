@@ -10,7 +10,6 @@
  ********************************************************************************************************/
 package gama.experimental.cim.files;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,12 +25,10 @@ import org.citygml4j.core.model.core.AbstractCityObjectProperty;
 import org.citygml4j.core.model.core.CityModel;
 import org.citygml4j.core.model.generics.GenericOccupiedSpace;
 import org.citygml4j.core.visitor.ObjectWalker;
-import org.geotools.data.simple.SimpleFeatureCollection;
-import org.opengis.feature.type.AttributeDescriptor;
-import org.opengis.feature.type.GeometryType;
 import org.xmlobjects.gml.model.geometry.AbstractGeometry;
-import org.xmlobjects.gml.model.geometry.GeometryProperty;
 import org.xmlobjects.gml.model.geometry.Envelope;
+import org.xmlobjects.gml.model.geometry.GeometryProperty;
+import org.xmlobjects.gml.model.geometry.primitives.LinearRing;
 
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.file;
@@ -94,7 +91,6 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 			
 	        CityJSONInputFactory in = context.createCityJSONInputFactory();
 
-	       
 	        CityModel cityModel = null;
 	        try (CityJSONReader reader = in.createCityJSONReader(getFile(scope).toPath())) {
 	            cityModel = (CityModel) reader.next();
@@ -127,6 +123,11 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 							public void visit(AbstractGeometry geometry) {
 								
 								System.out.println("- child "+geometry.getClass().getSimpleName()); 
+								
+								if (geometry instanceof LinearRing) {
+									LinearRing lr = (LinearRing) geometry; 
+									lr.getControlPoints();
+								}
 								
 								super.visit(geometry);
 							}
