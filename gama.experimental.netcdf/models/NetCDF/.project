@@ -13,8 +13,8 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
-		<nature>msi.gama.application.gamaNature</nature>
-		<nature>msi.gama.application.pluginNature</nature>
+		<nature>gama.ui.application.gamaNature</nature>
+		<nature>gama.ui.application.pluginNature</nature>
 	</natures>
 	<linkedResources>
 		<link>

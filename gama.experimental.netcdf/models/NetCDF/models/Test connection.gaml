@@ -13,14 +13,18 @@ global {
 	int gridsSize <- 0;
 	int timesAxisSize <- 0;
 	field field_from_matrix;
-	geometry shape<-envelope(netcdf_sample);
+	geometry shape <- envelope(netcdf_sample);
 
 	init {
-			write openDataSet(netcdf_sample);
-		gridsSize <- getGridsSize(netcdf_sample);
-		timesAxisSize <- netcdf_sample getTimeAxisSize grid_num;
-		matrix<int> m <- (matrix<int>(netcdf_sample readDataSlice (grid_num, times, 0, -1, -1)));
-		field_from_matrix <- field(m);
+		if(openDataSet(netcdf_sample)) {
+			write "The dataset has been opened correctly.";						
+			gridsSize <- getGridsSize(netcdf_sample);
+			timesAxisSize <- netcdf_sample getTimeAxisSize grid_num;
+			matrix<int> m <- (matrix<int>(netcdf_sample readDataSlice (grid_num, times, 0, -1, -1)));
+			field_from_matrix <- field(m);
+		} else {
+			write "The dataset cannot be opened.";			
+		}
 	}
 
 	reflex s {
@@ -58,7 +62,7 @@ experiment mike type: gui {
 	output {
 		display Field type: opengl {
 		//			mesh field_from_matrix color: palette triangulation: true smooth: 4;
-			mesh field_from_matrix color: palette scale: 0.1 triangulation: true smooth: 4  ;
+			mesh field_from_matrix color: palette scale: 0.1 triangulation: true smooth: 4;
 		}
 
 	}

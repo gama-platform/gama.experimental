@@ -65,7 +65,7 @@ species shp {
 experiment sim type: gui {
 	list<rgb> palette <- brewer_colors(any(brewer_palettes(0)));
 	output {
-		display "s" type: opengl synchronized: true { //camera_pos: {316512.7586,169804.7114,32663.0105} camera_look_pos: {316512.7586,169804.1413,-0.0675} camera_up_vector: {0.0,1.0,0.0}{ 
+		display "s" type: opengl { //camera_pos: {316512.7586,169804.7114,32663.0105} camera_look_pos: {316512.7586,169804.1413,-0.0675} camera_up_vector: {0.0,1.0,0.0}{ 
 		//			grid cell;
 			mesh field_from_matrix color: palette triangulation: true smooth: 4;
 			species shp;
