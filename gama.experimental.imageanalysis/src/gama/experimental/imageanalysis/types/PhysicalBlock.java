@@ -63,16 +63,12 @@ public class PhysicalBlock implements IValue {
 	
 	@Override
 	public String toString() {
-		return serialize(true);
-	}
-
-	public String serialize(final boolean includingBuiltIn) {
-		return (pattern == null ? "": pattern.serialize(includingBuiltIn)) + ":" + (shape == null ? "" : shape.serialize(includingBuiltIn)) ;
+		return serializeToJson(Json.getNew()).toString();
 	}
 
 	@Override
 	public JsonValue serializeToJson(Json json) {
-		return (pattern == null ? null: pattern.serializeToJson(json)) + ":" + (shape == null ? null : shape.serializeToJson(json)) ;
+		return json.typedObject(getGamlType(), "pattern", pattern, "shape", shape);
 	}
 	
 	

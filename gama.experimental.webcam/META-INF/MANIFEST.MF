@@ -13,9 +13,7 @@ Require-Bundle: gama.core,
  org.eclipse.equinox.p2.metadata,
  org.eclipse.equinox.p2.operations,
  gama.dependencies,
- org.apache.commons.compress,
  org.apache.commons.jxpath,
- org.apache.commons.io,
  org.eclipse.xsd,
  com.google.guava;bundle-version="30.1.0"
 Automatic-Module-Name: across.gaml.extensions.webcam
