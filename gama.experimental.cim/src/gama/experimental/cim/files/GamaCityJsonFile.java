@@ -24,6 +24,7 @@ import org.citygml4j.core.model.building.Building;
 import org.citygml4j.core.model.core.AbstractCityObject;
 import org.citygml4j.core.model.core.AbstractCityObjectProperty;
 import org.citygml4j.core.model.core.CityModel;
+import org.citygml4j.core.model.generics.GenericOccupiedSpace;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryType;
@@ -236,6 +237,11 @@ public class GamaCityJsonFile extends GamaGisFile {
 				case "Building" -> { 
 					Building b = (Building) cityObject;
 					System.out.println(b.getADEProperties());
+				}
+				case "GenericOccupiedSpace" -> { 
+					GenericOccupiedSpace b = (GenericOccupiedSpace) cityObject;
+					System.out.println(b.getADEProperties());
+					
 				}
 				default ->
 				throw new IllegalArgumentException("Unexpected city object: " + sn);
