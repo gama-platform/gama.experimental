@@ -5,9 +5,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>msi.gama</groupId>
-		<artifactId>msi.gama.experimental.parent</artifactId>
+		<artifactId>gama.experimental.parent</artifactId>
 		<version>1.9.2-SNAPSHOT</version>
-		<relativePath>../msi.gama.experimental.parent/</relativePath>
+		<relativePath>../gama.experimental.parent/</relativePath>
 	</parent>
 	<artifactId>msi.gama.experimental.p2updatesite</artifactId>
 	<packaging>eclipse-repository</packaging>
