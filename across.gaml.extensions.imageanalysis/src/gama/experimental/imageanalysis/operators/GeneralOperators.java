@@ -1,4 +1,4 @@
-package across.gaml.extensions.imageanalysis.operators;
+package gama.experimental.imageanalysis.operators;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
