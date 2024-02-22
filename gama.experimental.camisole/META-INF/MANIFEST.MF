@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Camisole
+Bundle-SymbolicName: gama.experimental.camisole;singleton:=true
+Bundle-Vendor: UMMISCO
+Bundle-Version: 1.9.2.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: gama.core,
+ gama.dependencies,
+ gama.extension.physics;bundle-version="0.0.0"
+Bundle-ClassPath: .,
+ lib/ssj-3.1.0.jar,
+ lib/colt-1.2.0.jar
+Automatic-Module-Name: ummisco.gama.camisole
