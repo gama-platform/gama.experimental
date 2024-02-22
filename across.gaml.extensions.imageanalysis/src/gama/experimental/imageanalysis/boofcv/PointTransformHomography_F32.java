@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package across.gaml.extensions.imageanalysis.boofcv;
+package gama.experimental.imageanalysis.boofcv;
 
 import boofcv.struct.distort.Point2Transform2Model_F32;
 import georegression.struct.homography.Homography2D_F32;

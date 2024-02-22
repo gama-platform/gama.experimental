@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="across.gaml.feature.imageanalysis"
+      id="gama.experimental.feature.imageanalysis"
       label="ImageAnalysis"
-      version="1.0.0.qualifier">
+      version="1.0.0.qualifier"
+      provider-name="ACROSS - IRD - TLU">
 
    <description url="http://www.example.com/description">
       Adds generic image processing primitives to the gaml language.
@@ -17,17 +18,11 @@
    </license>
 
    <plugin
-         id="across.gaml.extensions.webcam"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="gama.experimental.webcam"
+         version="0.0.0"/>
 
    <plugin
-         id="across.gaml.extensions.imageanalysis"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="gama.experimental.imageanalysis"
+         version="0.0.0"/>
 
 </feature>

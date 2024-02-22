@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="miat.gama.feature.qrcode"
+      id="gama.experimental.feature.qrcode"
       label="Qrcode"
-      version="1.0.0.qualifier">
+      version="1.0.0.qualifier"
+      provider-name="MIAT - INRAE">
 
    <description url="http://www.example.com/description">
       Adds primitive to encode/decode qrcodes in gaml.
@@ -17,17 +18,11 @@
    </license>
 
    <plugin
-         id="miat.gama.extension.qrcode"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="gama.experimental.qrcode"
+         version="0.0.0"/>
 
    <plugin
-         id="across.gaml.extensions.webcam"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="gama.experimental.webcam"
+         version="0.0.0"/>
 
 </feature>

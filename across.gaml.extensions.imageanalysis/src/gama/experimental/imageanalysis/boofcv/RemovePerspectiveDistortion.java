@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package across.gaml.extensions.imageanalysis.boofcv;
+package gama.experimental.imageanalysis.boofcv;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
@@ -184,7 +184,7 @@ public class RemovePerspectiveDistortion<T extends ImageBase<T>> {
 	public static void main(String[] args) {
 		
 		
-		BufferedImage orig = UtilImageIO.loadImageNotNull("C:\\Users\\admin_ptaillandie\\Documents\\GitHub\\gama.experimental\\across.gaml.extensions.imageanalysis\\src\\across\\gaml\\extensions\\imageanalysis\\operators\\real_map_sharpened.jpg");
+		BufferedImage orig = UtilImageIO.loadImageNotNull("C:\\Users\\admin_ptaillandie\\Documents\\GitHub\\gama.experimental\\gama.experimental.imageanalysis\\src\\across\\gaml\\extensions\\imageanalysis\\operators\\real_map_sharpened.jpg");
 		/*Planar<GrayF32> input = ConvertBufferedImage.convertFromPlanar(orig, null, true, GrayF32.class);
 
 		RemovePerspectiveDistortion<Planar<GrayF32>> removePerspective =

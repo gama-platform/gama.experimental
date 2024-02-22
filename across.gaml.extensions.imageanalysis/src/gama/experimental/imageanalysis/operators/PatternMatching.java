@@ -1,4 +1,4 @@
-package across.gaml.extensions.imageanalysis.operators;
+package gama.experimental.imageanalysis.operators;
 
  
 import java.awt.BasicStroke;
@@ -14,9 +14,6 @@ import javax.imageio.ImageIO;
 
 import com.google.common.io.Files;
 
-import across.gaml.extensions.imageanalysis.boofcv.RemovePerspectiveDistortion;
-import across.gaml.extensions.imageanalysis.types.PatternBlock;
-import across.gaml.extensions.imageanalysis.types.PhysicalBlock;
 import boofcv.alg.color.ColorRgb;
 import boofcv.alg.enhance.EnhanceImageOps;
 import boofcv.alg.enhance.GEnhanceImageOps;
@@ -52,6 +49,9 @@ import gama.core.util.GamaPair;
 import gama.core.util.IList;
 import gama.core.util.matrix.GamaIntMatrix;
 import gama.core.util.matrix.IMatrix;
+import gama.experimental.imageanalysis.boofcv.RemovePerspectiveDistortion;
+import gama.experimental.imageanalysis.types.PatternBlock;
+import gama.experimental.imageanalysis.types.PhysicalBlock;
 import gama.experimental.webcam.operators.WebcamOperators;
 import gama.experimental.webcam.types.GamaWebcam;
 

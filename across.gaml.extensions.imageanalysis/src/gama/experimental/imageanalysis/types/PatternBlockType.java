@@ -1,21 +1,19 @@
-package across.gaml.extensions.imageanalysis.types;
+package gama.experimental.imageanalysis.types;
 
-import msi.gama.common.interfaces.IKeyword;
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.GamlAnnotations.type;
-//import miat.gaml.extensions.argumentation.types.GamaArgument;
-//import miat.gaml.extensions.argumentation.types.GamaArgumentType;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.precompiler.ITypeProvider;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.matrix.GamaIntMatrix;
-import msi.gaml.expressions.IExpression;
-import msi.gaml.types.GamaType;
-import msi.gaml.types.IType;
+import gama.core.common.interfaces.IKeyword;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.annotations.precompiler.GamlAnnotations.type;
+import gama.annotations.precompiler.IConcept;
+import gama.annotations.precompiler.IOperatorCategory;
+import gama.annotations.precompiler.ITypeProvider;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.matrix.GamaIntMatrix;
+import gama.gaml.expressions.IExpression;
+import gama.gaml.types.GamaType;
+import gama.gaml.types.IType;
 
 @type(name = "pattern", id = PatternBlockType.id, wraps = { PatternBlock.class }, concept = { IConcept.TYPE, "pattern" })
 public class PatternBlockType extends GamaType<PatternBlock> {
