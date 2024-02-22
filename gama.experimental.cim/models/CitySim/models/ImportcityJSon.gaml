@@ -9,6 +9,7 @@ model ImportcityJSon
 
 global {
 	cityjson_file cube_cityjson_file <- cityjson_file("../includes/cube.city.json");
+	//cityjson_file cube_cityjson_file <- cityjson_file("../includes/twocube.city.json");
 	geometry shape <- envelope(cube_cityjson_file);
 	init {
 		create object from: cube_cityjson_file;
@@ -26,7 +27,7 @@ species object {
 experiment ImportcityJSon type: gui {
 	/** Insert here the definition of the input and output of the model */
 	output {
-		display map {
+		display map type:3d {
 			species object;
 		}
 	}
