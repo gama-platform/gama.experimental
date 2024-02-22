@@ -12,7 +12,6 @@
 package espacedev.gaml.extensions.genstar.type;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,18 +35,13 @@ import msi.gama.precompiler.GamlAnnotations.setter;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
 import msi.gama.util.GamaListFactory;
 import msi.gama.util.IContainer;
 import msi.gama.util.IList;
-import msi.gaml.operators.Strings;
+import msi.gama.util.file.json.Json;
+import msi.gama.util.file.json.JsonValue;
 import msi.gaml.types.IType;
 import msi.gaml.types.Types;
-import spll.localizer.constraint.ISpatialConstraint;
-import spll.localizer.constraint.SpatialConstraintMaxDensity;
-import spll.localizer.constraint.SpatialConstraintMaxNumber;
-import spll.localizer.distribution.ISpatialDistribution;
-import spll.localizer.distribution.SpatialDistributionFactory;
 
 /**
  * The Class GamaPopGenerator.
@@ -242,10 +236,6 @@ public class GamaPopGenerator implements IValue {
 
 	// IValue constract
 
-	@Override
-	public String serialize(final boolean includingBuiltIn) {
-		return null;
-	}
 
 	@Override
 	public String stringValue(final IScope scope) {
@@ -777,5 +767,11 @@ public class GamaPopGenerator implements IValue {
 	 * @return the agents
 	 */
 	public Collection<IAgent> getAgents() { return mapEntitiesAgent.values(); }
+
+	@Override
+	public JsonValue serializeToJson(Json json) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

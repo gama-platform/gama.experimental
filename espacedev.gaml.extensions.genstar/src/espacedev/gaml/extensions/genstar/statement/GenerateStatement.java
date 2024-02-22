@@ -27,8 +27,11 @@ import espacedev.gaml.extensions.genstar.utils.GenStarConstant;
 import espacedev.gaml.extensions.genstar.utils.GenStarGamaUtils;
 import msi.gama.common.interfaces.IKeyword;
 import msi.gama.kernel.experiment.ExperimentAgent;
+import msi.gama.kernel.experiment.ExperimentPlan;
+import msi.gama.kernel.experiment.ExperimentPlan.ExperimentPopulation;
 import msi.gama.kernel.simulation.SimulationPopulation;
 import msi.gama.metamodel.agent.IAgent;
+import msi.gama.metamodel.agent.IMacroAgent;
 import msi.gama.metamodel.population.IPopulation;
 import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
@@ -58,8 +61,6 @@ import msi.gaml.operators.Cast;
 import msi.gaml.species.ISpecies;
 import msi.gaml.statements.AbstractStatementSequence;
 import msi.gaml.statements.Arguments;
-import msi.gaml.statements.Facets;
-import msi.gaml.statements.Facets.Facet;
 import msi.gaml.statements.IStatement;
 import msi.gaml.statements.RemoteSequence;
 import msi.gaml.types.IType;
@@ -243,6 +244,7 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 	// ------------------------------------------------------------------------------------------------ //
 	// ------------------------------------------------------------------------------------------------ //
 
+
 	/**
 	 * Find population.
 	 *
@@ -250,8 +252,7 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 	 *            the scope
 	 * @return the i population
 	 */
-	@SuppressWarnings ("rawtypes")
-	private IPopulation findPopulation(final IScope scope) {
+	IPopulation findPopulation(final IScope scope) {
 		final IAgent executor = scope.getAgent();
 		if (species == null) return executor.getPopulationFor(description.getSpeciesContext().getName());
 		ISpecies s = Cast.asSpecies(scope, species.value(scope));
@@ -259,10 +260,20 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 			final String potentialSpeciesName = species.getDenotedType().getSpeciesName();
 			if (potentialSpeciesName != null) { s = scope.getModel().getSpecies(potentialSpeciesName); }
 		}
-		if (s == null) throw GamaRuntimeException.error(
-				"No population of " + species.serialize(false) + " is accessible in the context of " + executor + ".",
-				scope);
-		return executor.getPopulationFor(s);
+		if (s == null) throw GamaRuntimeException.error("No population of " + species.serializeToGaml(false)
+				+ " is accessible in the context of " + executor + ".", scope);
+		IPopulation pop = executor.getPopulationFor(s);
+		// hqnghi population of micro-model's experiment is not exist, we
+		// must create the new one
+		if (pop == null && s instanceof ExperimentPlan ep && executor instanceof IMacroAgent) {
+			pop = ep.new ExperimentPopulation(s);
+			final IScope sc = ep.getExperimentScope();
+			pop.initializeFor(sc);
+			((IMacroAgent) executor).addExternMicroPopulation(
+					s.getDescription().getModelDescription().getAlias() + "." + s.getName(), pop);
+		}
+		// end-hqnghi
+		return pop;
 	}
 
 	/**
@@ -369,15 +380,14 @@ public class GenerateStatement extends AbstractStatementSequence implements ISta
 				}
 			}
 
-			final Facets facets = description.getPassedArgs();
-			for (final Facet att : facets.getFacets()) {
-				if (!sd.isExperiment() && !sd.hasAttribute(att.key)) {
-					description.error("Attribute " + att + " is not defined in species " + species.getName(),
-							UNKNOWN_VAR);
-					return;
+			final Arguments facets = description.getPassedArgs();
+			facets.forEachFacet((s, e) -> {
+				boolean error = !sd.isExperiment() && !sd.hasAttribute(s);
+				if (error) {
+					description.error("Attribute " + s + " is not defined in species " + species.getName(), UNKNOWN_VAR);
 				}
-			}
-
+				return !error;
+			});
 		}
 
 	}

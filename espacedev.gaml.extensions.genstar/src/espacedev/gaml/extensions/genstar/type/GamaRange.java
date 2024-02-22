@@ -19,6 +19,8 @@ import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
+import msi.gama.util.file.json.Json;
+import msi.gama.util.file.json.JsonValue;
 import msi.gaml.types.IType;
 
 /**
@@ -69,7 +71,6 @@ public class GamaRange implements IValue {
 	@getter ("max_value")
 	public Number getMax() { return max.doubleValue(); }
 
-	@Override
 	public String serialize(final boolean includingBuiltIn) {
 		return min + "->" + max;
 	}
@@ -126,5 +127,10 @@ public class GamaRange implements IValue {
 	 */
 	private int intValue() {
 		return (int) floatValue();
+	}
+
+	@Override
+	public JsonValue serializeToJson(Json json) {
+		return json.valueOf(min + "->" + max);
 	}
 }
