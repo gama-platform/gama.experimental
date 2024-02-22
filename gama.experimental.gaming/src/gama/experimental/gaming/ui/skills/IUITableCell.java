@@ -1,4 +1,4 @@
-package ummisco.gama.gaming.ui.skills;
+package gama.experimental.gaming.ui.skills;
 
 public interface IUITableCell {
 	public static String SKILL_NAME = "UI_table_cell";
