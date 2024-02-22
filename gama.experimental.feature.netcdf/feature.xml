@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="cict.feature.netcdf"
+      id="gama.experimental.feature.netcdf"
       label="Netcdf"
-      version="1.0.0.qualifier">
+      version="1.0.0.qualifier"
+      provider-name="CICT">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -21,9 +22,7 @@
    </url>
 
    <plugin
-         id="cict.gaml.extensions.netcdf"
-         download-size="0"
-         install-size="0"
+         id="gama.experimental.netcdf"
          version="0.0.0"/>
 
 </feature>

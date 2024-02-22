@@ -1,4 +1,4 @@
-package cict.gaml.extensions.netcdf.file;
+package gama.experimental.netcdf.file;
 
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;

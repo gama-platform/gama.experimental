@@ -8,7 +8,7 @@
  * Visit https://github.com/gama-platform/gama for license information and contacts.
  *
  ********************************************************************************************************/
-package cict.gaml.extensions.netcdf.file;
+package gama.experimental.netcdf.file;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,41 +22,38 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.geotools.coverage.grid.GridCoverage2D;
-import org.geotools.coverage.grid.io.AbstractGridCoverage2DReader;
 import org.geotools.data.DataSourceException;
 import org.geotools.data.PrjFileReader; 
-import org.geotools.gce.arcgrid.ArcGridReader;
 import org.geotools.gce.geotiff.GeoTiffReader;
 import org.locationtech.jts.geom.Envelope;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
- 
 
-import msi.gama.common.geometry.Envelope3D;
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.GamaShape;
-import msi.gama.metamodel.shape.ILocation;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.file;
-import msi.gama.precompiler.GamlAnnotations.no_test;
-import msi.gama.precompiler.GamlAnnotations.operator;
-import msi.gama.precompiler.IConcept;
-import msi.gama.precompiler.IOperatorCategory;
-import msi.gama.precompiler.Reason;
-import msi.gama.runtime.GAMA;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.IList;
-import msi.gama.util.file.GamaGridFile;
-import msi.gama.util.matrix.GamaFloatMatrix;
-import msi.gama.util.matrix.GamaIntMatrix;
-import msi.gama.util.matrix.IMatrix;
-import msi.gaml.types.GamaGeometryType;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.core.common.geometry.Envelope3D;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.core.metamodel.shape.GamaShape;
+import gama.core.metamodel.shape.GamaShapeFactory;
+import gama.core.metamodel.shape.IShape;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.annotations.precompiler.GamlAnnotations.file;
+import gama.annotations.precompiler.GamlAnnotations.no_test;
+import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.annotations.precompiler.IConcept;
+import gama.annotations.precompiler.IOperatorCategory;
+import gama.annotations.precompiler.Reason;
+import gama.core.runtime.GAMA;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaListFactory;
+import gama.core.util.IList;
+import gama.core.util.file.GamaGridFile;
+import gama.core.util.matrix.GamaFloatMatrix;
+import gama.core.util.matrix.GamaIntMatrix;
+import gama.core.util.matrix.IMatrix;
+import gama.gaml.types.GamaGeometryType;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
@@ -251,9 +248,9 @@ public class GamaNetCDFFile extends GamaGridFile {
 //					final double vals = cov[numCols-1-xx][numRows-1-yy];
 					final double vals = (double) coverage.get(scope,xx,yy);
 					if (gis == null) {
-						rect = new GamaShape(rect.getInnerGeometry());
+						rect = GamaShapeFactory.createFrom(rect.getInnerGeometry());
 					} else {
-						rect = new GamaShape(gis.transform(rect.getInnerGeometry()));
+						rect = GamaShapeFactory.createFrom(gis.transform(rect.getInnerGeometry()));
 					}
 
 					rect.setAttribute("grid_value", vals);
@@ -464,7 +461,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 		return null;
 	}
 
-	public Double valueOf(final IScope scope, final ILocation loc) {
+	public Double valueOf(final IScope scope, final GamaPoint loc) {
 		if (getBuffer() == null) {
 			fillBuffer(scope);
 		}
@@ -518,7 +515,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 			if (netcdf.reader == null) {
 				netcdf.createReader(scope, true);
 			}
-			if (netcdf.reader.ds == null) {
+			if (netcdf.reader.ds != null) {
 				String netCDF_File = netcdf.getFile(scope).getAbsolutePath();
 				try {
 					netcdf.reader.ds = NetcdfDataset.openDataset(netCDF_File, true, null);

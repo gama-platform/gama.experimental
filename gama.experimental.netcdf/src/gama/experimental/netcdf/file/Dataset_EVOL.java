@@ -1,4 +1,4 @@
-package cict.gaml.extensions.netcdf.file;
+package gama.experimental.netcdf.file;
 
 /** import java.io */
 import java.io.File;
