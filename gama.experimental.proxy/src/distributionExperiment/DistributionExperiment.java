@@ -9,7 +9,6 @@ import endActionProxy.EndActionOneShotMigration;
 import endActionProxy.EndActionOneShotProxyUpdate;
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.experiment;
-import gama.core.common.interfaces.IKeyword;
 import gama.core.kernel.experiment.ExperimentAgent;
 import gama.core.metamodel.agent.IAgent;
 import gama.core.metamodel.population.IPopulation;
@@ -37,7 +36,7 @@ import proxyPopulation.ProxyPopulationFactory;
  *		 update proxyToUpdate to the corresponding processor
  *
  */
-@experiment (IKeyword.DISTRIBUTION)
+@experiment ("distribution")
 @doc("distribution experiment")
 public class DistributionExperiment extends ExperimentAgent
 {

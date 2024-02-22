@@ -228,23 +228,18 @@ public class GamaCityJsonFile extends GamaGisFile {
 	        for (AbstractCityObjectProperty cityObjectMember : cityModel.getCityObjectMembers()) {
 	            AbstractCityObject cityObject = cityObjectMember.getObject();
 	            
-	            
+	            System.out.println("Lower corner of CIM: "+cityModel.getBoundedBy().getEnvelope().getLowerCorner().getValue());
+				System.out.println("CIMObject is "+cityObject.getId());
+				
 	            String sn = cityObject.getClass().getSimpleName();
 	            switch (sn) {
 				case "Building" -> { 
 					Building b = (Building) cityObject;
 					System.out.println(b.getADEProperties());
 				}
-				
 				default ->
 				throw new IllegalArgumentException("Unexpected city object: " + sn);
 				}
-	            
-//	            System.out.println(cityObject);
-//	            System.out.println(cityObject.getGeometryInfo().getGeometries());
-	            //System.out.println(cityObject.getBoundedBy()); => empty
-	            //System.out.println(cityObject.getGeneralizesTo()); => null
-	            //System.out.println(cityObject.getLocation()); => null
 	            
 	            cityObjects.merge(cityObject.getClass().getSimpleName(), 1, Integer::sum);
 	        }
