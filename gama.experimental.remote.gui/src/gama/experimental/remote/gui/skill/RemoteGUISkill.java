@@ -1,24 +1,24 @@
-package ummisco.gama.remote.gui.skill;
+package gama.experimental.remote.gui.skill;
 
 import java.util.ArrayList;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.precompiler.GamlAnnotations.action;
-import msi.gama.precompiler.GamlAnnotations.arg;
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gama.precompiler.GamlAnnotations.skill;
-import msi.gama.precompiler.GamlAnnotations.variable;
-import msi.gama.precompiler.GamlAnnotations.vars;
-import msi.gama.precompiler.IConcept;
-import msi.gama.runtime.IScope;
-import msi.gaml.skills.Skill;
-import msi.gaml.types.IType;
-import ummisco.gama.dev.utils.DEBUG;
-import ummisco.gama.network.skills.INetworkSkill;
-import ummisco.gama.remote.gui.connector.MQTTConnector;
+import gama.experimental.remote.gui.connector.MQTTConnector;
+import gama.core.metamodel.agent.IAgent;
+import gama.annotations.precompiler.GamlAnnotations.action;
+import gama.annotations.precompiler.GamlAnnotations.arg;
+import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.annotations.precompiler.GamlAnnotations.skill;
+import gama.annotations.precompiler.GamlAnnotations.variable;
+import gama.annotations.precompiler.GamlAnnotations.vars;
+import gama.annotations.precompiler.IConcept;
+import gama.core.runtime.IScope;
+import gama.dev.DEBUG;
+import gama.gaml.skills.Skill;
+import gama.gaml.types.IType;
+import gama.extension.network.skills.INetworkSkill;
 
 @vars ({ @variable (
 		name = IRemoteGUISkill.NET_AGENT_NAME,

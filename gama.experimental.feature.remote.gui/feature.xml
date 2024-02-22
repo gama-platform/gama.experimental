@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ummisco.gama.feature.remote.gui"
+      id="gama.experimental.feature.remote.gui"
       label="Remote.Gui"
-      version="1.9.2.qualifier">
+      version="1.9.2.qualifier"
+      provider-name="UMMISCO - IRD">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -17,10 +18,7 @@
    </license>
 
    <plugin
-         id="ummisco.gama.remote.gui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="gama.experimental.remote.gui"
+         version="0.0.0"/>
 
 </feature>

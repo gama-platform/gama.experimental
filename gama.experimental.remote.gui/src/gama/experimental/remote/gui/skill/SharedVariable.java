@@ -1,4 +1,4 @@
-package ummisco.gama.remote.gui.skill;
+package gama.experimental.remote.gui.skill;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,12 +6,12 @@ import java.util.Map;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 
-import msi.gama.metamodel.agent.IAgent;
-import msi.gama.runtime.IScope;
-import msi.gama.util.IList;
-import msi.gama.util.IMap;
-import ummisco.gama.remote.gui.connector.MQTTConnector;
-import ummisco.gama.remote.reducer.DataReducer;
+import gama.experimental.remote.gui.connector.MQTTConnector;
+import gama.experimental.remote.reducer.DataReducer;
+import gama.core.metamodel.agent.IAgent;
+import gama.core.runtime.IScope;
+import gama.core.util.IList;
+import gama.core.util.IMap;
 
 public class SharedVariable {
 	public final static int EXPOSED_VARIABLE = 1;

@@ -1,4 +1,4 @@
-package ummisco.gama.remote.gui.connector;
+package gama.experimental.remote.gui.connector;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -12,8 +12,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import gama.extension.serialize.implementations.BinarySerialisation;
 
 public final class MQTTConnector {
 	public final static String SERVER_URL = "SERVER_URL";
@@ -78,8 +77,9 @@ public final class MQTTConnector {
 	}
 	
 	private void storeData(final String topic, final String message) {
-		final XStream dataStreamer = new XStream(new DomDriver());
-		final Object data = dataStreamer.fromXML(message);
+		final Object data = BinarySerialisation.createFromString(null, message);		
+//		final XStream dataStreamer = new XStream(new DomDriver());
+//		final Object data = dataStreamer.fromXML(message);
 	
 		System.out.println(" Received message is : "+ message);
 		System.out.println(" Received Data is : "+ data);
@@ -93,8 +93,9 @@ public final class MQTTConnector {
 	}
 
 	public void sendMessage(final String dest, final Object data) throws MqttException {
-		final XStream dataStreamer = new XStream(new DomDriver());
-		final String dataS = dataStreamer.toXML(data);
+		final String dataS = BinarySerialisation.saveToString(null, data, "", false);		
+//		final XStream dataStreamer = new XStream(new DomDriver());
+//		final String dataS = dataStreamer.toXML(data);
 		this.sendFormatedMessage(dest, dataS);
 	}
 

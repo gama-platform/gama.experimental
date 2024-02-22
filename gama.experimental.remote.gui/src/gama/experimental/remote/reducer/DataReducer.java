@@ -1,11 +1,11 @@
-package ummisco.gama.remote.reducer;
+package gama.experimental.remote.reducer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import msi.gama.util.IList;
-import msi.gama.util.IMap;
+import gama.core.util.IList;
+import gama.core.util.IMap;
 
 public class DataReducer {
 	public static <T> ArrayList<T> castToList(final IList<T> mList) {

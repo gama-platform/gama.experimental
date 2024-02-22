@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: remote_GUI
+Bundle-SymbolicName: gama.experimental.remote.gui;singleton:=true
+Bundle-Vendor: UMMISCO - IRD
+Bundle-Version: 1.9.2.qualifier
+Require-Bundle: gama.extension.network,
+ gama.core,
+ gama.extension.serialize,
+ gama.dependencies
+Automatic-Module-Name: gama.experimental.remote.gui

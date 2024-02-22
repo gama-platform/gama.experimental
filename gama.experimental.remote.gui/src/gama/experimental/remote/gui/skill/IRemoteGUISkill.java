@@ -1,4 +1,4 @@
-package ummisco.gama.remote.gui.skill;
+package gama.experimental.remote.gui.skill;
 
 public interface IRemoteGUISkill {
 	public static String SKILL_NAME = "remoteGUI";
