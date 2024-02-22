@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="gama.feature.experimental.matlab"
+      id="gama.experimental.feature.matlab"
       label="Matlab"
       version="1.9.2.qualifier"
       provider-name="UMMISCO">

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ummisco.gaml.feature.hydro"
+      id="gama.experimental.feature.hydro"
       label="mike and hecras"
-      version="1.9.2.qualifier">
+      version="1.9.2.qualifier"
+      provider-name="UMMISCO - CTU">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
