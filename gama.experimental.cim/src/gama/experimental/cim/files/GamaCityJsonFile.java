@@ -8,8 +8,9 @@
  * Visit https://github.com/gama-platform/gama for license information and contacts.
  *
  ********************************************************************************************************/
-package across.gaml.extensions.citygml.files;
+package gama.experimental.cim.files;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -19,6 +20,7 @@ import org.citygml4j.cityjson.CityJSONContextException;
 import org.citygml4j.cityjson.reader.CityJSONInputFactory;
 import org.citygml4j.cityjson.reader.CityJSONReadException;
 import org.citygml4j.cityjson.reader.CityJSONReader;
+import org.citygml4j.core.model.building.Building;
 import org.citygml4j.core.model.core.AbstractCityObject;
 import org.citygml4j.core.model.core.AbstractCityObjectProperty;
 import org.citygml4j.core.model.core.CityModel;
@@ -26,9 +28,9 @@ import org.geotools.data.simple.SimpleFeatureCollection;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryType;
 
-import gama.annotations.precompiler.GamlAnnotations.file;
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.annotations.precompiler.GamlAnnotations.file;
 import gama.annotations.precompiler.IConcept;
 import gama.core.metamodel.shape.IShape;
 import gama.core.runtime.IScope;
@@ -52,7 +54,7 @@ import gama.gaml.types.Types;
 		concept = { IConcept.GIS, IConcept.FILE },
 		doc = @doc ("Represents geospatial files written using the GeoJSON format. The internal representation is a list of geometries"))
 public class GamaCityJsonFile extends GamaGisFile {
- 
+	
 	/** 
 	 * Instantiates a new gama geo json file.
 	 *
@@ -64,12 +66,14 @@ public class GamaCityJsonFile extends GamaGisFile {
 	 *             the gama runtime exception
 	 */
 	@doc (
-			value = "This file constructor allows to read a geojson file (https://geojson.org/)",
+			value = "This file constructor allows to read a cityjson file (https://www.cityjson.org)",
 			examples = { @example (
 					value = "file f <- geojson_file(\"file.json\");",
 					isExecutable = false) })
 	public GamaCityJsonFile(final IScope scope, final String pathName) throws GamaRuntimeException {
 		super(scope, pathName, (Integer) null);
+		
+		
 	}
 
 	/**
@@ -83,7 +87,7 @@ public class GamaCityJsonFile extends GamaGisFile {
 	 *            the code
 	 */
 	@doc (
-			value = "This file constructor allows to read a geojson file and specifying the coordinates system code, as an int",
+			value = "This file constructor allows to read a cityjson file and specifying the coordinates system code, as an int",
 			examples = { @example (
 					value = "file f <- geojson_file(\"file.json\", 32648);",
 					isExecutable = false) })
@@ -218,18 +222,38 @@ public class GamaCityJsonFile extends GamaGisFile {
 				e.printStackTrace();
 			}
 
+	        cityModel.getFeatureMembers().forEach(i -> System.out.println(i));
+	        
 	        Map<String, Integer> cityObjects = new TreeMap<>();
 	        for (AbstractCityObjectProperty cityObjectMember : cityModel.getCityObjectMembers()) {
 	            AbstractCityObject cityObject = cityObjectMember.getObject();
+	            
+	            
+	            String sn = cityObject.getClass().getSimpleName();
+	            switch (sn) {
+				case "Building" -> { 
+					Building b = (Building) cityObject;
+					System.out.println(b.getADEProperties());
+				}
+				
+				default ->
+				throw new IllegalArgumentException("Unexpected city object: " + sn);
+				}
+	            
+//	            System.out.println(cityObject);
+//	            System.out.println(cityObject.getGeometryInfo().getGeometries());
+	            //System.out.println(cityObject.getBoundedBy()); => empty
+	            //System.out.println(cityObject.getGeneralizesTo()); => null
+	            //System.out.println(cityObject.getLocation()); => null
 	            
 	            cityObjects.merge(cityObject.getClass().getSimpleName(), 1, Integer::sum);
 	        }
 
 	        cityObjects.forEach((key, value) -> System.out.println(key + ": " + value + " instance(s)"));
 
-			} catch (CityJSONContextException e) {
+		} catch (CityJSONContextException e) {
 				e.printStackTrace();
-			}
+		}
 
 		return null;
 	}
