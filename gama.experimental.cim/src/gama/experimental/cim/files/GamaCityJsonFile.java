@@ -109,13 +109,14 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 			}
 	        
 	        cityModel.getFeatureMembers().forEach(i -> System.out.println(i));
-	        Envelope env =  cityModel.getBoundedBy().getEnvelope();
+	        Envelope env =  cityModel.getBoundedBy() != null ? cityModel.getBoundedBy().getEnvelope() : null;
 	        
-	        List<Double> lcp =  env.getLowerCorner().getValue();
-	        List<Double> ucp =  env.getUpperCorner().getValue();
-		       
-	        envelope = Envelope3D.of(lcp.get(0), ucp.get(0), lcp.get(1), ucp.get(1),lcp.get(2), ucp.get(2));
-	        
+	        if (env != null) {
+	        	List<Double> lcp =  env.getLowerCorner().getValue();
+	 	        List<Double> ucp =  env.getUpperCorner().getValue();
+	 		       
+	 	        envelope = Envelope3D.of(lcp.get(0), ucp.get(0), lcp.get(1), ucp.get(1),lcp.get(2), ucp.get(2));
+	 	    }
 	        Map<String, Integer> cityObjects = new TreeMap<>();
 	       IList<IShape> shapes = GamaListFactory.create();
 	       
@@ -126,27 +127,37 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 	            cityObjects.merge(cityObject.getClass().getSimpleName(), 1, Integer::sum);
 	            cityObjects.forEach((key, value) -> System.out.println(key + ": " + value + " instance(s)"));
 				IList<IShape> faces = GamaListFactory.create();
-	            List<GeometryProperty<?>> lod1geom = cityObject.getGeometryInfo().getGeometries(1);
-				lod1geom.forEach(g -> g.getObject().accept(
-						new ObjectWalker() {
-							@Override
-							public void visit(AbstractGeometry geometry) {
-								System.out.println("- child "+geometry.getClass().getSimpleName()); 
-								
-								if (geometry instanceof LinearRing) {
-									LinearRing lr = (LinearRing) geometry;
-									DirectPositionList pts = lr.getControlPoints().getPosList();
-									IList<GamaPoint> points = GamaListFactory.create();
-									List<Double> v = pts.getValue();
-									for(int i = 0; i < v.size() - 2; i= i+3) {
-										points.add( new GamaPoint(v.get(i),v.get(i+1),v.get(i+2)));
+				IShape gShape = null;
+				for (Integer lod : cityObject.getGeometryInfo().getLods()) {
+					
+					List<GeometryProperty<?>> lodgeom = cityObject.getGeometryInfo().getGeometries(lod);
+					lodgeom.forEach(g -> g.getObject().accept(
+							new ObjectWalker() {
+								@Override
+								public void visit(AbstractGeometry geometry) {
+									//System.out.println("- child "+geometry.getClass().getSimpleName()); 
+									
+									if (geometry instanceof LinearRing) {
+										LinearRing lr = (LinearRing) geometry;
+										DirectPositionList pts = lr.getControlPoints().getPosList();
+										IList<GamaPoint> points = GamaListFactory.create();
+										List<Double> v = pts.getValue();
+										for(int i = 0; i < v.size() - 2; i= i+3) {
+											points.add( new GamaPoint(v.get(i),v.get(i+1),v.get(i+2)));
+										}
+										faces.add(Creation.polygon(scope, points));
 									}
-									faces.add(Creation.polygon(scope, points));
+									super.visit(geometry);
 								}
-								super.visit(geometry);
-							}
-						}));
-				shapes.add(Creation.geometryCollection(scope, faces));
+							}));
+					IShape lodShape = Creation.geometryCollection(scope, faces);
+					if (gShape == null) {
+						gShape = lodShape;
+					}
+					gShape.getOrCreateAttributes().put("lod"+lod, lodShape);
+					
+				}
+				shapes.add(gShape);
 				 String sn = cityObject.getClass().getSimpleName();
 	            switch (sn) {
 				case "Building" -> { 
@@ -162,6 +173,9 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 				throw new IllegalArgumentException("Unexpected city object: " + sn);
 				}
 
+	            if (envelope == null) {
+	            	envelope = Envelope3D.of(shapes);
+	            }
 				setBuffer(shapes);
 	           
 	            
