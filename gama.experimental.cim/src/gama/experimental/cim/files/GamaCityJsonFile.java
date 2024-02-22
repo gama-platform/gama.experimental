@@ -101,7 +101,7 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 	        List<Double> lcp =  env.getLowerCorner().getValue();
 	        List<Double> ucp =  env.getUpperCorner().getValue();
 		       
-	        envelope = Envelope3D.of(lcp.get(0), lcp.get(1), lcp.get(2),ucp.get(0), ucp.get(1), ucp.get(2));
+	        envelope = Envelope3D.of(lcp.get(0), ucp.get(0), lcp.get(1), ucp.get(1),lcp.get(2), ucp.get(2));
 	        
 	        Map<String, Integer> cityObjects = new TreeMap<>();
 	       
