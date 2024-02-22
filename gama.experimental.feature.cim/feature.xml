@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="gama.experimental.feature.citygml"
+      id="gama.experimental.feature.cim"
       label="Citygml"
       version="1.0.0.qualifier">
 
@@ -17,7 +17,7 @@
    </license>
 
    <plugin
-         id="gama.experimental.citygml"
+         id="gama.experimental.cim"
          version="0.0.0"/>
 
 </feature>
