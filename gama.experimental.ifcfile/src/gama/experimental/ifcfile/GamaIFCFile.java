@@ -7,7 +7,7 @@
  *
  *
  **********************************************************************************************/
-package miat.gama.extension.ifcfile;
+package gama.experimental.ifcfile;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,25 +61,25 @@ import ifc2x3javatoolbox.ifc2x3tc1.IfcTypeObject;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcWall;
 import ifc2x3javatoolbox.ifc2x3tc1.IfcWindow;
 import ifc4javatoolbox.ifcmodel.IfcModel;
-import msi.gama.common.geometry.Envelope3D;
-import msi.gama.common.geometry.GeometryUtils;
-import msi.gama.common.interfaces.IKeyword;
-import msi.gama.metamodel.shape.GamaPoint;
-import msi.gama.metamodel.shape.IShape;
-import msi.gama.precompiler.GamlAnnotations.file;
-import msi.gama.precompiler.IConcept;
-import msi.gama.runtime.GAMA;
-import msi.gama.runtime.IScope;
-import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.GamaListFactory;
-import msi.gama.util.GamaMapFactory;
-import msi.gama.util.IList;
-import msi.gama.util.IMap;
-import msi.gama.util.file.GamaGeometryFile;
-import msi.gaml.operators.Spatial;
-import msi.gaml.types.GamaGeometryType;
-import msi.gaml.types.IType;
-import msi.gaml.types.Types;
+import gama.core.common.geometry.Envelope3D;
+import gama.core.common.geometry.GeometryUtils;
+import gama.core.common.interfaces.IKeyword;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.core.metamodel.shape.IShape;
+import gama.annotations.precompiler.GamlAnnotations.file;
+import gama.annotations.precompiler.IConcept;
+import gama.core.runtime.GAMA;
+import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.core.util.GamaListFactory;
+import gama.core.util.GamaMapFactory;
+import gama.core.util.IList;
+import gama.core.util.IMap;
+import gama.core.util.file.GamaGeometryFile;
+import gama.gaml.operators.Spatial;
+import gama.gaml.types.GamaGeometryType;
+import gama.gaml.types.IType;
+import gama.gaml.types.Types;
 
 /**
  * Written by drogoul Modified on 13 nov. 2011

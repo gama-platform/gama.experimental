@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="miat.gama.feature.ifcfile"
+      id="gama.experimental.feature.ifcfile"
       label="Ifcfile"
-      version="1.0.0.qualifier">
+      version="1.0.0.qualifier"
+      provider-name="MIAT - INRAE">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -17,10 +18,7 @@
    </license>
 
    <plugin
-         id="miat.gama.extension.ifcfile"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="gama.experimental.ifcfile"
+         version="0.0.0"/>
 
 </feature>
