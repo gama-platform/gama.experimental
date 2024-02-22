@@ -10,8 +10,8 @@
  ********************************************************************************************************/
 package gama.experimental.cim.files;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -25,9 +25,12 @@ import org.citygml4j.core.model.core.AbstractCityObject;
 import org.citygml4j.core.model.core.AbstractCityObjectProperty;
 import org.citygml4j.core.model.core.CityModel;
 import org.citygml4j.core.model.generics.GenericOccupiedSpace;
+import org.citygml4j.core.visitor.ObjectWalker;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryType;
+import org.xmlobjects.gml.model.geometry.AbstractGeometry;
+import org.xmlobjects.gml.model.geometry.GeometryProperty;
 
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.example;
@@ -229,28 +232,40 @@ public class GamaCityJsonFile extends GamaGisFile {
 	        for (AbstractCityObjectProperty cityObjectMember : cityModel.getCityObjectMembers()) {
 	            AbstractCityObject cityObject = cityObjectMember.getObject();
 	            
-	            System.out.println("Lower corner of CIM: "+cityModel.getBoundedBy().getEnvelope().getLowerCorner().getValue());
-				System.out.println("CIMObject is "+cityObject.getId());
+	            List<Double> xyz_origin = cityModel.getBoundedBy().getEnvelope().getLowerCorner().getValue();
+	            cityObjects.merge(cityObject.getClass().getSimpleName(), 1, Integer::sum);
+	            cityObjects.forEach((key, value) -> System.out.println(key + ": " + value + " instance(s)"));
+				
+	            List<GeometryProperty<?>> lod1geom = cityObject.getGeometryInfo().getGeometries(1);
+				lod1geom.forEach(g -> g.getObject().accept(
+						new ObjectWalker() {
+							@Override
+							public void visit(AbstractGeometry geometry) {
+								
+								System.out.println("- child "+geometry.getClass().getSimpleName()); 
+								
+								super.visit(geometry);
+							}
+						}));
 				
 	            String sn = cityObject.getClass().getSimpleName();
 	            switch (sn) {
 				case "Building" -> { 
 					Building b = (Building) cityObject;
-					System.out.println(b.getADEProperties());
+					System.out.println(b.getId());
 				}
 				case "GenericOccupiedSpace" -> { 
 					GenericOccupiedSpace b = (GenericOccupiedSpace) cityObject;
-					System.out.println(b.getADEProperties());
+					System.out.println(b.getId());
 					
 				}
 				default ->
 				throw new IllegalArgumentException("Unexpected city object: " + sn);
 				}
 	            
-	            cityObjects.merge(cityObject.getClass().getSimpleName(), 1, Integer::sum);
+	            
 	        }
 
-	        cityObjects.forEach((key, value) -> System.out.println(key + ": " + value + " instance(s)"));
 
 		} catch (CityJSONContextException e) {
 				e.printStackTrace();
