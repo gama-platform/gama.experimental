@@ -10,6 +10,7 @@
  ********************************************************************************************************/
 package gama.experimental.cim.files;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -23,6 +24,7 @@ import org.citygml4j.core.model.core.AbstractCityObject;
 import org.citygml4j.core.model.core.AbstractCityObjectProperty;
 import org.citygml4j.core.model.core.CityModel;
 import org.citygml4j.core.model.generics.GenericOccupiedSpace;
+import org.xmlobjects.gml.model.geometry.Envelope;
 
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.file;
@@ -92,8 +94,14 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 	        } catch (CityJSONReadException e) {
 				e.printStackTrace();
 			}
-
+	        
 	        cityModel.getFeatureMembers().forEach(i -> System.out.println(i));
+	        Envelope env =  cityModel.getBoundedBy().getEnvelope();
+	        
+	        List<Double> lcp =  env.getLowerCorner().getValue();
+	        List<Double> ucp =  env.getUpperCorner().getValue();
+		       
+	        envelope = Envelope3D.of(lcp.get(0), lcp.get(1), lcp.get(2),ucp.get(0), ucp.get(1), ucp.get(2));
 	        
 	        Map<String, Integer> cityObjects = new TreeMap<>();
 	       

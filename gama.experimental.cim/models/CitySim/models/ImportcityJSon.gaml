@@ -9,7 +9,7 @@ model ImportcityJSon
 
 global {
 	cityjson_file cube_cityjson_file <- cityjson_file("../includes/cube.city.json");
-	
+	geometry shape <- envelope(cube_cityjson_file);
 	init {
 		create object from: cube_cityjson_file;
 	}
