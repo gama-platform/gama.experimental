@@ -1,34 +1,26 @@
-package ummisco.gama.extension.hecras.skill;
-
-import msi.gama.precompiler.GamlAnnotations.doc;
-import msi.gama.precompiler.GamlAnnotations.skill;
+package ummisco.gaml.extensions.hecras.skill;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Ole32;
-import com.sun.jna.platform.win32.User32;
-import com.sun.jna.platform.win32.WinDef.HWND;
 
 import io.jhdf.HdfFile;
 import io.jhdf.api.Dataset;
-
-import com.sun.jna.platform.win32.WinUser;
-
 import msi.gama.precompiler.GamlAnnotations.action;
 import msi.gama.precompiler.GamlAnnotations.arg;
+import msi.gama.precompiler.GamlAnnotations.doc;
 import msi.gama.precompiler.GamlAnnotations.example;
-import msi.gaml.types.IType;
+import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
 import msi.gama.runtime.exceptions.GamaRuntimeException;
-import msi.gama.util.IList;
 import msi.gaml.skills.Skill;
+import msi.gaml.types.IType;
 
 @skill(name = "hecrasSkill", concept = { IConcept.STATISTIC, IConcept.SKILL })
 @doc("read hecras data")

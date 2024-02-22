@@ -12,4 +12,3 @@ Require-Bundle: msi.gama.core,
  ummisco.gama.network
 Bundle-ClassPath: ext/mpi.jar,
  .
-Import-Package: ummisco.gama.serializer.factory

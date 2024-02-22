@@ -1,4 +1,4 @@
-package ummisco.gama.extension.hecras.skill;
+package ummisco.gaml.extensions.hecras.skill;
 /*
  * The contents of this file is dual-licensed under 2
  * alternative Open Source/Free licenses: LGPL 2.1 or later and
@@ -24,10 +24,8 @@ package ummisco.gama.extension.hecras.skill;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Array;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -38,25 +36,19 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.OaIdl.SAFEARRAY;
 import com.sun.jna.platform.win32.Ole32;
-import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.Variant;
-import com.sun.jna.platform.win32.WinUser;
 import com.sun.jna.platform.win32.Variant.VARIANT;
 import com.sun.jna.platform.win32.Variant.VARIANT.ByReference;
 import com.sun.jna.platform.win32.WTypes.VARTYPE;
-import com.sun.jna.platform.win32.WinDef.HWND;
 import com.sun.jna.platform.win32.WinDef.LONG;
-
-import msi.gama.precompiler.doc.utils.XMLElements;
-import msi.gama.precompiler.doc.utils.XMLUtils;
-
 import com.sun.jna.platform.win32.COM.COMException;
 import com.sun.jna.platform.win32.COM.COMLateBindingObject;
+
+import msi.gama.precompiler.doc.utils.XMLUtils;
 
 public class HecRasEngine extends COMLateBindingObject {
 	public static void main(String args[]) {
