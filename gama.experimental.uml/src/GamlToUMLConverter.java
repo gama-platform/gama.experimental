@@ -7,12 +7,12 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 
-import msi.gama.lang.gaml.indexer.GamlResourceIndexer;
-import msi.gaml.compilation.GAML;
-import msi.gaml.compilation.ast.ISyntacticElement;
-import msi.gaml.compilation.ast.ISyntacticElement.SyntacticVisitor;
-import msi.gaml.types.Types;
-import ummisco.gama.ui.navigator.contents.WrappedGamaFile;
+import gama.gaml.compilation.GAML;
+import gama.gaml.compilation.ast.ISyntacticElement;
+import gama.gaml.compilation.ast.ISyntacticElement.SyntacticVisitor;
+import gama.gaml.types.Types;
+import gama.ui.navigator.view.contents.WrappedGamaFile;
+import gaml.compiler.gaml.indexer.GamlResourceIndexer;
 
 public class GamlToUMLConverter {
 

@@ -7,10 +7,11 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.handlers.HandlerUtil;
 
-import ummisco.gama.ui.navigator.contents.WrappedGamaFile;
-import ummisco.gama.ui.navigator.contents.WrappedResource;
+import gama.ui.navigator.view.contents.WrappedGamaFile;
+import gama.ui.navigator.view.contents.WrappedResource;
 
-public class GenerateUMLLightHandler extends AbstractHandler {
+
+public class GenerateUMLHeavyHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -37,7 +38,7 @@ public class GenerateUMLLightHandler extends AbstractHandler {
                     directorySelector.setFilterPath(file_to_convert.getResource().getLocation().toOSString());
              		String selectedDirectoryName = directorySelector.open();
              		//Do for a model
-             		JobUMLConverterLight myJob = new JobUMLConverterLight(((WrappedGamaFile) o), selectedDirectoryName);
+             		JobUMLConverterHeavy myJob = new JobUMLConverterHeavy(((WrappedGamaFile) o), selectedDirectoryName);
              		myJob.schedule();
              	}
             }

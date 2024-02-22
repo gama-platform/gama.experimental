@@ -51,12 +51,12 @@
          point="org.eclipse.ui.commands">
       <command
             defaultHandler="GenerateUMLHeavyHandler"
-            id="ummisco.gama.uml.generateHeavyUML"
+            id="gama.uml.generateHeavyUML"
             name="Generate UML from Model">
       </command>
       <command
             defaultHandler="GenerateUMLLightHandler"
-            id="ummisco.gama.uml.generateLightUML"
+            id="gama.uml.generateLightUML"
             name="Generate UML from Model">
       </command>
    </extension>

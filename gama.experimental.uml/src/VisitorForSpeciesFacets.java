@@ -1,5 +1,5 @@
-import msi.gaml.descriptions.IDescription.IFacetVisitor;
-import msi.gaml.descriptions.IExpressionDescription;
+import gama.gaml.descriptions.IDescription.IFacetVisitor;
+import gama.gaml.descriptions.IExpressionDescription;
 
 public class VisitorForSpeciesFacets implements IFacetVisitor {
 

@@ -1,7 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Uml Generator
-Bundle-SymbolicName: ummisco.gama.uml;singleton:=true
+Bundle-SymbolicName: gama.experimental.uml;singleton:=true
+Bundle-Vendor: UMMISCO
 Bundle-Version: 1.9.2.qualifier
 Automatic-Module-Name: ummisco.gama.uml
 Bundle-RequiredExecutionEnvironment: JavaSE-17
@@ -10,16 +11,16 @@ Import-Package: org.apache.commons.io,
  org.eclipse.ui.commands
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.13.0",
  org.eclipse.ui;bundle-version="3.109.0",
- msi.gama.core,
- msi.gama.ext,
- ummisco.gama.ui.navigator,
- ummisco.gama.ui.shared,
+ gama.core,
+ gama.dependencies,
+ gama.ui.navigator,
+ gama.ui.shared,
  org.eclipse.ui.ide;bundle-version="3.13.1",
  org.eclipse.core.filesystem;bundle-version="1.9.0",
  org.eclipse.core.resources;bundle-version="3.12.0",
- msi.gama.application, 
  org.eclipse.ui.console;bundle-version="3.7.1",
  org.eclipse.jface.text;bundle-version="3.12.2",
  org.eclipse.ui.forms;bundle-version="3.7.101",
- msi.gama.lang.gaml,
- ummisco.gama.ui.modeling
+ gaml.compiler,
+ gama.ui.editor,
+ gama.ui.application;bundle-version="0.0.0"
