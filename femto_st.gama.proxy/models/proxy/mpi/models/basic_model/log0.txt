@@ -1,0 +1,4 @@
+
+mon rank est 0
+la size est 0
+MPI_SEND done

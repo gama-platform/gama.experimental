@@ -1,0 +1,5364 @@
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------26-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 26
+-----------------27-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 27
+-----------------28-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 28
+-----------------29-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 29
+-----------------30-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 30
+-----------------31-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 31
+-----------------32-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 32
+-----------------33-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 33
+-----------------34-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 34
+-----------------35-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 35
+-----------------36-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 36
+-----------------37-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 37
+-----------------38-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 38
+-----------------39-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 39
+-----------------40-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 40
+-----------------41-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 41
+-----------------42-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 42
+-----------------43-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 43
+-----------------44-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 44
+-----------------45-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 45
+-----------------46-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 46
+-----------------47-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 47
+-----------------48-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 48
+-----------------49-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 49
+-----------------50-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 50
+-----------------51-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 51
+-----------------52-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 52
+-----------------53-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 53
+-----------------54-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 54
+-----------------55-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 55
+-----------------56-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 56
+-----------------57-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 57
+-----------------58-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 58
+-----------------59-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 59
+-----------------60-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 60
+-----------------61-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 61
+-----------------62-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 62
+-----------------63-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 63
+-----------------64-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 64
+-----------------65-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 65
+-----------------66-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 66
+-----------------67-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 67
+-----------------68-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 68
+-----------------69-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 69
+-----------------70-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 70
+-----------------71-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 71
+-----------------72-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 72
+-----------------73-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 73
+-----------------74-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 74
+-----------------75-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 75
+-----------------76-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 76
+-----------------77-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 77
+-----------------78-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 78
+-----------------79-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 79
+-----------------80-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 80
+-----------------81-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 81
+-----------------82-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 82
+-----------------83-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 83
+-----------------84-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 84
+-----------------85-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 85
+-----------------86-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 86
+-----------------87-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 87
+-----------------88-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 88
+-----------------89-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 89
+-----------------90-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 90
+-----------------91-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 91
+-----------------92-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 92
+-----------------93-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 93
+-----------------94-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 94
+-----------------95-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 95
+-----------------96-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 96
+-----------------97-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 97
+-----------------98-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 98
+-----------------99-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 99
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------26-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 26
+-----------------27-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 27
+-----------------28-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 28
+-----------------29-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 29
+-----------------30-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 30
+-----------------31-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 31
+-----------------32-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 32
+-----------------33-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 33
+-----------------34-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 34
+-----------------35-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 35
+-----------------36-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 36
+-----------------37-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 37
+-----------------38-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 38
+-----------------39-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 39
+-----------------40-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 40
+-----------------41-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 41
+-----------------42-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 42
+-----------------43-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 43
+-----------------44-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 44
+-----------------45-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 45
+-----------------46-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 46
+-----------------47-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 47
+-----------------48-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 48
+-----------------49-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 49
+-----------------50-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 50
+-----------------51-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 51
+-----------------52-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 52
+-----------------53-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 53
+-----------------54-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 54
+-----------------55-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 55
+-----------------56-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 56
+-----------------57-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 57
+-----------------58-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 58
+-----------------59-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 59
+-----------------60-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 60
+-----------------61-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 61
+-----------------62-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 62
+-----------------63-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 63
+-----------------64-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 64
+-----------------65-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 65
+-----------------66-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 66
+-----------------67-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 67
+-----------------68-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 68
+-----------------69-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 69
+-----------------70-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 70
+-----------------71-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 71
+-----------------72-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 72
+-----------------73-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 73
+-----------------74-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 74
+-----------------75-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 75
+-----------------76-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 76
+-----------------77-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 77
+-----------------78-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 78
+-----------------79-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 79
+-----------------80-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 80
+-----------------81-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 81
+-----------------82-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 82
+-----------------83-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 83
+-----------------84-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 84
+-----------------85-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 85
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------26-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 26
+-----------------27-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 27
+-----------------28-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 28
+-----------------29-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 29
+-----------------30-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 30
+-----------------31-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 31
+-----------------32-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 32
+-----------------33-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 33
+-----------------34-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 34
+-----------------35-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 35
+-----------------36-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 36
+-----------------37-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 37
+-----------------38-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 38
+-----------------39-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 39
+-----------------40-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 40
+-----------------41-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 41
+-----------------42-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 42
+-----------------43-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 43
+-----------------44-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 44
+-----------------45-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 45
+-----------------46-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 46
+-----------------47-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 47
+-----------------48-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 48
+-----------------49-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 49
+-----------------50-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 50
+-----------------51-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 51
+-----------------52-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 52
+-----------------53-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 53
+-----------------54-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 54
+-----------------55-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 55
+-----------------56-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 56
+-----------------57-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 57
+-----------------58-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 58
+-----------------59-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 59
+-----------------60-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 60
+-----------------61-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 61
+-----------------62-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 62
+-----------------63-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 63
+-----------------64-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 64
+-----------------65-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 65
+-----------------66-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 66
+-----------------67-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 67
+-----------------68-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 68
+-----------------69-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 69
+-----------------70-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 70
+-----------------71-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 71
+-----------------72-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 72
+-----------------73-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 73
+-----------------74-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 74
+-----------------75-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 75
+-----------------76-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 76
+-----------------77-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 77
+-----------------78-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 78
+-----------------79-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 79
+-----------------80-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 80
+-----------------81-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 81
+-----------------82-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 82
+-----------------83-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 83
+-----------------84-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 84
+-----------------85-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 85
+-----------------86-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 86
+-----------------87-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 87
+-----------------88-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 88
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------26-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 26
+-----------------27-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 27
+-----------------28-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 28
+-----------------29-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 29
+-----------------30-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 30
+-----------------31-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 31
+-----------------32-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 32
+-----------------33-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 33
+-----------------34-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 34
+-----------------35-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 35
+-----------------36-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 36
+-----------------37-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 37
+-----------------38-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 38
+-----------------39-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 39
+-----------------40-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 40
+-----------------41-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 41
+-----------------42-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 42
+-----------------43-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 43
+-----------------44-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 44
+-----------------45-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 45
+-----------------46-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 46
+-----------------47-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 47
+-----------------48-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 48
+-----------------49-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 49
+-----------------50-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 50
+-----------------51-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 51
+-----------------52-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 52
+-----------------53-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 53
+-----------------54-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 54
+-----------------55-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 55
+-----------------56-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 56
+-----------------57-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 57
+-----------------58-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 58
+-----------------59-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 59
+-----------------60-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 60
+-----------------61-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 61
+-----------------62-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 62
+-----------------63-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 63
+-----------------64-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 64
+-----------------65-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 65
+-----------------66-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 66
+-----------------67-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 67
+-----------------68-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 68
+-----------------69-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 69
+-----------------70-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 70
+-----------------71-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 71
+-----------------72-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 72
+-----------------73-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 73
+-----------------74-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 74
+-----------------75-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 75
+-----------------76-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 76
+-----------------77-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 77
+-----------------78-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 78
+-----------------79-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 79
+-----------------80-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 80
+-----------------81-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 81
+-----------------82-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 82
+-----------------83-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 83
+-----------------84-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 84
+-----------------85-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 85
+-----------------86-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 86
+-----------------87-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 87
+-----------------88-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 88
+-----------------89-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 89
+-----------------90-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 90
+-----------------91-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 91
+-----------------92-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 92
+-----------------93-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 93
+-----------------94-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 94
+-----------------95-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 95
+-----------------96-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 96
+-----------------97-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 97
+-----------------98-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 98
+-----------------99-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 99
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------26-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 26
+-----------------27-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 27
+-----------------28-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 28
+-----------------29-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 29
+-----------------30-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 30
+-----------------31-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 31
+-----------------32-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 32
+-----------------33-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 33
+-----------------34-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 34
+-----------------35-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 35
+-----------------36-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 36
+-----------------37-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 37
+-----------------38-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 38
+-----------------39-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 39
+-----------------40-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 40
+-----------------41-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 41
+-----------------42-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 42
+-----------------43-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 43
+-----------------44-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 44
+-----------------45-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 45
+-----------------46-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 46
+-----------------47-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 47
+-----------------48-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 48
+-----------------49-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 49
+-----------------50-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 50
+-----------------51-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 51
+-----------------52-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 52
+-----------------53-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 53
+-----------------54-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 54
+-----------------55-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 55
+-----------------56-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 56
+-----------------57-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 57
+-----------------58-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 58
+-----------------59-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 59
+-----------------60-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 60
+-----------------61-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 61
+-----------------62-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 62
+-----------------63-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 63
+-----------------64-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 64
+-----------------65-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 65
+-----------------66-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 66
+-----------------67-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 67
+-----------------68-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 68
+-----------------69-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 69
+-----------------70-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 70
+-----------------71-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 71
+-----------------72-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 72
+-----------------73-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 73
+-----------------74-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 74
+-----------------75-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 75
+-----------------76-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 76
+-----------------77-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 77
+-----------------78-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 78
+-----------------79-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 79
+-----------------80-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 80
+-----------------81-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 81
+-----------------82-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 82
+-----------------83-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 83
+-----------------84-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 84
+-----------------85-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 85
+-----------------86-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 86
+-----------------87-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 87
+-----------------88-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 88
+-----------------89-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 89
+-----------------90-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 90
+-----------------91-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 91
+-----------------92-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 92
+-----------------93-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 93
+-----------------94-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 94
+-----------------95-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 95
+-----------------96-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 96
+-----------------97-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 97
+-----------------98-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 98
+-----------------99-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 99
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------26-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 26
+-----------------27-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 27
+-----------------28-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 28
+-----------------29-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 29
+-----------------30-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 30
+-----------------31-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 31
+-----------------32-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 32
+-----------------33-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 33
+-----------------34-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 34
+-----------------35-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 35
+-----------------36-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 36
+-----------------37-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 37
+-----------------38-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 38
+-----------------39-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 39
+-----------------40-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 40
+-----------------41-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 41
+-----------------42-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 42
+-----------------43-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 43
+-----------------44-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 44
+-----------------45-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 45
+-----------------46-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 46
+-----------------47-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 47
+-----------------48-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 48
+-----------------49-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 49
+-----------------50-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 50
+-----------------51-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 51
+-----------------52-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 52
+-----------------53-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 53
+-----------------54-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 54
+-----------------55-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 55
+-----------------56-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 56
+-----------------57-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 57
+-----------------58-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 58
+-----------------59-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 59
+-----------------60-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 60
+-----------------61-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 61
+-----------------62-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 62
+-----------------63-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 63
+-----------------64-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 64
+-----------------65-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 65
+-----------------66-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 66
+-----------------67-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 67
+-----------------68-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 68
+-----------------69-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 69
+-----------------70-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 70
+-----------------71-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 71
+-----------------72-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 72
+-----------------73-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 73
+-----------------74-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 74
+-----------------75-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 75
+-----------------76-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 76
+-----------------77-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 77
+-----------------78-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 78
+-----------------79-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 79
+-----------------80-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 80
+-----------------81-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 81
+-----------------82-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 82
+-----------------83-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 83
+-----------------84-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 84
+-----------------85-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 85
+-----------------86-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 86
+-----------------87-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 87
+-----------------88-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 88
+-----------------89-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 89
+-----------------90-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 90
+-----------------91-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 91
+-----------------92-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 92
+-----------------93-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 93
+-----------------94-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 94
+-----------------95-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 95
+-----------------96-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 96
+-----------------97-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 97
+-----------------98-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 98
+-----------------99-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 99
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------26-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 26
+-----------------27-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 27
+-----------------28-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 28
+-----------------29-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 29
+-----------------30-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 30
+-----------------31-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 31
+-----------------32-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 32
+-----------------33-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 33
+-----------------34-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 34
+-----------------35-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 35
+-----------------36-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 36
+-----------------37-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 37
+-----------------38-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 38
+-----------------39-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 39
+-----------------40-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 40
+-----------------41-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 41
+-----------------42-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 42
+-----------------43-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 43
+-----------------44-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 44
+-----------------45-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 45
+-----------------46-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 46
+-----------------47-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 47
+-----------------48-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 48
+-----------------49-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 49
+-----------------50-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 50
+-----------------51-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 51
+-----------------52-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 52
+-----------------53-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 53
+-----------------54-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 54
+-----------------55-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 55
+-----------------56-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 56
+-----------------57-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 57
+-----------------58-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 58
+-----------------59-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 59
+-----------------60-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 60
+-----------------61-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 61
+-----------------62-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 62
+-----------------63-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 63
+-----------------64-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 64
+-----------------65-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 65
+-----------------66-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 66
+-----------------67-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 67
+-----------------68-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 68
+-----------------69-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 69
+-----------------70-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 70
+-----------------71-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 71
+-----------------72-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 72
+-----------------73-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 73
+-----------------74-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 74
+-----------------75-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 75
+-----------------76-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 76
+-----------------77-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 77
+-----------------78-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 78
+-----------------79-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 79
+-----------------80-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 80
+-----------------81-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 81
+-----------------82-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 82
+-----------------83-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 83
+-----------------84-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 84
+-----------------85-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 85
+-----------------86-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 86
+-----------------87-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 87
+-----------------88-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 88
+-----------------89-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 89
+-----------------90-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 90
+-----------------91-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 91
+-----------------92-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 92
+-----------------93-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 93
+-----------------94-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 94
+-----------------95-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 95
+-----------------96-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 96
+-----------------97-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 97
+-----------------98-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 98
+-----------------99-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 99
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------26-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 26
+-----------------27-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 27
+-----------------28-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 28
+-----------------29-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 29
+-----------------30-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 30
+-----------------31-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 31
+-----------------32-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 32
+-----------------33-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 33
+-----------------34-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 34
+-----------------35-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 35
+-----------------36-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 36
+-----------------37-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 37
+-----------------38-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 38
+-----------------39-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 39
+-----------------40-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 40
+-----------------41-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 41
+-----------------42-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 42
+-----------------43-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 43
+-----------------44-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 44
+-----------------45-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 45
+-----------------46-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 46
+-----------------47-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 47
+-----------------48-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 48
+-----------------49-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 49
+-----------------50-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 50
+-----------------51-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 51
+-----------------52-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 52
+-----------------53-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 53
+-----------------54-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 54
+-----------------55-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 55
+-----------------56-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 56
+-----------------57-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 57
+-----------------58-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 58
+-----------------59-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 59
+-----------------60-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 60
+-----------------61-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 61
+-----------------62-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 62
+-----------------63-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 63
+-----------------64-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 64
+-----------------65-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 65
+-----------------66-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 66
+-----------------67-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 67
+-----------------68-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 68
+-----------------69-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 69
+-----------------70-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 70
+-----------------71-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 71
+-----------------72-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 72
+-----------------73-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 73
+-----------------74-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 74
+-----------------75-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 75
+-----------------76-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 76
+-----------------77-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 77
+-----------------78-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 78
+-----------------79-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 79
+-----------------80-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 80
+-----------------81-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 81
+-----------------82-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 82
+-----------------83-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 83
+-----------------84-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 84
+-----------------85-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 85
+-----------------86-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 86
+-----------------87-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 87
+-----------------88-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 88
+-----------------89-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 89
+-----------------90-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 90
+-----------------91-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 91
+-----------------92-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 92
+-----------------93-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 93
+-----------------94-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 94
+-----------------95-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 95
+-----------------96-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 96
+-----------------97-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 97
+-----------------98-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 98
+-----------------99-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 99
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------26-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 26
+-----------------27-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 27
+-----------------28-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 28
+-----------------29-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 29
+-----------------30-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 30
+-----------------31-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 31
+-----------------32-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 32
+-----------------33-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 33
+-----------------34-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 34
+-----------------35-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 35
+-----------------36-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 36
+-----------------37-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 37
+-----------------38-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 38
+-----------------39-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 39
+-----------------40-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 40
+-----------------41-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 41
+-----------------42-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 42
+-----------------43-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 43
+-----------------44-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 44
+-----------------45-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 45
+-----------------46-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 46
+-----------------47-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 47
+-----------------48-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 48
+-----------------49-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 49
+-----------------50-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 50
+-----------------51-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 51
+-----------------52-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 52
+-----------------53-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 53
+-----------------54-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 54
+-----------------55-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 55
+-----------------56-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 56
+-----------------57-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 57
+-----------------58-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 58
+-----------------59-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 59
+-----------------60-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 60
+-----------------61-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 61
+-----------------62-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 62
+-----------------63-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 63
+-----------------64-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 64
+-----------------65-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 65
+-----------------66-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 66
+-----------------67-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 67
+-----------------68-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 68
+-----------------69-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 69
+-----------------70-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 70
+-----------------71-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 71
+-----------------72-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 72
+-----------------73-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 73
+-----------------74-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 74
+-----------------75-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 75
+-----------------76-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 76
+-----------------77-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 77
+-----------------78-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 78
+-----------------79-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 79
+-----------------80-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 80
+-----------------81-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 81
+-----------------82-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 82
+-----------------83-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 83
+-----------------84-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 84
+-----------------85-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 85
+-----------------86-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 86
+-----------------87-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 87
+-----------------88-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 88
+-----------------89-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 89
+-----------------90-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 90
+-----------------91-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 91
+-----------------92-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 92
+-----------------93-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 93
+-----------------94-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 94
+-----------------95-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 95
+-----------------96-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 96
+-----------------97-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 97
+-----------------98-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 98
+-----------------99-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 99
+-----------------0-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 0
+-----------------1-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 1
+-----------------2-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 2
+-----------------3-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 3
+-----------------4-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 4
+-----------------5-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 5
+-----------------6-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 6
+-----------------7-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 7
+-----------------8-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 8
+-----------------9-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 9
+-----------------10-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 10
+-----------------11-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 11
+-----------------12-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 12
+-----------------13-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 13
+-----------------14-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 14
+-----------------15-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 15
+-----------------16-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 16
+-----------------17-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 17
+-----------------18-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 18
+-----------------19-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 19
+-----------------20-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 20
+-----------------21-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 21
+-----------------22-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 22
+-----------------23-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 23
+-----------------24-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 24
+-----------------25-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 25
+-----------------26-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 26
+-----------------27-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 27
+-----------------28-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 28
+-----------------29-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 29
+-----------------30-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 30
+-----------------31-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 31
+-----------------32-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 32
+-----------------33-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 33
+-----------------34-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 34
+-----------------35-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 35
+-----------------36-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 36
+-----------------37-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 37
+-----------------38-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 38
+-----------------39-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 39
+-----------------40-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 40
+-----------------41-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 41
+-----------------42-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 42
+-----------------43-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 43
+-----------------44-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 44
+-----------------45-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 45
+-----------------46-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 46
+-----------------47-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 47
+-----------------48-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 48
+-----------------49-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 49
+-----------------50-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 50
+-----------------51-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 51
+-----------------52-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 52
+-----------------53-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 53
+-----------------54-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 54
+-----------------55-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 55
+-----------------56-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 56
+-----------------57-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 57
+-----------------58-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 58
+-----------------59-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 59
+-----------------60-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 60
+-----------------61-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 61
+-----------------62-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 62
+-----------------63-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 63
+-----------------64-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 64
+-----------------65-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 65
+-----------------66-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 66
+-----------------67-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 67
+-----------------68-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 68
+-----------------69-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 69
+-----------------70-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 70
+-----------------71-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 71
+-----------------72-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 72
+-----------------73-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 73
+-----------------74-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 74
+-----------------75-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 75
+-----------------76-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 76
+-----------------77-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 77
+-----------------78-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 78
+-----------------79-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 79
+-----------------80-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 80
+-----------------81-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 81
+-----------------82-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 82
+-----------------83-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 83
+-----------------84-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 84
+-----------------85-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 85
+-----------------86-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 86
+-----------------87-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 87
+-----------------88-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 88
+-----------------89-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 89
+-----------------90-----------------------
+agents_in_my_OLZ map([])
+agents_in_OLZ_previous_step map([])
+new agents : map([]) cycle 90

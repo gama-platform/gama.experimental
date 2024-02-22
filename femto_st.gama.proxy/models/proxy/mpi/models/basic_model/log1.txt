@@ -1,0 +1,4 @@
+
+mon rank est 1
+la size est 2
+MPI_RECV done : [10]
