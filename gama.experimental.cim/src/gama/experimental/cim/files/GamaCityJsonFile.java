@@ -187,6 +187,7 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 				for (Integer lod : cityObject.getGeometryInfo().getLods()) {
 					List<GeometryProperty<?>> lodgeom = cityObject.getGeometryInfo().getGeometries(lod);
 					IShape lodShape = BuildGeometriesGeom(scope, lodgeom);
+					if (lodShape == null) continue;
 					if (gShape == null) {
 						gShape = lodShape;
 					}
@@ -218,7 +219,8 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 					
 				}
 				default ->
-					throw new IllegalArgumentException("Unexpected city object: " + sn);
+					System.out.println("Unexpected city object: " + sn);
+					//throw new IllegalArgumentException("Unexpected city object: " + sn);
 				}
 	            System.out.println("shapes: " + shapes.size());
 	            setBuffer(shapes);

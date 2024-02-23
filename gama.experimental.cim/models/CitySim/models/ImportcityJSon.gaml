@@ -11,7 +11,9 @@ global {
 	string lod <- "lod1" among:["lod1", "lod2"] parameter: true on_change: change_lod;
 	//cityjson_file cube_cityjson_file <- cityjson_file("../includes/cube.city.json");
 	//cityjson_file cube_cityjson_file <- cityjson_file("../includes/twocube.city.json");
-	cityjson_file cube_cityjson_file <- cityjson_file("../includes/twobuildings.city.json");
+	//cityjson_file cube_cityjson_file <- cityjson_file("../includes/twobuildings.city.json");
+	cityjson_file cube_cityjson_file <- cityjson_file("../includes/LoD3_Railway.city.json");
+	
 	geometry shape <- envelope(cube_cityjson_file);
 	
 	init {
