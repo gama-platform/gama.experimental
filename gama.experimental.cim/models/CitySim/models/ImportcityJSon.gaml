@@ -15,9 +15,7 @@ global {
 	geometry shape <- envelope(cube_cityjson_file);
 	
 	init {
-		create object from: cube_cityjson_file {
-			write shape.attributes.keys;
-		}
+		create object from: cube_cityjson_file;
 	}
 	string lodStr;
 	action change_lod {
