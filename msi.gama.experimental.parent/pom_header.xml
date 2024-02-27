@@ -7,9 +7,9 @@
 	<packaging>pom</packaging>
 	
 	<properties>
-		<tycho.version>3.0.3</tycho.version>
+		<tycho.version>3.0.5</tycho.version>
 		<jdk.version>17</jdk.version>
-		<gama.version>1.9.3-SNAPSHOT</gama.version>
+		<gama.version>1.9.3</gama.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<wagon.version>3.5.3</wagon.version>
 	</properties>
@@ -20,10 +20,6 @@
 			<name>p2Repo</name>
 			<url>https://updates.gama-platform.org/1.9.3</url>
 			<layout>p2</layout>
-			<snapshots>
-				<enabled>true</enabled>
-				<checksumPolicy>ignore</checksumPolicy>
-			</snapshots>
 			<releases>
 				<enabled>true</enabled>
 				<checksumPolicy>ignore</checksumPolicy>
@@ -34,10 +30,6 @@
 			<name>gamaRepo</name>
 			<url>https://updates.gama-platform.org/1.9.3</url>
 			<layout>default</layout>
-			<snapshots>
-				<enabled>true</enabled>
-				<checksumPolicy>ignore</checksumPolicy>
-			</snapshots>
 			<releases>
 				<enabled>true</enabled>
 				<checksumPolicy>ignore</checksumPolicy>
@@ -50,9 +42,6 @@
 			<releases>
 				<enabled>true</enabled>
 			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
 		</repository>
 	</repositories>
 
