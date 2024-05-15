@@ -114,6 +114,35 @@ public class ArgumentationOperators {
 	}
 	
 	
+	@operator (
+			value = {"add_argument"},
+			category = {"argumentation"},
+			concept = {"argumentation"})
+	public static Boolean addArgument(GamaGraph graph, GamaArgument argument) {
+		if (graph != null && argument != null) {
+			return graph.addVertex(argument);
+		} 
+		return false;
+	}
+
+	@operator (
+			value = {"add_attack"},
+			category = {"argumentation"},
+			concept = {"argumentation"})
+	public static Boolean addAttack(GamaGraph graph, GamaArgument sourceArgument, GamaArgument targetArgument) {
+		if (graph != null && sourceArgument != null && targetArgument != null) {
+			if (graph.containsVertex(sourceArgument) && graph.containsVertex(targetArgument)) {
+				Object obj = graph.getEdge(sourceArgument, targetArgument);
+				if (obj != null) return false;
+				graph.addEdge(sourceArgument, targetArgument);
+				return true;
+			}
+			
+			return false;
+		} 
+		return false;
+	}
+	
 	
 	@operator (
 			value = {"set_actor"},

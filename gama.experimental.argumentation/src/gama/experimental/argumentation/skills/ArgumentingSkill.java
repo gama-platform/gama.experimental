@@ -284,7 +284,7 @@ public class ArgumentingSkill extends Skill {
 			sum += w;
 			val += ((arg.getConclusion().equals("+")) ? 1.0 : ((arg.getConclusion().equals("-")) ? -1.0 : 0.0)) * w;
 		}
-		return val / sum;
+		return sum == 0.0 ? 0.0 : (val / sum);
 	}
 	
 	
@@ -431,14 +431,22 @@ public class ArgumentingSkill extends Skill {
 	private double evaluate_arg(IScope scope, GamaArgument arg) {
 		double val = 0;
 		IAgent ag = scope.getAgent();
-		Map<String, Double> agVal = getCritImp(ag);
-		for (String c : arg.getCriteria().keySet()) {
-			val += arg.getCriteria().get(c) * (agVal.containsKey(c) ? agVal.get(c) : 1.0);
+		if ( arg.getCriteria().isEmpty()) {
+			val = 1.0;
+		} else {
+			Map<String, Double> agVal = getCritImp(ag);
+			for (String c : arg.getCriteria().keySet()) {
+				val += arg.getCriteria().get(c) * (agVal.containsKey(c) ? agVal.get(c) : 1.0);
+			}
 		}
-		Map<String,Double> sourceEval = getSourceConf(ag);
-		if (sourceEval.containsKey(arg.getSourceType())) {
-			val *= sourceEval.get(arg.getSourceType());
+		
+		if (arg.getSourceType() != null && !arg.getSourceType().isBlank()) {
+			Map<String,Double> sourceEval = getSourceConf(ag);
+			if (sourceEval.containsKey(arg.getSourceType())) {
+				val *= sourceEval.get(arg.getSourceType());
+			}
 		}
+		
 		return val;
 	}
 }
