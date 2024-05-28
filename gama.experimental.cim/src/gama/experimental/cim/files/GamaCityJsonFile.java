@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.swing.AbstractAction;
-
 import org.citygml4j.cityjson.CityJSONContext;
 import org.citygml4j.cityjson.CityJSONContextException;
 import org.citygml4j.cityjson.reader.CityJSONInputFactory;
@@ -29,17 +27,11 @@ import org.citygml4j.core.model.core.AbstractSpaceBoundaryProperty;
 import org.citygml4j.core.model.core.CityModel;
 import org.citygml4j.core.model.generics.GenericOccupiedSpace;
 import org.citygml4j.core.visitor.ObjectWalker;
-import org.citygml4j.core.visitor.VisitableObject;
-import org.xmlobjects.gml.model.base.AbstractProperty;
 import org.xmlobjects.gml.model.geometry.AbstractGeometry;
-import org.xmlobjects.gml.model.geometry.Envelope;
-import org.xmlobjects.gml.model.geometry.GeometryProperty;
-import org.xmlobjects.gml.model.geometry.primitives.LinearRing;
 import org.xmlobjects.gml.model.geometry.DirectPositionList;
+import org.xmlobjects.gml.model.geometry.Envelope;
 import org.xmlobjects.gml.model.geometry.GeometryProperty;
 import org.xmlobjects.gml.model.geometry.primitives.LinearRing;
-import org.xmlobjects.gml.model.geometry.Envelope;
-import org.xmlobjects.gml.model.geometry.GeometricPosition;
 
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.file;
@@ -52,7 +44,7 @@ import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaListFactory;
 import gama.core.util.IList;
 import gama.core.util.file.GamaGeometryFile;
-import gama.gaml.operators.Spatial.Creation;
+import gama.gaml.operators.spatial.SpatialCreation;
 import gama.gaml.types.GamaGeometryType;
 import gama.gaml.types.IType;
 import gama.gaml.types.Types;
@@ -105,7 +97,7 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 			for(int i = 0; i < v.size() - 2; i= i+3) {
 				points.add( new GamaPoint(v.get(i),v.get(i+1),v.get(i+2)));
 			}
-			return Creation.polygon(scope, points);
+			return SpatialCreation.polygon(scope, points);
 		}
 		return null;
 	}
@@ -125,7 +117,7 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 					}
 				}));
 		
-		return Creation.geometryCollection(scope, faces);
+		return SpatialCreation.geometryCollection(scope, faces);
 	}
 
 	
@@ -144,7 +136,7 @@ public class GamaCityJsonFile extends GamaGeometryFile {
 					}
 				}));
 		
-		return Creation.geometryCollection(scope, faces);
+		return SpatialCreation.geometryCollection(scope, faces);
 	}
 
 	

@@ -3,35 +3,31 @@ package gama.experimental.imageanalysis.operators;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import boofcv.alg.feature.detect.edge.CannyEdge;
-import boofcv.alg.feature.detect.edge.EdgeContour;
 import boofcv.alg.filter.binary.BinaryImageOps;
 import boofcv.alg.filter.binary.Contour;
 import boofcv.alg.filter.binary.GThresholdImageOps;
 import boofcv.alg.filter.binary.ThresholdImageOps;
 import boofcv.alg.misc.ImageStatistics;
-import boofcv.factory.feature.detect.edge.FactoryEdgeDetectors;
 import boofcv.gui.binary.VisualizeBinaryData;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.ConnectRule;
 import boofcv.struct.image.GrayF32;
-import boofcv.struct.image.GrayS16;
 import boofcv.struct.image.GrayS32;
 import boofcv.struct.image.GrayU8;
-import georegression.struct.point.Point2D_I32;
-import gama.core.metamodel.shape.GamaPoint;
-import gama.core.metamodel.shape.IShape;
-import gama.annotations.precompiler.IOperatorCategory;
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.annotations.precompiler.IOperatorCategory;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.core.metamodel.shape.IShape;
 import gama.core.runtime.IScope;
 import gama.core.util.GamaListFactory;
 import gama.core.util.IList;
 import gama.core.util.matrix.GamaIntMatrix;
 import gama.core.util.matrix.IMatrix;
 import gama.experimental.webcam.operators.WebcamOperators;
-import gama.gaml.operators.Spatial.Creation;
+import gama.gaml.operators.spatial.SpatialCreation;
 import gama.gaml.types.IType;
+import georegression.struct.point.Point2D_I32;
 
 public class GeneralOperators {
 
@@ -206,7 +202,7 @@ public class GeneralOperators {
 					pts.add(new GamaPoint(pt.x * coeffX, pt.y * coeffY) );
 				}
 				if (! pts.isEmpty()) {
-					lines.add(Creation.line(scope, pts));
+					lines.add(SpatialCreation.line(scope, pts));
 				}
 				
 				for (List<Point2D_I32> ppt : c.internal) {
@@ -215,7 +211,7 @@ public class GeneralOperators {
 						pts2.add(new GamaPoint(pt.x * coeffX, pt.y * coeffY) );
 					}
 					if (! pts2.isEmpty()) 
-						lines.add(Creation.line(scope, pts2));
+						lines.add(SpatialCreation.line(scope, pts2));
 				}
 				
 			}
