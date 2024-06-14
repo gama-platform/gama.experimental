@@ -26,12 +26,12 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.multi.GenericMultipleBarcodeReader;
 import com.google.zxing.multi.MultipleBarcodeReader;
 
-import gama.core.common.util.FileUtils;
-import gama.core.metamodel.shape.GamaPoint;
-import gama.core.metamodel.shape.GamaShape;
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.operator;
 import gama.annotations.precompiler.IOperatorCategory;
+import gama.core.common.util.FileUtils;
+import gama.core.metamodel.shape.GamaPoint;
+import gama.core.metamodel.shape.GamaShape;
 import gama.core.runtime.GAMA;
 import gama.core.runtime.IScope;
 import gama.core.runtime.exceptions.GamaRuntimeException;
@@ -45,7 +45,7 @@ import gama.core.util.matrix.GamaObjectMatrix;
 import gama.core.util.matrix.IMatrix;
 import gama.experimental.webcam.operators.WebcamOperators;
 import gama.experimental.webcam.types.GamaWebcam;
-import gama.gaml.operators.Spatial.Creation;
+import gama.gaml.operators.spatial.SpatialCreation;
 import gama.gaml.types.Types;
 
 public class Operators {
@@ -168,7 +168,7 @@ public class Operators {
 		for (ResultPoint pt : pts) {
 			ptsGama.add(new GamaPoint(pt.getX(), pt.getY()));
 		}
-		GamaShape gs = (GamaShape) Creation.polygon(scope, ptsGama);
+		GamaShape gs = (GamaShape) SpatialCreation.polygon(scope, ptsGama);
 		return gs;
 	}
 	
