@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Bioraffinerie
+Bundle-SymbolicName: ird.maelia.bioraffinerie;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: gama.core;bundle-version="0.0.0",
+ gama.dependencies;bundle-version="0.0.0"
+Automatic-Module-Name: ird.maelia.bioraffinerie
+Bundle-RequiredExecutionEnvironment: JavaSE-17
