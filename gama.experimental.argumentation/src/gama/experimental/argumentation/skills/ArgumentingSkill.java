@@ -1,32 +1,25 @@
 package gama.experimental.argumentation.skills;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import gama.experimental.argumentation.types.GamaArgument;
-import gama.experimental.argumentation.types.GamaArgumentType;
-import gama.core.metamodel.agent.IAgent;
 import gama.annotations.precompiler.GamlAnnotations.action;
 import gama.annotations.precompiler.GamlAnnotations.arg;
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.example;
 import gama.annotations.precompiler.GamlAnnotations.getter;
-import gama.annotations.precompiler.GamlAnnotations.operator;
 import gama.annotations.precompiler.GamlAnnotations.setter;
 import gama.annotations.precompiler.GamlAnnotations.skill;
 import gama.annotations.precompiler.GamlAnnotations.variable;
 import gama.annotations.precompiler.GamlAnnotations.vars;
+import gama.core.metamodel.agent.IAgent;
 import gama.core.runtime.IScope;
 import gama.core.runtime.exceptions.GamaRuntimeException;
-import gama.core.util.GamaList;
-import gama.core.util.GamaListCollectionWrapper;
 import gama.core.util.GamaListFactory;
 import gama.core.util.GamaMap;
 import gama.core.util.GamaMapFactory;
@@ -35,8 +28,9 @@ import gama.core.util.IList;
 import gama.core.util.IMap;
 import gama.core.util.graph.GamaGraph;
 import gama.core.util.graph.IGraph;
+import gama.experimental.argumentation.types.GamaArgument;
+import gama.experimental.argumentation.types.GamaArgumentType;
 import gama.gaml.descriptions.ConstantExpressionDescription;
-import gama.gaml.operators.Graphs;
 import gama.gaml.operators.Random;
 import gama.gaml.skills.Skill;
 import gama.gaml.species.ISpecies;
@@ -44,18 +38,17 @@ import gama.gaml.statements.Arguments;
 import gama.gaml.statements.IStatement;
 import gama.gaml.types.IType;
 import gama.gaml.types.Types;
-import net.sf.jargsemsat.jargsemsat.alg.Misc;
 import net.sf.jargsemsat.jargsemsat.datastructures.DungAF;
 
 @skill(name = "argumenting")
-@vars({ @variable(name = "argumentation_graph", type = IType.GRAPH),
+@vars({ @variable(name = "argumentation_graph", type = IType.GRAPH, init="directed(graph([]))"),
 
 	@variable(name = "source_type_confidence", type = IType.MAP),
 		@variable(name = "crit_importance", type = IType.MAP) })
 public class ArgumentingSkill extends Skill {
-	static final String ARGUMENTATION_GRAPH = "argumentation_graph";
-	static final String CRIT_IMPORTANCE = "crit_importance";
-	static final String SOURCE_TYPE_CONFIDENCE = "source_type_confidence";
+	static public final String ARGUMENTATION_GRAPH = "argumentation_graph";
+	static public final String CRIT_IMPORTANCE = "crit_importance";
+	static public final String SOURCE_TYPE_CONFIDENCE = "source_type_confidence";
 
 	public static int BLANK = 0;
 	public static int IN = 1;
@@ -64,32 +57,32 @@ public class ArgumentingSkill extends Skill {
 	public static int UNDEC = 4;
 
 	@getter(ARGUMENTATION_GRAPH)
-	public GamaGraph<GamaArgument, ?> getArgGraph(final IAgent agent) {
+	static public GamaGraph<GamaArgument, ?> getArgGraph(final IAgent agent) {
 		return (GamaGraph<GamaArgument, ?>) agent.getAttribute(ARGUMENTATION_GRAPH);
 	}
 
 	@setter(ARGUMENTATION_GRAPH)
-	public void setArgGraph(final IAgent agent, final IGraph s) {
+	static public void setArgGraph(final IAgent agent, final IGraph s) {
 		agent.setAttribute(ARGUMENTATION_GRAPH, s);
 	}
 
 	@getter(CRIT_IMPORTANCE)
-	public GamaMap getCritImp(final IAgent agent) {
+	static public GamaMap getCritImp(final IAgent agent) {
 		return (GamaMap) agent.getAttribute(CRIT_IMPORTANCE);
 	}
 
 	@setter(CRIT_IMPORTANCE)
-	public void setCritImpo(final IAgent agent, final GamaMap s) {
+	static public void setCritImpo(final IAgent agent, final GamaMap s) {
 		agent.setAttribute(CRIT_IMPORTANCE, s);
 	}
 
 	@getter(SOURCE_TYPE_CONFIDENCE)
-	public GamaMap getSourceConf(final IAgent agent) {
+	static public GamaMap getSourceConf(final IAgent agent) {
 		return (GamaMap) agent.getAttribute(SOURCE_TYPE_CONFIDENCE);
 	}
 
 	@setter(SOURCE_TYPE_CONFIDENCE)
-	public void setSourceConf(final IAgent agent, final GamaMap s) {
+	static public void setSourceConf(final IAgent agent, final GamaMap s) {
 		agent.setAttribute(SOURCE_TYPE_CONFIDENCE, s);
 	}
 
@@ -292,14 +285,18 @@ public class ArgumentingSkill extends Skill {
 	
 
 	@action(name = "add_argument",
-			args = { @arg(name = "argument", type = GamaArgumentType.id, optional = false, doc = @doc("the argument to add")),
+			args = {@arg(name = "agent", type = IType.AGENT, optional = true, doc = @doc("the agent of which to compute the attitude")),
+					@arg(name = "argument", type = GamaArgumentType.id, optional = false, doc = @doc("the argument to add")),
 					@arg(name = "graph", type = IType.GRAPH, optional = false, doc = @doc("the global argumentation graph with all the arguments and attacks")) }, doc = @doc(value = "add an argument and all the attacks to the agent argumentation graph", examples = {
 							@example("do add_argument(new_agrument, reference_graph);") }))
 	public boolean primAddArguments(final IScope scope) throws GamaRuntimeException {
-		IGraph<GamaArgument, Object> graph = (IGraph<GamaArgument, Object>) getArgGraph(scope.getAgent());
+		IAgent agent = scope.hasArg("agent") ? (IAgent) scope.getArg("agent", IType.AGENT) : null;
+		if (agent == null) agent = scope.getAgent();
+		IGraph<GamaArgument, Object> graph = (IGraph<GamaArgument, Object>) getArgGraph(agent);
 		final IGraph<GamaArgument, Object> refGraph = scope.hasArg("graph") ? (IGraph) scope.getArg("graph", IType.GRAPH) : null;
 		final GamaArgument initial_arg = scope.hasArg("argument") ? (GamaArgument) scope.getArg("argument", GamaArgumentType.id) : null;
 		GamaArgument arg = (GamaArgument) initial_arg.copy(scope);
+		
 		if ((graph != null) && (initial_arg != null) && !(graph.containsVertex(arg))) {
 			graph.addVertex(arg);
 			if (refGraph != null) {
@@ -324,7 +321,7 @@ public class ArgumentingSkill extends Skill {
 	@action(name = "remove_argument",
 			args = { @arg(name = "argument", type = GamaArgumentType.id, optional = false, doc = @doc("the argument to remove")) }, doc = @doc(value = "remove and arguments and all the attacks concerning this argument from the agent argumentation graph", examples = {
 					@example("do remove_argument(an_agrument);") }))
-	public boolean primRemoveArguments(final IScope scope) throws GamaRuntimeException {
+	public static boolean primRemoveArguments(final IScope scope) throws GamaRuntimeException {
 		IGraph graph = getArgGraph(scope.getAgent());
 		final GamaArgument arg = scope.hasArg("argument") ? (GamaArgument) scope.getArg("argument", GamaArgumentType.id)
 				: null;
@@ -392,11 +389,15 @@ public class ArgumentingSkill extends Skill {
 		return resultMap;
 	}
 	
-	@action(name = "get_arguments_acceptabilities", doc = @doc(value = "compute acceptability values for all known arguments using the Amgoud and al. acceptability semantics for weighted argumentation graphs", returns = "a map with arguments as key and acceptability as their respectives values", examples = {
+	@action(name = "get_arguments_acceptabilities", 
+			args = {@arg(name = "agent", type = IType.AGENT, optional = true, doc = @doc("the agent of which to compute the arguments acceptabilities"))},
+			doc = @doc(value = "compute acceptability values for all known arguments using the Amgoud and al. acceptability semantics for weighted argumentation graphs", returns = "a map with arguments as key and acceptability as their respectives values", examples = {
 			@example("map<argument,float> acceptability_values <- get_arg_acceptability();") }))
 	public IMap<GamaArgument, Double> primGetArgumentsAcceptabilities(final IScope scope) throws GamaRuntimeException {
+		IAgent agent = scope.hasArg("agent") ? (IAgent) scope.getArg("agent", IType.AGENT) : null;
+		if (agent == null) agent = scope.getAgent();
 		
-		IGraph<GamaArgument, Object> graph = (IGraph<GamaArgument, Object>) getArgGraph(scope.getAgent());
+		IGraph<GamaArgument, Object> graph = (IGraph<GamaArgument, Object>) getArgGraph(agent);
 		
 		IMap<GamaArgument,Double> basic_strength = GamaMapFactory.create();
 		IMap<GamaArgument,Double> acceptability_values = GamaMapFactory.create();
