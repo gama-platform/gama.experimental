@@ -758,7 +758,7 @@ public class MIDAO extends GamlAgent {
 	private Object doAction1Arg(final IScope scope, final String actionName, final String argName,
 			final Object ArgVal) {
 		Arguments args = new Arguments();
-		args.put(argName, ConstantExpressionDescription.create(ArgVal));
+		args.put(argName, ConstantExpressionDescription.createNoCache(ArgVal));
 		WithArgs act = getAgent().getSpecies().getAction(actionName);
 		act.setRuntimeArgs(scope, args);
 		return act.executeOn(scope);
@@ -767,20 +767,23 @@ public class MIDAO extends GamlAgent {
 	private Object doAction2Arg(final IScope scope, final String actionName, final String argName1,
 			final Object ArgVal1, final String argName2, final Object ArgVal2) {
 		Arguments args = new Arguments();
-		args.put(argName1, ConstantExpressionDescription.create(ArgVal1));
-		args.put(argName2, ConstantExpressionDescription.create(ArgVal2));
+		args.put(argName1, ConstantExpressionDescription.createNoCache(ArgVal1));
+		args.put(argName2, ConstantExpressionDescription.createNoCache(ArgVal2));
 		WithArgs act = getAgent().getSpecies().getAction(actionName);
 		act.setRuntimeArgs(scope, args);
 		return act.executeOn(scope);
 	}
+		
 	
 	private Object doAction3Arg(final IScope scope, final String actionName, final String argName1,
 			final Object ArgVal1, final String argName2, final Object ArgVal2, final String argName3,
 			final Object ArgVal3) {
 		Arguments args = new Arguments();
-		args.put(argName1, ConstantExpressionDescription.create(ArgVal1));
-		args.put(argName2, ConstantExpressionDescription.create(ArgVal2));
-		args.put(argName3, ConstantExpressionDescription.create(ArgVal3));
+		
+		
+		args.put(argName1, ConstantExpressionDescription.createNoCache(ArgVal1));
+		args.put(argName2, ConstantExpressionDescription.createNoCache(ArgVal2));
+		args.put(argName3, ConstantExpressionDescription.createNoCache(ArgVal3));
 		WithArgs act = getAgent().getSpecies().getAction(actionName);
 		act.setRuntimeArgs(scope, args);
 		return act.executeOn(scope);
@@ -789,11 +792,12 @@ public class MIDAO extends GamlAgent {
 			final Object ArgVal1, final String argName2, final Object ArgVal2, final String argName3,
 			final Object ArgVal3, final String argName4, final Object ArgVal4,final String argName5, final Object ArgVal5) {
 		Arguments args = new Arguments();
-		args.put(argName1, ConstantExpressionDescription.create(ArgVal1));
-		args.put(argName2, ConstantExpressionDescription.create(ArgVal2));
-		args.put(argName3, ConstantExpressionDescription.create(ArgVal3));
-		args.put(argName4, ConstantExpressionDescription.create(ArgVal4));
-		args.put(argName5, ConstantExpressionDescription.create(ArgVal5));
+		args.put(argName1, 
+				ConstantExpressionDescription.createNoCache(ArgVal1));
+		args.put(argName2, ConstantExpressionDescription.createNoCache(ArgVal2));
+		args.put(argName3, ConstantExpressionDescription.createNoCache(ArgVal3));
+		args.put(argName4, ConstantExpressionDescription.createNoCache(ArgVal4));
+		args.put(argName5, ConstantExpressionDescription.createNoCache(ArgVal5));
 		WithArgs act = getAgent().getSpecies().getAction(actionName);
 		act.setRuntimeArgs(scope, args);
 		return act.executeOn(scope);
