@@ -10,6 +10,9 @@ model Abstractmodel
 import "../Basic models/Argumentation graph generation.gaml"
 
 global {
+	float agrument_pro_rate <- 0.0; // A CHANGER POUR 0.0 OU 1.0
+	
+
 	
 	int num_possible_adopters <- 100;
 	float mean_relatives <- 7.0;
@@ -21,7 +24,6 @@ global {
 	int num_arguments <- 50;
 	map<string,float> possible_criteria <- ["A"::1.0,"B"::1.0,"C"::1.0,"D"::1.0, "E"::1.0];
 	map<string,float> source_types <- ["S1"::1.0,"S2"::1.0,"S3"::1.0,"S4"::1.0,"S5"::1.0];
-	float agrument_pro_rate <- 1.0;
 	
 	map<string,rgb> color_states <- ["knowledge"::#red, "persuasion"::#orange, "decision"::#yellow, "implementation":: #green, "confirmation"::#blue];
 	
@@ -54,7 +56,7 @@ global {
 		do generate_network;
 		int sumSN <- possible_adopter sum_of length(each.social_network);
 		ask possible_adopter {
-			probability_exchange <- 1.0;//10 * length(social_network) / sumSN;
+			probability_exchange <- 1.0;
 		}
 		
 		ask possible_adopter {
@@ -62,11 +64,11 @@ global {
 			if num_args > 0 {
 				list<argument> args <- 	num_args among arguments;
 				loop a over: args {
-				//	write sample(a.conclusion);
 					do new_argument(a);
 				}
+				
+			write sample(argumentation_graph.vertices collect argument(each).conclusion);
 			}	
-			//write sample(argumentation_graph.vertices collect argument(each).conclusion);
 		
 		}
 		
@@ -86,50 +88,7 @@ global {
 
 species communication_channel parent: abstract_communication_channel;
 
-species possible_adopter parent: abstract_adopter {
-	aspect default {
-		draw circle(1) color: color_states[adoption_state] ; 
-	}
-	aspect intention_aspect {
-		float val <- (intention + 1)/2;
-		//write sample(val);
-		draw circle(1) color:  rgb(255 * (1 - val), 255 * val, 0);
-	}
-	
-}
+species possible_adopter parent: abstract_adopter ;
 
 
-experiment explore_arguments_impact type: batch until: cycle = 1000 repeat: 1 keep_seed: true {
-	parameter agrument_pro_rate var: agrument_pro_rate min: 0.0 max:1.0 ;
-	method exploration  sample:5 ;
-	reflex result {
-		write sample(agrument_pro_rate) + " Mean: " + (simulations mean_of each.adopter_percentage) + " min: " +  (simulations min_of each.adopter_percentage)  + " max: " +  (simulations max_of each.adopter_percentage) ;
-	}
-}
-
-
-experiment Abstractmodel type: gui {
-	output {
-		display adopters {
-			species possible_adopter;
-		}
-		display intention {
-			species possible_adopter aspect: intention_aspect;
-		}
-		
-		display charts {
-			chart "evolution" size: {1,0.3}{
-				data "mean attitude" value: possible_adopter mean_of each.attitude color: #magenta;
-				data "mean intention" value: possible_adopter mean_of each.intention color: #blue;
-			}
-			
-			chart "adoption percentage" size: {1,0.3} position: {0,0.33} {
-				data "adoption percentage" value:adopter_percentage  color: #green;
-			}
-			
-			chart "Num of arguments per ageents" size: {1,0.5} position: {0,0.66} {
-				data "num arguments" value: possible_adopter mean_of (length(each.known_arguments)) color: #blue;
-			}
-		}
-	}
-}
+experiment Abstractmodel type: gui ;
