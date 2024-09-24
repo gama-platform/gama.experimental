@@ -296,7 +296,6 @@ public class ArgumentingSkill extends Skill {
 		final IGraph<GamaArgument, Object> refGraph = scope.hasArg("graph") ? (IGraph) scope.getArg("graph", IType.GRAPH) : null;
 		final GamaArgument initial_arg = scope.hasArg("argument") ? (GamaArgument) scope.getArg("argument", GamaArgumentType.id) : null;
 		GamaArgument arg = (GamaArgument) initial_arg.copy(scope);
-		System.out.println("ArgumentationSkill - primAddArguments - agent: " + agent + " arg: " + arg.getId() + " -> conclusion:  " + arg.getConclusion() );
 		if ((graph != null) && (initial_arg != null) && !(graph.containsVertex(arg))) {
 			graph.addVertex(arg);
 			if (refGraph != null) {

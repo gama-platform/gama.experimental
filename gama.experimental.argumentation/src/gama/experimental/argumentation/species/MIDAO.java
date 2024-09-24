@@ -553,7 +553,8 @@ public class MIDAO extends GamlAgent {
 		IAgent agent = scope.getAgent();
 		IAgent other = (IAgent) scope.getArg("other", IType.AGENT);
 		doAction1Arg(scope, "update_social_norm", "other", other); 
-		doAction1Arg(scope, "exchange_arguments", "other", other); 
+		if (!getKnownArguments(agent).isEmpty())
+			doAction1Arg(scope, "exchange_arguments", "other", other); 
 	}
 	
 	
@@ -619,7 +620,6 @@ public class MIDAO extends GamlAgent {
 			GamaPair<Double, Double> v = new GamaPair<Double, Double>(0.0, getArgumentLifespan(agentRec), Types.FLOAT, Types.FLOAT);
 			kArgs.put(arg, v);
 			setKnownArguments(agentRec, kArgs);
-			System.out.println("MIDAO - addArguments - agent: " + agentRec + " arg: " + arg.getId() + " -> conclusion:  " + arg.getConclusion() );
 			
 			doAction3Arg(scope, "add_argument","agent", agentRec, "argument", arg, "graph", refGraph);
 			doAction1Arg(scope, "change_in_known_arguments", "agent", agentRec);

@@ -99,7 +99,7 @@ species possible_adopter parent: abstract_adopter {
 }
 
 
-experiment explore_arguments_impact type: batch until: cycle = 1000 repeat: 1 keep_seed: true {
+experiment explore_arguments_impact type: batch until: cycle = 1000 repeat: 20 keep_seed: true {
 	parameter agrument_pro_rate var: agrument_pro_rate min: 0.0 max:1.0 ;
 	method exploration  sample:5 ;
 	reflex result {
