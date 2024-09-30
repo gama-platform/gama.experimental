@@ -2,6 +2,7 @@ package proxy;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.locationtech.jts.geom.Geometry;
 
@@ -24,6 +25,7 @@ import gama.core.util.IMap;
 import gama.dev.DEBUG;
 import gama.gaml.species.ISpecies;
 import proxyPopulation.ProxyPopulation;
+import synchronizationMode.BaseDistantSyncMode;
 import synchronizationMode.DistantSynchronizationMode;
 import synchronizationMode.LocalSynchronizationMode;
 import synchronizationMode.SynchronizationModeAbstract;
@@ -43,24 +45,24 @@ public class ProxyAgent implements IAgent
 
 	protected final ProxyPopulation population;
 	private IScope scope;
-	
 	public SynchronizationModeAbstract synchroMode;
-
-
-	public ProxyAgent(final ProxyPopulation s, final int index, IScope scope) 
-	{
-		DEBUG.OUT("create new proxy index : " + index);
-		this.population = s;
-		this.scope = scope;
-	}
+	public UUID uniqueID;
+	public boolean copy; // is the proxy a copy?
+    public int originalProcessRank;
     
-	public ProxyAgent(IAgent proxiedAgent, final ProxyPopulation s, IScope scope)
+	public ProxyAgent(IAgent proxiedAgent, final ProxyPopulation s, IScope scope, boolean copy, int originalProcessRank)
     {
 		DEBUG.OUT("create new proxy : " + proxiedAgent.getName());
 		
-    	this.synchroMode = new LocalSynchronizationMode(proxiedAgent);
+    	this.synchroMode = new LocalSynchronizationMode(proxiedAgent); // todo custom synchro mode
     	this.population = s;
 		this.scope = scope;
+		this.uniqueID = proxiedAgent.getUUID();
+		this.copy = copy;
+		this.originalProcessRank = originalProcessRank;
+		DEBUG.OUT("this.copy: " + this.copy);
+		DEBUG.OUT("this.originalProcessRank: " + this.originalProcessRank);
+		DEBUG.OUT("this.hashcodethisuniquedIF: " + this.uniqueID);
     }
 	
 	public void fixTopology()
@@ -72,11 +74,11 @@ public class ProxyAgent implements IAgent
 	public boolean equals(final Object obj)
 	{
 		DEBUG.OUT("custom custo m equals : " + this + " :: " + obj);
-		return obj == null ? false : this.hashCode() == obj.hashCode();
+		return obj == null ? false : this.uniqueID == ((IAgent)obj).getUUID();
 	}
 
 	public SynchronizationModeAbstract getSynchroMode() {
-		DEBUG.OUT("getSynchroMode : " + this.synchroMode);
+		//DEBUG.OUT("getSynchroMode : " + this.synchroMode);
 		return this.synchroMode;
 	}
 
@@ -90,16 +92,10 @@ public class ProxyAgent implements IAgent
 		DEBUG.OUT("set synchroMode " + synchroMode.getClass());
 		this.synchroMode = synchroMode;
 	}
-	public void setSynchronizationMode(DistantSynchronizationMode synchroMode)
+	public void setSynchronizationMode(BaseDistantSyncMode synchroMode)
 	{
 		DEBUG.OUT("set setDistantSynchronizationMode " + synchroMode.getClass());
 		this.synchroMode = synchroMode;
-	}	
-	
-	public void updateProxied(DistantSynchronizationMode synchroMode)
-	{
-		DEBUG.OUT("updateProxied with :" + synchroMode.getClass());
-		this.setSynchronizationMode(synchroMode);
 	}	
 	
 	@Override
@@ -294,6 +290,7 @@ public class ProxyAgent implements IAgent
 	@Override
 	public Object primDie(IScope scope) throws GamaRuntimeException {
 		DEBUG.OUT("do primDie");
+		DEBUG.OUT("do primDie name??? " + this.getSynchroMode().getAgent().getName());
 		population.fireAgentRemoved(scope, this.getSynchroMode().getAgent());
 		return this.getSynchroMode().primDie(scope);
 	}
@@ -305,7 +302,7 @@ public class ProxyAgent implements IAgent
 
 	@Override
 	public int compareTo(IAgent o) {
-		return (this.getHashCode() == ((MinimalAgent) o).hashCode) ? 1 : 0;
+		return (this.getUUID() == ((MinimalAgent) o).getUUID()) ? 1 : 0;
 	}
 
 	@Override
@@ -357,17 +354,6 @@ public class ProxyAgent implements IAgent
 	@Override
 	public IPopulation<? extends IAgent> getPopulationFor(String speciesName) {
 		return this.getScope().getSimulation().getMicroPopulation(speciesName);
-	}
-
-	@Override
-	public final int hashCode()
-	{
-		//DEBUG.OUT("HASHCODE FUNC IN PROXY");
-		return this.getSynchroMode().hashCode();
-	}
-
-	public int getHashCode() {
-		return this.getSynchroMode().getHashcode();
 	}
 	
 	public void proxyDispose()
@@ -509,7 +495,28 @@ public class ProxyAgent implements IAgent
 	public void updateWith(IScope s, ISerialisedAgent sa) {
 		this.getSynchroMode().updateWith(s, sa);
 	}
-	
-	
 
+	@Override
+	public void setUUID(String uuid) 
+	{
+		DEBUG.OUT("proxy setUUID " + uuid);
+		this.uniqueID = UUID.fromString(uuid);
+	}
+
+	@Override
+	public UUID getUUID() 
+	{
+		return this.uniqueID;
+	}
+
+	@Override
+	public void setOriginalSimulationID(int originalSimulationID) {
+		this.originalProcessRank = originalSimulationID;
+		
+	}
+
+	@Override
+	public int getOriginalSimulationID() {
+		return this.originalProcessRank;
+	}
 }

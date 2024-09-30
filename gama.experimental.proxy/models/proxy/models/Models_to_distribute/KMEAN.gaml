@@ -17,7 +17,7 @@ model MASKMEANS
 global
 {
 	// the number of classes to create (kmeans)
-	int k <- 2;
+	int k <- 10;
 	
 	// the number of points
 	int N <- 500;
@@ -93,9 +93,8 @@ experiment clustering2D type: gui
 	{
 		display map_kmeans 
 		{
-			species datapoints aspect: kmeans_aspect2D transparency:0.4;
 			species centroids aspect: kmeans_aspect2D;
+			species datapoints aspect: kmeans_aspect2D transparency:0.4;
 		}
-
 	}
 }

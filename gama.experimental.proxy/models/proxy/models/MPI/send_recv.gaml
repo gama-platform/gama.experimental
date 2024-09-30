@@ -16,6 +16,7 @@ global skills:[MPI_SKILL]
     
     init
     {
+    	write("WHWHWHWHWHWHHWHH");
 		mpi_rank <- MPI_RANK;
 		mpi_size <- MPI_SIZE;
 		file_name <- "log"+mpi_rank+".txt";
@@ -35,41 +36,37 @@ global skills:[MPI_SKILL]
 			create emptyAgent;
 			emptyAgent[2].data <- 30;
 			
-			//emptyAgent msg3 <- emptyAgent[0];
-		    
-			let msg3 <- 3 among emptyAgent;
-			//let msg3 <- [emptyAgent[0],emptyAgent[1],emptyAgent[2]];
-		    do MPI_SEND(msg3, dst, 50);
-		    write("MPI_SEND 3 done");
-		    write("" + MPI_RANK + " lenght emptyAgent" + length(emptyAgent));
-			
-		    /*
 		    list<unknown> msg <- [10];
 		    do MPI_SEND(msg, dst, 50);
 		    write("MPI_SEND 1 done");
 
 			list<unknown> msg2 <- [false, 10, 1.5, "hello"];
 		    do MPI_SEND(msg2, dst, 50);
-		    write("MPI_SEND 2 done");*/
+		    write("MPI_SEND 2 done");
+
+			list<emptyAgent> msg3 <- 3 among emptyAgent;
+		    do MPI_SEND(msg3, dst, 50);
+		    write("MPI_SEND 3 done");
+		    write("" + MPI_RANK + " lenght emptyAgent" + length(emptyAgent));
 		    
 		} else {
 		    int emet <- 0;
 		    
-		    /*list<unknown> l <- MPI_RECV(emet, 50);
+		    list<unknown> l <- MPI_RECV(emet, 50);
 		    write("MPI_RECV done : " + l);
 
 		    list<unknown> l2 <- MPI_RECV(emet, 50);
-		    write("MPI_RECV 2 done : " + l2);*/
+		    write("MPI_RECV 2 done : " + l2);
 		    
 		    list<emptyAgent> l3 <- MPI_RECV(emet, 50);
-		    write("MPI_RECV 3 done : " + l3);
+		    /*write("MPI_RECV 3 done : " + l3);
 		    
 			write("" + MPI_RANK + " emptyAgents :: " + list(emptyAgent));
 			ask emptyAgent
 			{
 				write("rank " + MPI_RANK + "[" + self.name + "(data)::" + self.data + "]");
 			}
-		    write("" + MPI_RANK + " lenght emptyAgent" + length(emptyAgent));
+		    write("" + MPI_RANK + " lenght emptyAgent" + length(emptyAgent));*/
 		}
 	    
 		do MPI_FINALIZE();
@@ -81,6 +78,7 @@ species emptyAgent
 {
 	int data;
 }
-experiment send_recv until: (cycle = 1)
+
+experiment send_recv
 {
 }

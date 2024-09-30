@@ -14,6 +14,11 @@ species movingAgent skills:[moving, ProxySkill]
 	point target <- any_location_in(world);
 	bool display_true <- false;
 	
+	init
+	{
+		
+	}
+	
 	aspect classic
 	{		
 		draw line(location, target) color: col;
@@ -84,16 +89,20 @@ species followingAgent parent: movingAgent
 	}
 }
 
-species standingAgent
+species standingAgent skills:[ProxySkill]
 {
 	int data; 
 	rgb col;
+	bool fake <- false;
+	int index;
+	string syncmode <- "";
 	
 	init
 	{
 		col <- #blue;
 		data <- 15;
 	}
+
 	reflex move
 	{
 	}
@@ -106,13 +115,25 @@ species standingAgent
 	
 	aspect classic
 	{		
-		draw circle(1.5) color: col;
-		draw name at: location color: #black font: font('Default', 10, #bold);
-		draw string(data) color: #purple font: font('Default', 50, #bold);
+		if(!fake)
+		{
+			
+			draw circle(1.5) color: col;
+			draw name at: location color: #black font: font('Default', 9, #bold);
+		}else
+		{
+			draw circle(0.5) color: rgb(col,0.5);
+			draw name+"_COPY" at: location color: #black font: font('Default', 9, #bold);
+			//draw polyline([standingAgent[index].position, self.position]);
+			//draw line(location, 50) color: col;
+		}
+		
+		
+		//draw string(data) color: #purple font: font('Default', 50, #bold);
 	}
 }
 
-species interactingAgent
+species interactingAgent skills:[ProxySkill]
 {
 	rgb col;
 	standingAgent target;	
@@ -127,6 +148,8 @@ species interactingAgent
 		if(target = nil)
 		{
 			target <- one_of(standingAgent);
+			write("new target " + target);
+			write("target data " + target.data);
 		}
 	}
 	
@@ -135,6 +158,7 @@ species interactingAgent
 		if(target != nil)
 		{		
 			write("I SEE THIS STANDING AGENT : " + target.data);
+			target.data <- target.data + 1;
 		}
 	}
 	

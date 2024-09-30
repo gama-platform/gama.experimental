@@ -1,5 +1,7 @@
 package synchronizationMode;
 
+import java.util.UUID;
+
 import org.locationtech.jts.geom.Geometry;
 
 import gama.core.common.geometry.Envelope3D;
@@ -136,8 +138,6 @@ public abstract interface SynchronizationModeAbstract extends IAgent
 	@Override
 	public abstract Object primDie(IScope scope);
 	 
-	public abstract int getHashcode();
-	 
 	@Override
 	public abstract boolean covers(IShape g);
 	
@@ -223,4 +223,10 @@ public abstract interface SynchronizationModeAbstract extends IAgent
 	public abstract boolean touches(final IShape g);
 
 	public abstract void updateAttributes(IAgent agent);
+	
+	@Override
+	public void setUUID(String uuid);
+
+	@Override
+	public UUID getUUID();
 }

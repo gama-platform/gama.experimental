@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.google.common.collect.Iterables;
 
@@ -32,6 +33,8 @@ import gama.gaml.species.ISpecies;
 import gama.gaml.statements.RemoteSequence;
 import gama.gaml.variables.IVariable;
 import proxy.ProxyAgent;
+import synchronizationMode.HardSyncMode;
+import synchronizationMode.LocalSynchronizationMode;
 
 
 // TODO notifier update code
@@ -46,19 +49,20 @@ import proxy.ProxyAgent;
 public class ProxyPopulation extends GamaPopulation<ProxyAgent>
 {
 	
-	// TODO implements all methods 
-	
 	static
 	{
 		DEBUG.ON();
 	}
 	
-	static Map<Integer, ProxyAgent> hashMapProxyID;
+	static Map<String, ProxyAgent> hashMapProxyID;
+	boolean emptyShell = true;
+	static boolean copyFlag = false;
+	int last;
 	
 	public ProxyPopulation(IMacroAgent host, ISpecies species) 
 	{
 		super(host, species);
-		hashMapProxyID = new HashMap<Integer, ProxyAgent>();
+		hashMapProxyID = new HashMap<String, ProxyAgent>();
 	}
 	
 	@Override
@@ -67,8 +71,10 @@ public class ProxyPopulation extends GamaPopulation<ProxyAgent>
 			final boolean toBeScheduled, final RemoteSequence sequence) throws GamaRuntimeException
 	{
 		DEBUG.OUT("createAgents 1");
+		DEBUG.OUT("createAgents initialValues " + initialValues);
 		if (number == 0) return GamaListFactory.EMPTY_LIST;
 		
+		DEBUG.OUT("NEW getGamlType().getContentType() " + getGamlType().getContentType());
 		final IList<MinimalAgent> agentList = GamaListFactory.create(getGamlType().getContentType(), number);
 		final IAgentConstructor<IAgent> constr = species.getDescription().getAgentConstructor();
 		
@@ -76,18 +82,11 @@ public class ProxyPopulation extends GamaPopulation<ProxyAgent>
 		{
 			IShape shape;
 			@SuppressWarnings ("unchecked") final IAgent agent = constr.createOneAgent(this, currentAgentIndex++);
-			int hashcode = 0;
+			DEBUG.OUT("NEW NEW NEW NEW NEW HASHASH " + agent.getUUID());
 			if (initialValues != null && !initialValues.isEmpty()) 
 			{
 				final Map<String, Object> init = initialValues.get(i);
-				if (init.containsKey(IKeyword.HASHCODE)) 
-				{
-					DEBUG.OUT("attributes conatin hashcode");
-					hashcode = (Integer) init.get(IKeyword.HASHCODE);
-				}else
-				{
-					DEBUG.OUT("attributes does not conatin hashcode");
-				}
+				DEBUG.OUT("init attributes ::  " + init);
 				
 				if (init.containsKey(IKeyword.SHAPE)) 
 				{
@@ -100,23 +99,21 @@ public class ProxyPopulation extends GamaPopulation<ProxyAgent>
 						agent.setGeometry((IShape) val);
 					}
 					init.remove(IKeyword.SHAPE);
-				} else if (init.containsKey(IKeyword.LOCATION)) 
+				}else if (init.containsKey(IKeyword.LOCATION)) 
 				{
 					agent.setLocation(scope, (GamaPoint) init.get(IKeyword.LOCATION));
 					init.remove(IKeyword.LOCATION);
 				}
+				
+				if(init.containsKey(IKeyword.UUID))
+				{
+					DEBUG.OUT("found this in value init :  " + init.get(IKeyword.UUID));
+					DEBUG.OUT("wh?, " + agent.getClass());
+					agent.setUUID((String)init.get(IKeyword.UUID));
+					DEBUG.OUT("hehehehehhehe " +agent.getUUID());
+				}
 			}
-			MinimalAgent minimal;
-			if(hashcode != 0)
-			{
-				DEBUG.OUT("HASHCODE DETECTED in attributes when creating agents");
-				 minimal = new MinimalAgent(agent.getPopulation(), agent.getIndex(), hashcode, agent.getGeometry()); // have to create minimal agent here to change hashcode
-				 agentList.add(minimal);
-			}else
-			{
-				DEBUG.OUT("NO HASHCODE DETECTED in attributes");
-				agentList.add((MinimalAgent)agent); // no hashcode in the attributes
-			}
+			agentList.add((MinimalAgent)agent); // no hashcode in the attributes
 		}
 		createVariablesForProxiedAgent(scope, agentList, initialValues, sequence);
 		
@@ -127,7 +124,10 @@ public class ProxyPopulation extends GamaPopulation<ProxyAgent>
 	public ProxyAgent createAgentAt(final IScope scope, final int index, final Map<String, Object> initialValues,
 			final boolean isRestored, final boolean toBeScheduled) throws GamaRuntimeException 
 	{		
-		DEBUG.OUT("createAgentAt");
+		DEBUG.OUT("ProxyAgent createAgentAt index " + index);
+		DEBUG.OUT("ProxyAgent initialValues " + initialValues);
+		DEBUG.OUT("ProxyAgent isRestored " + isRestored);
+		
 		final List<Map<String, Object>> mapInitialValues = new ArrayList<>();
 		mapInitialValues.add(initialValues);
 
@@ -174,13 +174,16 @@ public class ProxyPopulation extends GamaPopulation<ProxyAgent>
 	private IList<ProxyAgent> createProxys(IList<MinimalAgent> agentList, IScope scope, RemoteSequence sequence, boolean isRestored, boolean isScheduled )
 	{
 		DEBUG.OUT("createProxys(");
+		DEBUG.OUT("is restores ?? ? ?? ?? ? ? ? ? " + isRestored);
 		final IList<ProxyAgent> proxyList = GamaListFactory.create(getGamlType().getContentType(), agentList.size());
 		for (final MinimalAgent agent : agentList) {
-			ProxyAgent proxy = new ProxyAgent(agent, this, scope);
+			DEBUG.OUT("agrnt attirubte to give prox " + agent.getAttributes(false));
+			ProxyAgent proxy;
+			proxy = new ProxyAgent(agent, this, scope, copyFlag, agent.originalSimulationID);
 			proxy.fixTopology();
 			proxyList.add(proxy);
-			DEBUG.OUT("New agent(" + agent.getName() + ") hashcode : " + agent.hashCode);
-			hashMapProxyID.put(agent.hashCode, proxy);		
+			DEBUG.OUT("New agent(" + agent.getName() + ") hashcode : " + agent.getUUID());
+			hashMapProxyID.put(agent.getUUID().toString(), proxy);		
 		}
 		
 		scheduleProxy(proxyList, scope, sequence, isRestored);
@@ -256,18 +259,39 @@ public class ProxyPopulation extends GamaPopulation<ProxyAgent>
 
 	@Override
 	public void fireAgentRemoved(final IScope scope, final IAgent agent) {
+		DEBUG.OUT("fireAgentRemoved " + agent);
 		try {
-			if(agent instanceof ProxyAgent)
+			if(agent instanceof ProxyAgent pa)
 			{
-				ProxyAgent proxy = (ProxyAgent) agent;
-				this.remove(proxy);
+				if(pa.synchroMode instanceof HardSyncMode)
+				{
+					DEBUG.OUT("fireAgentRemoved : HARDSYNC " + pa);
+					DEBUG.OUT("agent instanceof ProxyAgent ");
+					ProxyAgent proxy = (ProxyAgent) agent;
+					DEBUG.OUT("proxy found " + proxy);
+					proxy.setSynchronizationMode(new LocalSynchronizationMode(proxy.getAgent()));
+					this.remove(proxy);
+				}
+				
 			}else
 			{
-				ProxyAgent proxy = getProxyFromHashCode(((MinimalAgent)agent).hashCode);
+				DEBUG.OUT("agent not instanceof ProxyAgent ");
+				ProxyAgent proxy = getProxyFromHashCode(((MinimalAgent)agent).getUUID());
+				DEBUG.OUT("getProxyFromHashCode " + proxy);
+				if(proxy.synchroMode instanceof HardSyncMode)
+				{
+					DEBUG.OUT("fireAgentRemoved : HARDSYNC agent " + proxy);
+					DEBUG.OUT("proxy found " + proxy);
+					proxy.setSynchronizationMode(new LocalSynchronizationMode(agent));
+					this.remove(proxy);
+					return;
+				}
+				
 				this.remove(proxy);
 
 			}
 		} catch (final RuntimeException e) {
+			DEBUG.OUT("fireAgentRemoved RuntimeException " + e);
 			e.printStackTrace();
 		}
 	}
@@ -278,21 +302,25 @@ public class ProxyPopulation extends GamaPopulation<ProxyAgent>
 	 * @param hashcode
 	 * @return
 	 */
-	static public ProxyAgent getProxyFromHashCode(int hashcode)
+	static public ProxyAgent getProxyFromHashCode(UUID uniqueID)
 	{	
-		ProxyAgent proxy = hashMapProxyID.get(hashcode);
+		DEBUG.OUT("getProxyFromHashCode :: " + uniqueID);
+		ProxyAgent proxy = hashMapProxyID.get(uniqueID.toString());
 		
 		DEBUG.OUT("Proxy hashcode in the population :: ");
 		for(var auto : hashMapProxyID.entrySet())
 		{
-			DEBUG.OUT(auto.getKey() + " :: " + auto.getKey());
+			DEBUG.OUT(auto.getValue().getName() + " :: " + auto.getKey());
 		}
-		DEBUG.OUT("proxy from hashcode(" + hashcode + ") : " + proxy);
+		if(proxy!=null)
+		{
+			DEBUG.OUT("proxy from hashcode(" + uniqueID + ") : " + proxy.getName());
+		}
 		
 		return proxy;
 	}
 	
-	public static Map<Integer, ProxyAgent> getMapProxyID()
+	public static Map<String, ProxyAgent> getMapProxyID()
 	{
 		return ProxyPopulation.hashMapProxyID;
 	}
@@ -301,7 +329,7 @@ public class ProxyPopulation extends GamaPopulation<ProxyAgent>
 	public ProxyAgent anyValue(final IScope scope) 
 	{	
 		final RandomUtils r = scope.getRandom();
-		List<Integer> keysAsArray = new ArrayList<Integer>(hashMapProxyID.keySet());
+		List<String> keysAsArray = new ArrayList<String>(hashMapProxyID.keySet());
 		DEBUG.OUT("keysAsArray" + " :: " + keysAsArray.size());
 		
 		for(var auto : ProxyPopulation.hashMapProxyID.entrySet())
@@ -312,30 +340,103 @@ public class ProxyPopulation extends GamaPopulation<ProxyAgent>
 		{
 			var auto = hashMapProxyID.get(keysAsArray.get(r.between(0, keysAsArray.size() - 1)));
 			DEBUG.OUT("returning  : " + auto);
-			
+			// TODO FIX HERE
 			return auto;
 		}
 		
 		return null;
 	}
 	
-
 	@SuppressWarnings ("unchecked")
 	@Override
-	public ProxyAgent getOrCreateAgent(final IScope scope, final Integer index) {
-		DEBUG.OUT("getOrCreateAgent proxy override");
-		ProxyAgent agent = getAgent(index);
-		DEBUG.OUT("agentagentagent proxy attribute " + agent.getOrCreateAttributes());
-		return agent == null ? (ProxyAgent) createAgentAt(scope, index, Collections.EMPTY_MAP, false, true) : agent;
+	public ProxyAgent getOrCreateAgent(final IScope scope, Integer index, Map<String, Object> initValues) 
+	{
+		DEBUG.OUT("getOrCreateAgentgetOrCreateAgentgetOrCreateAgentgetOrCreateAgent current index " + this.currentAgentIndex);
+		if(emptyShell)
+		{
+			DEBUG.OUT("emptyShell true " + emptyShell);
+			DEBUG.OUT("emptyShell initValues " + initValues);
+			emptyShell = false;
+			last = currentAgentIndex;
+			
+			DEBUG.OUT("creat empty shell at index " + last);
+			//ProxyAgent agt = createAgentAt(scope, currentAgentIndex, initValues, false, true);
+			DEBUG.OUT("empty shell created" + last);
+			//return agt;
+			return null;
+		}else
+		{
+			DEBUG.OUT("emptyShell false " + emptyShell);
+			emptyShell = true;
+			
+			DEBUG.OUT("initValues empty " + initValues);
+			String myUUID = (String) initValues.get(IKeyword.UUID);
+
+			DEBUG.OUT("looking for hash " + myUUID + " in pop " + this);
+			DEBUG.OUT("pop we azrfe looking into " + this.size());
+			
+			for(ProxyAgent auto : this)
+			{
+				DEBUG.OUT("agent in pop :  " + auto.getOrCreateAttributes() + " :: " + auto.getUUID().toString());
+				if(auto.getUUID() == null)
+				{
+					DEBUG.OUT("ONE AGENT IN POP DONT HAVE UUID " + auto);
+					break;
+				}
+				
+				if(myUUID == null)
+				{
+					DEBUG.OUT("LY AGENT DONT HAVE UUID " + this);
+					break;
+				}
+						
+				if(myUUID.equals(auto.getUUID().toString()))
+				{				
+					DEBUG.OUT("WE FOUND THE RIGHT AGENT at index : " + auto.getIndex());				
+					DEBUG.OUT("WE FOUND THE RIGHT AGENT at index : " + auto.getOrCreateAttributes());
+					DEBUG.OUT("WE FOUND THE RIGHT AGENT : " + auto);
+
+					DEBUG.OUT("number of agent " + this.size());
+					
+					//this.get(last).primDie(scope); // we kill the empty shell because we found the right agent to recreate in
+					//this.remove(last);
+					
+					//this.currentAgentIndex--;
+					//this.last = this.currentAgentIndex;
+					
+					return auto;
+				}
+			}
+			
+			DEBUG.OUT("Agent don't exist so we create it " + last);
+			
+			ProxyAgent proxy = createAgentAt(scope, last, initValues, false, true);
+			DEBUG.OUT("resuklt of created agent :  " + proxy.getIndex());
+			
+			DEBUG.OUT("number of agent " + this.size());
+			for(ProxyAgent auto : this)
+			{
+				DEBUG.OUT("agent in after pop :  " + auto.getOrCreateAttributes());
+				DEBUG.OUT("agent in after index :  " + auto.getIndex());
+				DEBUG.OUT("agent in after name :  " + auto.getName());
+			}
+			
+
+			
+			return proxy;
+		}
 	}
 	
 	@Override
 	public ProxyAgent getAgent(final Integer index) {
-		DEBUG.OUT("getAgent proxy override " + index);
+		DEBUG.OUT("getAgent proxy override " + index);	
 		ProxyAgent pro = Iterables.find(this, each -> each.getIndex() == index, null);
-		DEBUG.OUT("pro " + pro);
-		DEBUG.OUT("pro getOrCreateAttributes " + pro.getOrCreateAttributes());
+		DEBUG.OUT("pro pro pro " + pro);
 		return pro;
 	}
-
+	
+	public static void setCopyFlag(boolean copyFlagValue)
+	{
+		copyFlag = copyFlagValue;
+	}
 }

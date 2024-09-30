@@ -1,50 +1,46 @@
 /**
 * Name: GhostMode
-* Based on the internal empty template. 
-* Author: lucas
-* Tags: 
+* Model displaying the use of GhostMode DSP in a distributed ABM
+* Author: Lucas Grosjean
+* Tags: HPC, proxy, distribution, data synchronisation
 */
 
 
 model GhostMode
-
-/* Insert your model definition here */
-
-
-import "../Models_to_distribute/MovingAgent.gaml"
 
 global skills: [MPI_SKILL]
 {
 	int grid_width <- 2;
 	int grid_height <- 1;
 	int size_OLZ <- 20;
-	int simulation_id <- 0;
-	
 	int end_cycle <- 10;
 	
-	bool debug <- true;
+	int prey_eated_by_predator0 <- 0;
+	int prey_eated_by_predator1 <- 0;
 	
 	init
 	{
-		if(simulation_id = 0)
+		if(MPI_RANK  = 0)
 		{
-			create standingAgent
-			{
-				location <- {45,75};
-			}
 			
-			create interactingAgent
+			create prey
 			{
-				location <- {15,75};
+				location <- {45,25};
+				syncmode <- "GhostMode";
 			}
 		}else
 		{
-			create interactingAgent
+			create predator
 			{
-				location <- {75,75};
+				location <- {80,25};
+				index_ <- 0;
 			}
-			
 		}
+	}
+
+	reflex
+	{
+		write("------------------------"+cycle+"--------------------------");
 	}
 	
 	reflex when: cycle = end_cycle
@@ -53,12 +49,56 @@ global skills: [MPI_SKILL]
 	}
 }
 
-grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill, MPI_SKILL]
+species prey skills:[ProxySkill]
+{
+	string syncmode <- "";
+	bool eated <- false;
+}
+
+species predator
+{
+	prey target;	
+	int index_;
+	
+	reflex acquire_target
+	{
+		if(target = nil)
+		{
+			if(prey != nil and length(prey) > index)
+			{		
+				target <- prey[index_];
+			}
+		}
+	}
+	
+	reflex eat
+	{
+		if(target != nil)
+		{
+			if(!target.eated)
+			{
+				int ind <- index_;
+				ask target
+				{
+					self.eated <- true;
+				}
+				
+				if(index = 0)
+				{
+					prey_eated_by_predator0 <- prey_eated_by_predator0 + 1;
+				}else
+				{
+					prey_eated_by_predator1 <- prey_eated_by_predator1 + 1;
+				}
+			}
+		}
+	}
+}
+
+/* OLZ species */
+grid OLZ width: grid_width height: grid_height neighbors: 4 skills: [MPI_SKILL, ProxySkill]
 { 
-	
 	int rank <- grid_x + (grid_y * grid_width);
-	
-	string file_name_sub;
 	
 	list<geometry> OLZ_list;
 	geometry OLZ_combined;
@@ -87,13 +127,9 @@ grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill,
 	
 	// ALL OUTER OLZ
 	geometry outer_OLZ <- OLZ_top_outer + OLZ_bottom_outer + OLZ_left_outer + OLZ_right_outer;
-	
-	string file_name;
 		
 	init
 	{
-		write("init my rank : " + rank);
-		
 		// INNER OLZ
 		if(grid_y - 1 >= 0)
 		{		
@@ -159,15 +195,19 @@ grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill,
 	
 	map<int, list<agent>> agent_to_update <- map<int, list<agent>>([]); 				// agent to be updated in neighbor
 	map<int, list<agent>> agent_to_migrate <- map<int, list<agent>>([]); 				// agent to be migrated to neighbor
-	
-	
-	reflex agent_inside_OLZ when: index = simulation_id and simulation_id = 0
+
+	reflex agent_inside_OLZ when: index = MPI_RANK and MPI_RANK = 0
 	{
-		let agents_in_OLZ <- standingAgent overlapping OLZ_combined;
-		let agents_outside_OLZ <- standingAgent where ( not(each in agents_in_OLZ));
+		let agents_in_OLZ <- prey overlapping OLZ_combined;
+		let agents_outside_OLZ <- prey where ( not(each in agents_in_OLZ));
+
+		let no_agents_in_OLZ <- prey overlapping OLZ_combined;
+		let no_agents_outside_OLZ <- prey where ( not(each in agents_in_OLZ));
 		
 		write("agents_in_OLZ OLZ : " + agents_in_OLZ);
 		write("agents_outside_OLZ OLZ : " + agents_outside_OLZ);
+		write("no_agents_in_OLZ OLZ : " + no_agents_in_OLZ);
+		write("no_agents_outside_OLZ OLZ : " + no_agents_outside_OLZ);
 		
 		ask agents_in_OLZ
 		{
@@ -245,35 +285,9 @@ grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill,
 		}
 	}
 	
-	reflex debug_print when: debug and rank = simulation_id
-	{
-		if(new_agents_in_my_OLZ != nil)
-		{
-			//write("new_agents_in_my_OLZ " + new_agents_in_my_OLZ);
-		}
-		if(agents_in_my_OLZ != nil)
-		{
-			//write("agents_in_my_OLZ " + agents_in_my_OLZ);
-		}
-		if(agent_leaving_OLZ_to_me != nil)
-		{
-			//write("agent_leaving_OLZ_to_me " + agent_leaving_OLZ_to_me);
-		}
-		if(agent_leaving_OLZ_to_neighbor != nil)
-		{
-			//write("agent_leaving_OLZ_to_neighbor " + agent_leaving_OLZ_to_neighbor);
-		}
-		
-	}
-	
-	reflex end_step_update when : rank = simulation_id and simulation_id = 0
+	reflex end_step_update when : rank = MPI_RANK and MPI_RANK = 0
 	{	
-		
-		write("agentsToCopy " + new_agents_in_my_OLZ);
-		do agentsToCopy(new_agents_in_my_OLZ);
-		
-		//write("agentsToMigrateXXXXXXXXXXXXX " + agent_leaving_OLZ_to_neighbor);
-		//do agentsToMigrate(agent_leaving_OLZ_to_neighbor);
+		do agentsToCopy(new_agents_in_my_OLZ); // important function to send a copy of agent to other processors
 		
 		agents_in_OLZ_previous_step <- agents_in_my_OLZ;
 		new_agents_in_my_OLZ <- nil;
@@ -282,70 +296,42 @@ grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill,
 		agent_leaving_OLZ_to_neighbor <- nil;
 	}
 	
+	
 	aspect default
 	{
 		draw self.shape color: rgb(#white,125) border:#black;	
-		draw "[" + self.grid_x + "," + self.grid_y +"] : " + rank color: rgb(#red,125);
-		
-		//if(OLZ[simulation_id] = self)
-		//{
-			draw OLZ_combined color: rgb(200,200,100,125);
-		//}
-		
+		draw "[" + self.grid_x + "," + self.grid_y +"] : RANK " + rank color: rgb(#red,125) font: font('Default', 10, #bold);
+		draw OLZ_combined color: rgb(255,125,125,125);
 	}
-}
-
-experiment GM
-{	
-	output{
-		display OLZ_proxy_grid type: 2d
-		{
-			species OLZ;
-			species movingAgent aspect: classic;
-			species followingAgent aspect: classic;
-			species standingAgent aspect: classic;
-			species interactingAgent aspect: classic;
-		}
-	}
-}
-
-experiment GM_fake
-{	
-	init
-	{
-		create simulation with: [simulation_id::1];
-	}
-	output{
-		display OLZ_proxy_grid type: 2d
-		{
-			species OLZ;
-			species movingAgent aspect: classic;
-			species followingAgent aspect: classic;
-			species standingAgent aspect: classic;
-			species interactingAgent aspect: classic;
-		}
-	}
-}
-
-experiment GM_proxy type: proxy
-{
-	output{
-		display OLZ_proxy_grid type: 2d
-		{
-			species OLZ;
-			species movingAgent aspect: classic;
-			species followingAgent aspect: classic;
-			species standingAgent aspect: classic;
-			species interactingAgent aspect: classic;
-		}
-	}	
 }
 
 experiment GM_distribution type: distribution until: (cycle = end_cycle)
 {	
-	init
+	int i <- 0;
+	reflex when: (cycle > 1)
 	{
-		write("MPI_RANK : " + MPI_RANK);
-		simulation_id <- MPI_RANK;
+		ask simulation 
+		{
+			if(MPI_RANK = 1) // save by P1 to /output.log/snapshot/1
+			{		
+				// We choose a neutral background
+				save (snapshot("chart")) to: "../output.log/snapshot/" + MPI_RANK+ "/Ghostmode" + myself.i + ".png" rewrite: true;
+			}
+		}
+		i <- i + 1;
+	}
+	
+	output
+	{	display chart
+		{
+			species prey;
+			species predator;
+			
+	    	chart "Prey eaten by predator at each cycle" type: series y_range: {-0.2,50} title_font: font('SanSerif' , 25.0, #italic) label_font: font('SanSerif', 18 #plain) legend_font: font('SanSerif', 18 #bold)
+	    	{
+				data "prey eaten by predator0" value: prey_eated_by_predator0 color: #green;
+				data "prey eaten by predator1" value: prey_eated_by_predator1 color: #red; 
+	    	}
+		}
 	}
 }

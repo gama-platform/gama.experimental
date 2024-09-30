@@ -18,27 +18,14 @@ global skills:[MPI_SKILL]
 	{
 		mpi_rank <- MPI_RANK;
 		mpi_size <- MPI_SIZE;
-
-		file_name <- "log"+mpi_rank+".txt";
-		do clearLogFile();
 		
-		do writeLog("my mpi rank is " + mpi_rank);	
-		do writeLog("mpi world size is " + mpi_size);
+		write("my mpi rank is " + mpi_rank);	
+		write("mpi world size is " + mpi_size);
 		
 		do die;
 	}
-    
-    action writeLog(string log)
-	{
-		save log to: file_name rewrite:false;
-	}
-	
-	action clearLogFile
-	{
-		save "" to: file_name rewrite:true;
-	}
 }
 
-experiment rank_size type: distribution
+experiment rank_size
 {
 }

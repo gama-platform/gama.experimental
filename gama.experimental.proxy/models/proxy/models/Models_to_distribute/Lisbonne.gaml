@@ -99,6 +99,11 @@ species hull
 		do divide_convex_Y(init_convex(), 0);
 	}
 }
+
+species Walking_Agent skills: [moving] 
+{
+	
+}
 species Green skills:[moving] 
 {
 	

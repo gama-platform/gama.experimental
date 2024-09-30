@@ -1,78 +1,104 @@
 /**
-* Name: Migrationreference
-* Based on the internal empty template. 
-* Author: lucas
-* Tags: HPC, proxy, distribution
+* Name: Migration_reference
+* Model displaying the use of different DSP in a distributed ABM
+* Author: Lucas Grosjean
+* Tags: HPC, proxy, distribution, data synchronisation
 */
 
+model Migration
 
-model Migrationreference
-
-import "../Models_to_distribute/MovingAgent.gaml"
-
-global skills:[ProxySkill, MPI_SKILL, network]
+global skills: [MPI_SKILL, ProxySkill]
 {
 	int grid_width <- 2;
 	int grid_height <- 1;
-	int size_OLZ <- 20;
-	int simulation_id <- 0;
-	string file_name;
+	int size_OLZ <- 15;
+	int end_cycle <- 50;
 	
-	bool debug <- true;
+	int prey_eated <- 0;
+	int prey_eated_by_P1 <- 0;
 	
 	init
 	{
-		simulation_id <- MPI_RANK;
-		
-		file_name <- "log"+simulation_id+".txt";
-
-		do clearLogFile();
-		do writeLog("My rank " + MPI_RANK);
-		
-		if(simulation_id = 0) 
+		if(MPI_RANK = 0)
 		{
 			create movingAgent
 			{
-				location <- {25,25};
-				target <- {80,25};
-			}
-			create followingAgent
-			{
-				targetAgent <- one_of(movingAgent);
+				syncmode <- "GhostMode";
 			}
 		}
 	}
-	
-	action writeLog(string log)
+
+	reflex cycle_print
 	{
-		//save log format: "text" to: file_name rewrite:false;
-	}
-	
-	action clearLogFile
-	{
-		//save "" to: file_name rewrite:true;
-	}
-	
-	reflex
-	{
-		if(length(movingAgent) > 0)
-		{		
-			do printSyncMode(one_of(movingAgent));
+		write("------------------------"+cycle+"--------------------------");
+		
+		loop tmp over: movingAgent
+		{
+			write("MOVINGAGENT in my simualtion : " + tmp.name);
 		}
 	}
 	
-	aspect default
+	reflex when: cycle = end_cycle
 	{
-		draw shape;
+		do die;
 	}
 }
 
-grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill, MPI_SKILL]
+species movingAgent skills:[moving]
+{	
+	rgb col <- #red;
+	point target <- any_location_in(world);
+	bool display_true <- false;
+	int rank_current_cell <- 0;
+	
+	//string syncmode;
+	
+	point pA <- {20,20};
+	point pB <- {70,20};
+	
+	string syncmode;
+	
+	init
+	{
+		location <- {20,20};
+		target <- pB;
+	}
+	
+	aspect classic
+	{		
+		draw line(location, target) color: col;
+		if(display_true)
+		{
+			draw circle(1) color: #blue;
+		}else
+		{
+			draw circle(1) color: col;
+		}
+		
+		draw name color: #black;
+	}
+	
+	reflex move when: target != location
+	{
+		do goto speed: speed target:target;
+	}
+	
+	reflex target when: target = location
+	{
+		if(target = pB)
+		{
+			target <- pA;
+		}else
+		{
+			target <- pB;
+		}
+	}
+}
+
+/* OLZ species */
+grid OLZ width: grid_width height: grid_height neighbors: 4 skills: [MPI_SKILL, ProxySkill]
 { 
-	
 	int rank <- grid_x + (grid_y * grid_width);
-	
-	string file_name_sub;
 	
 	list<geometry> OLZ_list;
 	geometry OLZ_combined;
@@ -101,13 +127,9 @@ grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill,
 	
 	// ALL OUTER OLZ
 	geometry outer_OLZ <- OLZ_top_outer + OLZ_bottom_outer + OLZ_left_outer + OLZ_right_outer;
-	
-	string file_name;
 		
 	init
 	{
-		write("init my rank : " + rank);
-		
 		// INNER OLZ
 		if(grid_y - 1 >= 0)
 		{		
@@ -160,50 +182,42 @@ grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill,
 			OLZ_combined <- OLZ_combined + OLZ_top_left_inner;
 			OLZ_list << OLZ_top_left_inner;
 		}
-		
-		file_name_sub <- "log"+MPI_RANK+".txt";
-		write("setting MPI_RANK : " + MPI_RANK);
-		write("setting file_name_sub : " + file_name_sub);
 	}
 	
 	// key : rank of the neighbour cell, value : list of agent
-	map<int, list<movingAgent>> new_agents_in_my_OLZ <- map<int, list<movingAgent>>([]); 			// agents entering OLZ
-	map<int, list<movingAgent>> agents_in_my_OLZ <- map<int, list<movingAgent>>([]);				// agents currently in OLZ
+	map<int, list<agent>> new_agents_in_my_OLZ <- map<int, list<agent>>([]); 			// agents entering OLZ
+	map<int, list<agent>> agents_in_my_OLZ <- map<int, list<agent>>([]);				// agents currently in OLZ
 	
-	map<int, list<movingAgent>> agents_in_OLZ_previous_step <- map<int, list<movingAgent>>([]); 	// agent that was in the OLZ last step
+	map<int, list<agent>> agents_in_OLZ_previous_step <- map<int, list<agent>>([]); 	// agent that was in the OLZ last step
 	
-	map<int, list<movingAgent>> agent_leaving_OLZ_to_neighbor <- map<int, list<movingAgent>>([]); 	// agent leaving the OLZ to the neighbor managed area
-	map<int, list<movingAgent>> agent_leaving_OLZ_to_me <- map<int, list<movingAgent>>([]); 		// agent leaving the OLZ to my managed area
+	map<int, list<agent>> agent_leaving_OLZ_to_neighbor <- map<int, list<agent>>([]); 	// agent leaving the OLZ to the neighbor managed area
+	map<int, list<agent>> agent_leaving_OLZ_to_me <- map<int, list<agent>>([]); 		// agent leaving the OLZ to my managed area
 	
-	map<int, list<movingAgent>> agent_to_update <- map<int, list<movingAgent>>([]); 				// agent to be updated in neighbor
-	map<int, list<movingAgent>> agent_to_migrate <- map<int, list<movingAgent>>([]); 				// agent to be migrated to neighbor
-	
-	
-	reflex agent_inside_OLZ when: index = simulation_id and simulation_id = 0
+	map<int, list<agent>> agent_to_update <- map<int, list<agent>>([]); 				// agent to be updated in neighbor
+	map<int, list<agent>> agent_to_migrate <- map<int, list<agent>>([]); 				// agent to be migrated to neighbor
+
+	reflex
 	{
 		let agents_in_OLZ <- movingAgent overlapping OLZ_combined;
 		let agents_outside_OLZ <- movingAgent where ( not(each in agents_in_OLZ));
 		
-		write("movingAgent: "+movingAgent);
-		write("movingAgent le : " + length(movingAgent));
+		write("agents_in_OLZ OLZ : " + agents_in_OLZ);
+		write("agents_outside_OLZ OLZ : " + agents_outside_OLZ);
 		
-		ask movingAgent
-		{
-			write("I am " + self);
-			write("location " + self.location);
-			write("ask movingAgent self getClass : ");
-			do getClass(self);
-		}
+		/*do analyzeProxy(agents_in_OLZ);
+		do analyzeProxy(agents_outside_OLZ);*/
+	}
+
+	reflex agent_inside_OLZ when: index = MPI_RANK
+	{
+		let agents_in_OLZ <- movingAgent overlapping OLZ_combined;
+		let agents_outside_OLZ <- movingAgent where ( not(each in agents_in_OLZ));
 		
-		write("agents_in_OLZ OLZ : "+agents_in_OLZ);
-		write("agents_outside_OLZ OLZ : "+agents_outside_OLZ);
+		write("agents_in_OLZ OLZ : " + agents_in_OLZ);
+		write("agents_outside_OLZ OLZ : " + agents_outside_OLZ);
 		
 		ask agents_in_OLZ
 		{
-			write("agents_in_OLZ OzzzzzzLZ : "+self);
-			write("agents_in_OLZ self getClass : ");
-			do getClass(self);
-			
 			loop OLZ_shape over: myself.OLZ_list
 			{
 				int indexShape <- myself.neighborhood_shape[OLZ_shape];
@@ -243,17 +257,9 @@ grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill,
 		
 		ask agents_outside_OLZ
 		{
-			write("outside OzzzzLZ : "+self);
-			write("myself.OLZ_list : " + myself.OLZ_list);
-			
-			write("agents_outside_OLZ self getClass : ");
-			do getClass(self);
-			
 			loop OLZ_shape over: myself.OLZ_list
 			{
 				int indexShape <- myself.neighborhood_shape[OLZ_shape];
-				write("indexShape : " + indexShape);
-				write("self : " + self);
 				write("agents_in_OLZ_previous_step : " + myself.agents_in_OLZ_previous_step[indexShape]);
 				
 				if(myself.agents_in_OLZ_previous_step[indexShape] != nil and myself.agents_in_OLZ_previous_step[indexShape] contains self)
@@ -272,7 +278,7 @@ grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill,
 						}
 					}else
 					{
-						write("agent_leaving_OLZ_to_neighbor " + self);
+						write("agent_leaving_OLZ_to_neighbor " + self); // TODO FIX 
 						if(myself.agent_leaving_OLZ_to_neighbor[indexShape] != nil)
 						{						
 							myself.agent_leaving_OLZ_to_neighbor[indexShape] <- myself.agent_leaving_OLZ_to_me[indexShape] + self;
@@ -286,42 +292,19 @@ grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill,
 		}
 	}
 	
-	reflex debug_print when: debug and rank = simulation_id
-	{
+	reflex end_step_update when : rank = MPI_RANK
+	{	
+		if(length(new_agents_in_my_OLZ) > 0)
+		{			
+			write("new_agents_in_my_OLZ before send : " + new_agents_in_my_OLZ);
+		}
+		do agentsToCopy(new_agents_in_my_OLZ); // important function to send a copy of agent to other processors
 		
-		do writeLog2("-----------------" + cycle + "-----------------------");
-		do writeLog2("agents_in_my_OLZ " + agents_in_my_OLZ);
-		do writeLog2("agents_in_OLZ_previous_step " + agents_in_OLZ_previous_step);
-		do writeLog2("new agents : " + new_agents_in_my_OLZ + " cycle " + cycle);
-
-
-		write("-------------------------------"+cycle + "(simulation_id ::"+simulation_id+")"+ "(rank ::"+rank+")-----------------------------------");
-		if(new_agents_in_my_OLZ != nil)
-		{
-			write("new_agents_in_my_OLZ " + new_agents_in_my_OLZ);
+		if(length(agent_leaving_OLZ_to_neighbor) > 0)
+		{			
+			write("agent_leaving_OLZ_to_neighbor_neig before send : " + agent_leaving_OLZ_to_neighbor);
 		}
-		if(agents_in_my_OLZ != nil)
-		{
-			write("agents_in_my_OLZ " + agents_in_my_OLZ);
-		}
-		if(agent_leaving_OLZ_to_me != nil)
-		{
-			write("agent_leaving_OLZ_to_me " + agent_leaving_OLZ_to_me);
-		}
-		if(agent_leaving_OLZ_to_neighbor != nil)
-		{
-			write("agent_leaving_OLZ_to_neighbor " + agent_leaving_OLZ_to_neighbor);
-		}
-		
-	}
-	
-	reflex end_step_update when : rank = simulation_id and simulation_id = 0
-	{
-		write("agentsToCopy " + new_agents_in_my_OLZ);
-		do agentsToCopy(new_agents_in_my_OLZ);
-		
-		write("agentsToMigrateXXXXXXXXXXXXX " + agent_leaving_OLZ_to_neighbor);
-		do agentsToMigrate(agent_leaving_OLZ_to_neighbor);
+		do agentsToMigrate(agent_leaving_OLZ_to_neighbor); // important function to migrate of agent to other processors
 		
 		agents_in_OLZ_previous_step <- agents_in_my_OLZ;
 		new_agents_in_my_OLZ <- nil;
@@ -330,24 +313,36 @@ grid OLZ width: grid_width height: grid_height neighbors: 8 skills: [ProxySkill,
 		agent_leaving_OLZ_to_neighbor <- nil;
 	}
 	
-	action writeLog2(string log)
-	{
-		save log format: "text" to: file_name_sub rewrite:false;
-	}
 	
 	aspect default
 	{
 		draw self.shape color: rgb(#white,125) border:#black;	
-		draw "[" + self.grid_x + "," + self.grid_y +"] : " + rank color: rgb(#red,125);
-		
-		if(OLZ[simulation_id] = self)
-		{
-			draw OLZ_combined color: rgb(200,200,100,125);
-		}
-		
+		draw "[" + self.grid_x + "," + self.grid_y +"] : RANK " + rank color: rgb(#red,125) font: font('Default', 10, #bold);
+		draw OLZ_combined color: rgb(255,125,125,125);
 	}
 }
 
-experiment distribution type: distribution until: (cycle = 100)
+experiment Migration_reference type: distribution until: (cycle = end_cycle)
 {
+	int i <- 0;
+	reflex when: (cycle > 1)
+	{
+		ask simulation 
+		{
+			if(cycle mod 5 = 0) // saved by P0 to /output.log/snapshot/0
+			{		
+				// We choose a neutral background
+				save (snapshot("chart")) to: "../output.log/snapshot/" + MPI_RANK+ "/MIGRATION_" + myself.i + ".png" rewrite: true;
+			}
+		}
+		i <- i + 1;
+	}
+	
+	output
+	{	display chart
+		{
+			species movingAgent aspect: classic;
+			species OLZ;
+		}
+	}
 }

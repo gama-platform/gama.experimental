@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.locationtech.jts.geom.Geometry;
 
@@ -39,7 +40,7 @@ import proxy.ProxyAgent;
  * @author Lucas Grosjean
  *
  */
-public class DistantSynchronizationMode implements SynchronizationModeAbstract
+public class DistantSynchronizationMode extends BaseDistantSyncMode
 {	
 	static
 	{
@@ -47,8 +48,8 @@ public class DistantSynchronizationMode implements SynchronizationModeAbstract
 	}
 	
 	public IMap<String, Object> attributes;
-	
-	HashSet<Integer> copysPosition;
+	UUID uniqueID;
+	int originalSimulationID;
 	
 	public DistantSynchronizationMode(IScope scope, IAgent agentToDistantProxy)
 	{
@@ -89,6 +90,7 @@ public class DistantSynchronizationMode implements SynchronizationModeAbstract
 	{
 		DEBUG.OUT("agentWithData : " + agentWithData);
 		DEBUG.OUT("agentWithData class : " + agentWithData.getClass());
+		DEBUG.OUT("agentWithData hashcde : " + agentWithData.getUUID());
 		
 		var attributesFromAgentData = agentWithData.getOrCreateAttributes();
 		DEBUG.OUT("attributesFromAgentData: " + attributesFromAgentData);
@@ -115,13 +117,22 @@ public class DistantSynchronizationMode implements SynchronizationModeAbstract
 		DEBUG.OUT("put4");
 		this.attributes.put(IKeyword.LOCATION, agentWithData.getLocation());
 		DEBUG.OUT("put5");
-		if(agentWithData instanceof ProxyAgent)
+		
+		if(agentWithData instanceof ProxyAgent pa)
 		{
-			this.attributes.put(IKeyword.HASHCODE, ((ProxyAgent)agentWithData).getHashCode());			
+			DEBUG.OUT("agentWithData  instanceof ProxyAgent pa ");
+			this.uniqueID = pa.getUUID();
+			this.originalSimulationID = pa.getOriginalSimulationID();
+			DEBUG.OUT("originalSimulationID  " + this.originalSimulationID);	
 		}else
-		{			
-			this.attributes.put(IKeyword.HASHCODE, ((MinimalAgent)agentWithData).hashCode);
+		{		
+			DEBUG.OUT("agentWithData  instanceof else ");	
+			this.uniqueID = agentWithData.getUUID();
+			this.originalSimulationID = agentWithData.getOriginalSimulationID();
+			DEBUG.OUT("originalSimulationID  " + this.originalSimulationID);	
 		}
+		
+		
 		this.attributes.put(IKeyword.COLOR_ATTRIBUTE, new Color(122,122,122));
 		this.attributes.put(IKeyword.POPULATION, agentWithData.getPopulation());
 		
@@ -129,19 +140,21 @@ public class DistantSynchronizationMode implements SynchronizationModeAbstract
 		DEBUG.OUT("type of agent = " + this.getAttribute(IKeyword.TYPE));
 		DEBUG.OUT("GEOMETRY = " + this.getAttribute(IKeyword.GEOMETRY));
 		DEBUG.OUT("location : " + this.getLocation());
-		DEBUG.OUT("hashcode : " + this.getAttribute(IKeyword.HASHCODE));
+		DEBUG.OUT("hashcode : " + this.getAttribute(IKeyword.UUID));
 		DEBUG.OUT("color : " + this.getAttribute(IKeyword.COLOR_ATTRIBUTE));
 		DEBUG.OUT("population : " + this.getAttribute(IKeyword.POPULATION));
 	}
 	
 	@Override
 	public boolean step(IScope scope) throws GamaRuntimeException {
+		DEBUG.OUT("distant synchro suynchro DistantSynchronizationMode");
 		return true;
 	}
 	
 	@Override
 	public IMap<String, Object> getOrCreateAttributes()
 	{
+		DEBUG.OUT("distnasync getOrCreateAttributes ");
 		return attributes;
 	}
 
@@ -344,11 +357,6 @@ public class DistantSynchronizationMode implements SynchronizationModeAbstract
 	public Object primDie(IScope scope) throws GamaRuntimeException{
 		return null;	// TODO check if correct
 	}
-
-	@Override
-	public int getHashcode() {
-		return (int) this.attributes.get(IKeyword.HASHCODE);
-	}
 	
 	@Override
 	public boolean covers(IShape g)
@@ -536,5 +544,15 @@ public class DistantSynchronizationMode implements SynchronizationModeAbstract
 	public Map<String, Object> getAttributes(boolean createIfNeeded) {
 		if (attributes == null && createIfNeeded) { attributes = GamaMapFactory.create(Types.STRING, Types.NO_TYPE); }
 		return attributes;
+	}
+	
+	@Override
+	public void setUUID(String uuid) {
+		this.uniqueID = UUID.fromString(uuid);
+	}
+
+	@Override
+	public UUID getUUID() {
+		return this.uniqueID;
 	}
 }

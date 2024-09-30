@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MPI
 Bundle-SymbolicName: gama.experimental.MPI;singleton:=true
-Bundle-Version: 1.9.3.qualifier
-Automatic-Module-Name: femto.st.gama.MPI
+Bundle-Version: 0.0.0.qualifier
+Automatic-Module-Name: gama.experimental.MPI
 Bundle-Activator: pluginActivator.MPIActivator
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: com.google.inject,
@@ -19,6 +19,7 @@ Require-Bundle: gama.extension.serialize,
  gama.dependencies,
  com.google.guava
 Export-Package: MPISkill,
+ pluginActivator,
  mpi
 Bundle-ClassPath: .,
  ext/mpi.jar

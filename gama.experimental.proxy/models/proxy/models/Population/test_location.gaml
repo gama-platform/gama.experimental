@@ -27,6 +27,15 @@ global skills: [ProxySkill]
 		
 		write("inside_overlapping : " + inside_overlapping);
 		write("outside_overlapping : " + outside_overlapping);
+		
+		if(length(inside_overlapping) > 0)
+		{
+			write(getClass(inside_overlapping[0]));
+		}
+		if(length(outside_overlapping) > 0)
+		{
+			write(getClass(outside_overlapping[0]));
+		}
 	}
 }
 experiment test_inside_proxy type: proxy 

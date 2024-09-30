@@ -1,14 +1,12 @@
 /**
-* Name: mpigather
-* Based on the internal empty template. 
-* Author: lucas
-* Tags: 
+* Name: mpialltoall
+* MPI_ALLTOALL with GAMA
+* Author: Lucas Grosjean
+* Tags: HPC, MPI, Network, Communication
 */
 
 
 model mpialltoall
-
-/* Insert your model definition here */
 
 global skills: [MPI_SKILL]
 {
@@ -25,7 +23,6 @@ global skills: [MPI_SKILL]
 		mpi_size <- MPI_SIZE;
 
 		map<int, list<int>> msg;
-		map<int, list<emptyAgent>> msg2;
 		loop ind from: 0 to: mpi_size
 		{
 			if(ind != mpi_rank)
@@ -40,12 +37,30 @@ global skills: [MPI_SKILL]
 
 		write("mpi world size is " + mpi_size);
 		write("message " + msg);
-		let alltoall <- MPI_ALLTOALL(msg);	
+		map<int, list<int>> alltoall <- MPI_ALLTOALL(msg);	
 		write("result of alltoall : " + alltoall);
+		
+		map<int, list<emptyAgent>> msg2;
+		loop ind from: 0 to: mpi_size
+		{
+			if(ind != mpi_rank)
+			{
+				create emptyAgent with: [data::rnd(10)];
+				msg2[ind] <- list<emptyAgent>(emptyAgent[0]);
+			}
+		}
+		
+		map<int, list<emptyAgent>> alltoall2 <- MPI_ALLTOALL(msg2);	
+		write("result of alltoall2 : " + alltoall2);
 		
 		do die;
 	}
 }
-experiment mpi_alltoall type: distribution until: (cycle = 1)
+
+species emptyAgent
+{
+	int data;
+}
+experiment mpi_alltoall type: distribution
 { 
 }

@@ -2,16 +2,19 @@ package proxySkill;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import HardSyncModeComm.HardSyncModeProducerConsumer;
 import distributionExperiment.DistributionExperiment;
 import gama.annotations.precompiler.GamlAnnotations.action;
 import gama.annotations.precompiler.GamlAnnotations.arg;
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.skill;
 import gama.core.metamodel.agent.IAgent;
+import gama.core.metamodel.agent.MinimalAgent;
 import gama.core.metamodel.population.IPopulation;
 import gama.core.runtime.IScope;
+import gama.core.util.IList;
 import gama.core.util.IMap;
 import gama.dev.DEBUG;
 import gama.gaml.skills.Skill;
@@ -115,6 +118,8 @@ public class ProxySkill extends Skill
 		List<IAgent> newAgents = new ArrayList<IAgent>();
 		for(var agentToCopy : agentsToCopy)
 		{
+			DEBUG.OUT("agentToCopy : " + agentToCopy);
+			DEBUG.OUT("agentToCopy class " + agentToCopy.getClass());
 			IAgent agent = ProxyFunctions.createCopyAgent(scope, agentToCopy);
 			newAgents.add(agent);
 		}
@@ -164,35 +169,6 @@ public class ProxySkill extends Skill
 			ProxyFunctions.deleteDistant(scope, agentToDelete);
 		}
 	}
-	
-	@action (name = "addDistantAgentsToUpdate",
-		args = { @arg (
-				name = "ProxyAgents",
-				type = IType.LIST,
-				optional = false,
-				doc = @doc ("Agent to add distant agent")),
-				@arg (
-					name = "SimulationID",
-					type = IType.INT,
-					optional = false,
-					doc = @doc ("The simulation's ID where the agent to update is located"))
-		},
-	doc = @doc("Add SimulationID to procsWithDistantAgent of a local ProxyAgent"))
-	public void addDistantAgentsToUpdate(IScope scope)
-	{
-		List<ProxyAgent> proxys = (List<ProxyAgent>) scope.getArg("ProxyAgents");
-		DEBUG.OUT("addDistantAgentsToUpdate : " + proxys);
-		int simulationID = (Integer) scope.getArg("SimulationID");
-		
-		for(var agentToAddAsDistant : proxys)
-		{
-			if(agentToAddAsDistant.getSynchroMode() instanceof LocalSynchronizationMode)
-			{
-				DEBUG.OUT("Adding " + simulationID + " to " + agentToAddAsDistant.getName());
-				((LocalSynchronizationMode)agentToAddAsDistant.getSynchroMode()).addProcs(simulationID);
-			}
-		}
-	}
 
 	@action (name = "checkHashCode",
 		args = { @arg (
@@ -213,7 +189,7 @@ public class ProxySkill extends Skill
 		int simulationID = (Integer) scope.getArg("SimulationID");
 		
 		DEBUG.OUT("\n");
-		DEBUG.OUT("ProxyAgent hashcode in simulation(" + simulationID + ") : " + proxy.getHashCode());
+		DEBUG.OUT("ProxyAgent hashcode in simulation(" + simulationID + ") : " + proxy.getUUID());
 		DEBUG.OUT("\n");
 		
 		var agent = ProxyFunctions.getProxyFromAgent(scope, proxy.getAgent());
@@ -258,9 +234,11 @@ public class ProxySkill extends Skill
 	public String getClass(IScope scope)
 	{
 		IAgent agent = ((IAgent)scope.getArg("agent"));
+		DEBUG.OUT("getClassgetClass agent : " + agent);
 		if(agent != null)
 		{
 			DEBUG.OUT("agent get class : " + agent);
+			ProxyFunctions.getProxyFromAgent(scope, agent).toString();
 			return ((IAgent)scope.getArg("agent")).getClass().toString();
 		}
 		return "";
@@ -276,7 +254,7 @@ public class ProxySkill extends Skill
 	{
 		DEBUG.OUT("hasProxy class : " + ((IAgent)scope.getArg("agent")).getClass());
 		
-		return ProxyFunctions.getProxy(scope, (IAgent)scope.getArg("agent")).toString();
+		return ProxyFunctions.getProxyFromAgent(scope, (IAgent)scope.getArg("agent")).toString();
 	}
 	
 	@action (name = "getProxy",
@@ -300,10 +278,36 @@ public class ProxySkill extends Skill
 		if(ProxyPopulation.getMapProxyID() != null)
 		{
 			DEBUG.OUT("ProxyPopulation.getMapProxyID(: " + agent);
-			return ProxyPopulation.getProxyFromHashCode(agent.hashCode());
+			return ProxyPopulation.getProxyFromHashCode(agent.getUUID());
 		}
 		return null;
 	}
+	
+	@action (name = "getSynchro",
+			args = { @arg (
+					name = "agent",
+					type = IType.AGENT,
+					optional = false,
+					doc = @doc ("get the sycnhromode of an agent"))})
+		public String getSynchro(IScope scope)
+		{
+			IAgent agent = ((IAgent)scope.getArg("agent"));
+			
+			DEBUG.OUT("getSynchro for : " + agent);
+			
+			
+			if(agent instanceof ProxyAgent)
+			{
+				DEBUG.OUT("agent instanceof ProxyAgent : " + agent);
+				return ((ProxyAgent)agent).synchroMode.getClass().toGenericString();
+			}
+			if(ProxyPopulation.getMapProxyID() != null)
+			{
+				DEBUG.OUT("ProxyPopulation.getMapProxyID(: " + agent);
+				return ProxyPopulation.getProxyFromHashCode(agent.getUUID()).synchroMode.getClass().toGenericString();
+			}
+			return "";
+		}
 	
 
 	
@@ -341,8 +345,8 @@ public class ProxySkill extends Skill
 			{
 				if(agent instanceof ProxyAgent)
 				{
-					ret = ret + "agent : " + agent + " :: " + ((ProxyAgent)agent).getHashCode() + "\n";
-					DEBUG.OUT("agent : " + agent + " :: " + ((ProxyAgent)agent).getHashCode());
+					ret = ret + "agent : " + agent + " :: " + ((ProxyAgent)agent).getUUID() + "\n";
+					DEBUG.OUT("agent : " + agent + " :: " + ((ProxyAgent)agent).getUUID());
 				}else
 				{
 					ret = ret + "agent : " + agent + "\n";
@@ -380,19 +384,27 @@ public class ProxySkill extends Skill
 		DEBUG.OUT("agentsToCopy start : ");
 		IMap<Integer, List<?>> agentsToCopy = (IMap<Integer, List<?>>)scope.getArg("agentsToCopy");
 
-		List<Object> copiedAgents = ((DistributionExperiment)scope.getExperiment()).copiedProxyFromOther;
+		DEBUG.OUT("agentsToCopy value : "  + agentsToCopy);
+		IMap<Integer, IList<?>> copiedAgents = ((DistributionExperiment)scope.getExperiment()).copiedProxyFromOther;
+		Set<?> allValues = null;
+		if(copiedAgents != null)
+		{
+			allValues = copiedAgents.values().stream().flatMap(List::stream).collect(Collectors.toSet());
+		}
 		DEBUG.OUT("agentsToCopy size : " + agentsToCopy.size());
 		for(var auto : agentsToCopy.entrySet())
 		{
 			for(var copyAgent : auto.getValue())
 			{
-				if(copiedAgents != null && copiedAgents.contains(copyAgent))
+				DEBUG.OUT("copyAgent " + copyAgent);
+				DEBUG.OUT("copyAgent class " + copyAgent.getClass());
+				
+				if(allValues != null && allValues.contains(copiedAgents))
 				{
-					DEBUG.OUT("FOUND A COPY " + copyAgent);
+					DEBUG.OUT("we won't send this agent as he is a copy");
 					continue; // skip this agent as it is already copied on this processor
 				}
-				DEBUG.OUT("auto 2222 : " + auto.getClass().toString());
-				ProxyAgent proxy = ProxyFunctions.getProxy(scope, (IAgent) copyAgent);
+				ProxyAgent proxy = ProxyFunctions.getProxyFromAgent(scope, (IAgent) copyAgent);
 				DEBUG.OUT("copyAgent  proxy: " + proxy);
 			}
 		}
@@ -420,7 +432,7 @@ public class ProxySkill extends Skill
 			for(var migratedAgent : auto.getValue())
 			{
 				DEBUG.OUT("auto migratedAgent : " + auto.getClass().toString());
-				ProxyAgent proxy = ProxyFunctions.getProxy(scope, (IAgent) migratedAgent);
+				ProxyAgent proxy = ProxyFunctions.getProxyFromAgent(scope, (IAgent) migratedAgent);
 				DEBUG.OUT("migratedAgent  proxy: " + proxy);
 			}
 		}
@@ -429,46 +441,53 @@ public class ProxySkill extends Skill
 		DEBUG.OUT("end setting agentsToMigrate : " + ((DistributionExperiment)scope.getExperiment()).proxyToMigrate);
 		
 	}
-	@action (name = "startServer")
-	public void startServer(final IScope scope)
-	{
-		new HardSyncModeProducerConsumer(scope);
-	}
 	
-	@action (name = "sendRead",
-		args = { @arg (
-			name = "agent",
-			type = IType.AGENT,
-			optional = false,
-			doc = @doc ("get MinimalAgent of a proxy")),
-			@arg (
-				name = "rank",
-				type = IType.INT,
-				optional = false,
-				doc = @doc ("get MinimalAgent of a proxy")),
-			@arg (
-				name = "rankOther",
-				type = IType.INT,
-				optional = false,
-				doc = @doc ("get MinimalAgent of a proxy"))
-			})
-	public void sendRead(final IScope scope)
-	{
-		/*IAgent agent = (IAgent) scope.getArg("agent");
-		int rankMPI = (int) scope.getArg("rank");
-		int rankOther = (int) scope.getArg("rankOther");
-		HardSyncRequestRunnable rq = new HardSyncRequestRunnable(HardSyncModeComm.RequestType.READ, agent.hashCode(), rankMPI, rankOther, "name");
-		byte[] requestSerialized = rq.serializeObject();
-		try {
-			MPI.COMM_WORLD.send(requestSerialized, requestSerialized.length, MPI.BYTE, rankOther, IMPISkill.REQUEST_TYPE);
-		} catch (MPIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // send request*/
-	}
+	@action (
+			name = "printHash",
+			args = {
+				@arg (
+					name = "agent",
+					type = IType.AGENT,
+					optional = false,
+					doc = @doc ("Set the list of agents as distant agents, their proxyAgent will now update their attributes according to the politic of their proxy"))})
+		public void printHash(final IScope scope)
+		{
+			DEBUG.OUT("printHash start : ");
+			IAgent agent = (IAgent) scope.getArg("agent");
+
+			DEBUG.OUT("agentsToMigrate getUUID : " + agent.getUUID());
+			if(agent instanceof ProxyAgent pa)
+			{
+				DEBUG.OUT(pa.getName() + " :: " + pa.getUUID());
+			}
+			
+		}
 	
-	public void sendWrite() 
-	{
-		
-	}
+	@action (
+			name = "analyzeProxy",
+			args = {
+				@arg (
+					name = "agents",
+					type = IType.LIST,
+					optional = false,
+					doc = @doc ("Set the list of agents as distant agents, their proxyAgent will now update their attributes according to the politic of their proxy"))})
+		public void analyzeProxy(final IScope scope)
+		{
+			IList<IAgent> agents = (IList<IAgent>) scope.getArg("agents");
+			DEBUG.OUT("analyzeProxy " + agents);
+			for(var agent : agents)
+			{
+				ProxyAgent proxy;
+				if(agent instanceof MinimalAgent)
+				{
+					proxy = ProxyFunctions.getProxyFromAgent(scope, agent);
+				}else
+				{
+					proxy = (ProxyAgent) agent;
+				}
+				
+				DEBUG.OUT("proxy prox : " + agent);
+				DEBUG.OUT("proxy agent name : " + agent.getAgent().getName());
+			}
+		}
 }

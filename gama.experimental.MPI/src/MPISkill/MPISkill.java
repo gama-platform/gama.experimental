@@ -37,13 +37,13 @@ public class MPISkill extends Skill
 
 	static
 	{
-		DEBUG.ON();
+		DEBUG.OFF();
 	}
 
 	@getter(IMPISkill.MPI_SIZE)
 	public int mpi_size(final IScope scope)
 	{
-		DEBUG.LOG("getMPISIZE");
+		//DEBUG.LOG("getMPISIZE");
 		try {
 			return MPI.COMM_WORLD.getSize();
 		} catch (MPIException e) {
@@ -58,10 +58,7 @@ public class MPISkill extends Skill
 	public int mpi_rank(final IScope scope)
 	{
 		try {
-			DEBUG.LOG("getMPIRANK " + MPI.COMM_WORLD.getRank());
-			DEBUG.LOG("getMPIRANK " + MPI.COMM_WORLD.getRank());
-			DEBUG.LOG("getMPIRANK " + MPI.COMM_WORLD.getRank());
-			DEBUG.LOG("getMPIRANK " + MPI.COMM_WORLD.getRank());
+			//DEBUG.LOG("getMPIRANK " + MPI.COMM_WORLD.getRank());	
 			return MPI.COMM_WORLD.getRank();
 		} catch (MPIException e) {
 			// TODO Auto-generated catch block
@@ -98,13 +95,7 @@ public class MPISkill extends Skill
 		DEBUG.LOG("mesg = " + mesg);
 		DEBUG.LOG("dest = " + dest);
 		DEBUG.LOG("stag = " + stag);
-
-		try {
-			MPIFunctions.MPI_SEND(scope, mesg, dest, stag);
-		} catch (MPIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		MPIFunctions.MPI_SEND(scope, mesg, dest, stag);
 	}
 
 	@action (
@@ -129,13 +120,7 @@ public class MPISkill extends Skill
 
 		DEBUG.OUT("source = " + source);
 		DEBUG.OUT("rtag = " + rtag);
-
-		try {
-			return MPIFunctions.MPI_RECV(scope, source, rtag);
-		} catch (MPIException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return MPIFunctions.MPI_RECV(scope, source, rtag);
 	}
 	
 	@action (
@@ -143,7 +128,7 @@ public class MPISkill extends Skill
 				args = { 
 						@arg (
 							name = IMPISkill.MESG,
-							type = IType.LIST,
+							type = IType.NONE,
 							doc = @doc ("mesg message")),
 						@arg (
 							name = IMPISkill.DEST,
@@ -166,13 +151,7 @@ public class MPISkill extends Skill
 		{
 			DEBUG.OUT("sending : " + auto);
 		}
-		try {
-			return MPIFunctions.MPI_GATHERV(scope, mesg, recipient);
-		} catch (MPIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return MPIFunctions.MPI_GATHERV(scope, mesg, recipient);
 	}
 	
 	@action (
@@ -186,17 +165,11 @@ public class MPISkill extends Skill
 				value = "",
 				returns = "",
 				examples = { @example ("") }))
-	public IList mpi_alltoall(final IScope scope)
+	public IMap<Integer, IList<?>> mpi_alltoall(final IScope scope)
 	{
 		final IMap<Integer, List<?>> mesg = (IMap<Integer,  List<?>>) scope.getArg(IMPISkill.MESG, IType.MAP);
 		DEBUG.OUT("imap ALLTOALL : " + mesg);
-		try {
-			return MPIFunctions.MPI_ALLTOALLV(scope, mesg);
-		} catch (MPIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return MPIFunctions.MPI_ALLTOALLV(scope, mesg);
 	}
 	
 	
@@ -227,14 +200,29 @@ public class MPISkill extends Skill
 					returns = "",
 					examples = { @example ("") }))
 	public void mpi_finalize(final IScope scope) {
-		try 
-		{
-			DEBUG.OUT("MPI Finalize");
-			MPI.Finalize();
-		} catch (final MPIException mpiex) 
-		{
-			DEBUG.OUT("MPI Finalize Error" + mpiex);
-		}
+		MPIFunctions.MPI_FINALIZE();
+	}
+	
+	@action (
+			name = IMPISkill.MPI_INIT_MULTIPLE,
+			args = {},
+			doc = @doc (
+					value = "",
+					returns = "",
+					examples = { @example ("") }))
+	public void mpi_init(final IScope scope) {
+		MPIFunctions.MPI_INIT();
+	}
+	
+	@action (
+			name = IMPISkill.MPI_INIT,
+			args = {},
+			doc = @doc (
+					value = "",
+					returns = "",
+					examples = { @example ("") }))
+	public void mpi_init_multiple(final IScope scope) {
+		MPIFunctions.MPI_INIT_MULTIPLE_THREAD();
 	}
 	
 	@action (

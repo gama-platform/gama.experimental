@@ -55,6 +55,6 @@ global skills: [MPI_SKILL]
 }
 
 
-experiment mpi_gather type: distribution until: (cycle = 1)
+experiment mpi_gather
 { 
 }

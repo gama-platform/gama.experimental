@@ -4,10 +4,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.locationtech.jts.geom.Geometry;
 
+import distributionExperiment.DistributionExperiment;
 import gama.core.common.geometry.Envelope3D;
+import gama.core.common.interfaces.IKeyword;
 import gama.core.kernel.model.IModel;
 import gama.core.metamodel.agent.IAgent;
 import gama.core.metamodel.agent.IMacroAgent;
@@ -25,6 +29,10 @@ import gama.core.util.IList;
 import gama.core.util.IMap;
 import gama.dev.DEBUG;
 import gama.gaml.species.ISpecies;
+import mpi.MPI;
+import mpi.MPIException;
+import proxy.ProxyAgent;
+import proxySkill.ProxyFunctions;
 
 /**
  * Class used to define the way to access agent in distributed context
@@ -40,36 +48,10 @@ public class LocalSynchronizationMode implements SynchronizationModeAbstract
 	}
 	
 	public IAgent proxiedAgent;
-	private Set<Integer> procsWithDistantAgent;
-	
-	public Set<Integer> getProcsWithDistantAgent() {
-		return procsWithDistantAgent;
-	}
-
-	public void setProcsWithDistantAgent(Set<Integer> procsWithDistantAgent) {
-		this.procsWithDistantAgent = procsWithDistantAgent;
-	}
 
 	public LocalSynchronizationMode(IAgent proxiedAgent)
 	{
 		this.proxiedAgent = proxiedAgent;
-		procsWithDistantAgent = new HashSet<Integer>();
-	}
-	
-	public LocalSynchronizationMode(){
-		procsWithDistantAgent = new HashSet<Integer>();
-	}
-	
-	public void addProcs(int procNumber)
-	{
-		procsWithDistantAgent.add(procNumber);
-		// create EndStepAction for procNumber
-	}
-	
-	public void removeProcs(int procNumber)
-	{
-		procsWithDistantAgent.remove(procNumber);
-		// delete EndStepAction for procNumber
 	}
 	
 	public void sendUpdate() // TODO : call this at the end of each cycle
@@ -116,7 +98,9 @@ public class LocalSynchronizationMode implements SynchronizationModeAbstract
 	public Object getAttribute(String key)
 	{
 		DEBUG.OUT("LocalSynchroMode getAttributes : " + key);
-		return this.proxiedAgent.getAttribute(key);
+		Object obj = this.proxiedAgent.getAttribute(key);
+		DEBUG.OUT("LocalSynchroMode getAttributes result : " + obj);
+		return obj;
 	}
 
 	
@@ -203,6 +187,7 @@ public class LocalSynchronizationMode implements SynchronizationModeAbstract
 	
 	@Override
 	public boolean step(IScope scope) throws GamaRuntimeException {
+		DEBUG.OUT("localsynchro mode step ");
 		return this.proxiedAgent.step(scope);
 	}
 	
@@ -247,7 +232,7 @@ public class LocalSynchronizationMode implements SynchronizationModeAbstract
 	
 	@Override
 	public String getName() {
-		DEBUG.OUT("LocalSynchroMode getName : ");
+		//DEBUG.OUT("LocalSynchroMode getName : ");
 		return this.proxiedAgent.getName();
 	}
 
@@ -345,7 +330,7 @@ public class LocalSynchronizationMode implements SynchronizationModeAbstract
 	
 	@Override
 	public boolean isInstanceOf(ISpecies s, boolean direct) {
-		DEBUG.OUT("LocalSynchroMode isInstanceOf : ");
+		DEBUG.OUT("LocalSynchroMode isInstanceOf : " + s);
 		return this.proxiedAgent.isInstanceOf(s, direct);
 	}
 
@@ -360,7 +345,43 @@ public class LocalSynchronizationMode implements SynchronizationModeAbstract
 	@Override
 	public void setDirectVarValue(IScope scope, String s, Object v) throws GamaRuntimeException {
 
-		DEBUG.OUT("LocalSynchroMode getDirectVarValue : " + s + " :: " + v);
+		DEBUG.OUT("LocalSynchroMode setDirectVarValue : " + s + " :: " + v);
+		
+		if(s.equals(IKeyword.SYNCMODE)) 
+		{
+			if(v != null && ((String)v).equals(IKeyword.HARDSYNC))
+			{
+				int myRank;
+				try {
+					myRank = MPI.COMM_WORLD.getRank();
+					ProxyAgent proxy = ProxyFunctions.getProxyFromAgent(scope, this.proxiedAgent);
+					
+					HardSyncMode hs;
+					if(proxy.copy)
+					{
+						DEBUG.OUT("isacopy");
+						hs = new HardSyncMode(scope, myRank, proxy.originalProcessRank, proxy, false, this.getAgent()); // non-local hardsync
+						
+					}else
+					{
+						DEBUG.OUT("isnotacopy");
+						hs = new HardSyncMode(scope, myRank, myRank, proxy, true, this.getAgent()); // local hardsync
+					}
+					
+					DEBUG.OUT("new HardSyncMode set : " + hs);
+					proxy.setSynchroMode(hs);
+					DEBUG.OUT("proxy sync mode after updatd in setDirectVarValue " + proxy.synchroMode);
+					
+				} catch (MPIException e) {
+					// TODO Auto-generated catch block
+					DEBUG.OUT("setDirectVarValue MPIException ");
+					e.printStackTrace();
+				}
+			}else if(v == null)
+			{
+				DEBUG.OUT("THIS AGENT HAS A VARIABLE \"syncmode\" undefined");
+			}
+		}
 		this.proxiedAgent.setDirectVarValue(scope, s, v);	
 	}
 
@@ -410,19 +431,6 @@ public class LocalSynchronizationMode implements SynchronizationModeAbstract
 	public void updateAttributes(IAgent agent)
 	{
 		DEBUG.OUT("updateAttributes SynchronizationMode : " + agent);
-	}
-
-	@Override
-	public int getHashcode() {
-		DEBUG.OUT("LocalSynchroMode getHashcode : ");
-		return ((MinimalAgent)this.proxiedAgent).hashCode;
-	}
-	
-	@Override
-	public final int hashCode() {
-		DEBUG.OUT("LocalSynchroMode hashCode : ");
-		//DEBUG.OUT("hashCode in localsync Hard " + ((MinimalAgent)this.proxiedAgent).hashCode);
-		return ((MinimalAgent)this.proxiedAgent).hashCode;
 	}
 
 	
@@ -599,5 +607,25 @@ public class LocalSynchronizationMode implements SynchronizationModeAbstract
 	public Map<String, Object> getAttributes(boolean createIfNeeded) {
 		DEBUG.OUT("LocalSynchroMode getAttributes : ");
 		return this.proxiedAgent.getAttributes(createIfNeeded);
+	}
+
+	@Override
+	public void setUUID(String uuid) {
+		this.proxiedAgent.setUUID(uuid);
+	}
+
+	@Override
+	public UUID getUUID() {
+		return this.proxiedAgent.getUUID();
+	}
+
+	@Override
+	public void setOriginalSimulationID(int originalSimulationID) {
+		this.proxiedAgent.setOriginalSimulationID(originalSimulationID);		
+	}
+
+	@Override
+	public int getOriginalSimulationID() {
+		return proxiedAgent.getOriginalSimulationID();
 	}
 }

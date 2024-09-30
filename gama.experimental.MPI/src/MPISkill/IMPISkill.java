@@ -8,6 +8,8 @@ public interface IMPISkill {
 	String MPI_SIZE = "MPI_SIZE";
     String MPI_BARRIER = "MPI_BARRIER";
     String MPI_FINALIZE = "MPI_FINALIZE";
+    String MPI_INIT = "MPI_INIT";
+    String MPI_INIT_MULTIPLE = "MPI_INIT_MULTIPLE";
 	
 	String MPI_SEND = "MPI_SEND";
 	String MESG = "mesg";
@@ -22,6 +24,7 @@ public interface IMPISkill {
 	
     String MPI_GATHER = "MPI_GATHER";
     String MPI_ALLTOALL = "MPI_ALLTOALL";
+    String MPI_ALLTOALL2 = "MPI_ALLTOALL2";
 	String SIZE = "size_of_message";
     
     
@@ -29,7 +32,7 @@ public interface IMPISkill {
     String MPI_SCATTER = "MPI_SCATTER";
     String MPI_SCATTERV = "MPI_SCATTERV";
 
-	Integer REQUEST_TYPE = 0;
-	Integer REQUEST_READ = 1;
-	Integer REQUEST_WRITE = 2;
+	Integer REQUEST_TYPE = 1;
+	Integer REQUEST_READ = 2;
+	Integer REQUEST_WRITE = 3;
 }

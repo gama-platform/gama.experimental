@@ -8,8 +8,11 @@ import gama.core.runtime.IScope;
 import gama.dev.DEBUG;
 import proxy.ProxyAgent;
 import proxyPopulation.ProxyPopulation;
+import syncModeEnum.DistantSyncModeEnum;
+import synchronizationMode.BaseDistantSyncMode;
 import synchronizationMode.DistantSynchronizationMode;
 import synchronizationMode.LocalSynchronizationMode;
+import synchronizationMode.SynchronizationModeAbstract;
 
 public class ProxyFunctions 
 {
@@ -17,8 +20,6 @@ public class ProxyFunctions
 	static 
 	{
 		DEBUG.ON();
-		//DEBUG.FORCE_ON();
-		//DEBUG.ON();
 	}
 	
 	/**
@@ -47,7 +48,7 @@ public class ProxyFunctions
 			String agentType = agent.getGamlType().toString();
 			
 			IPopulation<? extends IAgent> popOfNewAgent = scope.getSimulation().getMicroPopulation(agentType);
-			ProxyAgent existingProxy = ((ProxyPopulation)popOfNewAgent).getProxyFromHashCode(((MinimalAgent) agent).hashCode);
+			ProxyAgent existingProxy = ((ProxyPopulation)popOfNewAgent).getProxyFromHashCode(((MinimalAgent) agent).getUUID());
 			if(existingProxy != null)
 			{
 				DEBUG.OUT("proxy exist (setDistant) : " + existingProxy);
@@ -68,22 +69,23 @@ public class ProxyFunctions
 	 */
 	public static IAgent migrateAgent(final IScope scope, IAgent agentToMigrate)
 	{
-		if(agentToMigrate instanceof ProxyAgent)
+		if(agentToMigrate instanceof ProxyAgent pa)
 		{
 			DEBUG.OUT("THIS IS A PROXYAGENT");
 			ProxyAgent proxy = (ProxyAgent) scope.getArg("agentToMigrate");
 			agentToMigrate = proxy.getAgent();
 			DEBUG.OUT("agentToCopy proxy : " + agentToMigrate.getOrCreateAttributes());
+			DEBUG.OUT("agentToCopy hashcode : " + pa.getUUID());
 		}
 		
 		DEBUG.OUT("agent " + agentToMigrate);
 		DEBUG.OUT("type : " + agentToMigrate.getGamlType().toString());
 		
 		DEBUG.OUT("attributes to create new agents : " + agentToMigrate.getOrCreateAttributes());
-		DEBUG.OUT("hashcode of agent : " + ((MinimalAgent)agentToMigrate).hashCode());
+		DEBUG.OUT("hashcode of agent : " + ((MinimalAgent)agentToMigrate).getUUID());
 
 		agentToMigrate.setAttribute(IKeyword.LOCATION, agentToMigrate.getLocation());
-		agentToMigrate.setAttribute(IKeyword.HASHCODE, ((MinimalAgent)agentToMigrate).hashCode());
+		agentToMigrate.setAttribute(IKeyword.UUID, ((MinimalAgent)agentToMigrate).getUUID().toString());
 	
 		DEBUG.OUT("mapAttributes : " + agentToMigrate.getOrCreateAttributes());
 		
@@ -136,11 +138,11 @@ public class ProxyFunctions
 		DEBUG.OUT("type : " + agentToCopy.getGamlType().toString());
 		
 		DEBUG.OUT("attributes to create new agents : " + agentToCopy.getOrCreateAttributes());
-		DEBUG.OUT("hashcode of agent : " + ((MinimalAgent)agentToCopy).hashCode());
+		DEBUG.OUT("hashcode of agent : " + ((MinimalAgent)agentToCopy).getUUID());
 
 		agentToCopy.setAttribute(IKeyword.GEOMETRY, agentToCopy.getGeometry());
 		agentToCopy.setAttribute(IKeyword.LOCATION, agentToCopy.getLocation());
-		agentToCopy.setAttribute(IKeyword.HASHCODE, ((MinimalAgent)agentToCopy).hashCode());
+		agentToCopy.setAttribute(IKeyword.UUID, ((MinimalAgent)agentToCopy).getUUID().toString());
 	
 		DEBUG.OUT("mapAttributes : " + agentToCopy.getOrCreateAttributes());
 		
@@ -206,11 +208,15 @@ public class ProxyFunctions
 	 */
 	public static ProxyAgent getProxyFromAgent(final IScope scope, final IAgent agent)
 	{
+		if(agent instanceof ProxyAgent)
+		{
+			return (ProxyAgent) agent;
+		}
 		DEBUG.OUT("agent.getGamlType().toString() : " + agent.getGamlType().toString());
 		IPopulation<? extends IAgent> popOfNewAgent = scope.getSimulation().getMicroPopulation(agent.getGamlType().toString());
 		DEBUG.OUT("popOfNewAgent : " + popOfNewAgent);
-		DEBUG.OUT("((MinimalAgent)agent).hashCode" + ((MinimalAgent)agent).hashCode);
-		return ((ProxyPopulation)popOfNewAgent).getProxyFromHashCode(((MinimalAgent)agent).hashCode);
+		DEBUG.OUT("((MinimalAgent)agent).getUUID() " + ((MinimalAgent)agent).getUUID());
+		return ((ProxyPopulation)popOfNewAgent).getProxyFromHashCode(((MinimalAgent)agent).getUUID());
 	}
 	
 	/**
@@ -223,7 +229,7 @@ public class ProxyFunctions
 	{
 		IPopulation<? extends IAgent> popOfNewAgent = scope.getSimulation().getMicroPopulation(proxyToDelete.getAgent().getGamlType().toString());
 		((ProxyPopulation)popOfNewAgent).remove(proxyToDelete);
-		((ProxyPopulation)popOfNewAgent).getMapProxyID().remove(proxyToDelete.getHashCode());
+		((ProxyPopulation)popOfNewAgent).getMapProxyID().remove(proxyToDelete.getUUID());
 	}
 	
 	/**
@@ -237,29 +243,6 @@ public class ProxyFunctions
 		ProxyAgent proxyToDelete = getProxyFromAgent(scope, agentToDeleteProxy);
 		IPopulation<? extends IAgent> popOfNewAgent = scope.getSimulation().getMicroPopulation(agentToDeleteProxy.getGamlType().toString());
 		((ProxyPopulation)popOfNewAgent).remove(proxyToDelete);
-		((ProxyPopulation)popOfNewAgent).getMapProxyID().remove(proxyToDelete.getHashCode());
-	}
-	
-
-	public static ProxyAgent getProxy(IScope scope, IAgent agent)
-	{
-
-		DEBUG.OUT("getProxy : " + agent.getClass());
-		if(agent instanceof ProxyAgent)
-		{
-			final ProxyAgent proxy = (ProxyAgent) agent;
-			DEBUG.OUT("proxy getProxy : " + proxy);
-			
-			return proxy;
-		}else // MinimalAgent
-		{
-			String agentType = agent.getGamlType().toString();
-			DEBUG.OUT("agentType : " + agentType);
-			
-			IPopulation<? extends IAgent> popOfNewAgent = scope.getSimulation().getMicroPopulation(agentType);
-			ProxyAgent existingProxy = ((ProxyPopulation)popOfNewAgent).getProxyFromHashCode(((MinimalAgent) agent).hashCode);
-			DEBUG.OUT("existingProxy : " + existingProxy);
-			return existingProxy;	
-		}
+		((ProxyPopulation)popOfNewAgent).getMapProxyID().remove(proxyToDelete.getUUID());
 	}
 }
