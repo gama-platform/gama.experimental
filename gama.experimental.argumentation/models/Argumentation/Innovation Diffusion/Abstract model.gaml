@@ -18,6 +18,11 @@ global {
 	float mean_args <- 0.5;
 	float std_args <- 0.5;
 	
+	bool do_exchange_arguments <- true;
+	bool do_use_communication_channel <- true;
+	
+	float proba_use_communication_chanel <- 0.05;
+	
 	int num_arguments <- 50;
 	map<string,float> possible_criteria <- ["A"::1.0,"B"::1.0,"C"::1.0,"D"::1.0, "E"::1.0];
 	map<string,float> source_types <- ["S1"::1.0,"S2"::1.0,"S3"::1.0,"S4"::1.0,"S5"::1.0];
@@ -43,7 +48,7 @@ global {
 			decision_threshold <- 5;
 			adoption_threshold <- 0.5;
 			confirmation_time <- 200.0;
-			proba_communication_channel <- communication_channel as_map (each::0.01);
+			proba_communication_channel <- communication_channel as_map (each::do_use_communication_channel ? proba_use_communication_chanel : 0.0);
 			known_arguments <- [];
 			
 			convergence_speed <- 0.1;
@@ -74,7 +79,7 @@ global {
 	
 	action generate_network {
 		ask possible_adopter {
-			int num_relatives <- round(gauss(mean_relatives, std_relatives));
+			int num_relatives <- do_exchange_arguments ? round(gauss(mean_relatives, std_relatives)) : 0;
 			if num_relatives > 0 {
 				social_network <- num_relatives among (possible_adopter - self);
 			
@@ -99,13 +104,33 @@ species possible_adopter parent: abstract_adopter {
 }
 
 
-experiment explore_arguments_impact type: batch until: cycle = 1000 repeat: 20 keep_seed: true {
+
+experiment explore_interaction_impact type: batch until: cycle = 1000 repeat: 20 keep_seed: true {
+	parameter do_exchange_arguments var: do_exchange_arguments among: [true, false];
+	parameter do_use_communication_channel var: do_use_communication_channel  among: [true, false];
+	
+	method exploration sample:4  ;
+	reflex result {
+		write sample(do_exchange_arguments) + " " +  sample(do_use_communication_channel) + " Mean: " + (simulations mean_of each.adopter_percentage) + " min: " +  (simulations min_of each.adopter_percentage)  + " max: " +  (simulations max_of each.adopter_percentage) ;
+	}
+}
+
+experiment explore_communication_channel_impact type: batch until: cycle = 1000 repeat: 20 keep_seed: true {
+	parameter proba_use_communication_chanel var: proba_use_communication_chanel min: 0.0 max: 1.0 ;	
+	method exploration sample:11  ;
+	reflex result {
+		write sample(proba_use_communication_chanel) + " Mean: " + (simulations mean_of each.adopter_percentage) + " min: " +  (simulations min_of each.adopter_percentage)  + " max: " +  (simulations max_of each.adopter_percentage) ;
+	}
+}
+
+experiment explore_pro_arguments_impact type: batch until: cycle = 1000 repeat: 20 keep_seed: true {
 	parameter agrument_pro_rate var: agrument_pro_rate min: 0.0 max:1.0 ;
 	method exploration  sample:5 ;
 	reflex result {
 		write sample(agrument_pro_rate) + " Mean: " + (simulations mean_of each.adopter_percentage) + " min: " +  (simulations min_of each.adopter_percentage)  + " max: " +  (simulations max_of each.adopter_percentage) ;
 	}
 }
+
 
 
 experiment Abstractmodel type: gui {
