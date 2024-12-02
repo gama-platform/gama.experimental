@@ -23,7 +23,6 @@ import gama.core.util.GamaMapFactory;
 import gama.core.util.GamaPair;
 import gama.core.util.IList;
 import gama.core.util.IMap;
-import gama.core.util.graph.GamaGraph;
 import gama.core.util.graph.IGraph;
 import gama.experimental.argumentation.skills.ArgumentingSkill;
 import gama.experimental.argumentation.types.GamaArgument;

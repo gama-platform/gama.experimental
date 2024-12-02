@@ -5,7 +5,7 @@ global {
 	map<argument,point> locs;
 	list<argument> arguments ;
 	graph global_argumentation;
-	
+	 
 	float h <- 10.0;
 	int nb_steps <- 2000000;
 	

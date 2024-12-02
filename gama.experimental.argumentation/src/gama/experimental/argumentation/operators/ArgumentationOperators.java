@@ -4,16 +4,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import gama.experimental.argumentation.types.GamaArgument;
-import gama.experimental.argumentation.types.GamaArgumentType;
-import gama.core.metamodel.agent.IAgent;
-import gama.annotations.precompiler.GamlAnnotations.action;
-import gama.annotations.precompiler.GamlAnnotations.arg;
-import gama.annotations.precompiler.GamlAnnotations.doc;
-import gama.annotations.precompiler.GamlAnnotations.example;
 import gama.annotations.precompiler.GamlAnnotations.operator;
+import gama.core.metamodel.agent.IAgent;
 import gama.core.runtime.IScope;
-import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaListFactory;
 import gama.core.util.GamaMap;
 import gama.core.util.GamaMapFactory;
@@ -22,9 +15,8 @@ import gama.core.util.file.GamaFile;
 import gama.core.util.graph.GamaGraph;
 import gama.core.util.graph.IGraph;
 import gama.core.util.matrix.IMatrix;
-import gama.gaml.statements.Arguments;
-import gama.gaml.statements.IStatement;
-import gama.gaml.types.IType;
+import gama.experimental.argumentation.types.GamaArgument;
+import gama.experimental.argumentation.types.GamaArgumentType;
 import gama.gaml.types.Types;
 
 public class ArgumentationOperators {
@@ -54,7 +46,7 @@ public class ArgumentationOperators {
  					GamaArgument arg1 = argNames.get(a1);
  					GamaArgument arg2  = argNames.get(a2);
 					if (arg1 != null && arg2 != null) {
-						graph.addEdge(arg1, arg2); 
+						graph.addEdge(arg1, arg2);  
 					} 
 				}
 			}
@@ -110,7 +102,7 @@ public class ArgumentationOperators {
 			String source_type = mat.get(scope, 16, i);
 			args.add(new GamaArgument(id, option, conclusion, "", "", criteria, null, source_type));
 		}
-		return args;
+		return args; 
 	}
 	
 	
@@ -140,7 +132,7 @@ public class ArgumentationOperators {
 			
 			return false;
 		} 
-		return false;
+		return false; 
 	}
 	
 	
