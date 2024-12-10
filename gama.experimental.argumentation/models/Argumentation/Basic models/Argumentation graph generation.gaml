@@ -18,17 +18,30 @@ global {
 	list<argument> arguments;
 	list<pair<argument,argument>> attacks;
 	graph global_argumentation_graph <- directed(graph([]));
+	bool use_exact_number <- false;
+	int agrument_pro_number <- 0;
 	
 	action create_global_argumentation_graph {
+		
 		loop i from: 1 to: num_arguments  {
-			argument a <- argument(["id":: ""+i, 
+			argument a;
+			if (use_exact_number ) {
+					a <- argument(["id":: ""+i, 
+									"option"::"choose A",
+									"conclusion":: i <= agrument_pro_number ? "+":"-",
+									"criteria"::[possible_criteria.keys[rnd_choice(possible_criteria.values)] :: 1.0],
+									"source_type"::source_types.keys[rnd_choice(source_types.values)]]);
+			}  else {
+				a <- argument(["id":: ""+i, 
 									"option"::"choose A",
 									"conclusion"::flip(agrument_pro_rate) ? "+":"-",
 									"criteria"::[possible_criteria.keys[rnd_choice(possible_criteria.values)] :: 1.0],
-									"source_type"::source_types.keys[rnd_choice(source_types.values)]
+									"source_type"::source_types.keys[rnd_choice(source_types.values)]]);
+			
+			}
 									
 				
-			]);
+			
 			arguments << a;
 			
 			bool is_ok <- global_argumentation_graph add_argument a;

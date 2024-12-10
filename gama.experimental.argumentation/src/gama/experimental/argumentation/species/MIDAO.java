@@ -56,12 +56,14 @@ import gama.gaml.types.Types;
 		@variable(name = "proba_communication_channel", type = IType.MAP),
 		@variable(name = "influence_factor", type = IType.FLOAT),
 		@variable(name = "known_arguments", type = IType.MAP),
-		@variable(name = "intention_uncertainty", type = IType.FLOAT),
+		@variable(name = "intention_uncertainty", type = IType.FLOAT, init= "1.0"),
 		@variable(name = "convergence_speed", type = IType.FLOAT),
 		@variable(name = "sigmoid_coeff", type = IType.FLOAT, init="1.0"),
 		@variable(name = "probability_exchange", type = IType.FLOAT, init="1.0"),
 		@variable(name = "argument_lifespan", type = IType.FLOAT, init="100.0"),
-		@variable(name = "global_argumentation_graph", type = IType.GRAPH)
+		@variable(name = "global_argumentation_graph", type = IType.GRAPH),
+		@variable(name = "usage_arguments", type = IType.LIST, of = GamaArgumentType.id),
+		@variable(name = "probability_innovation_usage", type = IType.FLOAT, init="1.0")
 				
 })
 public class MIDAO extends GamlAgent {
@@ -109,7 +111,10 @@ public class MIDAO extends GamlAgent {
 	
 	static final String GLOBAL_ARGUMENTATION_GRAPH = "global_argumentation_graph";
 	
+	static final String USAGE_ARGUMENTS = "usage_arguments";
 
+	static final String PROBABILITY_INNOVATION_USAGE = "probability_innovation_usage";
+	
 	
 	public MIDAO(IPopulation<? extends IAgent> s, int index) {
 		super(s, index);
@@ -249,6 +254,16 @@ public class MIDAO extends GamlAgent {
 		agent.setAttribute(ADOPTION_TIME, v);
 	}
 	
+	@getter(USAGE_ARGUMENTS)
+	public IList<GamaArgument> getUsageArguments(final IAgent agent) {
+		return (IList<GamaArgument>) agent.getAttribute(USAGE_ARGUMENTS);
+	}
+
+	@setter(USAGE_ARGUMENTS)
+	public void setUsageArguments(final IAgent agent, final IList<GamaArgument> v) {
+		agent.setAttribute(USAGE_ARGUMENTS, v);
+	}
+	
 	@getter(SOCIAL_NETWORK)
 	public IList<IAgent> getSocialNetwork(final IAgent agent) {
 		return (IList<IAgent>) agent.getAttribute(SOCIAL_NETWORK);
@@ -320,6 +335,15 @@ public class MIDAO extends GamlAgent {
 		agent.setAttribute(SIGMOID_COEFF, v);
 	}
 	
+	@getter(PROBABILITY_INNOVATION_USAGE)
+	public Double getProbaInnovationUsage(final IAgent agent) {
+		return (Double) agent.getAttribute(PROBABILITY_INNOVATION_USAGE);
+	}
+
+	@setter(PROBABILITY_INNOVATION_USAGE)
+	public void setProbaInnovationUsage(final IAgent agent, final Double v) {
+		agent.setAttribute(PROBABILITY_INNOVATION_USAGE, v);
+	}
 	
 	@getter(PROBABILITY_EXCHANGE)
 	public Double getProbaExchange(final IAgent agent) {
@@ -380,6 +404,14 @@ public class MIDAO extends GamlAgent {
 					setAdoptionState(ag,CONFIRMATION);
 				}
 			} 
+			if (IMPLEMENTATION.equals(state) || CONFIRMATION.equals(state)) {
+				doActionNoArg(scope, "get_usage_knowledge");
+				if (!getSocialNetwork(ag).isEmpty() && Random.opFlip(scope, getProbaExchange(ag))) {
+					IAgent other = getSocialNetwork(ag).anyValue(scope);
+					doAction1Arg(scope, "interaction_with_other", "other", other);
+				}
+				
+			}
 			return true;
 		}
 		return false;
@@ -401,8 +433,20 @@ public class MIDAO extends GamlAgent {
 				updateArgs = true;
 			} 
 		}
-		if (updateArgs = true) {
+		if (updateArgs) {
 			doAction1Arg(scope, "change_in_known_arguments", "agent", agent);
+		}
+	}
+	
+	
+	@action(name = "get_usage_knowledge", doc = @doc(value = "get new knwoledge for usage of the innovation", examples = {
+			@example("do get_usage_knowledge;") }))
+	public void  primGetUsageKnowledge(final IScope scope) throws GamaRuntimeException {
+		IAgent ag = scope.getAgent();
+		IList<GamaArgument> usageArguments = getUsageArguments(ag);
+		if (!usageArguments.isEmpty() && Random.opFlip(scope, getProbaInnovationUsage(ag))) {
+			GamaArgument arg = usageArguments.anyValue(scope);
+			addArguments(scope,ag,arg,getGlobalArgGraph(ag));
 		}
 	}
 	
@@ -427,17 +471,15 @@ public class MIDAO extends GamlAgent {
 			}
 		}
 
-		
-		
 	}
 	
 	@action(name = "compute_intention",
-			args = {@arg(name = "agent", type = IType.FLOAT, optional = true, doc = @doc("the agent of which to compute the attitude")) },
+			args = {@arg(name = "agent", type = IType.AGENT, optional = true, doc = @doc("the agent of which to compute the attitude")) },
 			
 			doc = @doc(value = "compute the intention from the attitude, social norm and the PBC", examples = {
 			@example("do compute_intention;") }))
 	public Double  primComputeIntention(final IScope scope) throws GamaRuntimeException {
-		IAgent agent = scope.getAgent();
+		IAgent agent = (IAgent) scope.getArg("agent", IType.AGENT);
 		Double wA = getWeightAttitude(agent);
 		Double wSN = getWeightSocialNorm(agent);
 		Double wPBC = getWeightPBC(agent);
@@ -534,7 +576,7 @@ public class MIDAO extends GamlAgent {
 		for (GamaArgument arg : getKnownArguments(agent).keySet()) {
 			v += conf.get(arg.getSourceType());
 		}
-		uncertainty = 1 - v/getDecisionThreshold(agent);
+		uncertainty = 1 - Math.min(1.0, v/getDecisionThreshold(agent));
 		setIntentionUncertainty(agent, uncertainty);
 		return uncertainty;
 	}
@@ -589,22 +631,41 @@ public class MIDAO extends GamlAgent {
 		IAgent agent = scope.getAgent();
 		IAgent other = (IAgent) scope.getArg("other", IType.AGENT);
 		double socialNorm = getSocialNorm(agent);
+		double otherSocialNorm = getSocialNorm(other);
 		
-		socialNorm += getConvergenceSpeed(agent) * (1 - getIntentionUncertainty(other)) * (getAttitude(other) - socialNorm) ;
+		socialNorm += getConvergenceSpeed(agent) * (1 - getIntentionUncertainty(other)) * (getIntention(other) - socialNorm) ;
 		setSocialNorm(agent, socialNorm);
+		
+		
+		otherSocialNorm += getConvergenceSpeed(other) * (1 - getIntentionUncertainty(agent)) * (getIntention(agent) - otherSocialNorm) ;
+		setSocialNorm(other, otherSocialNorm);
+		
+		
 		doAction1Arg(scope, "compute_intention","agent", agent);
+		doAction1Arg(scope, "compute_intention","agent", other);
 	}
 	
 	
 	@action(name = "new_argument", 
-			args = {@arg(name = "argument", type = GamaArgumentType.id, optional = false, doc = @doc("the new argument to add")) },
+			args = {
+					@arg(name = "argument", type = GamaArgumentType.id, optional = false, doc = @doc("the new argument to add")),
+					@arg(name = "lifespan", type = IType.FLOAT, optional = true, doc = @doc("the lifespan of the new argument to add"))},
 			doc = @doc(value = "add a new argument",
 					examples = {
 							@example("do new_argument(arg1);") }))
 	public void  primNewArgument(final IScope scope) throws GamaRuntimeException {
 		IAgent agent = scope.getAgent();
+		
 		GamaArgument arg = (GamaArgument) scope.getArg("argument", GamaArgumentType.id);
+		Double lifespan = scope.hasArg("lifespan") ? (Double) scope.getArg("lifespan", IType.FLOAT) : -1.0;
+		Double lis = getArgumentLifespan(agent);
+		if (lifespan >= 0.0) {
+			setArgumentLifespan(agent, lifespan);
+		}
 		addArguments(scope,agent,arg, getGlobalArgGraph(agent) );
+		if (lifespan >= 0.0) {
+			setArgumentLifespan(agent, lis);
+		}
 	}
 	
 	
