@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="SkLearn2PMML package" version="0.112.0"/>
+		<Timestamp>2024-12-12T14:46:17Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="x" optype="continuous" dataType="double"/>
+		<DataField name="y" optype="continuous" dataType="double"/>
+	</DataDictionary>
+	<ClusteringModel functionName="clustering" algorithmName="sklearn.cluster._kmeans.KMeans" modelClass="centerBased" numberOfClusters="3">
+		<MiningSchema>
+			<MiningField name="x"/>
+			<MiningField name="y"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="cluster" optype="categorical" dataType="string">
+				<Value value="0"/>
+				<Value value="1"/>
+				<Value value="2"/>
+			</OutputField>
+			<OutputField name="affinity(0)" optype="continuous" dataType="double" feature="affinity" value="0"/>
+			<OutputField name="affinity(1)" optype="continuous" dataType="double" feature="affinity" value="1"/>
+			<OutputField name="affinity(2)" optype="continuous" dataType="double" feature="affinity" value="2"/>
+		</Output>
+		<ComparisonMeasure kind="distance">
+			<squaredEuclidean/>
+		</ComparisonMeasure>
+		<ClusteringField field="x"/>
+		<ClusteringField field="y"/>
+		<Cluster id="0" size="121">
+			<Array type="real">480.60429975920215 385.4450643326907</Array>
+		</Cluster>
+		<Cluster id="1" size="112">
+			<Array type="real">626.0335445022473 263.37338613651605</Array>
+		</Cluster>
+		<Cluster id="2" size="103">
+			<Array type="real">637.2660779719174 399.3318375962638</Array>
+		</Cluster>
+	</ClusteringModel>
+</PMML>
