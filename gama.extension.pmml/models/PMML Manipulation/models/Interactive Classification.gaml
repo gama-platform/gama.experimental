@@ -109,3 +109,31 @@ experiment test {
 		}
 	}
 }
+
+// This experiment aims at checking the execution time of predicting
+// by generating a big amount of random input fields and 
+// measuring the time it takes for gama to predict an output for each
+experiment benchmarking {
+	int nb_predictions <- 10000;
+	parameter "Number of prediction to do" var:nb_predictions;
+
+	reflex check_duration{
+		//First we generate random inputs for the model to do predictions on 
+		list<map<string, float>> points <- [];
+		loop times:nb_predictions{
+			points <+ map("x"::rnd(x_min, x_max) , "y"::rnd(y_min, y_max));
+		}
+		
+		let start <- gama.machine_time;
+		loop p over:points{
+			let l <- evaluate(trained_model, p);
+		}
+		let end <- gama.machine_time;
+		write "Duration for " + nb_predictions + " evaluations: " + int(end-start) + "ms";
+	}
+
+}
+
+
+
+
