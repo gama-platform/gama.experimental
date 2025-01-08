@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MPI
 Bundle-SymbolicName: gama.experimental.MPI;singleton:=true
-Bundle-Version: 0.0.0.qualifier
+Bundle-Version: 2024.6.0.qualifier
 Automatic-Module-Name: gama.experimental.MPI
 Bundle-Activator: pluginActivator.MPIActivator
 Bundle-RequiredExecutionEnvironment: JavaSE-21

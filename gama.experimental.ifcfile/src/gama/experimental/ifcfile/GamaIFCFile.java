@@ -76,7 +76,7 @@ import gama.core.util.GamaMapFactory;
 import gama.core.util.IList;
 import gama.core.util.IMap;
 import gama.core.util.file.GamaGeometryFile;
-import gama.gaml.operators.Spatial;
+import gama.gaml.operators.spatial.*;
 import gama.gaml.types.GamaGeometryType;
 import gama.gaml.types.IType;
 import gama.gaml.types.Types;
@@ -177,7 +177,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 
 		public void addRotation(final GamaPoint xVector) {
 			xDir = toNewRef(xVector, true);
-			yDir = (GamaPoint) Spatial.Transformations.rotated_by(GAMA.getRuntimeScope(), xVector, 90).getLocation();
+			yDir = (GamaPoint) SpatialTransformations.rotated_by(GAMA.getRuntimeScope(), xVector, 90).getLocation();
 		}
 
 		public void addRotation(final GamaPoint xVector, final GamaPoint zVector) {
@@ -249,7 +249,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 		final List<IfcAxis2Placement> aps = new ArrayList<>();
 		relatedTo(scope, o.getObjectPlacement(), aps);
 		newAxe.update(aps, true);
-		final IShape box = Spatial.Creation.sphere(scope, 0.2);
+		final IShape box = SpatialCreation.sphere(scope, 0.2);
 		addAttribtutes(o, box);
 		newAxe.transform(box);
 
@@ -263,7 +263,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 		 * Double depth = solid.getDepth().value; if (solid.getSweptArea() instanceof IfcRectangleProfileDef) { final
 		 * IfcRectangleProfileDef profil = (IfcRectangleProfileDef) solid.getSweptArea(); final Double height =
 		 * profil.getXDim().value; final Double width = profil.getYDim().value; final IShape box =
-		 * Spatial.Creation.box(scope, height, width, depth); box.setAttribute(IKeyword.NAME,
+		 * SpatialCreation.box(scope, height, width, depth); box.setAttribute(IKeyword.NAME,
 		 * o.getName().getDecodedValue()); newAxe.transform(box); addAttribtutes(o, box);
 		 *
 		 * return box; }
@@ -298,14 +298,14 @@ public class GamaIFCFile extends GamaGeometryFile {
 		if (depth == null || depth == 0.0) {
 			depth = width / 10.0;
 		}
-		IShape box = Spatial.Creation.box(scope, width, depth, height);
-		box = Spatial.Transformations.translated_by(scope, box, new GamaPoint(width / 2.0, 0.0));
+		IShape box = SpatialCreation.box(scope, width, depth, height);
+		box = SpatialTransformations.translated_by(scope, box, new GamaPoint(width / 2.0, 0.0));
 		final IList<IShape> pts = GamaListFactory.create(Types.GEOMETRY);
 		pts.add(new GamaPoint(-depth / 2.0, 0));
 		pts.add(new GamaPoint(depth / 2.0, 0.0));
-		final IShape line = Spatial.Creation.line(scope, pts);
+		final IShape line = SpatialCreation.line(scope, pts);
 		box.setAttribute(IKeyword.NAME, d.getName().getDecodedValue());
-		box = Spatial.Transformations.translated_by(scope, box,
+		box = SpatialTransformations.translated_by(scope, box,
 				new GamaPoint(line.getLocation().getX() - line.getPoints().get(0).getX(),
 						line.getLocation().getY() - line.getPoints().get(0).getY()));
 
@@ -366,14 +366,14 @@ public class GamaIFCFile extends GamaGeometryFile {
 			depth = width / 10.0;
 		}
 
-		IShape box = Spatial.Creation.box(scope, width, depth, height);
+		IShape box = SpatialCreation.box(scope, width, depth, height);
 
 		box.setAttribute(IKeyword.NAME, d.getName().getDecodedValue());
 		final IList<IShape> pts = GamaListFactory.create(Types.GEOMETRY);
 		pts.add(new GamaPoint(-width / 2.0, 0.0));
 		pts.add(new GamaPoint(width / 2.0, 0.0));
-		final IShape line = Spatial.Creation.line(scope, pts);
-		box = Spatial.Transformations.translated_by(scope, box,
+		final IShape line = SpatialCreation.line(scope, pts);
+		box = SpatialTransformations.translated_by(scope, box,
 				new GamaPoint(line.getLocation().getX() - line.getPoints().get(0).getX(), 1.5 * depth));
 
 		addAttribtutes(d, box);
@@ -383,13 +383,13 @@ public class GamaIFCFile extends GamaGeometryFile {
 			final IfcAxis2Placement2D axispl2D = (IfcAxis2Placement2D) axisplFirst;
 			if (axispl2D.getRefDirection() != null) {
 				final GamaPoint dir = toPoint(axispl2D.getRefDirection());
-				box = Spatial.Transformations.rotated_by(scope, box, 90 * dir.y);
+				box = SpatialTransformations.rotated_by(scope, box, 90 * dir.y);
 			}
 		} else if (axisplFirst instanceof IfcAxis2Placement3D) {
 			final IfcAxis2Placement3D axispl3D = (IfcAxis2Placement3D) axisplFirst;
 			if (axispl3D.getRefDirection() != null) {
 				final GamaPoint dir = toPoint(axispl3D.getRefDirection());
-				box = Spatial.Transformations.rotated_by(scope, box, 90 * dir.y);
+				box = SpatialTransformations.rotated_by(scope, box, 90 * dir.y);
 			}
 		}
 
@@ -417,7 +417,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 				}
 			}
 		}
-		final IShape line = Spatial.Creation.line(scope, linePts);
+		final IShape line = SpatialCreation.line(scope, linePts);
 		newAxe.transform(line);
 		for (final IfcRepresentation r : w.getRepresentation().getRepresentations()) {
 			for (final IfcRepresentationItem it : r.getItems()) {
@@ -437,10 +437,10 @@ public class GamaIFCFile extends GamaGeometryFile {
 				final Double depth = solid.getDepth().value;
 				depths.put(w, height);
 
-				IShape box = Spatial.Creation.box(scope, width, height, depth);
+				IShape box = SpatialCreation.box(scope, width, height, depth);
 				newAxe.transform(box);
 
-				box = Spatial.Transformations.translated_by(scope, box,
+				box = SpatialTransformations.translated_by(scope, box,
 						new GamaPoint(line.getLocation().getX() - line.getPoints().get(0).getX(),
 								line.getLocation().getY() - line.getPoints().get(0).getY()));
 				box.setAttribute(IKeyword.NAME, w.getName().getDecodedValue());
@@ -501,13 +501,13 @@ public class GamaIFCFile extends GamaGeometryFile {
 						final IfcRectangleProfileDef profil = (IfcRectangleProfileDef) solid.getSweptArea();
 						final Double width = profil.getXDim().value;
 						final Double height = profil.getYDim().value;
-						IShape box = Spatial.Creation.box(scope, width, height, depth);
+						IShape box = SpatialCreation.box(scope, width, height, depth);
 						box.setAttribute(IKeyword.NAME, s.getName().getDecodedValue());
 						newAxe.transform(box);
 						addAttribtutes(s, box);
 
 						getMaterial(s, box);
-						box = Spatial.Transformations.translated_by(scope, box, new GamaPoint(0, 0, -depth));
+						box = SpatialTransformations.translated_by(scope, box, new GamaPoint(0, 0, -depth));
 						return box;
 					} else if (solid.getSweptArea() instanceof IfcArbitraryClosedProfileDef) {
 						final IfcArbitraryClosedProfileDef profil = (IfcArbitraryClosedProfileDef) solid.getSweptArea();
@@ -549,7 +549,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 						final IfcRectangleProfileDef profil = (IfcRectangleProfileDef) solid.getSweptArea();
 						final Double width = profil.getXDim().value;
 						final Double height = profil.getYDim().value;
-						final IShape box = Spatial.Creation.box(scope, width, height, depth);
+						final IShape box = SpatialCreation.box(scope, width, height, depth);
 						box.setAttribute(IKeyword.NAME, s.getName().getDecodedValue());
 						newAxe.transform(box);
 						addAttribtutes(s, box);
@@ -745,7 +745,7 @@ public class GamaIFCFile extends GamaGeometryFile {
 			final GamaPoint vect = new GamaPoint(-env.getMinX(), -env.getMinY(), -env.getMinZ());
 			final IList<IShape> newBuffer = GamaListFactory.create(Types.GEOMETRY);
 			for (final IShape buff : getBuffer()) {
-				newBuffer.add(Spatial.Transformations.translated_by(scope, buff, vect));
+				newBuffer.add(SpatialTransformations.translated_by(scope, buff, vect));
 			}
 			setBuffer(newBuffer);
 			env = env.translate(-env.getMinX(), -env.getMinY(), -env.getMinZ());// GeometryUtils.computeEnvelopeFrom(scope,
