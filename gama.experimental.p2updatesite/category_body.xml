@@ -1,14 +1,23 @@
 
  
- <feature url="features/across.gaml.feature.imageanalysis_1.0.0.qualifier.jar" id="across.gaml.feature.imageanalysis" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/across.gaml.feature.webcam_.jar" id="across.gaml.feature.webcam" version=""> <category name="gama.optional"/> </feature> 
- <feature url="features/espacedev.gaml.feature.genstar_.jar" id="espacedev.gaml.feature.genstar" version=""> <category name="gama.optional"/> </feature> 
- <feature url="features/femto_st.gama.feature.mpi_1.0.0.qualifier.jar" id="femto_st.gama.feature.mpi" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/irit.gama.feature.switchproject_1.0.0.qualifier.jar" id="irit.gama.feature.switchproject" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/miat.gama.feature.qrcode_1.0.0.qualifier.jar" id="miat.gama.feature.qrcode" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/mit.feature.launchpad_1.0.0.qualifier.jar" id="mit.feature.launchpad" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gama.feature.camisole_.jar" id="ummisco.gama.feature.camisole" version=""> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gama.feature.markdown.documentation_.jar" id="ummisco.gama.feature.markdown.documentation" version=""> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gama.feature.uml_.jar" id="ummisco.gama.feature.uml" version=""> <category name="gama.optional"/> </feature> 
- <feature url="features/ummisco.gaml.feature.hydro_.jar" id="ummisco.gaml.feature.hydro" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.bayesiannetwork_1.0.0.qualifier.jar" id="gama.experimental.feature.bayesiannetwork" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.camisole_.jar" id="gama.experimental.feature.camisole" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.fuzzylogic_.jar" id="gama.experimental.feature.fuzzylogic" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.gaming_.jar" id="gama.experimental.feature.gaming" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.hydro_.jar" id="gama.experimental.feature.hydro" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.ifcfile_1.0.0.qualifier.jar" id="gama.experimental.feature.ifcfile" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.imageanalysis_1.0.0.qualifier.jar" id="gama.experimental.feature.imageanalysis" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.launchpad_1.0.0.qualifier.jar" id="gama.experimental.feature.launchpad" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.markdown_.jar" id="gama.experimental.feature.markdown" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.matlab_.jar" id="gama.experimental.feature.matlab" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.MPI_.jar" id="gama.experimental.feature.MPI" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.netcdf_1.0.0.qualifier.jar" id="gama.experimental.feature.netcdf" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.proxy_.jar" id="gama.experimental.feature.proxy" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.qrcode_1.0.0.qualifier.jar" id="gama.experimental.feature.qrcode" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.remote.gui_.jar" id="gama.experimental.feature.remote.gui" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.rjava_.jar" id="gama.experimental.feature.rjava" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.switchproject_.jar" id="gama.experimental.feature.switchproject" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.uml_.jar" id="gama.experimental.feature.uml" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.webcam_.jar" id="gama.experimental.feature.webcam" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.weka_1.7.0.qualifier.jar" id="gama.experimental.feature.weka" version="1.7.0.qualifier"> <category name="gama.optional"/> </feature> 
 

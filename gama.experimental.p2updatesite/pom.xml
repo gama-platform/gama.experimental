@@ -4,9 +4,9 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>msi.gama</groupId>
+		<groupId>org.gama</groupId>
 		<artifactId>gama.experimental.parent</artifactId>
-		<version>1.9.2-SNAPSHOT</version>
+		<version>2024.6.0-SNAPSHOT</version>
 		<relativePath>../gama.experimental.parent/</relativePath>
 	</parent>
 	<artifactId>msi.gama.experimental.p2updatesite</artifactId>
@@ -111,5 +111,5 @@
 		</extensions>
 	</build>
 
-	<groupId>msi.gama</groupId>
+	<groupId>org.gama</groupId>
 </project>
