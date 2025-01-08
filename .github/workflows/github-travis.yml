@@ -26,8 +26,8 @@ jobs:
       - name: Prepare p2 VPS access
         run: |
           echo "Publishing p2 repository"
-          sed -i "s/<username>GAMA_PASS/<username>$GAMA_SERVER_USERNAME/g" $GITHUB_WORKSPACE/travis/settings.xml
-          sed -i "s/<password>GAMA_PASS/<password>$GAMA_SERVER_PASSWORD/g" $GITHUB_WORKSPACE/travis/settings.xml
+          sed -i "s/<username>GAMA_PASS/<username>$GAMA_SERVER_USERNAME/g" $GITHUB_WORKSPACE/settings.xml
+          sed -i "s/<password>GAMA_PASS/<password>$GAMA_SERVER_PASSWORD/g" $GITHUB_WORKSPACE/settings.xml
         env:
           GAMA_SERVER_USERNAME: ${{ secrets.GAMA_SERVER_USERNAME }}
           GAMA_SERVER_PASSWORD: ${{ secrets.GAMA_SERVER_PASSWORD }}
