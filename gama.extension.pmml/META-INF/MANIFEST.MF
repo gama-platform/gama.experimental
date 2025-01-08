@@ -22,4 +22,4 @@ Bundle-ClassPath: .,
  lib/pmml-model-1.6.5.jar,
  lib/pmml-model-metro-1.6.5.jar,
  lib/txw2-3.0.2.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-22
+Bundle-RequiredExecutionEnvironment: JavaSE-21
