@@ -1,15 +1,5 @@
 #!/bin/bash
-git_push(){
-    echo "git push new change of parent pom"
-    git config --global user.email "hqnghi88@gmail.com"
-    git config --global user.name "hqnghi88"
-    git config --global push.default simple
-    git remote rm origin
-    git remote add origin https://hqnghi88:$HQN_KEY@github.com/gama-platform/gama.experimental.git
-    git add -A
-    git commit -m "[ci skip] Generate parent and p2 pom"
-    git push origin HEAD:master
-}
+
 generate_parent_pom(){
     header=$(<msi.gama.experimental.parent/pom_header.xml)
     current_modules=$(<msi.gama.experimental.parent/pom_modules.xml)
@@ -62,8 +52,6 @@ generate_p2updatesite_category(){
         fi
       fi; 
     done
-
-    #echo $cate
     
     if [[ "$current_cate" != "$cate" ]]; then
         echo "$cate" > msi.gama.experimental.p2updatesite/category_body.xml
@@ -73,7 +61,6 @@ generate_p2updatesite_category(){
 
 generate_parent_pom
 generate_p2updatesite_category
-#git_push
 
 cd msi.gama.experimental.parent &&
 

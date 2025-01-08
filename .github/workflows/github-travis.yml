@@ -23,23 +23,23 @@ jobs:
           java-version: '17'
           java-package: jdk
       
-      - name: Prepare build
+      - name: Prepare p2 VPS access
         run: |
-          # mvn
-          sudo chmod +x $GITHUB_WORKSPACE/*.sh 
-          bash custom_mvn.sh
-          cat ~/.m2/settings.xml 
-          bash decrypt_secret.sh
+          echo "Publishing p2 repository"
+          sed -i "s/<username>GAMA_PASS/<username>$GAMA_SERVER_USERNAME/g" $GITHUB_WORKSPACE/travis/settings.xml
+          sed -i "s/<password>GAMA_PASS/<password>$GAMA_SERVER_PASSWORD/g" $GITHUB_WORKSPACE/travis/settings.xml
         env:
-          MSG: ${ github.event.head_commit.message } 
-          SSH_USER_PWD: ${{ secrets.USER_PWD }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          GITHUB_TOKEN: ${{ github.token }}
-          SSHPASS: ${{ secrets.USER_PWD }}
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          TRAVIS_COMMIT: ${ GITHUB_SHA }
-          TRAVIS_EVENT_TYPE: ${{ github.event_name }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GAMA_SERVER_USERNAME: ${{ secrets.GAMA_SERVER_USERNAME }}
+          GAMA_SERVER_PASSWORD: ${{ secrets.GAMA_SERVER_PASSWORD }}
+
+      - name: Install SSH key
+        # Consider it's a release and want to update p2 site for it
+        if: "${{ inputs.get_all_archives_for_release }}"
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.GAMA_SERVER_SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.GAMA_SERVER_SSH_KNOWN_HOSTS }}
+          if_key_exists: replace # replace / ignore / fail; optional (defaults to fail)
 
       - name: Import JAR signing keystore
         run: |
