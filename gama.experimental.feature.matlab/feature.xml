@@ -2,7 +2,7 @@
 <feature
       id="gama.experimental.feature.matlab"
       label="Matlab"
-      version="0.0.0.qualifier"
+      version="2024.6.0.qualifier"
       provider-name="UMMISCO">
 
    <description url="http://www.example.com/description">
