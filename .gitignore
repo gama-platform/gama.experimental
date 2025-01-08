@@ -31,5 +31,5 @@ msi.gama.ext/lib/
 stderr
 stdout
 
-msi.gama.experimental.p2updatesite/category.xml
-msi.gama.experimental.parent/pom.xml
+gama.experimental.p2updatesite/category.xml
+gama.experimental.parent/pom.xml
