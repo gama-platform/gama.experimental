@@ -3,7 +3,7 @@
  <feature url="features/gama.experimental.feature.bayesiannetwork_1.0.0.qualifier.jar" id="gama.experimental.feature.bayesiannetwork" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/gama.experimental.feature.camisole_.jar" id="gama.experimental.feature.camisole" version=""> <category name="gama.optional"/> </feature> 
  <feature url="features/gama.experimental.feature.fuzzylogic_.jar" id="gama.experimental.feature.fuzzylogic" version=""> <category name="gama.optional"/> </feature> 
- <feature url="features/gama.experimental.feature.gaming_.jar" id="gama.experimental.feature.gaming" version=""> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.gaming_.jar" id="gama.experimental.feature.gaming" version="2024.6.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/gama.experimental.feature.hydro_.jar" id="gama.experimental.feature.hydro" version=""> <category name="gama.optional"/> </feature> 
  <feature url="features/gama.experimental.feature.ifcfile_1.0.0.qualifier.jar" id="gama.experimental.feature.ifcfile" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
  <feature url="features/gama.experimental.feature.imageanalysis_1.0.0.qualifier.jar" id="gama.experimental.feature.imageanalysis" version="1.0.0.qualifier"> <category name="gama.optional"/> </feature> 
@@ -19,5 +19,5 @@
  <feature url="features/gama.experimental.feature.switchproject_.jar" id="gama.experimental.feature.switchproject" version=""> <category name="gama.optional"/> </feature> 
  <feature url="features/gama.experimental.feature.uml_.jar" id="gama.experimental.feature.uml" version=""> <category name="gama.optional"/> </feature> 
  <feature url="features/gama.experimental.feature.webcam_.jar" id="gama.experimental.feature.webcam" version=""> <category name="gama.optional"/> </feature> 
- <feature url="features/gama.experimental.feature.weka_1.7.0.qualifier.jar" id="gama.experimental.feature.weka" version="1.7.0.qualifier"> <category name="gama.optional"/> </feature> 
+ <feature url="features/gama.experimental.feature.weka_.jar" id="gama.experimental.feature.weka" version="1.7.0.qualifier"> <category name="gama.optional"/> </feature> 
 
