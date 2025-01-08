@@ -1,15 +1,15 @@
 #!/bin/bash
 
 generate_parent_pom(){
-    header=$(<msi.gama.experimental.parent/pom_header.xml)
-    current_modules=$(<msi.gama.experimental.parent/pom_modules.xml)
-    footer=$(<msi.gama.experimental.parent/pom_footer.xml)
+    header=$(<gama.experimental.parent/pom_header.xml)
+    current_modules=$(<gama.experimental.parent/pom_modules.xml)
+    footer=$(<gama.experimental.parent/pom_footer.xml)
 
     modules=$'\n'$"<modules>"$'\n'
     for file in *; do 
       if [[ -d "$file" && ! -L "$file" ]]; then
         #echo "$file is a directory"; 
-         if [[ -f "$file/pom.xml" && "$file" != "msi.gama.experimental.parent" ]]; then
+         if [[ -f "$file/pom.xml" && "$file" != "gama.experimental.parent" ]]; then
             echo "File $file/pom.xml found!"        
             modules="$modules <module>../$file</module> "$'\n'
         fi
@@ -18,21 +18,21 @@ generate_parent_pom(){
 
     modules="$modules </modules>"$'\n'
     if [[ "$current_modules" != "$modules" ]]; then
-        echo "$modules" > msi.gama.experimental.parent/pom_modules.xml
-        echo "$header $modules $footer"> msi.gama.experimental.parent/pom.xml
+        echo "$modules" > gama.experimental.parent/pom_modules.xml
+        echo "$header $modules $footer"> gama.experimental.parent/pom.xml
     fi
 }
 generate_p2updatesite_category(){
-    header=$(<msi.gama.experimental.p2updatesite/category_header.xml)
-    user_cate=$(<msi.gama.experimental.p2updatesite/category_body_user.xml)
-    current_cate=$(<msi.gama.experimental.p2updatesite/category_body.xml)
-    footer=$(<msi.gama.experimental.p2updatesite/category_footer.xml)
+    header=$(<gama.experimental.p2updatesite/category_header.xml)
+    user_cate=$(<gama.experimental.p2updatesite/category_body_user.xml)
+    current_cate=$(<gama.experimental.p2updatesite/category_body.xml)
+    footer=$(<gama.experimental.p2updatesite/category_footer.xml)
 
     cate=$'\n'$" "$'\n'
     for file in *; do 
       if [[ -d "$file" && ! -L "$file" ]]; then
-		isInFile=$( cat msi.gama.experimental.p2updatesite/category_body_user.xml | grep -c ${file})
-         if [[ -f "$file/pom.xml" && ${file} != *"msi.gama.experimental.parent"* &&  $isInFile -eq 0  ]]; then
+		isInFile=$( cat gama.experimental.p2updatesite/category_body_user.xml | grep -c ${file})
+         if [[ -f "$file/pom.xml" && ${file} != *"gama.experimental.parent"* &&  $isInFile -eq 0  ]]; then
             
             if [[ ${file} == *"feature"* ]]; then	
                
@@ -54,15 +54,15 @@ generate_p2updatesite_category(){
     done
     
     if [[ "$current_cate" != "$cate" ]]; then
-        echo "$cate" > msi.gama.experimental.p2updatesite/category_body.xml
-        echo "$header $cate $user_cate $footer " > msi.gama.experimental.p2updatesite/category.xml
+        echo "$cate" > gama.experimental.p2updatesite/category_body.xml
+        echo "$header $cate $user_cate $footer " > gama.experimental.p2updatesite/category.xml
     fi
 }
 
 generate_parent_pom
 generate_p2updatesite_category
 
-cd msi.gama.experimental.parent &&
+cd gama.experimental.parent &&
 
 if [[ $GPG_PASSPHRASE != "" ]]; then
     mvn verify -Dgpg.passphrase=$GPG_PASSPHRASE --settings ../settings.xml 
