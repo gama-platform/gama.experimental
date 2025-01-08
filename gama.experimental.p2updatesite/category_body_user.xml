@@ -1,6 +1,24 @@
- <feature url="features/gama.experimental.feature.matlab_.jar" id="gama.experimental.feature.matlab" version=""> <category name="gama.optional.connectors.math"/> </feature> 
- <feature url="features/gama.experimental.feature.rjava_.jar" id="gama.experimental.feature.rjava" version=""> <category name="gama.optional.connectors.math"/> </feature>
- <feature url="features/gama.experimental.feature.ifcfile_1.0.0.qualifier.jar" id="gama.experimental.feature.ifcfile" version="1.0.0.qualifier"> <category name="gama.optional.file.formats"/> </feature> 
- <feature url="features/gama.experimental.feature.netcdf_1.0.0.qualifier.jar" id="gama.experimental.feature.netcdf" version="1.0.0.qualifier"> <category name="gama.optional.file.formats"/> </feature> 
- <feature url="features/gama.experimental.feature.bayesiannetwork_.jar" id="gama.experimental.feature.bayesiannetwork" version="1.0.0.qualifier"> <category name="gama.optional.classical.ia"/> </feature> 
- <feature url="features/gama.experimental.feature.fuzzylogic_.jar" id="gama.experimental.feature.fuzzylogic" version=""> <category name="gama.optional.classical.ia"/> </feature> 
+ <feature url="features/gama.experimental.feature.matlab_.jar" id="gama.experimental.feature.matlab" version=""> 
+ 	<category name="gama.optional.connectors"/> 
+ </feature> 
+ <feature url="features/gama.experimental.feature.rjava_.jar" id="gama.experimental.feature.rjava" version=""> 
+ 	<category name="gama.optional.connectors"/> 
+</feature>
+ <feature url="features/gama.experimental.feature.ifcfile_1.0.0.qualifier.jar" id="gama.experimental.feature.ifcfile" version="1.0.0.qualifier"> 
+ 	<category name="gama.optional.formats"/> 
+</feature> 
+ <feature url="features/gama.experimental.feature.netcdf_1.0.0.qualifier.jar" id="gama.experimental.feature.netcdf" version="1.0.0.qualifier"> 
+ 	<category name="gama.optional.formats"/> 
+</feature> 
+ <feature url="features/gama.experimental.feature.bayesiannetwork_.jar" id="gama.experimental.feature.bayesiannetwork" version="1.0.0.qualifier"> 
+ 	<category name="gama.optional.ia"/> 
+</feature> 
+ <feature url="features/gama.experimental.feature.fuzzylogic_.jar" id="gama.experimental.feature.fuzzylogic" version=""> 
+ 	<category name="gama.optional.ia"/> 
+</feature> 
+ <feature url="features/gama.experimental.feature.cim_.jar" id="gama.experimental.feature.cim" version="1.0.0.qualifier"> 
+ 	<category name="gama.optional.formats"/> 
+</feature> 
+ <feature url="features/gama.extension.feature.pmml_.jar" id="gama.extension.feature.pmml" version="1.0.0.qualifier"> 
+ 	<category name="gama.optional.formats"/> 
+</feature> 

@@ -1,6 +1,9 @@
    <category-def name="gama.ui" label="UI components of GAMA"/>
    <category-def name="gama.core" label="Core components of GAMA"/>
    <category-def name="gama.optional" label="Optional components of GAMA"/>
-   <category-def name="gama.optional.participative" label="Paticipative simulations"/>   
+   <category-def name="gama.optional.participative" label="Participative simulations"/>   
+   <category-def name="gama.optional.connectors" label="Components to connect GAMA to other softwares"/>
+   <category-def name="gama.optional.formats" label="Components to supports new file formats"/>
+   <category-def name="gama.optional.ia" label="Components related to artificial intelligence"/>
    <category-def name="gama.models" label="GAMA Models Library"/>
 </site>
