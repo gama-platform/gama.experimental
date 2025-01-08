@@ -8,4 +8,4 @@ Export-Package: gama.experimental.gampy
 Require-Bundle: gama.core,
  gama.dependencies
 Automatic-Module-Name: irit.madras.gama.gampy
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21

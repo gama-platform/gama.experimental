@@ -3,9 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Extension to interface Matlab and GAMA
 Bundle-SymbolicName: gama.experimental.matlab;singleton:=true
 Bundle-Vendor: UMMISCO
-Bundle-Version: 1.9.2.qualifier
+Bundle-Version: 0.0.0.qualifier
 Automatic-Module-Name: ummisco.gama.extensions.matlab
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: gama.core,
  gama.dependencies
 Export-Package: gama.experimental.matlab.gaml.files,

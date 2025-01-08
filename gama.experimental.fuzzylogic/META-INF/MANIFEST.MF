@@ -3,9 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Fuzzy logic extension
 Bundle-SymbolicName: gama.experimental.fuzzylogic;singleton:=true
 Bundle-Vendor: UTC-IRIT
-Bundle-Version: 1.9.2.qualifier
+Bundle-Version: 2024.6.0.qualifier
 Automatic-Module-Name: gama.experimental.fuzzylogic
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: gama.core,
  gama.dependencies
 Bundle-ClassPath: lib/jFuzzyLogic.jar,

@@ -6,7 +6,7 @@ Bundle-Vendor: ACROSS - IRD - TLU
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: across.gaml.extensions.imageanalysis
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: gama.dependencies,
  gama.core,
  gama.experimental.webcam,

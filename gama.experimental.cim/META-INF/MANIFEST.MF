@@ -57,7 +57,7 @@ Bundle-ClassPath: lib/jackson-core-2.16.1.jar,
  lib/xml-objects-1.1.0.jar,
  lib/xsom-4.0.4.jar,
  .
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: gama.annotations.precompiler,
  gama.core.metamodel.shape,
  gama.core.runtime,

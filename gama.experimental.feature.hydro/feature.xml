@@ -2,7 +2,7 @@
 <feature
       id="gama.experimental.feature.hydro"
       label="mike and hecras"
-      version="1.9.2.qualifier"
+      version="2024.6.0.qualifier"
       provider-name="UMMISCO - CTU">
 
    <description url="http://www.example.com/description">

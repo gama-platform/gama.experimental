@@ -4,7 +4,7 @@ Bundle-Name: Proxy
 Bundle-SymbolicName: gama.experimental.proxy;singleton:=true
 Bundle-Version: 0.0.0.qualifier
 Automatic-Module-Name: gama.experimental.proxy
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Import-Package: com.google.inject,
  gama.headless.common,
  gama.headless.job,

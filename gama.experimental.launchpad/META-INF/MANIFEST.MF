@@ -4,7 +4,7 @@ Bundle-Name: gama.experimental.launchpad
 Bundle-SymbolicName: gama.experimental.launchpad;singleton:=true
 Bundle-Vendor: MIT MEDIA Lab
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: gama.core,
  gama.dependencies
 Bundle-ClassPath: libs/lib/hazelcast-2.6.jar,

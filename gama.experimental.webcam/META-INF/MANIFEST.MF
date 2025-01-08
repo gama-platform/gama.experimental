@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Webcam plugin
 Bundle-SymbolicName: gama.experimental.webcam;singleton:=true
 Bundle-Vendor: ACROSS - IRD - TLU
-Bundle-Version: 1.9.2.qualifier
+Bundle-Version: 2024.6.0.qualifier
 Export-Package: gama.experimental.webcam.operators,
  gama.experimental.webcam.types
 Require-Bundle: gama.core,
@@ -27,4 +27,4 @@ Bundle-ClassPath: lib/webcam-capture-0.3.13-SNAPSHOT.jar,
  lib/jna-5.12.1.jar,
  lib/jna-platform-5.12.1.jar,
  .
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21

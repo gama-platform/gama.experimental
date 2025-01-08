@@ -4,7 +4,7 @@ Bundle-Name: Gaml.NetCDF extension
 Bundle-SymbolicName: gama.experimental.netcdf;singleton:=true
 Bundle-Vendor: CICT
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: gama.core;visibility:=reexport,
  gama.dependencies;visibility:=reexport
 Bundle-ClassPath: .,

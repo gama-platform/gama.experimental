@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Gaming
 Bundle-SymbolicName: gama.experimental.gaming;singleton:=true
 Bundle-Vendor: UMMISCO
-Bundle-Version: 1.9.2.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-Version: 2024.6.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: gama.core,
  gama.dependencies
 Automatic-Module-Name: ummisco.gama.gaming

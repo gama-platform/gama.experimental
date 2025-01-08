@@ -5,7 +5,7 @@ Bundle-SymbolicName: gama.experimental.database.extended;singleton:=true
 Bundle-Vendor: IRIT
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: irit.gama.extensions.database.extended
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: gama.core,
  gama.dependencies,
  gama.annotations,
