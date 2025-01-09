@@ -9,7 +9,7 @@
 	<properties>
 		<tycho.version>4.0.8</tycho.version>
 		<jdk.version>21</jdk.version>
-		<gama.version>0.0.0-SNAPSHOT</gama.version>
+		<gama.version>[2024.6.0,)</gama.version>
 		<gama.p2.version>2024-06</gama.p2.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<wagon.version>3.5.3</wagon.version>
