@@ -389,13 +389,14 @@ public class ArgumentingSkill extends Skill {
 	}
 	
 	@action(name = "get_arguments_acceptabilities", 
-			args = {@arg(name = "agent", type = IType.AGENT, optional = true, doc = @doc("the agent of which to compute the arguments acceptabilities"))},
+			args = {@arg(name = "agent", type = IType.AGENT, optional = true, doc = @doc("the agent of which to compute the arguments acceptabilities")),
+					@arg(name = "semantics", type = IType.STRING, optional = true, doc = @doc("the type of semantics used to compute the arguments acceptabilities: 'max', 'card', 'categorizer'"))},
 			doc = @doc(value = "compute acceptability values for all known arguments using the Amgoud and al. acceptability semantics for weighted argumentation graphs", returns = "a map with arguments as key and acceptability as their respectives values", examples = {
 			@example("map<argument,float> acceptability_values <- get_arg_acceptability();") }))
 	public IMap<GamaArgument, Double> primGetArgumentsAcceptabilities(final IScope scope) throws GamaRuntimeException {
 		IAgent agent = scope.hasArg("agent") ? (IAgent) scope.getArg("agent", IType.AGENT) : null;
 		if (agent == null) agent = scope.getAgent();
-		
+		String semantics = scope.hasArg("semantics") ? scope.getStringArg("semantics") : "max";
 		IGraph<GamaArgument, Object> graph = (IGraph<GamaArgument, Object>) getArgGraph(agent);
 		
 		IMap<GamaArgument,Double> basic_strength = GamaMapFactory.create();
@@ -406,21 +407,36 @@ public class ArgumentingSkill extends Skill {
 			acceptability_values.addValueAtIndex(scope,  v, evaluate_arg(scope, v));
 		}
 		double threshold_acceptability_delta = 0.001f;
-		double max_acceptability_delta = 1f;
-		Set incoming_edges ;
-		while (max_acceptability_delta > threshold_acceptability_delta) {
-			max_acceptability_delta = 0f;
+		double acceptability_delta = 1f;
+		Set<Object> incoming_edges ;
+		boolean maxSemantics = false;
+		boolean cardSemantics = false;
+		if ("card".equals(semantics)) {
+			cardSemantics = true;
+		} else if ("max".equals(semantics)) {
+			maxSemantics = true;
+		} 
+		while (acceptability_delta > threshold_acceptability_delta) {
+			acceptability_delta = 0f;
 			for (GamaArgument v : graph.getVertices()) {
-				double max_attacking_acceptability = 0;
+				double attacking_acceptability = 0;
 				incoming_edges = graph.incomingEdgesOf(v);
-				if (incoming_edges.size()>0) {
+				if (incoming_edges.size()>0) { 
+					int numEdges = incoming_edges.size();
 					for(Object e : incoming_edges){
-						max_attacking_acceptability = acceptability_values.get(graph.getEdgeSource(e)) > max_attacking_acceptability ? acceptability_values.get(graph.getEdgeSource(e)) : max_attacking_acceptability;
+						double attAccep = acceptability_values.get(graph.getEdgeSource(e));
+						if (maxSemantics) 
+							attacking_acceptability = Math.max(attAccep, attacking_acceptability);
+						else 
+							attacking_acceptability += attAccep;
 					}
+					if (cardSemantics) 
+						attacking_acceptability = numEdges + attacking_acceptability/numEdges;
 				}
-				double acceptability = basic_strength.get(v) / (1 + max_attacking_acceptability);
+				double acceptability = basic_strength.get(v) / (1 + attacking_acceptability);
+				
+				acceptability_delta = Math.max(acceptability_values.get(v) - acceptability, acceptability_delta);
 				//The news acceptabilities values are smaller or equal to the previous one so the delta between those 2 values can be computed without using the absolute function
-				max_acceptability_delta = (acceptability_values.get(v) - acceptability) > max_acceptability_delta ? (acceptability_values.get(v) - acceptability) : max_acceptability_delta;
 				acceptability_values.addValueAtIndex(scope, v, acceptability);
 			}
 		}

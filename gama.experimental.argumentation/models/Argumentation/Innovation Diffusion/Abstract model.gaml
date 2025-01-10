@@ -32,8 +32,10 @@ global {
 	bool save_result <- false;
 	string result_file <- "evolution_result.csv";
 	
+	string semantics_type <- "max" ;
+	
 	float influencer_rate <- 0.0;
-	string social_network_type <- "random" among:["random", "complete","latice8", "scale-free", "small-world"];
+	string social_network_type <- "random" among:["no","random", "complete","latice8", "scale-free", "small-world"];
 	
 	int neighbors_type <- social_network_type = "latice4" ? 4 : 8 ;
 	
@@ -48,6 +50,8 @@ global {
 	
 	bool unfiform_individuals <- false;
 	
+	bool uniform_weights_pbc <- false;
+	float g_weight_attitude <- 0.5;
 	
 	map<string,float> possible_criteria <- unfiform_individuals ?  ["A"::1.0] : ["A"::1.0,"B"::1.0,"C"::1.0,"D"::1.0,"E"::1.0];
 	map<string,float> source_types <- unfiform_individuals ? ["S1"::1.0] : ["S1"::1.0,"S2"::1.0,"S3"::1.0,"S4"::1.0,"S5"::1.0];
@@ -65,6 +69,7 @@ global {
 	
 	list<argument> arguments_get_from_usage;
 	
+	float polarization_ <- #max_float;
 	
 	init {
 		do create_global_argumentation_graph;
@@ -75,10 +80,12 @@ global {
 			arguments <- world.arguments;
 		}
 		create possible_adopter number: num_possible_adopters {
+			semantics <- semantics_type;
 			crit_importance <- possible_criteria.keys as_map (each:: (unfiform_individuals ? 0.5 :rnd(1.0)));
 			source_type_confidence <- source_types.keys as_map (each::  (unfiform_individuals ? 0.5 : rnd(1.0))); 
-			weight_attitude <- rnd(1.0);
-			weight_social_norm <- 1 - weight_attitude;
+			social_norm <- rnd(-1.0, 1.0);
+			weight_attitude <-uniform_weights_pbc ? g_weight_attitude : rnd(1.0);
+			weight_social_norm <-  1 - weight_attitude;
 			weight_pbc <- 0.0;
 			persuasion_threshold <- 0.1;
 			decision_threshold <- 5;
@@ -96,7 +103,7 @@ global {
 		do generate_network;
 		float sum_influence_factor <- possible_adopter sum_of each.influence_factor; 
 		ask possible_adopter {
-			probability_exchange <- 100 * (influence_factor /sum_influence_factor);
+			probability_exchange <- sum_influence_factor = 0 ? 0 : (100 * (influence_factor /sum_influence_factor));
 		}
 		
 		list<possible_adopter> influencers;
@@ -121,6 +128,9 @@ global {
 	
 	action generate_network {
 		switch social_network_type {
+			match "no" {
+				
+			}
 			match "complete" {
 				ask possible_adopter {
 					social_network <-(possible_adopter - self);
@@ -170,6 +180,31 @@ global {
 		}
 		
 	}
+	
+	float polarization{
+		if (polarization_ != #max_float) {
+			return polarization_;
+		}
+		polarization_ <- 0.0;
+		list<float> dists;
+		int N <- length(possible_adopter) - 1;
+		
+		ask possible_adopter {
+			ask possible_adopter {
+				if (self != myself) {
+					dists << abs(intention - myself.intention);
+				}
+			}
+		}
+		
+		float mean_val <- mean(dists);
+		loop v over: dists {
+			polarization_ <- polarization_ + ((v - mean_val) ^ 2);
+		}
+		polarization_ <- polarization_ / (1 * (N + 1) * N);
+		return polarization_;
+	}
+ 	
 		
 	
 	reflex save_result_to_file when: save_result and every(10 #cycle){
@@ -209,7 +244,6 @@ species possible_adopter parent: abstract_adopter {
 	}*/
 	
 }
-
 
 
 experiment explore_evolution type: batch until: cycle >= 2000 repeat: 100 keep_seed: true {
@@ -265,7 +299,7 @@ experiment explore_evolution type: batch until: cycle >= 2000 repeat: 100 keep_s
 		save "id,polarization,mean intention,adoption rate\n" to: file_t format: "text";
 		loop sim over: simulations {
 			string val_t <- ""+ int(sim);
-			val_t <- val_t + "," + (last(sim.intentions)) + ","+ (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
+			val_t <- val_t + "," + (sim.polarization()) + "," + (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
 			save val_t +"\n" to: file_t format:"text" rewrite: false;
 		}
 	}
@@ -316,12 +350,109 @@ experiment explore_stochasticity type: batch until: cycle >= 1000 repeat: 200 ke
 		save "id,polarization,mean intention,adoption rate\n" to: file_t format: "text";
 		loop sim over: simulations {
 			string val_t <- ""+ int(sim);
-			val_t <- val_t + "," + (last(sim.intentions)) + ","+ (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
+			val_t <- val_t + ","  + (sim.polarization()) + "," + (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
 			save val_t +"\n" to: file_t format:"text" rewrite: false;
 		}
 		
 	}
 }
+
+
+experiment explore_semantics type: batch until: cycle >= 1000 repeat: 100 keep_seed: true {
+	parameter semantics_type var: semantics_type among: ["max", "card", "categorizer"];
+	init {
+		save_result <- false;
+		agrument_pro_number <- 25;
+		attack_num_mean <- 10.0;
+	
+	} 
+	reflex result {
+		write "\nADOPTERS - " + sample(semantics_type) + " Mean: " + (simulations mean_of each.adopter_percentage) + " min: " +  (simulations min_of each.adopter_percentage)  + " max: " +  (simulations max_of each.adopter_percentage) ;
+		write "INTENTION - " sample(semantics_type) +  " Mean: " + (simulations mean_of each.mean_intention) + " min: " +  (simulations min_of each.mean_intention)  + " max: " +  (simulations max_of each.mean_intention) ;
+		write "POLARIZATION - " sample(semantics_type) + " Mean: " + (simulations mean_of each.polarization()) + " min: " +  (simulations min_of each.polarization())  + " max: " +  (simulations max_of each.polarization()) ;
+		string fl_a <- "id";
+		string fl_i <- "id";
+		string file_a <- "explore_semantics/semantics_adoption_" + semantics_type +".csv";
+		string file_i <- "explore_semantics/semantics_intention_" + semantics_type +".csv";
+		int num <- simulations min_of length(each.intentions);
+		loop i from: 0 to:  num -1 {
+			fl_a <- fl_a +",adoption_" + i;
+			fl_i <- fl_i +",intention_" + i;
+		}
+		save fl_a +"\n" to: file_a format:"text";
+		save fl_i +"\n" to: file_i format:"text";
+		loop sim over: simulations {
+			string val_a <- ""+ int(sim);
+			string val_i <- ""+ int(sim);
+			loop i from: 0 to:  num -1 {
+				val_i <- val_i +"," + sim.intentions[i];
+			}
+			loop i from: 0 to:  num -1 {
+				val_a <- val_a +"," + sim.adoption_rates[i];
+			} 
+			save val_a +"\n" to: file_a format:"text" rewrite: false; 
+			save val_i +"\n" to: file_i format:"text" rewrite: false;
+		
+		}
+		string file_t <- "explore_semantics/semantics_" + semantics_type +".csv";
+		save "id,polarization,mean intention,adoption rate\n" to: file_t format: "text";
+		loop sim over: simulations {
+			string val_t <- ""+ int(sim);
+			val_t <- val_t + ","  + (sim.polarization()) + "," + (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
+			save val_t +"\n" to: file_t format:"text" rewrite: false;
+		}
+		
+	}
+}
+
+
+experiment explore_weight_attitude type: batch until: cycle >= 1000 repeat: 100 keep_seed: true {
+	parameter g_weight_attitude var: g_weight_attitude among: [0.0, 0.5,1.0];
+	parameter social_network_type var: social_network_type among:["no", "random"];
+	init {
+		save_result <- false;
+		uniform_weights_pbc <- true;
+		agrument_pro_number <- 25;
+	} 
+	reflex result {
+		write "\nADOPTERS - " + sample(g_weight_attitude) + " - "+ sample(social_network_type)+ " Mean: " + (simulations mean_of each.adopter_percentage) + " min: " +  (simulations min_of each.adopter_percentage)  + " max: " +  (simulations max_of each.adopter_percentage) ;
+		write "INTENTION - " sample(g_weight_attitude) + " - "+ sample(social_network_type)+ " Mean: " + (simulations mean_of each.mean_intention) + " min: " +  (simulations min_of each.mean_intention)  + " max: " +  (simulations max_of each.mean_intention) ;
+		write "POLARIZATION - " sample(g_weight_attitude) + " - "+ sample(social_network_type)+ " Mean: " + (simulations mean_of each.polarization()) + " min: " +  (simulations min_of each.polarization())  + " max: " +  (simulations max_of each.polarization()) ;
+		string fl_a <- "id";
+		string fl_i <- "id";
+		string file_a <- "explore_weight_attitude/weight_attitude_adoption_" + g_weight_attitude +"_"+social_network_type+".csv";
+		string file_i <- "explore_weight_attitude/weight_attitude_intention_" + g_weight_attitude +"_"+social_network_type+".csv";
+		int num <- simulations min_of length(each.intentions);
+		loop i from: 0 to:  num -1 {
+			fl_a <- fl_a +",adoption_" + i;
+			fl_i <- fl_i +",intention_" + i;
+		}
+		save fl_a +"\n" to: file_a format:"text";
+		save fl_i +"\n" to: file_i format:"text";
+		loop sim over: simulations {
+			string val_a <- ""+ int(sim);
+			string val_i <- ""+ int(sim);
+			loop i from: 0 to:  num -1 {
+				val_i <- val_i +"," + sim.intentions[i];
+			}
+			loop i from: 0 to:  num -1 {
+				val_a <- val_a +"," + sim.adoption_rates[i];
+			} 
+			save val_a +"\n" to: file_a format:"text" rewrite: false; 
+			save val_i +"\n" to: file_i format:"text" rewrite: false;
+		
+		}
+		string file_t <- "explore_weight_attitude/weight_attitude_" + g_weight_attitude +"_"+social_network_type+".csv";
+		save "id,polarization,mean intention,adoption rate\n" to: file_t format: "text";
+		loop sim over: simulations {
+			string val_t <- ""+ int(sim);
+			val_t <- val_t + ","  + (sim.polarization()) + "," + (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
+			save val_t +"\n" to: file_t format:"text" rewrite: false;
+		}
+		
+	}
+}
+
 
 
 experiment explore_heterogeinty type: batch until: cycle >= 1000 repeat: 100 keep_seed: true {
@@ -363,7 +494,7 @@ experiment explore_heterogeinty type: batch until: cycle >= 1000 repeat: 100 kee
 		save "id,polarization,mean intention,adoption rate\n" to: file_t format: "text";
 		loop sim over: simulations {
 			string val_t <- ""+ int(sim);
-			val_t <- val_t + "," + (last(sim.intentions)) + ","+ (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
+			val_t <- val_t + ","  + (sim.polarization()) + "," + (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
 			save val_t +"\n" to: file_t format:"text" rewrite: false;
 		}
 		
@@ -427,7 +558,7 @@ experiment explore_pro_arguments_impact type: batch until: cycle >= 1000 repeat:
 		save "id,polarization,mean intention,adoption rate\n" to: file_t format: "text";
 		loop sim over: simulations {
 			string val_t <- ""+ int(sim);
-			val_t <- val_t + "," + (last(sim.intentions)) + ","+ (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
+			val_t <- val_t + "," + (sim.polarization()) + "," + (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
 			save val_t +"\n" to: file_t format:"text" rewrite: false;
 		}
 		
@@ -480,7 +611,7 @@ experiment explore_influencer_impact type: batch until: cycle >= 1000 repeat: 10
 		save "id,polarization,mean intention,adoption rate\n" to: file_t format: "text";
 		loop sim over: simulations {
 			string val_t <- ""+ int(sim);
-			val_t <- val_t + "," + (last(sim.intentions)) + ","+ (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
+			val_t <- val_t + "," +  (sim.polarization()) + "," + (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
 			save val_t +"\n" to: file_t format:"text" rewrite: false;
 		}
 		
@@ -531,7 +662,7 @@ experiment explore_social_network_impact type: batch until: cycle >= 1000 repeat
 		save "id,polarization,mean intention,adoption rate\n" to: file_t format: "text";
 		loop sim over: simulations {
 			string val_t <- ""+ int(sim);
-			val_t <- val_t + "," + (last(sim.intentions)) + ","+ (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
+			val_t <- val_t + ","  + (sim.polarization()) + "," + (last(sim.intentions)) + "," + (last(sim.adoption_rates)) ;	
 			save val_t +"\n" to: file_t format:"text" rewrite: false;
 		}
 		

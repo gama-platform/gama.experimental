@@ -63,7 +63,8 @@ import gama.gaml.types.Types;
 		@variable(name = "argument_lifespan", type = IType.FLOAT, init="100.0"),
 		@variable(name = "global_argumentation_graph", type = IType.GRAPH),
 		@variable(name = "usage_arguments", type = IType.LIST, of = GamaArgumentType.id),
-		@variable(name = "probability_innovation_usage", type = IType.FLOAT, init="1.0")
+		@variable(name = "probability_innovation_usage", type = IType.FLOAT, init="1.0"),
+		@variable(name = "semantics", type = IType.STRING, init="max")
 				
 })
 public class MIDAO extends GamlAgent {
@@ -115,6 +116,7 @@ public class MIDAO extends GamlAgent {
 
 	static final String PROBABILITY_INNOVATION_USAGE = "probability_innovation_usage";
 	
+	static final String SEMANTICS = "semantics";
 	
 	public MIDAO(IPopulation<? extends IAgent> s, int index) {
 		super(s, index);
@@ -375,6 +377,18 @@ public class MIDAO extends GamlAgent {
 		agent.setAttribute(GLOBAL_ARGUMENTATION_GRAPH, s);
 	}
 	
+	@getter(SEMANTICS)
+	public String getSemantics(final IAgent agent) {
+		return (String) agent.getAttribute(SEMANTICS);
+	}
+
+	@setter(SEMANTICS)
+	public void setSemantics(final IAgent agent, final String v) {
+		agent.setAttribute(SEMANTICS, v);
+	}
+
+	
+	
 	@Override
 	public boolean doStep(final IScope scope) {
 		if (super.doStep(scope)) {
@@ -520,19 +534,15 @@ public class MIDAO extends GamlAgent {
 		Double attitude = 0.0;
 		IMap<GamaArgument, GamaPair<Double,Double>> knownArguments = getKnownArguments(agent);
 		if (!knownArguments.isEmpty()) {
-			IMap<GamaArgument, Double> argumentAcceptability = (IMap<GamaArgument, Double>) doAction1Arg(scope, "get_arguments_acceptabilities", "agent", agent);
-			int nb_pos = 0;
-			int nb_neg = 0;
+			IMap<GamaArgument, Double> argumentAcceptability = (IMap<GamaArgument, Double>) doAction2Arg(scope, "get_arguments_acceptabilities", "agent", agent, "semantics", getSemantics(agent));
 			for(GamaArgument arg : argumentAcceptability.keySet()) {
 				double acc = argumentAcceptability.get(arg);
 				knownArguments.get(arg).key = acc;
 				
 				if (arg.getConclusion().equals("+")) {
 					attitude += acc;
-					nb_pos++;
 				} else if (arg.getConclusion().equals("-")) {
 					attitude += (- 1)* acc;
-					nb_neg++;
 				} 
 			}
 			attitude = (Double) doAction2Arg(scope, "normalize_attitude","agent", agent, "attitude", attitude);
