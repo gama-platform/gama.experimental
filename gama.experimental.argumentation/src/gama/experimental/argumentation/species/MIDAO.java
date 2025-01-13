@@ -414,12 +414,13 @@ public class MIDAO extends GamlAgent {
 				double adoptTime = getAdoptionTime(ag);
 				adoptTime += scope.getSimulation().getTimeStep(scope);
 				setAdoptionTime(ag, adoptTime);
-				if (getIntention(ag) >= getAdoptionThreshold(ag) && adoptTime >= getConfirmationTime(ag) ) {
+				if (adoptTime >= getConfirmationTime(ag) ) {
 					setAdoptionState(ag,CONFIRMATION);
 				}
 			} 
 			if (IMPLEMENTATION.equals(state) || CONFIRMATION.equals(state)) {
-				doActionNoArg(scope, "get_usage_knowledge");
+				if (!CONFIRMATION.equals(state) || getIntention(ag) >= getAdoptionThreshold(ag))
+					doActionNoArg(scope, "get_usage_knowledge");
 				if (!getSocialNetwork(ag).isEmpty() && Random.opFlip(scope, getProbaExchange(ag))) {
 					IAgent other = getSocialNetwork(ag).anyValue(scope);
 					doAction1Arg(scope, "interaction_with_other", "other", other);
