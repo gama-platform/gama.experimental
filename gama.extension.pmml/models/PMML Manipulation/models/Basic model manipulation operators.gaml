@@ -42,7 +42,7 @@ global {
 		let random_input <- input_fields as_map (each::rnd(0.0,5.0));
 		write "We generated those random inputs: " + random_input;
 		
-		write "Evaluating the model with those gives use this map: " + evaluate(eval, random_input);
+		write "Evaluating the model with them gives us this map: " + evaluate(eval, random_input);
 			
 	}
 	
