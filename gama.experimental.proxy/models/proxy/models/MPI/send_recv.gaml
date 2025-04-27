@@ -1,6 +1,6 @@
 /**
 * Name: send_recv
-* Author: Lucas Grosjean, Nicolas Marilleau
+* Author: Lucas Grosjean
 * Description: Test of send and receive with MPI
 * Tags: MPI, Network, HPC
 */
@@ -16,7 +16,6 @@ global skills:[MPI_SKILL]
     
     init
     {
-    	write("WHWHWHWHWHWHHWHH");
 		mpi_rank <- MPI_RANK;
 		mpi_size <- MPI_SIZE;
 		file_name <- "log"+mpi_rank+".txt";
@@ -43,6 +42,7 @@ global skills:[MPI_SKILL]
 			list<unknown> msg2 <- [false, 10, 1.5, "hello"];
 		    do MPI_SEND(msg2, dst, 50);
 		    write("MPI_SEND 2 done");
+		    
 
 			list<emptyAgent> msg3 <- 3 among emptyAgent;
 		    do MPI_SEND(msg3, dst, 50);
@@ -51,7 +51,9 @@ global skills:[MPI_SKILL]
 		    
 		} else {
 		    int emet <- 0;
+		    write("before");
 		    
+		    write("after");
 		    list<unknown> l <- MPI_RECV(emet, 50);
 		    write("MPI_RECV done : " + l);
 
@@ -59,17 +61,18 @@ global skills:[MPI_SKILL]
 		    write("MPI_RECV 2 done : " + l2);
 		    
 		    list<emptyAgent> l3 <- MPI_RECV(emet, 50);
-		    /*write("MPI_RECV 3 done : " + l3);
+		    
+		    write("MPI_RECV 3 done : " + l3);
 		    
 			write("" + MPI_RANK + " emptyAgents :: " + list(emptyAgent));
 			ask emptyAgent
-			{
+			{	
 				write("rank " + MPI_RANK + "[" + self.name + "(data)::" + self.data + "]");
 			}
-		    write("" + MPI_RANK + " lenght emptyAgent" + length(emptyAgent));*/
+		    write("" + MPI_RANK + " lenght emptyAgent" + length(emptyAgent));
 		}
 	    
-		do MPI_FINALIZE();
+	    write(""+mpi_rank +" done");
 	    do die;
     }
 }
@@ -79,6 +82,6 @@ species emptyAgent
 	int data;
 }
 
-experiment send_recv
+experiment send_recv type: MPI_EXP
 {
 }

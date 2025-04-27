@@ -17,6 +17,7 @@ global
 	int size_OLZ <- 20;
 	int simulation_id <- 0;
 	bool debug <- true;
+	int nb_neighbor <- 8;
 	
 	init
 	{
@@ -46,12 +47,10 @@ global
 	}
 }
 
-grid OLZ width: grid_width height: grid_height neighbors: 8
+grid OLZ width: grid_width height: grid_height neighbors: nb_neighbor
 { 
 	
 	int rank <- grid_x + (grid_y * grid_width);
-	
-	string file_name_sub;
 	
 	list<geometry> OLZ_list;
 	geometry OLZ_combined;
@@ -81,7 +80,19 @@ grid OLZ width: grid_width height: grid_height neighbors: 8
 	// ALL OUTER OLZ
 	geometry outer_OLZ <- OLZ_top_outer + OLZ_bottom_outer + OLZ_left_outer + OLZ_right_outer;
 	
-	string file_name;
+	
+	
+	// key : rank of the neighbour cell, value : list of agent
+	map<int, list<agent>> new_agents_in_my_OLZ <- map<int, list<agent>>([]); 			// agents entering OLZ
+	map<int, list<agent>> agents_in_my_OLZ <- map<int, list<agent>>([]);				// agents currently in OLZ
+	
+	map<int, list<agent>> agents_in_OLZ_previous_step <- map<int, list<agent>>([]); 	// agent that was in the OLZ last step
+	
+	map<int, list<agent>> agent_leaving_OLZ_to_neighbor <- map<int, list<agent>>([]); 	// agent leaving the OLZ to the neighbor managed area
+	map<int, list<agent>> agent_leaving_OLZ_to_me <- map<int, list<agent>>([]); 		// agent leaving the OLZ to my managed area
+	
+	map<int, list<agent>> agent_to_update <- map<int, list<agent>>([]); 				// agent to be updated in neighbor
+	map<int, list<agent>> agent_to_migrate <- map<int, list<agent>>([]); 				// agent to be migrated to neighbor
 		
 	init
 	{
@@ -139,20 +150,35 @@ grid OLZ width: grid_width height: grid_height neighbors: 8
 			OLZ_combined <- OLZ_combined + OLZ_top_left_inner;
 			OLZ_list << OLZ_top_left_inner;
 		}
+		
+		do init_map;
+		
 	}
 	
-	// key : rank of the neighbour cell, value : list of agent
-	map<int, list<agent>> new_agents_in_my_OLZ <- map<int, list<agent>>([]); 			// agents entering OLZ
-	map<int, list<agent>> agents_in_my_OLZ <- map<int, list<agent>>([]);				// agents currently in OLZ
+	action init_map
+	{
+		loop i from: 0 to: 7 
+		{ 
+		   	new_agents_in_my_OLZ[i] <- [];
+			agents_in_my_OLZ[i] <- [];
+			agents_in_OLZ_previous_step[i] <- [];
+			agent_leaving_OLZ_to_neighbor[i] <- [];
+			agent_leaving_OLZ_to_me[i] <- [];
+			agent_to_update[i] <- [];
+		 	agent_to_migrate[i] <- [];
+		}
+	}
 	
-	map<int, list<agent>> agents_in_OLZ_previous_step <- map<int, list<agent>>([]); 	// agent that was in the OLZ last step
-	
-	map<int, list<agent>> agent_leaving_OLZ_to_neighbor <- map<int, list<agent>>([]); 	// agent leaving the OLZ to the neighbor managed area
-	map<int, list<agent>> agent_leaving_OLZ_to_me <- map<int, list<agent>>([]); 		// agent leaving the OLZ to my managed area
-	
-	map<int, list<agent>> agent_to_update <- map<int, list<agent>>([]); 				// agent to be updated in neighbor
-	map<int, list<agent>> agent_to_migrate <- map<int, list<agent>>([]); 				// agent to be migrated to neighbor
-	
+	action clear_agents_map
+	{
+		loop i from: 0 to: 7 
+		{ 
+		   	new_agents_in_my_OLZ[i] <- [];
+			agents_in_my_OLZ[i] <- [];
+			agent_leaving_OLZ_to_neighbor[i] <- [];
+			agent_leaving_OLZ_to_me[i] <- [];
+		}
+	}
 	
 	reflex agent_inside_OLZ when: index = simulation_id and simulation_id = 0
 	{
@@ -164,38 +190,27 @@ grid OLZ width: grid_width height: grid_height neighbors: 8
 		
 		ask agents_in_OLZ
 		{
+			write("0");
 			loop OLZ_shape over: myself.OLZ_list
 			{
+				write("00");
 				int indexShape <- myself.neighborhood_shape[OLZ_shape];
+				write("0121212 " + indexShape);
 				if(self overlaps(OLZ_shape))
 				{
-					if(myself.agents_in_my_OLZ[indexShape] != nil)
-					{
-						myself.agents_in_my_OLZ[indexShape] <- myself.agents_in_my_OLZ[indexShape] + self;
-					}else
-					{
-						myself.agents_in_my_OLZ[indexShape] <- [self];
-					}
-					
+					write("1 " + myself.agents_in_my_OLZ[indexShape]);
+					myself.agents_in_my_OLZ[indexShape] << self;
+					write("2");
 					if(myself.agents_in_OLZ_previous_step[indexShape] = nil)
-					{
-						if(myself.new_agents_in_my_OLZ[indexShape] != nil)
-						{						
-							myself.new_agents_in_my_OLZ[indexShape] <- myself.new_agents_in_my_OLZ[indexShape] + self;
-						}else
-						{
-							myself.new_agents_in_my_OLZ[indexShape] <- [self];
-						}
-						
+					{						
+						write("3");
+						myself.new_agents_in_my_OLZ[indexShape] << self;
+						write("4");
 					}else if(not(myself.agents_in_OLZ_previous_step[indexShape] contains(self)))
 					{
-						if(myself.new_agents_in_my_OLZ[indexShape] != nil)
-						{	
-							myself.new_agents_in_my_OLZ[indexShape] <- myself.new_agents_in_my_OLZ[indexShape] + self;
-						}else
-						{
-							myself.new_agents_in_my_OLZ[indexShape] <- [self];
-						}
+						write("5");
+						myself.new_agents_in_my_OLZ[indexShape] << self;
+						write("6");
 					}
 				}
 			}
@@ -211,61 +226,24 @@ grid OLZ width: grid_width height: grid_height neighbors: 8
 				if(myself.agents_in_OLZ_previous_step[indexShape] != nil and myself.agents_in_OLZ_previous_step[indexShape] contains self)
 				{			
 					write("this agent was in OLZ last step but isnt now : " + self);
-					
 					if(self overlaps myself.shape)
 					{
 						write("agent_leaving_OLZ_to_me " + self);
-						if(myself.agent_leaving_OLZ_to_me[indexShape] != nil)
-						{						
-							myself.agent_leaving_OLZ_to_me[indexShape] <- myself.agent_leaving_OLZ_to_me[indexShape] + self;
-						}else
-						{
-							myself.agent_leaving_OLZ_to_me[indexShape] <- [self];
-						}
+						myself.agent_leaving_OLZ_to_me[indexShape] << self;
 					}else
 					{
-						write("agent_leaving_OLZ_to_neighbor " + self);
-						if(myself.agent_leaving_OLZ_to_neighbor[indexShape] != nil)
-						{						
-							myself.agent_leaving_OLZ_to_neighbor[indexShape] <- myself.agent_leaving_OLZ_to_me[indexShape] + self;
-						}else
-						{
-							myself.agent_leaving_OLZ_to_neighbor[indexShape] <- [self];
-						}
+						myself.agent_leaving_OLZ_to_neighbor[indexShape] << self;
+						
 					}
 				}	
 			}
 		}
 	}
 	
-	reflex debug_print when: debug and rank = simulation_id
-	{
-		if(new_agents_in_my_OLZ != nil)
-		{
-			//write("new_agents_in_my_OLZ " + new_agents_in_my_OLZ);
-		}
-		if(agents_in_my_OLZ != nil)
-		{
-			//write("agents_in_my_OLZ " + agents_in_my_OLZ);
-		}
-		if(agent_leaving_OLZ_to_me != nil)
-		{
-			//write("agent_leaving_OLZ_to_me " + agent_leaving_OLZ_to_me);
-		}
-		if(agent_leaving_OLZ_to_neighbor != nil)
-		{
-			//write("agent_leaving_OLZ_to_neighbor " + agent_leaving_OLZ_to_neighbor);
-		}
-		
-	}
-	
 	reflex end_step_update when : rank = simulation_id and simulation_id = 0
 	{	
 		agents_in_OLZ_previous_step <- agents_in_my_OLZ;
-		new_agents_in_my_OLZ <- nil;
-		agents_in_my_OLZ <- nil;
-		agent_leaving_OLZ_to_me <- nil;
-		agent_leaving_OLZ_to_neighbor <- nil;
+		do clear_agents_map;
 	}
 	
 	aspect default

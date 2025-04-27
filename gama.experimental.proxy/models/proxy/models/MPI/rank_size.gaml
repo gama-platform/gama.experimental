@@ -26,6 +26,6 @@ global skills:[MPI_SKILL]
 	}
 }
 
-experiment rank_size
+experiment rank_size type: MPI_EXP
 {
 }

@@ -7,15 +7,15 @@
 
 model Migration
 
-global skills: [MPI_SKILL, ProxySkill]
+global skills: [MPI_SKILL]
 {
 	int grid_width <- 2;
 	int grid_height <- 1;
 	int size_OLZ <- 15;
-	int end_cycle <- 50;
+	int end_cycle <- 100;
+	int nb_neighbor <- 8;
 	
-	int prey_eated <- 0;
-	int prey_eated_by_P1 <- 0;
+	list<agent> agent_to_remove;
 	
 	init
 	{
@@ -26,6 +26,16 @@ global skills: [MPI_SKILL, ProxySkill]
 				syncmode <- "GhostMode";
 			}
 		}
+	}
+	
+	reflex
+	{
+		ask agent_to_remove
+		{
+			write("killing " + self);
+			do die;
+		}
+		agent_to_remove <- nil;
 	}
 
 	reflex cycle_print
@@ -96,12 +106,13 @@ species movingAgent skills:[moving]
 }
 
 /* OLZ species */
-grid OLZ width: grid_width height: grid_height neighbors: 4 skills: [MPI_SKILL, ProxySkill]
+grid OLZ width: grid_width height: grid_height neighbors: nb_neighbor skills: [MPI_SKILL, ProxySkill]
 { 
 	int rank <- grid_x + (grid_y * grid_width);
 	
 	list<geometry> OLZ_list;
-	geometry OLZ_combined;
+	geometry OLZ_combined_inner;
+	geometry OLZ_combined_outer;
 	map<geometry, int> neighborhood_shape;
 	
 	// INNER OLZ 
@@ -110,7 +121,7 @@ grid OLZ width: grid_width height: grid_height neighbors: 4 skills: [MPI_SKILL, 
 	geometry OLZ_left_inner <- shape - rectangle(world.shape.width / grid_width, world.shape.height / grid_height) translated_by {size_OLZ / 2,0,0};
 	geometry OLZ_right_inner <- shape - rectangle(world.shape.width / grid_width, world.shape.height / grid_height) translated_by {-(size_OLZ / 2),0,0};
 	
-	// CORNER
+	// INNER CORNER
 	geometry OLZ_bottom_left_inner <- OLZ_left_inner inter OLZ_bottom_inner;
 	geometry OLZ_bottom_right_inner <- OLZ_right_inner inter OLZ_bottom_inner;
 	geometry OLZ_top_left_inner <- OLZ_left_inner inter OLZ_top_inner;
@@ -121,6 +132,12 @@ grid OLZ width: grid_width height: grid_height neighbors: 4 skills: [MPI_SKILL, 
 	geometry OLZ_bottom_outer <- (shape - rectangle(world.shape.width / grid_width, world.shape.height / grid_height ) translated_by {0,-(size_OLZ / 2),0}) translated_by {0,(size_OLZ / 2),0};
 	geometry OLZ_left_outer <- (shape - rectangle(world.shape.width / grid_width, world.shape.height / grid_height) translated_by {size_OLZ / 2,0,0}) translated_by {-(size_OLZ / 2),0,0};
 	geometry OLZ_right_outer <- (shape - rectangle(world.shape.width / grid_width, world.shape.height / grid_height) translated_by {-(size_OLZ / 2),0,0}) translated_by {(size_OLZ / 2),0,0};
+	
+	// OUTER CORNER
+	geometry OLZ_bottom_left_outer <- OLZ_left_outer inter OLZ_bottom_outer;
+	geometry OLZ_bottom_right_outer<- OLZ_right_outer inter OLZ_bottom_outer;
+	geometry OLZ_top_left_outer <- OLZ_left_outer inter OLZ_top_outer;
+	geometry OLZ_top_right_outer<- OLZ_right_outer inter OLZ_top_outer;
 	
 	// ALL INNER OLZ
 	geometry inner_OLZ <- OLZ_top_inner + OLZ_bottom_inner + OLZ_left_inner + OLZ_right_inner;
@@ -135,25 +152,29 @@ grid OLZ width: grid_width height: grid_height neighbors: 4 skills: [MPI_SKILL, 
 		{		
 			write(""+grid_x + "," + (grid_y-1));
 			neighborhood_shape << OLZ_top_inner :: (grid_x + ((grid_y - 1) * grid_width));
-			OLZ_combined <- OLZ_combined + OLZ_top_inner;
+			OLZ_combined_inner <- OLZ_combined_inner + OLZ_top_inner;
+			OLZ_combined_outer <- OLZ_combined_outer + OLZ_top_outer;
 			OLZ_list << OLZ_top_inner;
 		}
 		if(grid_y + 1 < grid_height)
 		{		
 			neighborhood_shape << OLZ_bottom_inner :: (grid_x + ((grid_y + 1) * grid_width));
-			OLZ_combined <- OLZ_combined + OLZ_bottom_inner;
+			OLZ_combined_inner <- OLZ_combined_inner + OLZ_bottom_inner;
+			OLZ_combined_outer <- OLZ_combined_outer + OLZ_bottom_outer;
 			OLZ_list << OLZ_bottom_inner;
 		}
 		if(grid_x - 1 >=0)
 		{		
 			neighborhood_shape << OLZ_left_inner :: ((grid_x - 1)  + (grid_y * grid_width));
-			OLZ_combined <- OLZ_combined + OLZ_left_inner;
+			OLZ_combined_inner <- OLZ_combined_inner + OLZ_left_inner;
+			OLZ_combined_outer <- OLZ_combined_outer + OLZ_left_outer;
 			OLZ_list << OLZ_left_inner;
 		}	
 		if(grid_x + 1 < grid_width)
 		{		
 			neighborhood_shape << OLZ_right_inner :: ((grid_x + 1)  + (grid_y * grid_width));
-			OLZ_combined <- OLZ_combined + OLZ_right_inner;
+			OLZ_combined_inner <- OLZ_combined_inner + OLZ_right_inner;
+			OLZ_combined_outer <- OLZ_combined_outer + OLZ_right_outer;
 			OLZ_list << OLZ_right_inner;
 		}
 		
@@ -161,25 +182,29 @@ grid OLZ width: grid_width height: grid_height neighbors: 4 skills: [MPI_SKILL, 
 		if(grid_x + 1 < grid_width and grid_y - 1 >= 0)
 		{		
 			neighborhood_shape << OLZ_top_right_inner :: ((grid_x + 1)  + ((grid_y - 1)  * grid_width));
-			OLZ_combined <- OLZ_combined + OLZ_top_right_inner;
+			OLZ_combined_inner <- OLZ_combined_inner + OLZ_top_right_inner;
+			OLZ_combined_outer <- OLZ_combined_outer + OLZ_top_right_outer;
 			OLZ_list << OLZ_top_right_inner;
 		} 
 		if(grid_x - 1 >= 0 and grid_y + 1 < grid_height)
 		{		
 			neighborhood_shape << OLZ_bottom_left_inner :: ((grid_x - 1)  + ((grid_y + 1)  * grid_width));
-			OLZ_combined <- OLZ_combined + OLZ_bottom_left_inner;
+			OLZ_combined_inner <- OLZ_combined_inner + OLZ_bottom_left_inner;
+			OLZ_combined_outer <- OLZ_combined_outer + OLZ_bottom_left_outer;
 			OLZ_list << OLZ_bottom_left_inner;
 		}
 		if(grid_x + 1 < grid_width and grid_y + 1 < grid_height)
 		{		
 			neighborhood_shape << OLZ_bottom_right_inner :: ((grid_x + 1)  + ((grid_y + 1)  * grid_width));
-			OLZ_combined <- OLZ_combined + OLZ_bottom_right_inner;
+			OLZ_combined_inner <- OLZ_combined_inner + OLZ_bottom_right_inner;
+			OLZ_combined_outer <- OLZ_combined_outer + OLZ_bottom_right_outer;
 			OLZ_list << OLZ_bottom_right_inner;
 		}
 		if(grid_x - 1 >= 0 and grid_y - 1 >= 0)
 		{		
 			neighborhood_shape << OLZ_top_left_inner :: ((grid_x - 1)  + ((grid_y - 1)  * grid_width));
-			OLZ_combined <- OLZ_combined + OLZ_top_left_inner;
+			OLZ_combined_inner <- OLZ_combined_inner + OLZ_top_left_inner;
+			OLZ_combined_outer <- OLZ_combined_outer + OLZ_top_left_outer;
 			OLZ_list << OLZ_top_left_inner;
 		}
 	}
@@ -196,27 +221,27 @@ grid OLZ width: grid_width height: grid_height neighbors: 4 skills: [MPI_SKILL, 
 	map<int, list<agent>> agent_to_update <- map<int, list<agent>>([]); 				// agent to be updated in neighbor
 	map<int, list<agent>> agent_to_migrate <- map<int, list<agent>>([]); 				// agent to be migrated to neighbor
 
-	reflex
-	{
-		let agents_in_OLZ <- movingAgent overlapping OLZ_combined;
-		let agents_outside_OLZ <- movingAgent where ( not(each in agents_in_OLZ));
-		
-		write("agents_in_OLZ OLZ : " + agents_in_OLZ);
-		write("agents_outside_OLZ OLZ : " + agents_outside_OLZ);
-		
-		/*do analyzeProxy(agents_in_OLZ);
-		do analyzeProxy(agents_outside_OLZ);*/
-	}
-
 	reflex agent_inside_OLZ when: index = MPI_RANK
 	{
-		let agents_in_OLZ <- movingAgent overlapping OLZ_combined;
-		let agents_outside_OLZ <- movingAgent where ( not(each in agents_in_OLZ));
+		let agents_in_cell_and_outer <- movingAgent overlapping (self.shape+OLZ_combined_inner+OLZ_combined_outer);
+		let agents_in_inner_OLZ <- movingAgent overlapping OLZ_combined_inner;
 		
-		write("agents_in_OLZ OLZ : " + agents_in_OLZ);
+		let agents_outside_OLZ <- movingAgent where ( not(each in agents_in_inner_OLZ));
+		let agents_outside_me_and_OLZ <- movingAgent where ( not(each in agents_in_cell_and_outer));
+		
+		write("agents_in_OLZ OLZ : " + agents_in_inner_OLZ);
 		write("agents_outside_OLZ OLZ : " + agents_outside_OLZ);
+		write("agents_in_cell_and_outer OLZ : " + agents_in_cell_and_outer);
+		write("agents_outside_me_and_OLZ OLZ : " + agents_outside_me_and_OLZ);
 		
-		ask agents_in_OLZ
+		agent_to_remove <- agents_outside_me_and_OLZ;
+		
+		loop tmp over: agents_in_inner_OLZ
+		{
+			write("agent unique if " + tmp.getUUID());
+		}
+		
+		ask agents_in_inner_OLZ
 		{
 			loop OLZ_shape over: myself.OLZ_list
 			{
@@ -318,22 +343,25 @@ grid OLZ width: grid_width height: grid_height neighbors: 4 skills: [MPI_SKILL, 
 	{
 		draw self.shape color: rgb(#white,125) border:#black;	
 		draw "[" + self.grid_x + "," + self.grid_y +"] : RANK " + rank color: rgb(#red,125) font: font('Default', 10, #bold);
-		draw OLZ_combined color: rgb(255,125,125,125);
+		
+		if(rank = MPI_RANK)
+		{		
+			draw OLZ_combined_inner color: rgb(#red,0.4);
+			draw OLZ_combined_outer color: rgb(#blue,0.4);
+		}
+		
 	}
 }
 
-experiment Migration_reference type: distribution until: (cycle = end_cycle)
+experiment Migration_reference type: distribution
 {
 	int i <- 0;
-	reflex when: (cycle > 1)
+	reflex
 	{
 		ask simulation 
-		{
-			if(cycle mod 5 = 0) // saved by P0 to /output.log/snapshot/0
-			{		
+		{	
 				// We choose a neutral background
 				save (snapshot("chart")) to: "../output.log/snapshot/" + MPI_RANK+ "/MIGRATION_" + myself.i + ".png" rewrite: true;
-			}
 		}
 		i <- i + 1;
 	}

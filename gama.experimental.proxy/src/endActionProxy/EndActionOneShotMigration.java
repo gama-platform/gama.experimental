@@ -1,5 +1,6 @@
 package endActionProxy;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +14,6 @@ import gama.core.util.IList;
 import gama.core.util.IMap;
 import gama.dev.DEBUG;
 import gama.gaml.statements.IExecutable;
-import mpi.MPIException;
 import proxy.ProxyAgent;
 import proxySkill.ProxyFunctions;
 import synchronizationMode.LocalSynchronizationMode;
@@ -33,7 +33,7 @@ public class EndActionOneShotMigration implements IExecutable
 
 	static
 	{
-		DEBUG.ON();
+		//DEBUG.ON();
 	}
 	
 	IMap<Integer, List<?>> proxyToMigrate;
@@ -58,7 +58,7 @@ public class EndActionOneShotMigration implements IExecutable
 		if(result.size() > 0)
 		{
 			setLocalSynchro(scope, result); // update the syncmode of newly migrated agents
-			updateCopiedFromOther(scope, result);
+			//updateCopiedFromOther(scope, result);
 		}
 		
 		return result;
@@ -166,7 +166,7 @@ public class EndActionOneShotMigration implements IExecutable
 		        difference.removeAll(setB);  // Remove elements in B from the difference set
 				DEBUG.OUT("difference removeAll " + difference);
 		        
-		        copiedProxyFromOther.put(entry.getKey(), (IList<?>) difference);
+		        copiedProxyFromOther.put(entry.getKey(), (IList<?>) new ArrayList(difference));
 				DEBUG.OUT("copiedProxyFromOther " + copiedProxyFromOther.get(entry.getKey()));
 	        }
 		}

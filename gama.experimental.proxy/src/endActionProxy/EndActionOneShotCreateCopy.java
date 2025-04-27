@@ -44,7 +44,7 @@ public class EndActionOneShotCreateCopy implements IExecutable
 
 	static
 	{
-		DEBUG.ON();
+		//DEBUG.ON();
 	}
 	
 	IMap<Integer, List<?>> proxyToCopy;
@@ -63,91 +63,36 @@ public class EndActionOneShotCreateCopy implements IExecutable
 		DEBUG.OUT("-----------------CreateCopy-------------------------------" + this.current_step + "------------------------------------------------");
 		DEBUG.OUT("proxy to copy : " + proxyToCopy);
 		
-		replaceBuggedAgentBeforeSend(scope); // remove bugged agent TODO
-		removeCopiedProxyFromProxyToCopy(scope); // remove all the copy from agent to send
-		removeDuplicates(scope);
+		removeDuplicates(scope); // todo : check and remove this function
 		DEBUG.OUT(scope);
+		
+		for(var auto : proxyToCopy.entrySet())
+		{
+			DEBUG.OUT("proxy to copy list : " + auto);
+			for(var agent : auto.getValue())
+			{
+				DEBUG.OUT("proxy to copy sending " + agent + " :: " + ((ProxyAgent)agent).getAttributes(false));
+				DEBUG.OUT("proxy to copy location " + agent + " :: " + ((ProxyAgent)agent).getLocation());
+			}
+		}
+		
 		IMap<Integer, IList<?>> result = sendAgentToCopy(scope); // send agent to specific proc
 
 		DEBUG.OUT("resultresultresultresult " + result);
-		updateCopiedProxyFromOther(scope, result); // uppdate copiedProxyFromOther
+		
+		for(var auto : result.entrySet())
+		{
+			DEBUG.OUT("result proxy to copy list : " + auto);
+			for(var agent : auto.getValue())
+			{
+				DEBUG.OUT("result sending " + agent + " :: " + ((ProxyAgent)agent).getAttributes(false));
+				DEBUG.OUT("result location " + agent + " :: " + ((ProxyAgent)agent).getLocation());
+			}
+		}
 		updateProxyToUpdate(scope); // update the list of proxy to update at each cyle
 			
 		return result; // returning the new agents copied this step
 	}
-
-	/**
-	 * To be removed after fixing the bug of regular agent appearing when using spatial operator
-	 * 
-	 */
-	private void replaceBuggedAgentBeforeSend(IScope scope)
-	{		
-		DEBUG.OUT("replaceBuggedAgentBeforeSend " + proxyToCopy);
-		for(var auto : proxyToCopy.entrySet())
-		{
-			List<IAgent> agents = (List<IAgent>) auto.getValue();
-			DEBUG.OUT("replaceBuggedAgentBeforeSend agents" + agents);
-			for (int i = 0; i < agents.size(); i++) 
-			{
-				var agent = agents.get(i);
-				DEBUG.OUT("cuurently on agent" + agents);
-				if(agent instanceof MinimalAgent agt)
-				{
-					DEBUG.OUT("agent : " + agent + " is a MinimalAgent ");
-					ProxyAgent proxy = ProxyFunctions.getProxyFromAgent(scope, agt);
-					DEBUG.OUT("proxy of " + agent + " : " + proxy);
-					agents.set(i, proxy);
-				}else
-				{
-					DEBUG.OUT("agent : " + agent + " is a proxy ");
-				}
-			}
-			proxyToCopy.put(auto.getKey(), agents);
-			DEBUG.OUT("replaceBuggedAgentBeforeSend after " + auto.getValue());
-		}
-		DEBUG.OUT("replaceBuggedAgentBeforeSend riught? " + proxyToCopy);
-	}
-	
-	/**
-	 * removeCopiedProxyFromProxyToCopy : remove all element of values of copiedProxyFromOther from proxyToCopy
-	 * as we don't want to send copied agent to other processor
-	 * 
-	 * @param scope
-	 */
-	private void removeCopiedProxyFromProxyToCopy(IScope scope)
-	{
-		IMap<Integer, IList<?>> copiedProxyFromOther = ((DistributionExperiment)scope.getExperiment()).copiedProxyFromOther;
-		
-		if(copiedProxyFromOther == null){
-			DEBUG.OUT("copiedProxyFromOther IS NULL");
-			return;
-		}
-		DEBUG.OUT("copiedProxyFromOther " + copiedProxyFromOther);
-		DEBUG.OUT("removeCopiedProxyFromProxyToCopy before " + proxyToCopy);
-		
-		for (var entry : copiedProxyFromOther.entrySet()) {
-		    int key = entry.getKey();
-		    List<?> valuesToRemove = entry.getValue();
-
-		    // Get the corresponding list in the first map, creating it if needed
-		    List<?> listInFirstMap = proxyToCopy.getOrDefault(key, GamaListFactory.create());
-
-		    // Efficiently remove values using removeAll()
-		    listInFirstMap.removeAll(valuesToRemove);
-
-		    // If the list is now empty, remove the entry entirely
-		    if (listInFirstMap.isEmpty()) {
-		    	DEBUG.OUT("listInFirstMap removing " + key);
-		    	proxyToCopy.remove(key);
-		    } else {
-		        // Update the modified list in the first map
-		    	DEBUG.OUT("proxyToCopy.put " + listInFirstMap);
-		    	proxyToCopy.put(key, (IList<?>) listInFirstMap);
-		    }
-		}
-		DEBUG.OUT("removeCopiedProxyFromProxyToCopy end " + proxyToCopy);
-	}
-	
 	
 	private IMap<Integer, IList<?>> sendAgentToCopy(IScope scope)
 	{
@@ -158,65 +103,6 @@ public class EndActionOneShotCreateCopy implements IExecutable
 		DEBUG.OUT("RESULT OF COPY " + result);
 		
 		return result;
-	}
-	
-	/**
-	 * updateCopiedProxyFromOther : we may have received agent from other processors with the global communication, we need to add these agent to copiedProxyFromOther
-	 * in that way, we won't send these agent to other processor later on.
-	 * 
-	 * 
-	 * @param scope
-	 * @param result
-	 */
-	private void updateCopiedProxyFromOther(IScope scope, IMap<Integer, IList<?>> result)
-	{
-		DEBUG.OUT("updateCopiedProxyFromOther " + result);
-		IMap<Integer, IList<?>> newMap;
-		if(((DistributionExperiment)scope.getExperiment()).copiedProxyFromOther != null) // we already have agent copied from other processor so we have to add the recived agent from this step
-		{
-			DEBUG.OUT("copiedProxyFromOther != nll " + ((DistributionExperiment)scope.getExperiment()).copiedProxyFromOther);
-			newMap = ((DistributionExperiment)scope.getExperiment()).copiedProxyFromOther;
-		}else // we don't have copied agent before this step
-		{
-			DEBUG.OUT("copiedProxyFromOther == nll ");
-			newMap = GamaMapFactory.create();
-		}
-
-		DEBUG.OUT("newMap before " + newMap);
-		for(var newAgents : result.entrySet())
-		{
-			DEBUG.OUT("newAgents entry " + newAgents);
-			if(newMap.get(newAgents.getKey()) != null)
-			{
-				DEBUG.OUT("newMap.get(newAgents.getKey()) != null");
-				DEBUG.OUT("newAgents " + newAgents);
-				newMap.put(newAgents.getKey(), newAgents.getValue());
-			}else
-			{
-				DEBUG.OUT("nononononoon newMap.get(newAgents.getKey()) != null");
-				/*DEBUG.OUT("newMapb4 " + newMap);
-				newMap.put(newAgents.getKey(),(IList<?>)Stream.concat(newAgents.getValue().stream(), newMap.get(newAgents.getKey()).stream())
-	                .collect(Collectors.toList()));
-				DEBUG.OUT("newMapafter " + newMap);*/
-				
-				DEBUG.OUT("newMapb4 " + newMap);
-				
-				Integer key = newAgents.getKey();
-				IList<?> newList = newAgents.getValue();
-
-				IList<?> existingList = newMap.get(key);
-				IList<?> mergedList = existingList != null ?
-				(IList<?>) Stream.concat(newList.stream(), existingList.stream()).collect(Collectors.toList()) :
-				    newList;
-
-				newMap.put(key, mergedList);
-
-				DEBUG.OUT("newMapafter " + newMap);
-			}
-		}
-		
-		DEBUG.OUT("newMap after " + newMap);
-		((DistributionExperiment)scope.getExperiment()).copiedProxyFromOther = newMap;
 	}
 	
 	/**

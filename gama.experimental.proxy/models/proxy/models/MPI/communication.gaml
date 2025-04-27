@@ -37,6 +37,6 @@ global skills:[MPI_SKILL]
     }
 }
 
-experiment com_mpi
+experiment com_mpi type: MPI_EXP
 {
 }

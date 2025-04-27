@@ -32,7 +32,7 @@ public class EndActionOneShotProxyUpdate implements IExecutable
 
 	static
 	{
-		DEBUG.ON();
+		//DEBUG.ON();
 	}
 	
 	IMap<Integer, List<?>> proxyToUpdate;

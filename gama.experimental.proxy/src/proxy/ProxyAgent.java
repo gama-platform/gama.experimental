@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.locationtech.jts.geom.Geometry;
 
+import gama.annotations.precompiler.GamlAnnotations.action;
+import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.core.common.geometry.Envelope3D;
 import gama.core.kernel.model.IModel;
 import gama.core.metamodel.agent.IAgent;
@@ -40,7 +42,7 @@ public class ProxyAgent implements IAgent
 {
 	static
 	{
-		DEBUG.ON();
+		//DEBUG.ON();
 	}
 
 	protected final ProxyPopulation population;
@@ -501,6 +503,12 @@ public class ProxyAgent implements IAgent
 	{
 		DEBUG.OUT("proxy setUUID " + uuid);
 		this.uniqueID = UUID.fromString(uuid);
+	}
+
+	@action (name = "getUUID")
+	public UUID getUUID(IScope scope) 
+	{
+		return this.uniqueID;
 	}
 
 	@Override

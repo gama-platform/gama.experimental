@@ -23,8 +23,8 @@ public class MPIExperiment extends ExperimentAgent
 {
 	static
 	{
-		DEBUG.ON();
-		DEBUG.FORCE_ON();
+		//DEBUG.ON();
+		//DEBUG.FORCE_ON();
 	}
 	
 	public MPIExperiment(IPopulation<? extends IAgent> s, int index) throws GamaRuntimeException 
@@ -37,7 +37,7 @@ public class MPIExperiment extends ExperimentAgent
 	@Override
 	public void dispose() 
 	{
-    	DEBUG.OUT("************* disposing ProxyExperiment");
+    	DEBUG.OUT("************* disposing MPIExperiment");
 		super.dispose();
 		MPIFunctions.MPI_FINALIZE();
 		DEBUG.UNREGISTER_LOG_WRITER();
@@ -47,19 +47,14 @@ public class MPIExperiment extends ExperimentAgent
 	protected void postStep(final IScope scope) 
 	{
 		// from this point we are sure that there are no more request to process for this step
-		DEBUG.OUT("before postStep");
 		super.postStep(scope);
-		DEBUG.OUT("after postStep");
 	}
 	
 	private void setOuputForDistributedExperiment()
 	{
 		Globals.OUTPUT_PATH = "output.log"; // directory in which all logs will be written 
 		try {
-			DEBUG.OUT("MPI.COMM_WORLD.getRank() " + MPI.COMM_WORLD.getRank());
-			DEBUG.OUT("pre register");
 			DEBUG.REGISTER_LOG_WRITER(new IExperimentJob.DebugStream(MPI.COMM_WORLD.getRank()));
-			DEBUG.OUT("post register");
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

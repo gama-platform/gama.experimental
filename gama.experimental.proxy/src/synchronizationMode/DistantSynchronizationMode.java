@@ -1,7 +1,6 @@
 package synchronizationMode;
 
 import java.awt.Color;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,12 +14,10 @@ import gama.core.kernel.model.IModel;
 import gama.core.metamodel.agent.IAgent;
 import gama.core.metamodel.agent.IMacroAgent;
 import gama.core.metamodel.agent.ISerialisedAgent;
-import gama.core.metamodel.agent.MinimalAgent;
 import gama.core.metamodel.population.IPopulation;
 import gama.core.metamodel.shape.GamaPoint;
 import gama.core.metamodel.shape.GamaShape;
 import gama.core.metamodel.shape.IShape;
-import gama.core.metamodel.shape.IShape.Type;
 import gama.core.metamodel.topology.ITopology;
 import gama.core.runtime.IScope;
 import gama.core.runtime.exceptions.GamaRuntimeException;

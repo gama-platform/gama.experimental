@@ -27,7 +27,7 @@ public class ProxyExperiment extends ExperimentAgent
 {
 	static
 	{
-		DEBUG.ON();
+		//DEBUG.ON();
 	}
 	
 	public ProxyExperiment(IPopulation<? extends IAgent> s, int index) throws GamaRuntimeException 

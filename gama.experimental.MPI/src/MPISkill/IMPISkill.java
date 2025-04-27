@@ -12,12 +12,17 @@ public interface IMPISkill {
     String MPI_INIT_MULTIPLE = "MPI_INIT_MULTIPLE";
 	
 	String MPI_SEND = "MPI_SEND";
+	String MPI_ISEND = "MPI_ISEND";
 	String MESG = "mesg";
 	String SNDSIZE = "sndsize";
 	String DEST = "dest";
 	String STAG = "stag";
+	String MPI_BROADCAST = "MPI_BROADCAST";
+	
+	String ROOT = "root";
 	
 	String MPI_RECV = "MPI_RECV";
+	String MPI_IRECV = "MPI_IRECV";
 	String RCVSIZE = "rcvsize";
 	String SOURCE = "source";
 	String RTAG = "rtag";

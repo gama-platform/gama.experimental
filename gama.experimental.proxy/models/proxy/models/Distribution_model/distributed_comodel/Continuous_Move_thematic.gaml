@@ -7,7 +7,9 @@
 * Tags: 3d, shapefile, gis, agent_movement, skill
 */
 
+
 model continuous_move 
+
 
 global 
 { 
@@ -26,20 +28,17 @@ global
 	geometry free_space;
 	
 	//Number of people agent
-	int nb_people <- 100;
+	int nb_people <- 10000;
+	
+	bool simulationOver <- false;
 	
 	//Point to evacuate
 	list<point> target_point <- list({shape.width, 0}, {0,shape.height});
-	init 
-	{ 
-		write("theme world.shape.height " + world.shape.height);
-		write("theme world.shape.width " + world.shape.width);
- 		write("theme world.shape " + world.shape);
+	init { 
+		write("init");
 		free_space <- copy(shape);
 		//Creation of the buildinds
-		
-		create building from: building_shapefile 
-		{
+		create building from: building_shapefile {
 			//Creation of the free space by removing the shape of the different buildings existing
 			free_space <- free_space - (shape + people_size);
 		}	
@@ -47,13 +46,22 @@ global
 		//Simplification of the free_space to remove sharp edges
 		free_space <- free_space simplification(1.0);
 		//Creation of the people agents
-		
-		create people number: nb_people 
-		{
+		create people number: nb_people {
 			//People agents are placed randomly among the free space
 			location <- any_location_in(free_space);
 			target_loc <-  target_point closest_to self;
 		} 
+		 	
+	}
+	
+	reflex
+	{
+		if(length(people where !dead(each)) = 0)
+		{
+ 			write("total_duration " + float(total_duration)/1000 + "s");
+			simulationOver <- true;
+			// do die;
+		}
 	}
 }
 //Species which represent the building 
@@ -128,22 +136,21 @@ species people skills:[moving]{
 	}
 }
 
-experiment Thematic_experiment type: gui {
+experiment Thematic_experiment{
 	
-	float minimum_cycle_duration <- 0.04; 
-	output {
-		display map type: 2d {
+	/*output {
+		display map{
 			
-			species building;
+			species building refresh: false;
 			species people;
 			
-			/*graphics "exit" refresh: false {
+			graphics "exit" refresh: false {
 				loop tmp over: target_point
 				{				
 					draw sphere(2 * people_size) at: tmp color: #green;	
 				}
-			}*/
+			}
 		}
-	}
+	}*/
 }
 

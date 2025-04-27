@@ -1,10 +1,12 @@
 package proxySkill;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import MPISkill.IMPISkill;
 import distributionExperiment.DistributionExperiment;
 import gama.annotations.precompiler.GamlAnnotations.action;
 import gama.annotations.precompiler.GamlAnnotations.arg;
@@ -14,11 +16,16 @@ import gama.core.metamodel.agent.IAgent;
 import gama.core.metamodel.agent.MinimalAgent;
 import gama.core.metamodel.population.IPopulation;
 import gama.core.runtime.IScope;
+import gama.core.util.GamaListFactory;
+import gama.core.util.GamaMapFactory;
 import gama.core.util.IList;
 import gama.core.util.IMap;
 import gama.dev.DEBUG;
+import gama.extension.serialize.gaml.SerialisationOperators;
+import gama.extension.serialize.implementations.BinarySerialisation;
 import gama.gaml.skills.Skill;
 import gama.gaml.types.IType;
+import mpi.MPI;
 import proxy.ProxyAgent;
 import proxyPopulation.ProxyPopulation;
 import synchronizationMode.LocalSynchronizationMode;
@@ -383,32 +390,27 @@ public class ProxySkill extends Skill
 	{
 		DEBUG.OUT("agentsToCopy start : ");
 		IMap<Integer, List<?>> agentsToCopy = (IMap<Integer, List<?>>)scope.getArg("agentsToCopy");
-
-		DEBUG.OUT("agentsToCopy value : "  + agentsToCopy);
-		IMap<Integer, IList<?>> copiedAgents = ((DistributionExperiment)scope.getExperiment()).copiedProxyFromOther;
-		Set<?> allValues = null;
-		if(copiedAgents != null)
+		
+		for(var entry : agentsToCopy.entrySet())
 		{
-			allValues = copiedAgents.values().stream().flatMap(List::stream).collect(Collectors.toSet());
-		}
-		DEBUG.OUT("agentsToCopy size : " + agentsToCopy.size());
-		for(var auto : agentsToCopy.entrySet())
-		{
-			for(var copyAgent : auto.getValue())
+			List<IAgent> agentListProxy= ((List<IAgent>)entry.getValue()).stream().map(element -> {
+                if (element instanceof MinimalAgent) {
+                	DEBUG.OUT("swapped a minimal agent to his proxy");
+                    return ProxyFunctions.getProxyFromAgent(scope, element); // swap minimal to ProxyAgent
+                } else {
+                    return element;
+                }
+            }).collect(Collectors.toList());
+			
+			boolean removedAny = agentListProxy.removeIf(each -> ((ProxyAgent)each).copy); // remove copied agant
+			if(removedAny)
 			{
-				DEBUG.OUT("copyAgent " + copyAgent);
-				DEBUG.OUT("copyAgent class " + copyAgent.getClass());
-				
-				if(allValues != null && allValues.contains(copiedAgents))
-				{
-					DEBUG.OUT("we won't send this agent as he is a copy");
-					continue; // skip this agent as it is already copied on this processor
-				}
-				ProxyAgent proxy = ProxyFunctions.getProxyFromAgent(scope, (IAgent) copyAgent);
-				DEBUG.OUT("copyAgent  proxy: " + proxy);
+				DEBUG.OUT("Removed copied agent from agntsToCopy");
 			}
+			
+			entry.setValue(agentListProxy);
 		}
-		DEBUG.OUT("agentsToCopy : " + agentsToCopy);
+		
 		((DistributionExperiment)scope.getExperiment()).proxyToCopy = agentsToCopy;
 	}
 	
@@ -489,5 +491,174 @@ public class ProxySkill extends Skill
 				DEBUG.OUT("proxy prox : " + agent);
 				DEBUG.OUT("proxy agent name : " + agent.getAgent().getName());
 			}
+		}	
+	
+	@action (
+			name = "testSerialize",
+			args = {
+				@arg (
+					name = "agents",
+					type = IType.LIST,
+					optional = false,
+					doc = @doc ("Set the list of agents as distant agents, their proxyAgent will now update their attributes according to the politic of their proxy"))})
+		public void testSerialize(final IScope scope)
+		{
+			IList<IAgent> agents = (IList<IAgent>) scope.getArg("agents");
+			DEBUG.OUT("testSerialize with this list of agents " + agents);
+			String conversion = SerialisationOperators.serialize(scope, agents);
+			final byte[] message = conversion.getBytes();
+			
+			DEBUG.OUT("serialize done with " + agents.size());	
+			
+			return;
+		}
+	
+	static int[] computeDispl(int tasks, int[] buffSendSize)
+    {
+        int[] displs = new int[tasks];
+        displs[0] = 0;
+        
+        StringBuilder str = new StringBuilder("computeDispl : \n");
+        str.append("displs" + 0 + " :: " + displs[0]+ "\n");
+
+        for(int index = 1; index < buffSendSize.length; index++)
+        {
+            str.append(index + " :: " + buffSendSize[index]+ "\n");
+            displs[index] = displs[index-1] + buffSendSize[index-1];
+            str.append("displs" + index + " :: " + displs[index]+ "\n");
+        }
+        //System.out.println(str);
+        return displs;
+    }
+	
+	
+	@action (
+			name = "testSerializeWithAlltoAll",
+			args = {
+					@arg (
+							name = IMPISkill.MESG,
+							type = IType.MAP,
+							doc = @doc ("mesg message"))
+			})
+		public void testSerializeWithAlltoAll(final IScope scope)
+		{
+
+			final IMap<Integer, List<?>> msg = (IMap<Integer,  List<?>>) scope.getArg(IMPISkill.MESG, IType.MAP);
+			
+			DEBUG.OUT("MPI_ALLTOALLV " + msg);
+			
+			int my_rank = 0;
+			int world_size = 4;
+			
+			try {
+		        
+		        DEBUG.OUT("my_rank : " + my_rank);
+		        DEBUG.OUT("world_size : " + world_size);
+		        
+		        DEBUG.OUT("msg number of elem  : " + msg.length(scope));
+		        DEBUG.OUT("msg size  : " + msg.size());
+		        
+		        DEBUG.OUT("msg.entrySet() : " + msg.entrySet());
+		        for(var auto : msg.entrySet())
+				{
+		        	DEBUG.OUT("rank : " + auto.getKey());
+					for(var copyAgent : auto.getValue())
+					{
+						DEBUG.OUT("agent to send : " + copyAgent);
+					}
+				}
+		
+		        
+		        int bufferReceiveSize[] = new int[world_size]; // buffer to receive size of incoming buffer in allToAllv
+		        int buffSendSize[] = new int[world_size]; // buffer to send size of incoming buffer to all
+		        
+		        List<byte[]> serializedMessage = new ArrayList<byte[]>();
+		        
+		        for(int index = 0; index < world_size; index++)
+		        {
+		        	if(msg.get(index) != null && msg.get(index).size() != 0)
+		        	{
+		        		
+		        		String conversion = SerialisationOperators.serialize(scope, msg.get(index));
+		        		//DEBUG.OUT("conversion: " +conversion);
+		        		
+		        		final byte[] message = conversion.getBytes();
+		        		
+		        		buffSendSize[index] = message.length;
+		        		serializedMessage.add(message);
+		        	}else
+		        	{
+		        		buffSendSize[index] = 0;
+		        	}
+		        }
+		         
+		        byte[] finalMessage = new byte[Arrays.stream(buffSendSize).sum()];
+		        int offset = 0;
+		        for (byte[] byteArray : serializedMessage) {
+		            System.arraycopy(byteArray, 0, finalMessage, offset, byteArray.length);
+		            offset += byteArray.length;
+		        }
+		        
+				DEBUG.OUT("finalMessage lenght : " +finalMessage.length);
+		        
+		        int displsSend[] = computeDispl(world_size, buffSendSize); // displs of send buffer
+				DEBUG.OUT("computeDispl displsSend ");
+		
+				/*DEBUG.OUT("1st all to all ");
+		        MPI.COMM_WORLD.allToAll(buffSendSize, 1, MPI.INT, bufferReceiveSize, 1, MPI.INT); // send to all + receive from all size of incoming buffer
+		
+				DEBUG.OUT("bufferReceiveSize received : " + bufferReceiveSize.length);
+				
+		        int displsReceive[] = computeDispl(world_size, bufferReceiveSize); // displs of receive buffer
+				DEBUG.OUT("computeDispl displsReceive ");
+		        byte bufferReceiveData[] = new byte[Arrays.stream(bufferReceiveSize).sum()]; // buffer to receive data*/
+				    
+				/*DEBUG.OUT("bufferReceiveData");
+		        MPI.COMM_WORLD.allToAllv(finalMessage, buffSendSize, displsSend, MPI.BYTE, bufferReceiveData, bufferReceiveSize, displsReceive, MPI.BYTE); // send to all + receive from all with different size
+		        
+		        IMap<Integer, IList<?>> ma = GamaMapFactory.create();
+		        byte b1[];
+		
+				DEBUG.OUT("displsReceive.length : " + displsReceive.length);
+		
+		        int subBufferStart;
+		        int subBufferEnd;
+		        for(int index = 0; index < displsReceive.length; index++)
+		        {        
+		        	DEBUG.OUT("index " + index);
+		        	DEBUG.OUT("displsReceive.length " + displsReceive.length);
+		    	    if(index != displsReceive.length-1)
+		            {
+		                DEBUG.OUT("start displ["+index+"] from displ " + (displsReceive[index]));
+		                DEBUG.OUT("end displ[" + (index+1) +"] " + (displsReceive[index+1]));         
+		                subBufferStart = displsReceive[index];
+		                subBufferEnd = displsReceive[index+1];
+		           
+		            }else
+		            {           
+		                subBufferStart = displsReceive[index];  
+		            	subBufferEnd = bufferReceiveData.length;
+		            }
+		    		if(subBufferStart != subBufferEnd)
+		    		{
+		    	        IList<?> li = GamaListFactory.create();
+		    			b1 = Arrays.copyOfRange(bufferReceiveData, subBufferStart, subBufferEnd);
+		    			li.addAll((List)BinarySerialisation.createFromString(scope, new String(b1)));
+		    			DEBUG.OUT("created li : " + li);
+		    			
+		    			ma.put(index, li);
+		    		}
+				}
+		
+				DEBUG.OUT("returning alltoall li : " + ma);
+		        
+				return ma;*/
+	
+			} catch (Exception e) {
+				DEBUG.OUT("MPI_ALLTOALLV exception " + e);
+				e.printStackTrace();
+			} // rank of process
+			
+			return;
 		}
 }

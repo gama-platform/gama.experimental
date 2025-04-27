@@ -17,7 +17,7 @@ model MASKMEANS
 global
 {
 	// the number of classes to create (kmeans)
-	int k <- 10;
+	int k <- 20;
 	
 	// the number of points
 	int N <- 500;
@@ -70,7 +70,7 @@ species centroids
 	rgb color_kmeans <-  rgb(225,225,225);
 	list<datapoints> mypoints;
 	
-	reflex update_location when: length(mypoints) > 0
+	reflex update_location when: length(mypoints) > 0 and cycle mod 5 = 0
 	{
 		location <- mean(mypoints collect each.location); // move centroid in the middle of the convex
 		write("lenght : " + length(mypoints));

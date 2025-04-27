@@ -1,23 +1,21 @@
 /**
-* Name: mpigather
-* Based on the internal empty template. 
-* Author: lucas
-* Tags: 
+* Name: mpi_gather
+* Author: Lucas Grosjean
+* Description: Test of mpi_gather with MPI
+* Tags: MPI, Network, HPC
 */
 
 
 model mpigather
 
-/* Insert your model definition here */
 
 global skills: [MPI_SKILL]
 {
 	int mpi_rank <- 0;
     int mpi_size <- 0;
-	int rank_to_send_data <- 0;
+	int rank_to_send_data <- 0;			// this processor will receive the data
 
     int int_to_send;
-	string file_name;
 
 	init
 	{
@@ -25,36 +23,46 @@ global skills: [MPI_SKILL]
 		mpi_size <- MPI_SIZE;
 		int_to_send <- MPI_RANK;
 		
-		file_name <- "log"+mpi_rank+".txt";
-		do clearLogFile();
-		
-
-		if (mpi_rank = 0)
-		{
-			do writeLog("mpi world size is " + mpi_size);
-			list<unknown> gather <- MPI_GATHER(list(mpi_rank), rank_to_send_data);	
-			do writeLog("result of gather : " + gather);
-		}else
-		{
-			do MPI_GATHER(list(mpi_rank), rank_to_send_data);	
-		    do writeLog("" + mpi_rank + "sent my int");
-		}
+		do gather_same_number_of_elements;
+		do gather_different_number_of_elements;
 		
 		do die;
 	}
-    
-    action writeLog(string log)
+	
+	action gather_same_number_of_elements
 	{
-		save log format: "text" to: file_name rewrite:false;
+		if (mpi_rank = 0)
+		{
+			list<unknown> gather <- MPI_GATHER(nil, rank_to_send_data);		// no need to send anything
+			write("result of gather : " + gather);
+		}else
+		{			
+			do MPI_GATHER(list(mpi_rank), rank_to_send_data);	// 2 elements
+		   	write("" + mpi_rank + "sent my data");
+		}
 	}
 	
-	action clearLogFile
+	action gather_different_number_of_elements
 	{
-		save "" format: "text" to: file_name rewrite:true;
+		if (mpi_rank = 0)
+		{
+			list<unknown> gather <- MPI_GATHER(nil, rank_to_send_data);		// no need to send anything
+			write("result of gather : " + gather);
+		}else
+		{
+			if(mpi_rank = 1)
+			{			
+				do MPI_GATHER(list(mpi_rank,mpi_rank), rank_to_send_data);	// 2 elements
+			}else
+			{
+				do MPI_GATHER(list(mpi_rank), rank_to_send_data);			// 1 element
+			}
+		   	write("" + mpi_rank + "sent my data");
+		}
 	}
 }
 
 
-experiment mpi_gather
+experiment mpi_gather type: MPI_EXP
 { 
 }

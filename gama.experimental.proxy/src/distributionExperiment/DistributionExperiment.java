@@ -47,8 +47,8 @@ public class DistributionExperiment extends ExperimentAgent
 {
 	static
 	{
-		DEBUG.ON();
-		DEBUG.FORCE_ON();
+		//DEBUG.ON();
+		//DEBUG.FORCE_ON();
 	}
 	
 	public IMap<Integer, List<?>> proxyToMigrate;
@@ -74,7 +74,7 @@ public class DistributionExperiment extends ExperimentAgent
 	@Override
 	public void dispose() 
 	{
-    	DEBUG.OUT("************* disposing ProxyExperiment");
+    	//DEBUG.OUT("************* disposing DistributionExperiment");
 		disposeHardSyncServer();
 		super.dispose();
 		MPIFunctions.MPI_FINALIZE();
@@ -85,11 +85,11 @@ public class DistributionExperiment extends ExperimentAgent
 	protected void postStep(final IScope scope) 
 	{
 		this.current_step++;
-		DEBUG_();
+		//DEBUG_();
 		
 		postCreateCopyAction();
-		postMigrateAgentAction();
-		postProxyUpdate();
+		//postMigrateAgentAction();
+		//postProxyUpdate();
 		
 		synchronizeDistributedExperiments();
 		
@@ -98,11 +98,11 @@ public class DistributionExperiment extends ExperimentAgent
 		waitOnRequestsToBeProcessed();
 		
 		// from this point we are sure that there are no more request to process for this step
-		DEBUG.OUT("before postStep");
+		//DEBUG.OUT("before postStep");
 		super.postStep(scope);
-		DEBUG.OUT("after postStep");
+		//DEBUG.OUT("after postStep");
 		
-		DEBUG.OUT("2n synchronizeDistributedExperiments");
+		//DEBUG.OUT("2n synchronizeDistributedExperiments");
 		synchronizeDistributedExperiments(); // might not be needed
 	}
 	
@@ -131,10 +131,10 @@ public class DistributionExperiment extends ExperimentAgent
 	{
 		Globals.OUTPUT_PATH = "output.log"; // directory in which all logs will be written 
 		try {
-			DEBUG.OUT("MPI.COMM_WORLD.getRank() " + MPI.COMM_WORLD.getRank());
-			DEBUG.OUT("pre register");
+			//DEBUG.OUT("MPI.COMM_WORLD.getRank() " + MPI.COMM_WORLD.getRank());
+			//DEBUG.OUT("pre register");
 			DEBUG.REGISTER_LOG_WRITER(new IExperimentJob.DebugStream(MPI.COMM_WORLD.getRank()));
-			DEBUG.OUT("post register");
+			//DEBUG.OUT("post register");
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -154,12 +154,12 @@ public class DistributionExperiment extends ExperimentAgent
 	
 	private void disposeHardSyncServer()
 	{
-    	DEBUG.OUT("hardSyncServer dispose ");
+		//DEBUG.OUT("hardSyncServer dispose ");
 		while(!hardSyncServer.isQueueEmpty())
 		{	
-			DEBUG.OUT("waiting for server to process all request before disposing");
+			//DEBUG.OUT("waiting for server to process all request before disposing");
 		}		
-		DEBUG.OUT("hardSyncServer.stop()");
+		//DEBUG.OUT("hardSyncServer.stop()");
 		hardSyncServer.stop();
 	}
 	
@@ -181,9 +181,9 @@ public class DistributionExperiment extends ExperimentAgent
 		EndActionOneShotMigration migration;
 		if(proxyToMigrate != null)
 		{
-			DEBUG.OUT("posting proxyToMigrate " + proxyToMigrate);
+			//DEBUG.OUT("posting proxyToMigrate " + proxyToMigrate);
 			migration = new EndActionOneShotMigration(proxyToMigrate, this.current_step);
-			DEBUG.OUT("posting EndActionOneShotMigration1 " + migration);
+			//DEBUG.OUT("posting EndActionOneShotMigration1 " + migration);
 			
 
 			/*if(this.proxyToUpdate != null)
@@ -210,9 +210,9 @@ public class DistributionExperiment extends ExperimentAgent
 			}*/
 		}else
 		{
-			DEBUG.OUT("no agent to migrate proxyToMigrate " + proxyToMigrate);
+			//DEBUG.OUT("no agent to migrate proxyToMigrate " + proxyToMigrate);
 			migration = new EndActionOneShotMigration(GamaMapFactory.create(), current_step); // empty proxyToMigrate
-			DEBUG.OUT("posting EndActionOneShotMigration2 " + migration);
+			//DEBUG.OUT("posting EndActionOneShotMigration2 " + migration);
 		}
 		this.postOneShotAction(migration);
 	}
@@ -222,11 +222,11 @@ public class DistributionExperiment extends ExperimentAgent
 		EndActionOneShotProxyUpdate update;
 		if(proxyToUpdate != null)
 		{
-			DEBUG.OUT("new EndActionOneShotProxyUpdate : " + proxyToUpdate);
+			//DEBUG.OUT("new EndActionOneShotProxyUpdate : " + proxyToUpdate);
 			update = new EndActionOneShotProxyUpdate(proxyToUpdate);
 		}else
 		{
-			DEBUG.OUT("new EndActionOneShotProxyUpdate empty");
+			//DEBUG.OUT("new EndActionOneShotProxyUpdate empty");
 			update = new EndActionOneShotProxyUpdate(GamaMapFactory.create()); // empty proxyToUpdate
 		}
 		this.postOneShotAction(update);
@@ -234,7 +234,7 @@ public class DistributionExperiment extends ExperimentAgent
 	
 	private void synchronizeDistributedExperiments()
 	{
-		DEBUG.OUT("synchronizeDistributedExperiments");
+		//DEBUG.OUT("synchronizeDistributedExperiments");
 		try {
 			MPI.COMM_WORLD.barrier();
 		} catch (MPIException e) {
@@ -250,10 +250,10 @@ public class DistributionExperiment extends ExperimentAgent
 		{
 			if(this.hardSyncServer.isQueueEmpty())
 			{
-				DEBUG.OUT("QueueEmpty SO WE PROCEED");
+				//DEBUG.OUT("QueueEmpty SO WE PROCEED");
 				break;
 			}
-			DEBUG.OUT("QueueEmpty IS TILL PREOCESSORING A RESUETS");
+			//DEBUG.OUT("QueueEmpty IS TILL PREOCESSORING A RESUETS");
 		}
 	}
 }

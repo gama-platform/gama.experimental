@@ -28,7 +28,9 @@ global
 	geometry free_space;
 	
 	//Number of people agent
-	int nb_people <- 100;
+	int nb_people <- 20000;
+	
+	bool simulationOver <- false;
 	
 	//Point to evacuate
 	list<point> target_point <- list({shape.width, 0}, {0,shape.height});
@@ -50,6 +52,16 @@ global
 			target_loc <-  target_point closest_to self;
 		} 
 		 	
+	}
+	
+	reflex
+	{
+		if(length(people where !dead(each)) = 0)
+		{
+ 			write("total_duration sub_model " + float(total_duration)/1000 + "s");
+ 			
+ 			//do die;
+		}
 	}
 }
 //Species which represent the building 
@@ -123,12 +135,10 @@ species people skills:[moving]{
 		draw sphere(size/3) at: {location.x,location.y,size*0.75} color: color;
 	}
 }
-
-experiment main type: gui {
-	
-	float minimum_cycle_duration <- 0.04; 
+experiment display_poeple
+{
 	output {
-		display map type: 2d {
+		display map{
 			
 			species building refresh: false;
 			species people;
@@ -141,5 +151,8 @@ experiment main type: gui {
 			}
 		}
 	}
+}
+experiment main{
+	
 }
 

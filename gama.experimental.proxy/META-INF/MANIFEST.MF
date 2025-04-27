@@ -22,6 +22,8 @@ Export-Package: endActionProxy,
  hardSyncModeComm,
  proxy,
  syncModeEnum,
- proxyPopulation
+ proxyPopulation,
+ graphPartitionning,
+ gridPartitionning
 Bundle-ClassPath: .,
  ext/mpi.jar
