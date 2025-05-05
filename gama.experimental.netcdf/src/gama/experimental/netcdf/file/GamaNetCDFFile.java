@@ -29,6 +29,7 @@ import org.locationtech.jts.geom.Envelope;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
+import gama.core.common.IStatusMessage;
 import gama.core.common.geometry.Envelope3D;
 import gama.core.metamodel.shape.GamaPoint;
 import gama.core.metamodel.shape.GamaShape;
@@ -160,7 +161,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 			
 			try {
 				if (fillBuffer) {
-					scope.getGui().getStatus().beginSubStatus(scope, "Reading file " + getName(scope));
+					scope.getGui().getStatus().informStatus("Reading file " + getName(scope), IStatusMessage.SIMULATION_ICON);
 				}
 				// Necessary to compute it here, because it needs to be passed
 				// to the Hints
@@ -236,7 +237,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 				final double cmy = cellHeight / 2;
 //				for (int n = numRows * numCols, i = n-1 ; i > -1; i--) {
 				for (int i = 0, n = numRows * numCols; i < n; i++) {
-					scope.getGui().getStatus().setSubStatusCompletion(scope, i / (double) n);
+					scope.getGui().getStatus().informStatus(""+(i / (double) n), IStatusMessage.SIMULATION_ICON);
 					final int yy = i / numCols;
 					final int xx = i - yy * numCols;
 //					final int xx = i / numRows;
@@ -269,7 +270,7 @@ public class GamaNetCDFFile extends GamaGridFile {
 //				if (store != null) {
 //					store.dispose();
 //				}
-				scope.getGui().getStatus().endSubStatus(scope, "Opening file " + getName(scope));
+				scope.getGui().getStatus().informStatus("Opening file " + getName(scope), IStatusMessage.SIMULATION_ICON);
 			}
 		}
 

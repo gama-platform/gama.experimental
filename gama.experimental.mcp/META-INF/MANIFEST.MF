@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Gaml.MCP extension
+Bundle-SymbolicName: gama.experimental.mcp;singleton:=true
+Bundle-Vendor: CICT
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Require-Bundle: gama.core;visibility:=reexport,
+ gama.dependencies;visibility:=reexport
+Bundle-ClassPath: .,
+ lib/tutorials-1.0.0-beta4-jar-with-dependencies.jar
+Export-Package: gama.experimental.mcpskill
+Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: gama.experimental.netcdf
