@@ -7,28 +7,33 @@ generate_p2updatesite_category(){
     footer=$(<gama.experimental.p2updatesite/category_footer.xml)
 
     cate=$'\n'$" "$'\n'
-    for file in *; do
-      if [[ -d "$file" && ! -L "$file" ]]; then
-		isInFile=$( cat gama.experimental.p2updatesite/category_body_user.xml | grep -c ${file})
-         if [[ -f "$file/pom.xml" && ${file} != *"gama.experimental.parent"* &&  $isInFile -eq 0  ]]; then
+    for file in *"feature"*; do
+        isInFile=$( cat gama.experimental.p2updatesite/category_body_user.xml | grep -c ${file})
 
-            if [[ ${file} == *"feature"* ]]; then
+        if [[ -f "$file/pom.xml" && ${file} != *"gama.experimental.parent"* &&  $isInFile -eq 0  ]]; then
 
-                version=$(sed '/<parent>/,/<\/parent>/d;/<version>/!d;s/ *<\/\?version> *//g' "$file/pom.xml")
-
-                q=$".qualifier"
-                version=${version/-SNAPSHOT/$q}
-				temp="<feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"
-				temp=$(echo $temp|tr -d '\r')
-				temp=$(echo $temp|tr -d '\n')
-                cate="$cate $temp "$'\r'$'\n'
-
-                #echo $cate
-				echo
-
+            version=$(sed '/<parent>/,/<\/parent>/d;/<version>/!d;s/ *<\/\?version> *//g' "$file/pom.xml")
+            if [ -z $version ]; then
+                version=$(sed '/<version>/!d;s/ *<\/\?version> *//g' "$file/pom.xml" | sed 's/^[[:space:]]*//')
             fi
-        fi
-      fi;
+
+            q=$".qualifier"
+            version=${version/-SNAPSHOT/$q}
+            temp="<feature  url=\"features/"$file"_$version.jar\" id=\"$file\" version=\"$version\"> <category name=\"gama.optional\"/>   </feature>"
+            temp=$(echo $temp|tr -d '\r' |tr -d '\n')
+            cate="$cate $temp "$'\r'$'\n'
+
+            #echo $temp
+        else
+            echo "Skipping $file"
+            if [[ ! -f "$file/pom.xml" ]]; then
+                echo "  No pom.xml properly set"
+            fi
+            if [[ ! $isInFile -eq 0 ]]; then
+                echo "  Already set in gama.experimental.p2updatesite/category_body_user.xml"
+            fi
+            echo "===="
+        fi;
     done
 
     if [[ "$current_cate" != "$cate" ]]; then
@@ -62,8 +67,7 @@ cat $rootPath/gama.experimental.parent/pom_footer.xml >> $rootPath/gama.experime
 
 # Maven to update p2 site
 # ==============================================
-#generate_p2updatesite_category
-
+generate_p2updatesite_category
 
 # Compiling and publishing experimentals
 # ==============================================
