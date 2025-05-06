@@ -59,7 +59,7 @@ generate_p2updatesite_category(){
     fi
 }
 
-generate_parent_pom
+#generate_parent_pom
 generate_p2updatesite_category
 
 cd gama.experimental.parent &&

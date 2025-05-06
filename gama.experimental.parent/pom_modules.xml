@@ -12,16 +12,17 @@
  <module>../gama.experimental.feature.launchpad</module> 
  <module>../gama.experimental.feature.markdown</module> 
  <module>../gama.experimental.feature.matlab</module> 
- <module>../gama.experimental.feature.MPI</module> 
+<!--  <module>../gama.experimental.feature.MPI</module> 
+ --> <module>../gama.experimental.feature.mcp</module> 
  <module>../gama.experimental.feature.netcdf</module> 
- <module>../gama.experimental.feature.proxy</module> 
- <module>../gama.experimental.feature.qrcode</module> 
- <module>../gama.experimental.feature.remote.gui</module> 
- <module>../gama.experimental.feature.rjava</module> 
- <module>../gama.experimental.feature.switchproject</module> 
- <module>../gama.experimental.feature.uml</module> 
- <module>../gama.experimental.feature.webcam</module> 
- <module>../gama.experimental.feature.weka</module> 
+<!--  <module>../gama.experimental.feature.proxy</module> 
+ --> <module>../gama.experimental.feature.qrcode</module> 
+<!--  <module>../gama.experimental.feature.remote.gui</module> 
+ --> <module>../gama.experimental.feature.rjava</module> 
+<!--  <module>../gama.experimental.feature.switchproject</module> 
+ --> <module>../gama.experimental.feature.uml</module> 
+<!--  <module>../gama.experimental.feature.webcam</module> 
+ --> <module>../gama.experimental.feature.weka</module> 
  <module>../gama.experimental.fuzzylogic</module> 
  <module>../gama.experimental.gaming</module> 
  <module>../gama.experimental.gampy</module> 
@@ -33,16 +34,17 @@
  <module>../gama.experimental.launchpad</module> 
  <module>../gama.experimental.markdown</module> 
  <module>../gama.experimental.matlab</module> 
- <module>../gama.experimental.MPI</module> 
+<!--  <module>../gama.experimental.MPI</module> 
+ --> <module>../gama.experimental.mcp</module> 
  <module>../gama.experimental.netcdf</module> 
  <module>../gama.experimental.p2updatesite</module> 
- <module>../gama.experimental.proxy</module> 
- <module>../gama.experimental.qrcode</module> 
- <module>../gama.experimental.remote.gui</module> 
- <module>../gama.experimental.rjava</module> 
- <module>../gama.experimental.switchproject</module> 
- <module>../gama.experimental.uml</module> 
- <module>../gama.experimental.webcam</module> 
- <module>../gama.experimental.weka</module> 
+<!--  <module>../gama.experimental.proxy</module> 
+ --> <module>../gama.experimental.qrcode</module> 
+<!--  <module>../gama.experimental.remote.gui</module> 
+ --> <module>../gama.experimental.rjava</module> 
+<!--  <module>../gama.experimental.switchproject</module> 
+ --> <module>../gama.experimental.uml</module> 
+<!--  <module>../gama.experimental.webcam</module> 
+ --> <module>../gama.experimental.weka</module> 
  </modules>
 
