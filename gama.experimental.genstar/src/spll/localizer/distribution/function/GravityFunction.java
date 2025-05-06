@@ -10,8 +10,8 @@ import gama.core.metamodel.shape.IShape;
 import gama.core.runtime.IScope;
 import gama.core.util.GamaListFactory;
 import gama.core.util.IList;
-import gama.gaml.operators.Spatial.Queries;
-import gama.gaml.operators.Spatial.Transformations;
+import gama.gaml.operators.spatial.SpatialQueries;
+import gama.gaml.operators.spatial.SpatialTransformations;
 import gama.gaml.types.Types;
 
 /**
@@ -64,7 +64,7 @@ public class GravityFunction implements ISpatialComplexFunction<Double> {
 		
 		this.mass = candidates.stream().collect(
 				Collectors.toMap(Function.identity(), 
-						spacEntity -> (double) Queries.overlapping(scope,agents, Transformations.enlarged_by(scope, spacEntity, buffer)).length(scope)));
+						spacEntity -> (double) SpatialQueries.overlapping(scope,agents, SpatialTransformations.enlarged_by(scope, spacEntity, buffer)).length(scope)));
 		this.buffer = buffer;
 		this.frictionCoeff = frictionCoeff;
 	}
@@ -102,7 +102,7 @@ public class GravityFunction implements ISpatialComplexFunction<Double> {
 				mass.put(se, entities.stream().mapToDouble(e -> se.euclidianDistanceTo(e.getLocation())).sum());
 		else
 			for(IShape se : candidates)
-				mass.put(se, (double) Queries.overlapping(scope,entities, Transformations.enlarged_by(scope, se.getLocation(), buffer)).length(scope));
+				mass.put(se, (double) SpatialQueries.overlapping(scope,entities, SpatialTransformations.enlarged_by(scope, se.getLocation(), buffer)).length(scope));
 	}
 
 	@Override

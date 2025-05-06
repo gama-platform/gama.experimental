@@ -29,7 +29,6 @@ import org.geotools.feature.SchemaException;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.operation.TransformException;
 
-import core.metamodel.attribute.Attribute;
 import core.util.GSPerformanceUtil;
 import gama.core.metamodel.agent.IAgent;
 import gama.core.metamodel.shape.GamaPoint;
@@ -42,9 +41,9 @@ import gama.core.util.IList;
 import gama.core.util.matrix.GamaField;
 import gama.gaml.operators.Cast;
 import gama.gaml.operators.Containers;
-import gama.gaml.operators.Spatial.Operators;
-import gama.gaml.operators.Spatial.Queries;
-import gama.gaml.operators.Spatial.Transformations;
+import gama.gaml.operators.spatial.SpatialOperators;
+import gama.gaml.operators.spatial.SpatialQueries;
+import gama.gaml.operators.spatial.SpatialTransformations;
 import gama.gaml.types.Types;
 import spll.localizer.constraint.ISpatialConstraint;
 import spll.localizer.constraint.SpatialConstraintLocalization;
@@ -722,7 +721,7 @@ public class SPLocalizer implements ISPLocalizer {
 	private void localizationInNestWithNumbersMap(IScope scope, final IContainer<?, IAgent> entities, final IShape spatialBounds)
 			throws IOException {
 		List<ISpatialConstraint> otherConstraints = new ArrayList<>(linker.getConstraints());
-		IList<IShape> areas = spatialBounds == null ? map.copy(scope) : (IList<IShape>) Queries.overlapping(scope, map, spatialBounds);
+		IList<IShape> areas = spatialBounds == null ? map.copy(scope) : (IList<IShape>) SpatialQueries.overlapping(scope, map, spatialBounds);
 			areas = gama.gaml.operators.Random.opShuffle(scope, areas);
 			Map<IShape, Double> vals = map.stream().collect(Collectors.toMap(a ->a,
 					e -> Cast.asFloat(scope, e.getAttribute(keyAttMap))));
@@ -786,21 +785,21 @@ public class SPLocalizer implements ISPLocalizer {
 	 * @param avoidOverlapping
 	 */
 	public void computeMinMaxDistance(IScope scope, IList<IShape> nests)  {
-		IShape u = Operators.union(scope, nests);
+		IShape u = SpatialOperators.union(scope, nests);
 		IShape s = null;
 		if (maxDist != null && maxDist > 0.0) {
 			if (minDist != null && minDist >= maxDist) {
-				s = Transformations.enlarged_by(scope, u, maxDist).getExteriorRing(scope);
+				s = SpatialTransformations.enlarged_by(scope, u, maxDist).getExteriorRing(scope);
 			} else {
-				s = Transformations.enlarged_by(scope, u, maxDist);
+				s = SpatialTransformations.enlarged_by(scope, u, maxDist);
 				if (minDist != null && minDist > 0.0) {
-					s = Operators.minus(scope, s, Transformations.enlarged_by(scope, u, minDist));
+					s = SpatialOperators.minus(scope, s, SpatialTransformations.enlarged_by(scope, u, minDist));
 				}
 			}
-			s = Operators.inter(scope, s, scope.getSimulation().getGeometry());
+			s = SpatialOperators.inter(scope, s, scope.getSimulation().getGeometry());
 			
 		} else if (minDist != null && minDist > 0.0) {
-			s = Operators.minus(scope,  scope.getSimulation().getGeometry(), Transformations.enlarged_by(scope, u, minDist));
+			s = SpatialOperators.minus(scope,  scope.getSimulation().getGeometry(), SpatialTransformations.enlarged_by(scope, u, minDist));
 		}
 		this.localizationConstraint.setGeoms((IList<IShape>) s.getGeometries());
 	}
