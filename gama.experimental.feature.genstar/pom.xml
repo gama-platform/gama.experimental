@@ -5,7 +5,7 @@
 >
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.gama</groupId>
-  <artifactId>gama.experimental.genstar</artifactId>
+  <artifactId>gama.experimental.feature.genstar</artifactId>
   <packaging>eclipse-feature</packaging>
   <parent>
   	<groupId>org.gama</groupId>
