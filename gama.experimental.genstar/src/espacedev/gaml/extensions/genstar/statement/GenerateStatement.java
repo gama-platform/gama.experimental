@@ -56,7 +56,7 @@ import one.util.streamex.StreamEx;
  * The Class GenerateStatement.
  */
 @symbol (
-		name = IKeyword.GENERATE,
+		name = GenerateStatement.GENERATE, //IKeyword.GENERATE,
 		kind = ISymbolKind.SEQUENCE_STATEMENT,
 		with_sequence = true,
 		breakable = true,
@@ -125,6 +125,9 @@ import one.util.streamex.StreamEx;
 @validator (GenerateValidator.class)
 public class GenerateStatement extends CreateStatement {//extends AbstractStatementSequence implements IStatement.WithArgs {
 
+	/** From former Gama plugin within Gama */ 
+	public final static String GENERATE = "generate";
+	
 	/** The init. */
 	private Arguments init;
 
@@ -163,7 +166,7 @@ public class GenerateStatement extends CreateStatement {//extends AbstractStatem
 
 		sequence = new RemoteSequence(description);
 		sequence.setName("commands of generate ");
-		setName(IKeyword.GENERATE);
+		setName(GENERATE);
 	}
 
 	@SuppressWarnings ({ "rawtypes", "unchecked" })

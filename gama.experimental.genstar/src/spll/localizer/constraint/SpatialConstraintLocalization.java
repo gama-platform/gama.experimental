@@ -7,8 +7,8 @@ import gama.core.util.GamaListFactory;
 import gama.core.util.IContainer;
 import gama.core.util.IList;
 import gama.gaml.operators.Containers;
-import gama.gaml.operators.Spatial.Queries;
-import gama.gaml.operators.Spatial.Transformations;
+import gama.gaml.operators.spatial.SpatialQueries;
+import gama.gaml.operators.spatial.SpatialTransformations;
 import gama.gaml.types.Types;
 
 public class SpatialConstraintLocalization extends ASpatialConstraint {
@@ -26,11 +26,11 @@ public class SpatialConstraintLocalization extends ASpatialConstraint {
 		if (bounds == null) return (nests == null ? null : (IList<IShape>) (nests.listValue(scope, Types.GEOMETRY, false)));
 		IList<IShape> cands = null;
 		if (geoms != null ) {
-			cands = (IList<IShape>) Queries.overlapping(scope, geoms, bounds);
+			cands = (IList<IShape>) SpatialQueries.overlapping(scope, geoms, bounds);
 			//System.out.println("bounds "+ bounds);
 			if (cands.isEmpty()) return cands;
 			
-			IShape cu= Transformations.convex_hull(scope, bounds);
+			IShape cu= SpatialTransformations.convex_hull(scope, bounds);
 			cands.removeIf(a -> !a.getGeometry().getLocation().intersects(cu));
 			if (nests != null) {
 				cands = Containers.inter(GAMA.getRuntimeScope(), cands, nests);
@@ -49,7 +49,7 @@ public class SpatialConstraintLocalization extends ASpatialConstraint {
 	@Override
 	public void relaxConstraintOp(IList<IShape> nests) {
 		if (bounds != null) 
-			bounds = Transformations.enlarged_by(GAMA.getRuntimeScope(), bounds, increaseStep);
+			bounds = SpatialTransformations.enlarged_by(GAMA.getRuntimeScope(), bounds, increaseStep);
 		else 
 			currentValue = maxIncrease;
 	}

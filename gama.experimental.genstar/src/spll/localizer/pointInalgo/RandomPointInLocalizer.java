@@ -5,14 +5,14 @@ import gama.core.metamodel.shape.IShape;
 import gama.core.runtime.IScope;
 import gama.core.util.GamaListFactory;
 import gama.core.util.IList;
-import gama.gaml.operators.Spatial.Punctal;
+import gama.gaml.operators.spatial.SpatialPunctal;
 
 public class RandomPointInLocalizer implements PointInLocalizer{
 	
 	
 	@Override
 	public GamaPoint pointIn(IScope scope, IShape geom) {
-		return Punctal.any_location_in(scope, geom);
+		return SpatialPunctal.any_location_in(scope, geom);
 	
 		
 	}
