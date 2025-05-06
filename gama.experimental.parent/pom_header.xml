@@ -5,7 +5,7 @@
 	<artifactId>gama.experimental.parent</artifactId>
 	<version>2024.6.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
+
 	<properties>
 		<tycho.version>4.0.8</tycho.version>
 		<jdk.version>21</jdk.version>
@@ -154,3 +154,5 @@
 			<version>${gama.version}</version>
 		</dependency>
 	</dependencies>
+
+	<modules>

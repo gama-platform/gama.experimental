@@ -1,4 +1,6 @@
 
+</modules>
+
 	<build>
 		<extensions>
 			<extension>
@@ -66,17 +68,17 @@
 					<executionEnvironment>JavaSE-${jdk.version}</executionEnvironment>
 				</configuration>
 				<dependencies>
-					<!--dependency containing the annotation processor specified in the 
-						annotationProcessor element <dependency> <groupId>com.github.hqnghi88</groupId> 
-						<artifactId>msi.gama.processor</artifactId> <version>[1.4.0,4.0.0)</version> 
-						</dependency> <dependency> <groupId>com.github.hqnghi88</groupId> <artifactId>msi.gama.ext</artifactId> 
+					<!--dependency containing the annotation processor specified in the
+						annotationProcessor element <dependency> <groupId>com.github.hqnghi88</groupId>
+						<artifactId>msi.gama.processor</artifactId> <version>[1.4.0,4.0.0)</version>
+						</dependency> <dependency> <groupId>com.github.hqnghi88</groupId> <artifactId>msi.gama.ext</artifactId>
 						<version>[0.0.0,4.0.0)</version> </dependency> -->
 				</dependencies>
 			</plugin>
 			<plugin>
-				<!-- You can see the effect of Execution Environnement here : https://wiki.eclipse.org/Tycho/Execution_Environments 
-					: Tycho ensures that package imports may only be matched against the selected 
-					execution environment , b) Tycho hides packages which are not provided by 
+				<!-- You can see the effect of Execution Environnement here : https://wiki.eclipse.org/Tycho/Execution_Environments
+					: Tycho ensures that package imports may only be matched against the selected
+					execution environment , b) Tycho hides packages which are not provided by
 					the configured execution environment. -->
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
@@ -217,7 +219,7 @@
 					<resolver>p2</resolver>
 					<pomDependencies>consider</pomDependencies>
 					<environments>
-						<!-- 
+						<!--
 						<environment>
 							<os>linux</os>
 							<ws>gtk</ws>
