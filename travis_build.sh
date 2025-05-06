@@ -5,6 +5,8 @@ generate_parent_pom(){
     current_modules=$(<gama.experimental.parent/pom_modules.xml)
     footer=$(<gama.experimental.parent/pom_footer.xml)
 
+    echo "$header $current_modules $footer"> gama.experimental.parent/pom.xml
+: << 'COMMENT'
     modules=$'\n'$"<modules>"$'\n'
     for file in *; do 
       if [[ -d "$file" && ! -L "$file" ]]; then
@@ -21,7 +23,9 @@ generate_parent_pom(){
         echo "$modules" > gama.experimental.parent/pom_modules.xml
         echo "$header $modules $footer"> gama.experimental.parent/pom.xml
     fi
+COMMENT
 }
+
 generate_p2updatesite_category(){
     header=$(<gama.experimental.p2updatesite/category_header.xml)
     user_cate=$(<gama.experimental.p2updatesite/category_body_user.xml)
@@ -59,7 +63,7 @@ generate_p2updatesite_category(){
     fi
 }
 
-#generate_parent_pom
+generate_parent_pom
 generate_p2updatesite_category
 
 cd gama.experimental.parent &&
