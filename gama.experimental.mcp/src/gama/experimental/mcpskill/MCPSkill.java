@@ -24,7 +24,9 @@ import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaStreamingChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiTokenCountEstimator;
 import gama.annotations.precompiler.GamlAnnotations.action;
 import gama.annotations.precompiler.GamlAnnotations.arg;
@@ -99,16 +101,32 @@ public class MCPSkill extends Skill {
 	 * @param scope the scope
 	 * @return the string
 	 */
-	@action(name = "build_model", args = {
-			@arg(name = "llm", type = IType.STRING, doc = @doc("command to execute")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+	@action(name = "build_model", args = { @arg(name = "llm", type = IType.STRING, doc = @doc("LLM name: openai or ollama")),
+			@arg(name = "model", type = IType.STRING, doc = @doc("model to use gpt-4o-mini,llama3.2 ... ")),
+			@arg(name = "url", type = IType.STRING, doc = @doc("URL of LLM (for Ollama)")), // "http://localhost:11434"
+			@arg(name = "key", type = IType.STRING, doc = @doc("API Key (for OpenAi)")), }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
 	public String build_model(final IScope scope) {
 		// final IAgent agent = scope.getAgent();
-//		final String commandToExecute = (String) scope.getArg("command", IType.STRING);
-		OllamaChatModel model = (OllamaChatModel) scope.getAgent().getAttribute(IMCPSkill.LLM_MODEL);
-		if (model == null) {
-			model = OllamaChatModel.builder().baseUrl("http://localhost:11434").modelName("llama3.1").logRequests(true)
-					.build();
-			scope.getAgent().setAttribute(IMCPSkill.LLM_MODEL, model);
+		final String llmToBuild = (String) scope.getArg("llm", IType.STRING);
+		final String modelToBuild = (String) scope.getArg("model", IType.STRING);
+		final String urlToBuild = (String) scope.getArg("url", IType.STRING);
+		final String keyToBuild = (String) scope.getArg("key", IType.STRING);
+		if ("openai".equals(llmToBuild)) {
+			ChatModel model = (OpenAiChatModel) scope.getAgent().getAttribute(IMCPSkill.LLM_MODEL);
+			if (model == null) {
+				model = OpenAiChatModel.builder().apiKey(keyToBuild).modelName(modelToBuild) // "gpt-4o-mini"
+						.logRequests(true).build();
+				scope.getAgent().setAttribute(IMCPSkill.LLM_MODEL, model);
+
+			}
+		} else {
+			ChatModel model = (OllamaChatModel) scope.getAgent().getAttribute(IMCPSkill.LLM_MODEL);
+			if (model == null) {
+				model = OllamaChatModel.builder().baseUrl(urlToBuild).modelName(modelToBuild)// "llama3.2"
+						.logRequests(true).build();
+				scope.getAgent().setAttribute(IMCPSkill.LLM_MODEL, model);
+
+			}
 
 		}
 
@@ -176,89 +194,14 @@ public class MCPSkill extends Skill {
 
 		final String msgToAdd = (String) scope.getArg("msg", IType.STRING);
 
-		OllamaChatModel model = (OllamaChatModel) scope.getAgent().getAttribute(IMCPSkill.LLM_MODEL);
+		ChatModel model = (ChatModel) scope.getAgent().getAttribute(IMCPSkill.LLM_MODEL);
 		if (model != null) {
 			String ans = model.chat(msgToAdd);
-			
+
 			return ans;
 		}
 
 		return "";
 
 	}
-
-	/**
-	 * Connect to server.
-	 *
-	 * @param scope the scope
-	 * @throws GamaRuntimeException the gama runtime exception
-	 */
-	@SuppressWarnings("unchecked")
-	@action(name = IMCPSkill.CONNECT_TOPIC, args = {
-			@arg(name = IMCPSkill.PROTOCOL, type = IType.STRING, doc = @doc("protocol type (MQTT (by default), TCP, UDP, websocket, arduino): the possible value ares '"
-					+ "', otherwise the MQTT protocol is used.")),
-			@arg(name = IMCPSkill.PORT, type = IType.INT, doc = @doc("Port number")),
-			@arg(name = "raw", type = IType.BOOL, doc = @doc("message type raw or rich")),
-			@arg(name = IMCPSkill.WITHNAME, type = IType.STRING, optional = true, doc = @doc("ID of the agent (its name) for the simulation")),
-			@arg(name = IMCPSkill.LOGIN, type = IType.STRING, optional = true, doc = @doc("login for the connection to the server")),
-			@arg(name = IMCPSkill.PASSWORD, type = IType.STRING, optional = true, doc = @doc("password associated to the login")),
-			@arg(name = IMCPSkill.SERVER_URL, type = IType.STRING, optional = true, doc = @doc("server URL (localhost or a server URL)")) }, doc = @doc(value = "Action used by a networking agent to connect to a server or to create a server.", examples = {
-					@example(" do connect with_name:\"any_name\";"), @example(" do connect protocol: \"arduino\";"), }))
-	public boolean connectToServer(final IScope scope) throws GamaRuntimeException {
-		final IAgent agt = scope.getAgent();
-		final String serverURL = (String) scope.getArg(IMCPSkill.SERVER_URL, IType.STRING);
-		final String login = (String) scope.getArg(IMCPSkill.LOGIN, IType.STRING);
-		final String password = (String) scope.getArg(IMCPSkill.PASSWORD, IType.STRING);
-		final String networkName = (String) scope.getArg(IMCPSkill.WITHNAME, IType.STRING);
-		final String protocol = (String) scope.getArg(IMCPSkill.PROTOCOL, IType.STRING);
-		final Boolean raw_package = (Boolean) scope.getArg("raw", IType.BOOL);
-		final Integer port = (Integer) scope.getArg(IMCPSkill.PORT, IType.INT);
-
-		return true;
-	}
-
-	/**
-	 * Fetch message.
-	 *
-	 * @param scope the scope
-	 * @return the gama message
-	 */
-	@action(name = IMCPSkill.FETCH_MESSAGE, doc = @doc(value = "Fetch the first message from the mailbox (and remove it from the mailing box). If the mailbox is empty, it returns a nil message.", examples = {
-			@example("message mess <- fetch_message();"), @example("loop while:has_more_message(){ \n"
-					+ "	message mess <- fetch_message();\n" + "	write message.contents;\n" + "}") }))
-	public GamaMessage fetchMessage(final IScope scope) {
-		final IAgent agent = scope.getAgent();
-		GamaMessage msg = null;
-		return msg;
-	}
-
-	/**
-	 * Checks for more message.
-	 *
-	 * @param scope the scope
-	 * @return true, if successful
-	 */
-	@action(name = IMCPSkill.HAS_MORE_MESSAGE_IN_BOX, doc = @doc(value = "Check whether the mailbox contains any message.", examples = {
-			@example("bool mailbox_contain_messages <- has_more_message();"),
-			@example("loop while:has_more_message(){ \n" + "	message mess <- fetch_message();\n"
-					+ "	write message.contents;\n" + "}") }))
-	public boolean hasMoreMessage(final IScope scope) {
-		final IAgent agent = scope.getAgent();
-		return false;
-	}
-
-	/**
-	 * Fetch messages of agents.
-	 *
-	 * @param scope the scope
-	 */
-	@action(name = IMCPSkill.FETCH_MESSAGE_FROM_NETWORK, doc = @doc(value = "Fetch all messages from network to mailbox. Use this in specific case only, this action is done at the end of each step. ", examples = {
-			@example("do fetch_message_from_network;//forces gama to get all the new messages since the begining of the cycle\n"
-					+ "loop while: has_more_message(){ \n" + "	message mess <- fetch_message();\n"
-					+ "	write message.contents;\n" + "}") }))
-	public boolean fetchMessagesOfAgents(final IScope scope) {
-
-		return true;
-	}
-
 }
