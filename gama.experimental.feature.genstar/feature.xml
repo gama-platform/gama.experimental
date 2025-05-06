@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <feature
-      id="gama.experimental.feature.genstar"
-      label="Genstar"
-      version="1.0.0.qualifier">
+    id="gama.experimental.feature.genstar"
+    label="Genstar"
+    version="2024.6.0.qualifier"
+>
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -16,8 +17,6 @@
       [Enter License Description here.]
    </license>
 
-   <plugin
-         id="gama.experimental.genstar"
-         version="0.0.0"/>
+   <plugin id="gama.experimental.genstar" version="0.0.0" />
 
 </feature>
