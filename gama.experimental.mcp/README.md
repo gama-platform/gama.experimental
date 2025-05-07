@@ -1,5 +1,6 @@
 # Installing and Using MCP Plugins in GAMA
 
+
 ## 1. Install MCP Plugins from GAMA
 - Go to `Support > Install new Plugins...`
 
@@ -14,7 +15,6 @@ ollama pull llama3:2
 
 ### Run the model
 ollama run llama3:2
-
 
 ## 4. Run MCP model in GAMA
 ### Run Plugin models/MCP/models/Simple LLM Call.gaml 
