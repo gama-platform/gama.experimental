@@ -1,0 +1,4 @@
+code;cover;location;type;mode;domain;params
+
+# constraints on multiple covers
+ALL0;ALL;;NextCover;ONLY;;/Users/bgaudou/Dev/wsEclipseMars/inra.gama.apiland2/coupling/next_covers.txt
