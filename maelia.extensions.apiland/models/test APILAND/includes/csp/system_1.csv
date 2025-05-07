@@ -1,6 +1,0 @@
-code;cover;location;type;mode;domain;params
-
-# constraints on multiple covers
-ALL0;ALL;;NextCover;ONLY;;F:/maelia/vendee/data/farm/1/next_covers.txt
-ALL1;ALL;;Duration;ONLY;1;middle
-
