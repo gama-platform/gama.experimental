@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JDQSIM implementation
+Bundle-SymbolicName: gama.experimental.jdeqsim;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: gama.experimental.jdeqsim
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Require-Bundle: gama.core,
+ gama.dependencies,
+ gama.annotations
+Export-Package: gama.experimental.jdeqsim.architecture,
+ gama.experimental.jdeqsim.common,
+ gama.experimental.jdeqsim.common.logger,
+ gama.experimental.jdeqsim.core,
+ gama.experimental.jdeqsim.core.message,
+ gama.experimental.jdeqsim.core.message.def,
+ gama.experimental.jdeqsim.core.plan,
+ gama.experimental.jdeqsim.core.unit,
+ gama.experimental.jdeqsim.skill,
+ gama.experimental.jdeqsim.test,
+ gama.experimental.jdeqsim.test.util
