@@ -7,7 +7,7 @@
 model Testconnection
 
 global {
-	string msg0 <- "there is a fire, what do we do? only anwser yes or no";
+	string msg0 <- "there is a fire, what do we do? structure the anwser to 0 or 1. do not output anything else.";
 
 	init {
 		write msg0;
@@ -19,7 +19,7 @@ global {
 
 		create A {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(role: "You are a teenager");
+			chat_memory <- create_chat_memory(role: "You are a teenager.");
 			do add_to_chat_memory message: msg0 memory: chat_memory;
 		} } }
 
@@ -33,10 +33,11 @@ species A skills: [mcp_skill] {
 		do add_to_chat_memory message: comingmsg memory: chat_memory;
 		mymsg <- send_to_llm(llm:chat_model, message: comingmsg);
 		write self;
+//		write fetch_chat_memory(chat_memory);
 		write mymsg;
 		comingmsg <- nil;
 		ask ((A as list) - self) {
-			comingmsg <- myself.mymsg + ". only anwser yes or no";
+			comingmsg <- myself.mymsg ;
 		}
 
 		do add_to_chat_memory message: mymsg memory: chat_memory;

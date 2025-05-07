@@ -17,7 +17,7 @@ global {
 		create A {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
 			chat_memory <- create_chat_memory(role: roleMsg);
-			mcp_transport<-create_mcp_transport(url:"http://localhost:3001/sse",timeout:60);
+			mcp_transport<-create_mcp_transport(url:"https://router.mcp.so/sse",timeout:260);
 			mcp_client<-create_mcp_client(transport: mcp_transport);
 			mcp_tool<-create_mcp_tool(client: mcp_client);
 			my_bot<-create_mcp_ai_service(llm: chat_model, tool: mcp_tool);
