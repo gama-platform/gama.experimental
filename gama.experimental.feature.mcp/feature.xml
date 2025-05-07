@@ -22,7 +22,7 @@
    </url>
 
    <plugin
-         id="gama.experimental.netcdf"
+         id="gama.experimental.mcp"
          version="0.0.0"/>
 
 </feature>
