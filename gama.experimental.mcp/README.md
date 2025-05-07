@@ -3,6 +3,7 @@
 
 ## 1. Install MCP Plugins from GAMA
 - Go to `Support > Install new Plugins...`
+- In all available sites write ```MCP```
 
 ## 2. Install and Launch Ollama
 - Download from: [https://ollama.com/](https://ollama.com/)
@@ -11,10 +12,10 @@
 ## 3. Use Ollama from the Terminal
 
 ### Pull the model (only once, when first installing Ollama or if no LLM is available)
-ollama pull llama3:2
+```ollama pull llama3.2```
 
 ### Run the model
-ollama run llama3:2
+```ollama run llama3.2```
 
 ## 4. Run MCP model in GAMA
-### Run Plugin models/MCP/models/Simple LLM Call.gaml 
+- Run Plugin models/MCP/models/Simple LLM Call.gaml 
