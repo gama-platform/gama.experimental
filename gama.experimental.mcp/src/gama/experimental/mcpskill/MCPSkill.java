@@ -20,6 +20,7 @@ import java.util.Map;
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.mcp.McpToolProvider;
 import dev.langchain4j.mcp.client.DefaultMcpClient;
@@ -42,6 +43,7 @@ import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProvider;
 import dev.langchain4j.service.tool.ToolProviderResult;
+import dev.langchain4j.service.tool.ToolProviderResult.Builder;
 import gama.annotations.precompiler.GamlAnnotations.action;
 import gama.annotations.precompiler.GamlAnnotations.arg;
 import gama.annotations.precompiler.GamlAnnotations.doc;
@@ -53,10 +55,13 @@ import gama.core.messaging.MessagingSkill;
 import gama.core.runtime.IScope;
 import gama.core.util.GamaList;
 import gama.core.util.GamaListFactory;
+import gama.core.util.GamaPair;
 import gama.core.util.IList;
+import gama.core.util.IMap;
 import gama.dev.DEBUG;
+import gama.gaml.descriptions.ActionDescription;
 import gama.gaml.skills.Skill;
-import gama.gaml.types.IType; 
+import gama.gaml.types.IType;
 
 /**
  * The Class NetworkSkill.
@@ -160,8 +165,9 @@ public class MCPSkill extends Skill {
 
 			if (scope.hasArg("responseFormat")) {
 				final String responseFormat = (String) scope.getArg("responseFormat", IType.STRING);
-				modelTobuild = modelTobuild.responseFormat(responseFormat.toString().toLowerCase().equals("json")?
-						dev.langchain4j.model.chat.request.ResponseFormat.JSON:dev.langchain4j.model.chat.request.ResponseFormat.TEXT);
+				modelTobuild = modelTobuild.responseFormat(responseFormat.toString().toLowerCase().equals("json")
+						? dev.langchain4j.model.chat.request.ResponseFormat.JSON
+						: dev.langchain4j.model.chat.request.ResponseFormat.TEXT);
 			}
 			if (scope.hasArg("numCtx")) {
 				final Integer numCtx = (Integer) scope.getArg("numCtx", IType.INT);
@@ -212,73 +218,83 @@ public class MCPSkill extends Skill {
 
 	}
 
-	@action(name = "create_assistant", args = { 
-			@arg(name = "llm", type = IType.NONE, doc = @doc("llm ai")),
-			@arg(name = "tool", type = IType.NONE, doc = @doc("command to execute")),
-			 }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+	@action(name = "create_assistant", args = { @arg(name = "llm", type = IType.NONE, doc = @doc("llm ai")),
+			@arg(name = "memory", type = IType.NONE, doc = @doc("memory")),
+			@arg(name = "tools", type = IType.NONE, doc = @doc("toolprovider")), }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
 	public Object create_assistant(final IScope scope) {
 		// final IAgent agent = scope.getAgent();
 		final Object msgToAdd = scope.getArg("tool", IType.NONE);
-
-//		ToolSpecification toolSpecification = ToolSpecification.builder().name("getWeather")
-//				.description("Returns the weather forecast for a given city")
-//				.parameters(JsonObjectSchema.builder()
-//						.addStringProperty("city", "The city for which the weather forecast should be returned")
-//						.addEnumProperty("temperatureUnit", List.of("CELSIUS", "FAHRENHEIT")).required("city").build())
-//				.build();
-
-//		ToolSpecification toolSpecification = ToolSpecification.builder().name("get_booking_details")
-//				.description("Returns booking details")
-//				.parameters(JsonObjectSchema.builder()
-//						.addProperties(Map.of("bookingNumber",
-//								JsonStringSchema.builder().description("Booking number in B-12345 format").build()))
-//						.build())
-//				.build();
-
-		ToolExecutor toolExecutor = (toolExecutionRequest, memoryId) -> {
-			System.out.println(toolExecutionRequest.arguments());
-//			Map<String, Object> arguments = fromJson(toolExecutionRequest.arguments());
-//			String bookingNumber = arguments.get("bookingNumber").toString();
-//			Booking booking = getBooking(bookingNumber);
-			return "B-12345";
-		};
-
 		final ChatModel chatModel = (ChatModel) scope.getArg("llm", IType.NONE);
-		
+		final ToolProvider toolProvider = (ToolProvider) scope.getArg("tools", IType.NONE);
 
-
-		ToolProvider toolProvider = (toolProviderRequest) -> {
-		    if (toolProviderRequest.userMessage().singleText().contains("booking")) {
-		        ToolSpecification toolSpecification = ToolSpecification.builder()
-		            .name("get_booking_details")
-		            .description("Returns booking details")
-		            .parameters(JsonObjectSchema.builder()
-		                .addStringProperty("bookingNumber")
-		                .build())
-		            .build();
-		        return ToolProviderResult.builder()
-		            .add(toolSpecification, toolExecutor)
-		            .build();
-		    } else {
-		        return null;
-		    }
-		};
-
-		Assistant assistant = AiServices.builder(Assistant.class)
-		    .chatModel(chatModel)
-		    .toolProvider(toolProvider)
-		    .build();
-//		Assistant assistant = AiServices.builder(Assistant.class).chatModel(chatModel)
-//				.tools(Map.of(toolSpecification, toolExecutor)).build();
-
-		return assistant;
+		AiServices assistant = AiServices.builder(Assistant.class).chatModel(chatModel).toolProvider(toolProvider)
+				.hallucinatedToolNameStrategy(toolExecutionRequest -> ToolExecutionResultMessage
+						.from(toolExecutionRequest, "Error: there is no tool called " + toolExecutionRequest.name()));
+		if (scope.hasArg("memory")) {
+			final ChatMemory memory = (ChatMemory) scope.getArg("memory", IType.NONE);
+			assistant = assistant.chatMemory(memory);
+		}
+		return assistant.build();
 
 	}
 
-    interface Assistant {
+	@action(name = "create_tool_provider", args = {
+			@arg(name = "tools", type = IType.MAP, doc = @doc("command to execute")), }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+	public Object create_tool_provider(final IScope scope) {
+		// final IAgent agent = scope.getAgent();
+		final IMap tools = (IMap) scope.getArg("tools", IType.MAP);
+		ToolProvider toolProvider = (toolProviderRequest) -> {
+//			System.out.println("toolProviderRequest " + toolProviderRequest.userMessage().singleText());
+			Builder tb = ToolProviderResult.builder();
+			tools.getPairs().stream().forEach(
+					(c) -> tb.add((ToolSpecification) ((GamaPair) c).key, (ToolExecutor) ((GamaPair) c).value));
+			return tb
+//					.add(toolSpecification, toolExecutor)
+//					.add(toolSpecification2, toolExecutor2)
+					.build();
 
-        String chat(String message);
-    }
+		};
+
+		return toolProvider;
+
+	}
+
+	@action(name = "create_tool_executor", args = {
+			@arg(name = "execute", type = IType.NONE, doc = @doc("command to execute")), }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+	public Object create_tool_executor(final IScope scope) {
+		// final IAgent agent = scope.getAgent();
+		final Object execute = scope.getArg("execute", IType.NONE);
+//		scope.getModel().getAction(getName())
+
+		ToolExecutor toolExecutor = (toolExecutionRequest, memoryId) -> {
+			if (execute instanceof ActionDescription) {
+				String aname = ((ActionDescription) execute).getName();
+				return scope.getModel().getAction(aname).executeOn(scope).toString();
+			}
+			return toolExecutionRequest.arguments();
+		};
+
+		return toolExecutor;
+
+	}
+
+	@action(name = "specify_tool", args = { @arg(name = "tool", type = IType.STRING, doc = @doc("significant name")),
+			@arg(name = "description", type = IType.STRING, doc = @doc("clear detailed description for the tool")), }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+	public Object specify_tool(final IScope scope) {
+		// final IAgent agent = scope.getAgent();
+		final String name = (String) scope.getArg("tool", IType.STRING);
+		final String description = (String) scope.getArg("description", IType.STRING);
+
+		ToolSpecification toolSpecification = ToolSpecification.builder().name(name).description(description).build();
+
+		return toolSpecification;
+
+	}
+
+	interface Assistant {
+
+		String chat(String message);
+	}
 
 	@action(name = "fetch_chat_memory", args = {
 			@arg(name = "memory", type = IType.NONE, doc = @doc("memory to fetch")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
@@ -309,17 +325,15 @@ public class MCPSkill extends Skill {
 
 	}
 
-	@action(name = "send_to_llm", args = { 
-			@arg(name = "llm", type = IType.NONE, doc = @doc("command to execute")),
+	@action(name = "send_to_llm", args = { @arg(name = "llm", type = IType.NONE, doc = @doc("command to execute")),
 			@arg(name = "message", type = IType.STRING, doc = @doc("command to execute")),
-			@arg(name = "with_memory", type = IType.NONE, doc = @doc("command to execute")),
-			}, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+			@arg(name = "with_memory", type = IType.NONE, doc = @doc("command to execute")), }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
 	public String send_to_llm(final IScope scope) {
 
 		final String msgToAdd = (String) scope.getArg("message", IType.STRING);
 		final ChatModel model = (ChatModel) scope.getArg("llm", IType.NONE);
-		if (scope.hasArg("with_memory")) { 
-			 
+		if (scope.hasArg("with_memory")) {
+
 			final ChatMemory memory = (ChatMemory) scope.getArg("with_memory", IType.NONE);
 			if (model != null) {
 				ChatResponse ans = model.chat(memory.messages());
@@ -338,8 +352,8 @@ public class MCPSkill extends Skill {
 
 	}
 
-
-	@action(name = "send_to_assistant", args = { @arg(name = "assistant", type = IType.NONE, doc = @doc("command to execute")),
+	@action(name = "send_to_assistant", args = {
+			@arg(name = "assistant", type = IType.NONE, doc = @doc("command to execute")),
 			@arg(name = "message", type = IType.STRING, doc = @doc("command to execute")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
 	public String send_to_assistant(final IScope scope) {
 
