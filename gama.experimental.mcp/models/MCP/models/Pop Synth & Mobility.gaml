@@ -56,8 +56,7 @@ Do not include any explanatory text—only the list in the specified format.";
 		write sample(msg);
 		create genPop {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.1");
-			chat_memory <- create_chat_memory(role:role);	
-		//	do add_to_chat_memory message: msg0 memory: chat_memory;
+		//	chat_memory <- create_chat_memory(role:role);	
 		}	
 		
 		ask genPop {
@@ -87,14 +86,14 @@ Do not include any explanatory text—only the list in the specified format.";
 				
 				float distance_to_work <- 0.0; 
 				using(topology(the_graph)) {
-					distance_to_work <- self distance_to working_place * 100;
+					distance_to_work <- self distance_to working_place * rnd(10.0);
 				}		
 				
 				role <- "I am " + name + ". I am " + ((gender = 'M') ? "a man. " : "a woman. ");
 				role <- role + "My workplace is " + distance_to_work + " meters away. ";
 				
 				chat_model_people <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.1");
-				chat_memory_people <- create_chat_memory(role:role);	
+				// chat_memory_people <- create_chat_memory(role:role);	
 				
 				write role + " has been created.";
 			}
@@ -158,18 +157,23 @@ species people skills:[moving,mcp_skill] {
 		the_target <- any_location_in (working_place);
 				
 		string prompt_mob <- "Today, the weather is: " + weather ;
-		prompt_mob <- prompt_mob + "What is the best mode of transportation today? ";
+		prompt_mob <- prompt_mob + "What is for me the best mode of transportation today? ";
 		prompt_mob <- prompt_mob + "Answer with only one of the following words, and nothing else: car, bike, or bus.";
 		
-		string answer <- lower_case(send_to_llm(llm:chat_model_people, message: prompt_mob));
+//		write prompt_mob color: #green;
+		
+		string answer <- lower_case(send_to_llm(llm:chat_model_people, message: role+prompt_mob));
 		mobility_mode <- (answer contains "car")?"car": ((answer contains "bike")?"bike":"bus");
 		
-		write ""+self + " - " + answer + " - " + mobility_mode;
+		write role+prompt_mob color: #blue;
+		write ""+self + " - " + answer + " -> " + mobility_mode;
 		color <- (answer = "car") ? #red : ((answer = "bike") ? #green : #pink);
 			
-		do add_to_chat_memory 
-			message: "The "+current_date.day+"-"+current_date.month+"-"+current_date.year+", I took the " + answer + "." 
-			memory: chat_memory_people;		
+//		do add_to_chat_memory 
+//			message: "The "+current_date.day+"-"+current_date.month+"-"+current_date.year+", I took the " + mobility_mode + "." 
+//			memory: chat_memory_people;		
+	
+	//	role <- role + "The "+current_date.day+"-"+current_date.month+"-"+current_date.year+", I took the " + mobility_mode + ".";
 	}
 		
 	reflex time_to_go_home when: current_date.hour = end_work and objective = "working"{
