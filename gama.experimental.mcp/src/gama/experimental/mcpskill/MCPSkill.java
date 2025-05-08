@@ -99,40 +99,40 @@ public class MCPSkill extends Skill {
 				final Double frequencyPenalty = (Double) scope.getArg("frequencyPenalty", IType.FLOAT);
 				modelTobuild = modelTobuild.frequencyPenalty(frequencyPenalty);
 			}
-			if (scope.hasArg("numCtx")) {
+			if (scope.hasArg("maxCompletionTokens")) {
 				final Integer maxCompletionTokens = (Integer) scope.getArg("maxCompletionTokens", IType.INT);
 				modelTobuild = modelTobuild.maxCompletionTokens(maxCompletionTokens);
 			}
-			if (scope.hasArg("numCtx")) {
+			if (scope.hasArg("maxRetries")) {
 				final Integer maxRetries = (Integer) scope.getArg("maxRetries", IType.INT);
 				modelTobuild = modelTobuild.maxRetries(maxRetries);
 			}
-			if (scope.hasArg("numCtx")) {
+			if (scope.hasArg("maxTokens")) {
 				final Integer maxTokens = (Integer) scope.getArg("maxTokens", IType.INT);
 				modelTobuild = modelTobuild.maxTokens(maxTokens);
 			}
-			if (scope.hasArg("numCtx")) {
+			if (scope.hasArg("presencePenalty")) {
 				final Double presencePenalty = (Double) scope.getArg("presencePenalty", IType.FLOAT);
 				modelTobuild = modelTobuild.presencePenalty(presencePenalty);
 			}
-			if (scope.hasArg("numCtx")) {
+			if (scope.hasArg("seed")) {
 
 				final Integer seed = (Integer) scope.getArg("seed", IType.INT);
 				modelTobuild = modelTobuild.seed(seed);
 			}
-			if (scope.hasArg("numCtx")) {
+			if (scope.hasArg("store")) {
 				final Boolean store = (Boolean) scope.getArg("store", IType.BOOL);
 				modelTobuild = modelTobuild.store(store);
 			}
-			if (scope.hasArg("numCtx")) {
+			if (scope.hasArg("temperature")) {
 				final Double temperature = (Double) scope.getArg("temperature", IType.FLOAT);
 				modelTobuild = modelTobuild.temperature(temperature);
 			}
-			if (scope.hasArg("numCtx")) {
+			if (scope.hasArg("timeout")) {
 				final Integer timeout = (Integer) scope.getArg("timeout", IType.INT);
 				modelTobuild = modelTobuild.timeout(Duration.ofSeconds(timeout));
 			}
-			if (scope.hasArg("numCtx")) {
+			if (scope.hasArg("topP")) {
 				final Double topP = (Double) scope.getArg("topP", IType.FLOAT);
 				modelTobuild = modelTobuild.topP(topP);
 			}
@@ -160,7 +160,6 @@ public class MCPSkill extends Skill {
 				modelTobuild = modelTobuild.seed(seed);
 			}
 			if (scope.hasArg("temperature")) {
-
 				final Double temperature = (Double) scope.getArg("temperature", IType.FLOAT);
 				modelTobuild = modelTobuild.temperature(temperature);
 			}
