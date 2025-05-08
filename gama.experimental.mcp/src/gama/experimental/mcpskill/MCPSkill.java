@@ -15,7 +15,10 @@ import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 
+import dev.langchain4j.agent.tool.Tool;
+import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.mcp.McpToolProvider;
@@ -28,11 +31,17 @@ import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel.OllamaChatModelBuilder;
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.request.ResponseFormat;
+import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
+import dev.langchain4j.model.chat.request.json.JsonStringSchema;
+import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiTokenCountEstimator;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProvider;
+import dev.langchain4j.service.tool.ToolProviderResult;
 import gama.annotations.precompiler.GamlAnnotations.action;
 import gama.annotations.precompiler.GamlAnnotations.arg;
 import gama.annotations.precompiler.GamlAnnotations.doc;
@@ -47,7 +56,7 @@ import gama.core.util.GamaListFactory;
 import gama.core.util.IList;
 import gama.dev.DEBUG;
 import gama.gaml.skills.Skill;
-import gama.gaml.types.IType;
+import gama.gaml.types.IType; 
 
 /**
  * The Class NetworkSkill.
@@ -67,6 +76,7 @@ public class MCPSkill extends Skill {
 			@arg(name = "model_name", type = IType.STRING, doc = @doc("model to use gpt-4o-mini,llama3.2 ... ")),
 			@arg(name = "url", type = IType.STRING, doc = @doc("URL of LLM (for Ollama)")), // "http://localhost:11434"
 			@arg(name = "key", type = IType.STRING, doc = @doc("API Key (for OpenAi)")),
+			@arg(name = "responseFormat", type = IType.STRING, doc = @doc("responseFormat:'json', 'text' by default")),
 			@arg(name = "numCtx", type = IType.INT, doc = @doc("numCtx (for Ollama)")),
 			@arg(name = "numPredict", type = IType.INT, doc = @doc("numPredict (for Ollama)")),
 			@arg(name = "repeatPenalty", type = IType.FLOAT, doc = @doc("repeatPenalty (for Ollama)")),
@@ -95,6 +105,10 @@ public class MCPSkill extends Skill {
 			OpenAiChatModelBuilder modelTobuild = OpenAiChatModel.builder().apiKey(keyToBuild)
 					.modelName(modelnameToBuild); // "gpt-4o-mini"
 
+			if (scope.hasArg("responseFormat")) {
+				final String responseFormat = (String) scope.getArg("responseFormat", IType.STRING);
+				modelTobuild = modelTobuild.responseFormat(responseFormat);
+			}
 			if (scope.hasArg("frequencyPenalty")) {
 				final Double frequencyPenalty = (Double) scope.getArg("frequencyPenalty", IType.FLOAT);
 				modelTobuild = modelTobuild.frequencyPenalty(frequencyPenalty);
@@ -143,6 +157,12 @@ public class MCPSkill extends Skill {
 
 			OllamaChatModelBuilder modelTobuild = OllamaChatModel.builder().baseUrl(urlToBuild)
 					.modelName(modelnameToBuild);// "llama3.2"
+
+			if (scope.hasArg("responseFormat")) {
+				final String responseFormat = (String) scope.getArg("responseFormat", IType.STRING);
+				modelTobuild = modelTobuild.responseFormat(responseFormat.toString().toLowerCase().equals("json")?
+						dev.langchain4j.model.chat.request.ResponseFormat.JSON:dev.langchain4j.model.chat.request.ResponseFormat.TEXT);
+			}
 			if (scope.hasArg("numCtx")) {
 				final Integer numCtx = (Integer) scope.getArg("numCtx", IType.INT);
 				modelTobuild = modelTobuild.numCtx(numCtx);
@@ -192,13 +212,80 @@ public class MCPSkill extends Skill {
 
 	}
 
+	@action(name = "create_assistant", args = { 
+			@arg(name = "llm", type = IType.NONE, doc = @doc("llm ai")),
+			@arg(name = "tool", type = IType.NONE, doc = @doc("command to execute")),
+			 }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+	public Object create_assistant(final IScope scope) {
+		// final IAgent agent = scope.getAgent();
+		final Object msgToAdd = scope.getArg("tool", IType.NONE);
+
+//		ToolSpecification toolSpecification = ToolSpecification.builder().name("getWeather")
+//				.description("Returns the weather forecast for a given city")
+//				.parameters(JsonObjectSchema.builder()
+//						.addStringProperty("city", "The city for which the weather forecast should be returned")
+//						.addEnumProperty("temperatureUnit", List.of("CELSIUS", "FAHRENHEIT")).required("city").build())
+//				.build();
+
+//		ToolSpecification toolSpecification = ToolSpecification.builder().name("get_booking_details")
+//				.description("Returns booking details")
+//				.parameters(JsonObjectSchema.builder()
+//						.addProperties(Map.of("bookingNumber",
+//								JsonStringSchema.builder().description("Booking number in B-12345 format").build()))
+//						.build())
+//				.build();
+
+		ToolExecutor toolExecutor = (toolExecutionRequest, memoryId) -> {
+			System.out.println(toolExecutionRequest.arguments());
+//			Map<String, Object> arguments = fromJson(toolExecutionRequest.arguments());
+//			String bookingNumber = arguments.get("bookingNumber").toString();
+//			Booking booking = getBooking(bookingNumber);
+			return "B-12345";
+		};
+
+		final ChatModel chatModel = (ChatModel) scope.getArg("llm", IType.NONE);
+		
+
+
+		ToolProvider toolProvider = (toolProviderRequest) -> {
+		    if (toolProviderRequest.userMessage().singleText().contains("booking")) {
+		        ToolSpecification toolSpecification = ToolSpecification.builder()
+		            .name("get_booking_details")
+		            .description("Returns booking details")
+		            .parameters(JsonObjectSchema.builder()
+		                .addStringProperty("bookingNumber")
+		                .build())
+		            .build();
+		        return ToolProviderResult.builder()
+		            .add(toolSpecification, toolExecutor)
+		            .build();
+		    } else {
+		        return null;
+		    }
+		};
+
+		Assistant assistant = AiServices.builder(Assistant.class)
+		    .chatModel(chatModel)
+		    .toolProvider(toolProvider)
+		    .build();
+//		Assistant assistant = AiServices.builder(Assistant.class).chatModel(chatModel)
+//				.tools(Map.of(toolSpecification, toolExecutor)).build();
+
+		return assistant;
+
+	}
+
+    interface Assistant {
+
+        String chat(String message);
+    }
 
 	@action(name = "fetch_chat_memory", args = {
-			@arg(name = "memory", type = IType.NONE, doc = @doc("memory to fetch"))  }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+			@arg(name = "memory", type = IType.NONE, doc = @doc("memory to fetch")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
 	public IList<String> fetch_chat_memory(final IScope scope) {
 		// final IAgent agent = scope.getAgent();
 		final ChatMemory chatMemory = (ChatMemory) scope.getArg("memory", IType.NONE);
-		IList<String> msgs=GamaListFactory.create();
+		IList<String> msgs = GamaListFactory.create();
 		chatMemory.messages().stream().forEach((c) -> msgs.add(c.toString()));
 
 		return msgs;
@@ -222,12 +309,42 @@ public class MCPSkill extends Skill {
 
 	}
 
-	@action(name = "send_to_llm", args = { @arg(name = "llm", type = IType.NONE, doc = @doc("command to execute")),
-			@arg(name = "message", type = IType.STRING, doc = @doc("command to execute")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+	@action(name = "send_to_llm", args = { 
+			@arg(name = "llm", type = IType.NONE, doc = @doc("command to execute")),
+			@arg(name = "message", type = IType.STRING, doc = @doc("command to execute")),
+			@arg(name = "with_memory", type = IType.NONE, doc = @doc("command to execute")),
+			}, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
 	public String send_to_llm(final IScope scope) {
 
 		final String msgToAdd = (String) scope.getArg("message", IType.STRING);
 		final ChatModel model = (ChatModel) scope.getArg("llm", IType.NONE);
+		if (scope.hasArg("with_memory")) { 
+			 
+			final ChatMemory memory = (ChatMemory) scope.getArg("with_memory", IType.NONE);
+			if (model != null) {
+				ChatResponse ans = model.chat(memory.messages());
+
+				return ans.toString();
+			}
+		}
+
+		if (model != null) {
+			String ans = model.chat(msgToAdd);
+
+			return ans;
+		}
+
+		return "";
+
+	}
+
+
+	@action(name = "send_to_assistant", args = { @arg(name = "assistant", type = IType.NONE, doc = @doc("command to execute")),
+			@arg(name = "message", type = IType.STRING, doc = @doc("command to execute")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+	public String send_to_assistant(final IScope scope) {
+
+		final String msgToAdd = (String) scope.getArg("message", IType.STRING);
+		final Assistant model = (Assistant) scope.getArg("assistant", IType.NONE);
 
 		if (model != null) {
 			String ans = model.chat(msgToAdd);
