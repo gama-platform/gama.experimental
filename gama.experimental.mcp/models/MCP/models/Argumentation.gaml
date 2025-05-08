@@ -7,12 +7,12 @@
 model Testconnection
 
 global {
-	string context <- "Nous jouons un jeu de rôle. Voici le contexte général: il existe un nouveau type de compteur : les compteurs d'eau communicants. Les agriculteurs doivent définir s'ils veulent l'adopter ou non";
+	string context <- "We are playing a role-playing game. Here is the general context: a new type of meter has been introduced—smart water meters. Farmers must decide whether or not they want to adopt them.";
 
 	init {
 		
 		create Farmer {
-			role <- "tu joues le role d'un jeune agriculteur, qui aime tester de nouvelles technologies.";
+			role <- "You are playing the role of a young farmer who enjoys trying out new technologies.";
 			adoption <- true;
 			confidence_level <- 3;
 			economic_level <- 2;
@@ -26,7 +26,7 @@ global {
 		
 		
 		create Farmer {
-			role <- "tu joues le role d'un agriculteur père de famille. Tu ne sais rien sur les compteurs d'eau communicants. Tu es intéressé par les questions environnementales et tu peux être sensible aux questions des resources en eaux";
+			role <- "You are playing the role of a farmer and father. You are interested in environmental issues and may be sensitive to questions about water resources.";
 			
 			adoption <- false;
 			confidence_level <- 1;
@@ -40,7 +40,7 @@ global {
 		}
 		
 			create Farmer {
-				role <- "tu joues le role d'une agricultrice bio de 38 ans. Tu es très sensible à l'avis de " + Farmer[0];
+				role <- "You are playing the role of a 38-year-old organic farmer. You are very influenced by " +  Farmer[0].name +"’s opinion. ";
 				adoption <- true;
 				confidence_level <- 2;
 				economic_level <- 1;
@@ -53,9 +53,7 @@ global {
 		}
 		
 		create Farmer {
-			role <- "tu joues le role d'un vieil agriculteur, qui est réticent à tester de nouvelles technologies. Tu es équipé d'un 
-				vieux compteur mécanique et tu ne vois pas pourquoi tu devrais changer de compteur d'eau. Pour toi, les compteurs communicants, cela vaut cher et c'est complexe.
- 				Tu n'es pas intéressé par les questions environnementales";
+			role <- "You are playing the role of an old farmer who is reluctant to try new technologies. You have an old mechanical meter and don’t see why you should switch to a smart water meter. To you, smart meters are expensive and complicated. You are not interested in environmental issues.";
 			
 			adoption <- false;
 			confidence_level <- 3;
@@ -92,23 +90,22 @@ species Farmer skills: [mcp_skill] {
 	string last_word <- "";
 
 	string read_attribute {
-		//string mess <- " J'ai un niveau d'assurance de " + confidence_level + " sur 5. 1 signifie que je ne suis pas sûr du tout de moi et que je peux très facilement changer d'avis sur l'utilisation des compteurs d'eau communicants. Un niveau de 5 signifie que je suis très sûr de moi et que je ne souhaite pas changer d'avis."; 
-		string mess <- "";//" J'ai un niveau d'assurance de " + confidence_level + " sur 5. 1 signifie que je ne suis pas sûr du tout de moi et que je peux très facilement changer d'avis sur l'utilisation des compteurs d'eau communicants. Un niveau de 5 signifie que je suis très sûr de moi et que je ne souhaite pas changer d'avis."; 
+		string mess <- "";
 		if confidence_level = 1 {
-			mess <-  " Tu n'es pas sûr du tout de toi et tu peux très facilement changer d'avis sur l'utilisation des compteurs d'eau communicants.";
+			mess <-  " You are very unsure of yourself and can easily change your mind about using smart water meters.";
 		} else if confidence_level = 2{
-			mess <-  " Tu as un avis sur l'utilisation des compteurs d'eau communicants, mais tu peux éventuellement changer d'avis sur ce sujet.";
+			mess <-  " You have an opinion about the use of smart water meters, but you might eventually change your mind on the subject.";
 		} else {
-			mess <-  " Tu es très sûr de toi et tu ne veux pas changer d'avis sur l'utilisation des compteurs d'eau communicants.";
+			mess <-  " You are very confident in your opinion and do not want to change your mind about using smart water meters.";
 		}
 		if economic_level = 1 {
-			mess <-  mess + " Tu as un niveau économique faible : tu es pauvre et tu n'as pas beaucoup de marges financières.";
+			mess <-  mess + " You have a low economic status: you are poor and have very little financial leeway.";
 		} else if economic_level = 2{
-			mess <-  mess + " Tu as un niveau financier moyen, qui te permet d'investir dans quelques nouvelles technologies.";
+			mess <-  mess + " You have an average financial status, which allows you to invest in some new technologies.";
 		} else {
-			mess <-  mess + " Tu es très riche et tu peux facilement investir dans les nouvelles technologies.";
+			mess <-  mess + " You are very wealthy and can easily invest in new technologies.";
 		}
-		mess <- mess + (adoption ?  " Je suis un utilisateur des compteurs d'eau communicant" : " Je n'ai jamais utilisé avant les compteurs communicants");
+		mess <- mess + (adoption ?  " You are a user of smart water meters" : " You are not a user of smart water meters");
 		return mess;
 	}
 	init {
@@ -123,19 +120,22 @@ species Farmer skills: [mcp_skill] {
 		string msg <- send_to_llm(llm:chat_model, message:firstmsg );
 		last_word <- msg;
 		//write ( "\n\nfirstmsg : " + name + " -> "+ firstmsg) color: color;
+		speak_with <- to_who;
+		ask experiment {
+				do update_outputs;
+			}
+			
 		write ( "\n"+ name + " to " + to_who.name + " -> " + (msg)) color: color;
 		string msg_to_send <- "l'agriculteur " + name + " souhaite vous donner son avis sur les compteurs d'eau communicant";
 		msg_to_send  <- msg_to_send + " il vous dit pour vous convaincre: " + msg ;
 		//write name + "-> " + sample(msg);
 		already_given <- already_given +  msg;
 		ask  to_who{ 
-			myself.speak_with <- self;
 			already_received <- already_received + msg_to_send;
 		
-			string comingmsg <- context + "\n" + role + "\nVoici les arguments reçus. " + already_received + ". " + (empty(already_given) ? "": ("Voici ceux que tu as données: " + already_given));
-			string msg_ <- comingmsg + "\nEst-ce que tu veux utiliser les compteurs d'eau communicants (ou continuer à les utiliser) ? réponse par 'OUI, je compte utiliser les compteurs d'eau communicants' ou 'NON, je ne veux pas utiliser les compteurs d'eau communicants' en donnant des arguments pour ton choix" ;
-			//write ("\nmsg_: " + name + " -> "+ msg) color: color;
-		
+			string comingmsg <- context + "\n" + role + "\nHere are the arguments received. " + already_received + ". " + (empty(already_given) ? "": (" Here are the ones you gave: " + already_given));
+			string msg_ <- comingmsg + "\nDo you want to use smart water meters (or continue using them)? Answer with ‘YES, I plan to use smart water meters’ or ‘NO, I do not want to use smart water meters’ and provide arguments for your choice" ;
+			
 		
 			string adotion_str <- send_to_llm(llm:chat_model, message: msg_);
 			last_word <- adotion_str;
@@ -151,12 +151,11 @@ species Farmer skills: [mcp_skill] {
 			ask experiment {
 				do update_outputs;
 			}
-			//write name + " Adoption -> " + sample(adotion_str);
 			
 			
 		
 		}
-		string msg_c <- context + "\n" + role +"\nEst-ce que tu as encore de nouvelles choses à dire sachant que tu as déjà dit ça + " + already_given + " ? réponse soit OUI ou NON sur le fait d'avoir encore des nouveaux arguments à donner";
+		string msg_c <- context + "\n" + role +"\nDo you still have new things to say knowing that you have already said this? " + already_given + ". Answer either YES or NO regarding whether you have new arguments to provide";
 		//write ( "\nmsg2_: " + name + "-> " + msg_c) color: color;
 		string continue_str <- send_to_llm(llm:chat_model, message:msg_c);
 		wish_to_talk<- "oui" in lower_case(continue_str);
@@ -196,10 +195,10 @@ species Farmer skills: [mcp_skill] {
 			draw shape + 2 color: #gray ;
 		
 		}
-		draw shape  color: color ;
-		draw  icon size: 25 ;
-		draw circle(3) color: adoption ? #green : #red border: #black at: location + {10,-10};
-		draw name font: font(15, #bold) color: #white at: location + {0,13.5,0.2} anchor: #center;
+		draw shape  color: color depth: 0.1;
+		draw  icon size: 25 at: (location + {0,0,0.2});
+		draw circle(3) color: adoption ? #green : #red border: #black at: location + {10,-10} depth: 1;
+		draw name font: font(15, #bold) color: #white at: location + {0,13.5,0.2} anchor: #center ;
 		
 		//draw mymsg at: location + {0, 0, 10} font: font("Helvetica", 30, #bold) color: #red;
 	}
