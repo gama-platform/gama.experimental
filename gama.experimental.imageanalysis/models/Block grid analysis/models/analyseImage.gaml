@@ -18,22 +18,22 @@ global {
 	
 
 	//tolerance for the comparison of color (white and black)
-	float tolerance_BW <- 1.2 min: 1.0 max: 2.0 step: 0.1 parameter: true;
+	float tolerance_BW <- 1.2 min: 1.0 max: 2.0 step: 0.1 ;
 	
 	//allow to increase the constrast of the image
-	float coeff_constrast <- 1.0 min: 1.0 max:3.0 step: 0.1 parameter: true;
+	float coeff_constrast <- 1.0 min: 1.0 max:3.0 step: 0.1 ;
 	
 	//define the low threshold for the detection of block
-	float low_threhold_block_detection <- 0.1 min: 0.0 max:0.5 step: 0.1 parameter: true;
+	float low_threhold_block_detection <- 0.1 min: 0.0 max:0.5 step: 0.1 ;
 	
 	//define the high threshold for the detection of block
-	float high_threhold_block_detection <- 0.5 min: 0.1 max:1.0 step: 0.1 parameter: true;
+	float high_threhold_block_detection <- 0.5 min: 0.1 max:1.0 step: 0.1 ;
 	
 	//apply filters to improve the image quality
-	bool improve_image <- false parameter: true;
+	bool improve_image <- false ;
 	
 	//possibility to save all the images produced for debugging puropose
-	bool save_image <- false parameter: true;
+	bool save_image <- false ;
 
 	
 	list<point> distorsion_points <- [{384.54160789844855,64.96240601503759,0.0},{1402.7644569816644,32.48120300751879,0.0},{1408.1805359661496,1039.3984962406014,0.0},{430.5782792665726,1055.639097744361,0.0}];

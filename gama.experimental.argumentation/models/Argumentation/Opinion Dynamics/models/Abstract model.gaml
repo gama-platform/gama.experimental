@@ -264,7 +264,7 @@ species people skills: [argumenting] frequency: 0 {
 
 experiment basic_exp type: gui {
 	output {
-		display chart refresh: every(100 #cycle) {
+		display chart refresh: every(100 #cycle) type: 2d{
 			/*chart "opinon" series_label_position: none memorize: false size: {1, 0.5} {
 				datalist legend: list(people) collect each.name value: list(people) collect (each.opinion) color: [#black];
 			}*/
@@ -291,7 +291,7 @@ experiment batch_test_total_arguments type: batch until: cycle = 1000000 keep_se
 	parameter nb_arguments_ags var: nb_arguments_ags among: [1, 3, 5, 7, 10, 20, 30, 60];
 
 	reflex result {
-		list sims <- (simulations where each.convergence);
+		list<model_comparison_model> sims <- (simulations where each.convergence);
 		string vv <- name + " nb_arguments_ags:" + nb_arguments_ags + " nb_per_group:" + [simulations mean_of each.nb_per_group[0], simulations mean_of each.nb_per_group[1], simulations
 		mean_of each.nb_per_group[2], simulations mean_of each.nb_per_group[3], simulations mean_of each.nb_per_group[4], simulations mean_of each.nb_per_group[5], simulations mean_of
 		each.nb_per_group[6], simulations mean_of each.nb_per_group[7]] + "std: " + [standard_deviation(simulations collect each.nb_per_group[0]), standard_deviation(simulations collect
@@ -328,7 +328,7 @@ experiment batch_test_argumentation_arguments type: batch until: cycle = 1000000
 	parameter nb_arguments_ags var: nb_arguments_ags among: [1, 3, 5, 7, 10, 20, 30, 60];
 
 	reflex result {
-		list sims <- (simulations where each.convergence);
+		list<model_comparison_model> sims <- (simulations where each.convergence);
 		string vv <- name + " nb_arguments_ags:" + nb_arguments_ags + " nb_per_group:" + [simulations mean_of each.nb_per_group[0], simulations mean_of each.nb_per_group[1], simulations
 		mean_of each.nb_per_group[2], simulations mean_of each.nb_per_group[3], simulations mean_of each.nb_per_group[4], simulations mean_of each.nb_per_group[5], simulations mean_of
 		each.nb_per_group[6], simulations mean_of each.nb_per_group[7]] + "std: " + [standard_deviation(simulations collect each.nb_per_group[0]), standard_deviation(simulations collect
@@ -365,7 +365,7 @@ experiment batch_test_argumentation_attacks type: batch until: cycle = 1000000 k
 	parameter nb_of_attacks var: nb_of_attacks among: [0, 100, 200,300, 400,500,600,700,800, 900];
 
 	reflex result {
-		list sims <- (simulations where each.convergence);
+		list<model_comparison_model> sims <- (simulations where each.convergence);
 		string vv <- name + " nb_of_attacks:" + nb_of_attacks + " nb_per_group:" + [simulations mean_of each.nb_per_group[0], simulations mean_of each.nb_per_group[1], simulations
 		mean_of each.nb_per_group[2], simulations mean_of each.nb_per_group[3], simulations mean_of each.nb_per_group[4], simulations mean_of each.nb_per_group[5], simulations mean_of
 		each.nb_per_group[6], simulations mean_of each.nb_per_group[7]] + "std: " + [standard_deviation(simulations collect each.nb_per_group[0]), standard_deviation(simulations collect
@@ -403,7 +403,7 @@ experiment batch_test_argumentation_h type: batch until: cycle = 1000000 keep_se
 	parameter h var: h among: [0.0,1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0];
 
 	reflex result {
-		list sims <- (simulations where each.convergence);
+		list<model_comparison_model> sims <- (simulations where each.convergence);
 		string vv <- name + " h:" + h + " nb_per_group:" + [simulations mean_of each.nb_per_group[0], simulations mean_of each.nb_per_group[1], simulations
 		mean_of each.nb_per_group[2], simulations mean_of each.nb_per_group[3], simulations mean_of each.nb_per_group[4], simulations mean_of each.nb_per_group[5], simulations mean_of
 		each.nb_per_group[6], simulations mean_of each.nb_per_group[7]] + "std: " + [standard_deviation(simulations collect each.nb_per_group[0]), standard_deviation(simulations collect

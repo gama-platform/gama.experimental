@@ -144,7 +144,7 @@ experiment simplemodel type: gui {
 			species hunter;
 		}
 
-		display evolution {
+		display evolution type: 2d {
 			chart "Evolution of preys and hunters" type: series {
 				data "hunter" value: length(hunter) color: #blue;
 				data "prey" value: patch sum_of (each.prey) / 10 color: #green;
@@ -152,7 +152,7 @@ experiment simplemodel type: gui {
 
 		}
 
-		display genetic {
+		display genetic type: 2d{
 			chart "Genetic evolution" type: series {
 				data "hunting capacity" value: hunter sum_of (each.hunting_capacity) / length(hunter) color: #red;
 				data "exploitation rate" value: hunter sum_of (each.exploitation_rate) / length(hunter) color: #pink;

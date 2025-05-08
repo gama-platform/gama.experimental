@@ -10,7 +10,7 @@ model analyseWebcamImage
 
 import "analyseImage.gaml"
 
-global {
+global { 
 	int image_width <- 640;
 	int image_height <- 480;
 	bool image_miror_horizontal <- true ;

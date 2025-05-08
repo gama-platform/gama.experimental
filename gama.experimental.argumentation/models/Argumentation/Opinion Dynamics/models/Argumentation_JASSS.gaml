@@ -331,7 +331,7 @@ species people skills: [argumenting] frequency: 0{
 
 experiment argumentation_model type: gui {
 	output {
-		display chart refresh: every(100 #cycle){
+		display chart refresh: every(100 #cycle) type: 2d{
 			/*chart "opinon"  series_label_position:none memorize: false style: dot size: {1,0.5}{
 				datalist legend:list(people) collect each.name value: list(people) collect each.opinion color:#black;
 			}*/
@@ -360,7 +360,7 @@ experiment batch_model_prop type: batch until: cycle = 200000 repeat: 30 keep_se
 	parameter proportion var: proportion among:[0.0, 0.1, 0.2, 0.5, 1.0 ];
 	parameter no_type var: no_type <- true among:[true];
 	reflex result {
-		list sims <- (simulations where each.convergence);
+		list<model_argumentation_model> sims <- (simulations where each.convergence);
 		string val_ <- "proportion: " + proportion +
 		 " mean_opinion:" + (simulations mean_of each.mean_opinion) + " - :" + standard_deviation(simulations collect each.mean_opinion) + 
 		" evol:" + (simulations mean_of each.evol)  + " - :" + standard_deviation(simulations collect each.evol) +
@@ -432,7 +432,7 @@ experiment batch_model_nb type: batch until: cycle = 200000 repeat: 30 keep_seed
 	parameter nb_arguments var: nb_arguments among:[1,3,5,7];
 	parameter no_type var: no_type <- true among:[true];
 	reflex result {
-		list sims <- (simulations where each.convergence);
+		list<model_argumentation_model> sims <- (simulations where each.convergence);
 		string val_ <- "nb_arguments: " + nb_arguments +
 		 " mean_opinion:" + (simulations mean_of each.mean_opinion) + " - :" + standard_deviation(simulations collect each.mean_opinion) + 
 		" evol:" + (simulations mean_of each.evol)  + " - :" + standard_deviation(simulations collect each.evol) +
@@ -493,7 +493,7 @@ experiment batch_model_no_evo type: batch until: cycle > 0 repeat: 30 keep_seed:
 	parameter scenario var: scenario <- "no argument" among:["no argument"];
 
 	reflex result {
-		list sims <- (simulations where each.convergence);
+		list<model_argumentation_model> sims <- (simulations where each.convergence);
 		string val_ <- 
 		 " mean_opinion:" + (simulations mean_of each.mean_opinion) + " - :" + standard_deviation(simulations collect each.mean_opinion) + 
 		" evol:" + (simulations mean_of each.evol)  + " - :" + standard_deviation(simulations collect each.evol) +
@@ -564,7 +564,7 @@ experiment batch_model_no_arg type: batch until: cycle = 500000 repeat: 30 keep_
 	parameter scenario var: scenario <- "no argument" among:["no argument"];
 
 	reflex result {
-		list sims <- (simulations where each.convergence);
+		list<model_argumentation_model> sims <- (simulations where each.convergence);
 		string val_ <- 
 		 " mean_opinion:" + (simulations mean_of each.mean_opinion) + " - :" + standard_deviation(simulations collect each.mean_opinion) + 
 		" evol:" + (simulations mean_of each.evol)  + " - :" + standard_deviation(simulations collect each.evol) +
@@ -638,7 +638,7 @@ experiment batch_model type: batch until: cycle = 200000 repeat: 30 keep_seed: t
 	parameter type_argument var: type_argument;
 	
 	reflex result {
-		list sims <- (simulations where each.convergence);
+		list<model_argumentation_model> sims<- (simulations where each.convergence);
 		string val_ <- "scenario: " + scenario + " type_argument: " + type_argument +
 		 " mean_opinion:" + (simulations mean_of each.mean_opinion) + " - :" + standard_deviation(simulations collect each.mean_opinion) + 
 		" evol:" + (simulations mean_of each.evol)  + " - :" + standard_deviation(simulations collect each.evol) +

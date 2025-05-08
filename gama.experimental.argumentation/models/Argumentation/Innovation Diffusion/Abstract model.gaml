@@ -77,7 +77,7 @@ global {
 		//write global_argumentation_graph.vertices collect argument(each).conclusion;
 		create communication_channel number: 1 {
 			type <- "communication channel";
-			arguments <- world.arguments;
+			arguments <- world.arguments; 
 		}
 		create possible_adopter number: num_possible_adopters {
 			semantics <- semantics_type;
@@ -97,7 +97,7 @@ global {
 			usage_arguments <- arguments_get_from_usage;
 			convergence_speed <- 0.1;
 			sigmoid_coeff <- 1.0;
-			argument_lifespan <- 200.0;
+			argument_lifespan <- 200.0; 
 			global_argumentation_graph <- world.global_argumentation_graph;
 		}
 		do generate_network;
@@ -678,7 +678,7 @@ experiment Abstractmodel type: gui {
 			species possible_adopter aspect: intention_aspect;
 		}
 		
-		display charts {
+		display charts type:2d {
 			chart "evolution" size: {1,0.3}{
 				data "mean attitude" value: possible_adopter mean_of each.attitude color: #magenta;
 				data "mean intention" value: possible_adopter mean_of each.intention color: #blue;

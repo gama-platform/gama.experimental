@@ -21,7 +21,6 @@ import gama.core.metamodel.agent.IAgent;
 import gama.core.runtime.IScope;
 import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaListFactory;
-import gama.core.util.GamaMap;
 import gama.core.util.GamaMapFactory;
 import gama.core.util.GamaPair;
 import gama.core.util.IList;
@@ -67,22 +66,22 @@ public class ArgumentingSkill extends Skill {
 	}
 
 	@getter(CRIT_IMPORTANCE)
-	static public GamaMap getCritImp(final IAgent agent) {
-		return (GamaMap) agent.getAttribute(CRIT_IMPORTANCE);
+	static public IMap getCritImp(final IAgent agent) {
+		return (IMap) agent.getAttribute(CRIT_IMPORTANCE);
 	}
 
 	@setter(CRIT_IMPORTANCE)
-	static public void setCritImpo(final IAgent agent, final GamaMap s) {
+	static public void setCritImpo(final IAgent agent, final IMap s) {
 		agent.setAttribute(CRIT_IMPORTANCE, s);
 	}
 
 	@getter(SOURCE_TYPE_CONFIDENCE)
-	static public GamaMap getSourceConf(final IAgent agent) {
-		return (GamaMap) agent.getAttribute(SOURCE_TYPE_CONFIDENCE);
+	static public IMap getSourceConf(final IAgent agent) {
+		return (IMap) agent.getAttribute(SOURCE_TYPE_CONFIDENCE);
 	}
 
 	@setter(SOURCE_TYPE_CONFIDENCE)
-	static public void setSourceConf(final IAgent agent, final GamaMap s) {
+	static public void setSourceConf(final IAgent agent, final IMap s) {
 		agent.setAttribute(SOURCE_TYPE_CONFIDENCE, s);
 	}
 

@@ -70,7 +70,7 @@ experiment testweka type: gui {
 		display map_size {
 			species bug aspect: size;
 		}
-		display charts {
+		display charts type: 2d {
 			chart 'Cluster distribution' type: pie background: rgb('lightGray') size: {0.9, 0.4} position: {0.05, 0.05} {
 				int cnt <- 0;
 				loop gp over: groups {
