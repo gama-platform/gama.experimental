@@ -11,10 +11,7 @@
 
 ## 3. Use Ollama from the Terminal
 
-### Pull the model (only once, when first installing Ollama or if no LLM is available)
-```ollama pull llama3.2```
-
-### Run the model
+### Run the model (It pull the model automatically, only once, when first installing Ollama or if no LLM is available)
 ```ollama run llama3.2```
 
 ## 4. Run MCP model in GAMA
