@@ -116,7 +116,9 @@ species Farmer skills: [mcp_skill] {
 	reflex chating when: wish_to_talk  {
 		speak_with <- nil;
 		Farmer to_who <- one_of(Farmer - self);
-		string firstmsg <- context+". " + role +" .Donne un unique argument à " + to_who.name + " pour expliquer pourquoi il faut " + (adoption ? "adopter " : "ne pas adopter") + " les compteurs d'eau communicant en tant qu'agirculteur et des choses déjà dites et éviter de redonner des arguments déjà évoqué."  + (empty(already_given) ? "": ("Choses déjà dites: " + already_given)) + ". Ne renvoie que l'argument"  ;
+	
+	
+		string firstmsg <- context + ". " + role +". Give a single argument to "  + to_who.name + " to explain why " + (adoption ? "smart water meters should be adopted " : "smart water meters should not be adopted ") + "as a farmer, avoiding repeating arguments that have already been mentioned." + (empty(already_given) ? "" : (" Already mentioned arguments: " + already_given)) + ". Return only the argument.";
 		string msg <- send_to_llm(llm:chat_model, message:firstmsg );
 		last_word <- msg;
 		//write ( "\n\nfirstmsg : " + name + " -> "+ firstmsg) color: color;
@@ -203,15 +205,7 @@ species Farmer skills: [mcp_skill] {
 		//draw mymsg at: location + {0, 0, 10} font: font("Helvetica", 30, #bold) color: #red;
 	}
 
-}
-experiment exploration type: batch until: cycle > 10 repeat: 10{
-	
-	reflex end {
-		loop s over: simulations {
-			write "num adopters: " + Farmer count each.adoption;
-		}
-	}
-}
+} 
 experiment main type: gui {
 	output {
 		 layout 0 tabs:true editors: false;
