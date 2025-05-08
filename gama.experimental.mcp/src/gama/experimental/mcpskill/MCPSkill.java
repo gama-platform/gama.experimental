@@ -324,7 +324,7 @@ public class MCPSkill extends Skill {
 			if (model != null) {
 				ChatResponse ans = model.chat(memory.messages());
 
-				return ans.toString();
+				return ans.aiMessage().text();
 			}
 		}
 
