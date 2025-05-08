@@ -47,7 +47,7 @@ global {
  */
 species manager control: event_manager {
 
-	// Reflex to write the size of event queues
+// Reflex to write the size of event queues
 	reflex write_size {
 		write "[" + name + "]::[write_size] manager size = " + size + " at " + (starting_date + time);
 	}
@@ -58,7 +58,7 @@ species manager control: event_manager {
  * The car species with scheduling skill in order to use the action 'later'
  */
 species car skills: [scheduling] {
-	// General aspect
+// General aspect
 	geometry shape <- rectangle(car_width, car_height) at_location point(road_width / 2.0, road_height);
 	rgb color <- rnd_color(255);
 
@@ -86,7 +86,7 @@ species car skills: [scheduling] {
  * The queue road species with scheduling skill in order to use the action 'later'
  */
 species queue_road skills: [scheduling] {
-	// Capacity
+// Capacity
 	int nb_car_max <- 5;
 
 	// Representation of cars inside the road
@@ -131,7 +131,7 @@ species queue_road skills: [scheduling] {
 	// Add new car
 	action add_car {
 		if (length(cars_queue) < nb_car_max) {
-			// Create and get new car
+		// Create and get new car
 			create car returns: new_cars;
 			car new_car <- new_cars[0];
 

@@ -22,6 +22,7 @@ import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaDate;
 import gama.core.util.GamaMap;
 import gama.core.util.IList;
+import gama.core.util.IMap;
 import gama.gaml.descriptions.ActionDescription;
 import gama.gaml.species.ISpecies;
 import gama.gaml.statements.Arguments;
@@ -137,7 +138,7 @@ public class Event {
 	/**
 	 * Create a new event with action and Arguments as map
 	 */
-	public Event(IScope scope, IAgent caller, ActionDescription action, final GamaMap<String, Object> args,
+	public Event(IScope scope, IAgent caller, ActionDescription action, final IMap<String, Object> args,
 			GamaDate date, IAgent referredAgent) {
 
 		this.scope = scope.copy("Later");

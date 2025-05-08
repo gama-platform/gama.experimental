@@ -26,6 +26,7 @@ import gama.core.runtime.IScope;
 import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaDate;
 import gama.core.util.GamaMap;
+import gama.core.util.IMap;
 import gama.gaml.architecture.reflex.ReflexArchitecture;
 import gama.gaml.descriptions.ActionDescription;
 import gama.gaml.types.IType;
@@ -110,7 +111,7 @@ public class EventManagerArchitecture extends ReflexArchitecture {
 	 * Internal register (used by "scheduling" skill)
 	 */
 	public String register(final IScope scope, final IAgent caller, final ActionDescription action,
-			final GamaMap<String, Object> args, final GamaDate date, final IAgent referredAgent)
+			final IMap<String, Object> args, final GamaDate date, final IAgent referredAgent)
 			throws GamaRuntimeException {
 
 		IAgent agent = (IAgent) getCurrentAgent(scope).getAttribute(IKeywordIrit.EVENT_MANAGER);

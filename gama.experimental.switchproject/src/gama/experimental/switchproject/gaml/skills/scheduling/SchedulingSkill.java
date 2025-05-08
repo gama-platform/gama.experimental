@@ -27,7 +27,7 @@ import gama.annotations.precompiler.IConcept;
 import gama.core.runtime.IScope;
 import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaDate;
-import gama.core.util.GamaMap;
+import gama.core.util.IMap;
 import gama.gaml.descriptions.ActionDescription;
 import gama.gaml.skills.Skill;
 import gama.gaml.types.IType;
@@ -96,7 +96,7 @@ public class SchedulingSkill extends Skill {
 		// Get caller
 		IAgent caller = scope.getAgent();
 		// Get arguments
-		GamaMap<String, Object> args = (GamaMap<String, Object>) scope.getArg(IKeywordIrit.WITH_ARGUMENTS, IType.MAP);
+		IMap<String, Object> args = (IMap<String, Object>) scope.getArg(IKeywordIrit.WITH_ARGUMENTS, IType.MAP);
 		// Get refer to agent
 		IAgent referredAgent = (IAgent) scope.getArg(IKeywordIrit.REFER_TO, IType.AGENT);
 		
