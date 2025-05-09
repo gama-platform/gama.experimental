@@ -13,15 +13,28 @@ package gama.experimental.mcpskill;
 import static dev.langchain4j.data.message.UserMessage.userMessage;
 import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import dev.langchain4j.agent.tool.Tool;
 import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.data.document.BlankDocumentException;
+import dev.langchain4j.data.document.Document;
+import dev.langchain4j.data.document.DocumentParser;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.mcp.McpToolProvider;
 import dev.langchain4j.mcp.client.DefaultMcpClient;
 import dev.langchain4j.mcp.client.McpClient;
@@ -39,11 +52,16 @@ import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiTokenCountEstimator;
+import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
+import dev.langchain4j.rag.content.retriever.ContentRetriever;
+import static gama.experimental.mcpskill.FileSystemDocumentLoader.loadDocumentsRecursively;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProvider;
 import dev.langchain4j.service.tool.ToolProviderResult;
 import dev.langchain4j.service.tool.ToolProviderResult.Builder;
+import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
+import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import gama.annotations.precompiler.GamlAnnotations.action;
 import gama.annotations.precompiler.GamlAnnotations.arg;
 import gama.annotations.precompiler.GamlAnnotations.doc;
@@ -220,6 +238,7 @@ public class MCPSkill extends Skill {
 
 	@action(name = "create_assistant", args = { @arg(name = "llm", type = IType.NONE, doc = @doc("llm ai")),
 			@arg(name = "memory", type = IType.NONE, doc = @doc("memory")),
+			@arg(name = "contentRetriever", type = IType.NONE, doc = @doc("contentRetriever")),
 			@arg(name = "tools", type = IType.NONE, doc = @doc("toolprovider")), }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
 	public Object create_assistant(final IScope scope) {
 		// final IAgent agent = scope.getAgent();
@@ -233,6 +252,10 @@ public class MCPSkill extends Skill {
 		if (scope.hasArg("memory")) {
 			final ChatMemory memory = (ChatMemory) scope.getArg("memory", IType.NONE);
 			assistant = assistant.chatMemory(memory);
+		}
+		if (scope.hasArg("contentRetriever")) {
+			final ContentRetriever cr = (ContentRetriever) scope.getArg("contentRetriever", IType.NONE);
+			assistant = assistant.contentRetriever(cr);
 		}
 		return assistant.build();
 
@@ -269,6 +292,7 @@ public class MCPSkill extends Skill {
 		ToolExecutor toolExecutor = (toolExecutionRequest, memoryId) -> {
 			if (execute instanceof ActionDescription) {
 				String aname = ((ActionDescription) execute).getName();
+				if(scope.getModel()!=null && scope.getModel().getAction(aname)!=null)
 				return scope.getModel().getAction(aname).executeOn(scope).toString();
 			}
 			return toolExecutionRequest.arguments();
@@ -434,6 +458,42 @@ public class MCPSkill extends Skill {
 
 		return response;
 
+	}
+ 
+
+	@action(name = "create_rag", args = {
+			@arg(name = "path", type = IType.STRING, doc = @doc("path to rag")),
+			@arg(name = "filter", type = IType.STRING, doc = @doc("path to rag")),
+			}, 
+			doc = @doc(value = "path to rag learn docs.", returns = "The error message if any"))
+	public Object create_rag(final IScope scope) {
+		// final IAgent agent = scope.getAgent();
+		final String pathToAdd = (String) scope.getArg("path", IType.STRING);
+		final String filter = (String) scope.getArg("filter", IType.STRING);
+ 
+		List<Document> documents = loadDocumentsRecursively(Paths.get(pathToAdd),glob(filter));
+
+		// Here, we create an empty in-memory store for our documents and their
+		// embeddings.
+		InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+
+		// Here, we are ingesting our documents into the store.
+		// Under the hood, a lot of "magic" is happening, but we can ignore it for now.
+		EmbeddingStoreIngestor.ingest(documents, embeddingStore);
+
+		// Lastly, let's create a content retriever from an embedding store.
+		ContentRetriever cr = EmbeddingStoreContentRetriever.from(embeddingStore);
+		return cr;
+
+	}
+
+	public static PathMatcher glob(String glob) {
+		return FileSystems.getDefault().getPathMatcher("glob:" + glob);
+	}
+
+	public static Path toPath(String relativePath) {
+		URL fileUrl = MCPSkill.class.getClassLoader().getResource(relativePath);
+		return Paths.get(relativePath);
 	}
 
 	public interface Bot {

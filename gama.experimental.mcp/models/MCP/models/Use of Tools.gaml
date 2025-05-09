@@ -14,19 +14,20 @@ global {
 	list<string> msgto <- [msg1, msg2];
 
 	action toto {
-		create people;
+		create cricket;
 	}
 
 	init {
 		create A {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
 			chat_memory <- create_chat_memory(role: roleMsg);
-			unknown toolSpecification <- specify_tool(tool: "add People", description: "to increase the population, it will create an agent of species people");
+			unknown toolSpecification <- specify_tool(tool: "create a cricket", description: "it will increase but never decrease the population");
 			unknown toolExecutor <- create_tool_executor(execute: world.toto);
 			unknown toolProvider <- create_tool_provider([toolSpecification::toolExecutor]);
 			//			write fetch_chat_memory(chat_memory);
 			my_assistant <- create_assistant(llm: chat_model, memory: chat_memory, tools: toolProvider);
-			write send_to_assistant(assistant: my_assistant, message: "i want to decrease the population ");
+			mymsg<- send_to_assistant(assistant: my_assistant, message: "i want to decrease the green house gas");
+			write mymsg;
 			//			write "\n\n\n";
 			//			write fetch_chat_memory(chat_memory);
 		} } }
@@ -42,14 +43,14 @@ species A skills: [mcp_skill] {
 	string mymsg;
 
 	reflex chating {
-		do add_to_chat_memory message: msgto[cycle] memory: chat_memory;
+		do add_to_chat_memory message: mymsg memory: chat_memory;
 		//		mymsg <- send_to_llm(llm: chat_model, message: msgto[cycle], with_memory: chat_memory);
-		mymsg <- send_to_assistant(assistant: my_assistant, message: msgto[cycle]);
+		mymsg <- send_to_assistant(assistant: my_assistant, message: mymsg);
 		write mymsg;
 		do add_to_chat_memory message: mymsg memory: chat_memory;
 	} }
 
-species people {
+species cricket {
 
 	aspect default {
 		draw cube(10) color: #red;
@@ -60,7 +61,7 @@ species people {
 experiment main type: gui {
 	output {
 		display Field type: opengl {
-			species people;
+			species cricket;
 		}
 
 	}
