@@ -292,8 +292,8 @@ public class MCPSkill extends Skill {
 		ToolExecutor toolExecutor = (toolExecutionRequest, memoryId) -> {
 			if (execute instanceof ActionDescription) {
 				String aname = ((ActionDescription) execute).getName();
-				if(scope.getModel()!=null && scope.getModel().getAction(aname)!=null)
-				return scope.getModel().getAction(aname).executeOn(scope).toString();
+				if (scope.getModel() != null && scope.getModel().getAction(aname) != null)
+					return scope.getModel().getAction(aname).executeOn(scope).toString();
 			}
 			return toolExecutionRequest.arguments();
 		};
@@ -459,20 +459,21 @@ public class MCPSkill extends Skill {
 		return response;
 
 	}
- 
 
-	@action(name = "create_rag", args = {
-			@arg(name = "path", type = IType.STRING, doc = @doc("path to rag")),
-			@arg(name = "filter", type = IType.STRING, doc = @doc("path to rag")),
-			}, 
-			doc = @doc(value = "path to rag learn docs.", returns = "The error message if any"))
+	@action(name = "create_rag", args = { @arg(name = "path", type = IType.STRING, doc = @doc("path to rag")),
+			@arg(name = "filter", type = IType.STRING, doc = @doc("path to rag")), }, doc = @doc(value = "path to rag learn docs.", returns = "The error message if any"))
 	public Object create_rag(final IScope scope) {
 		// final IAgent agent = scope.getAgent();
 		final String pathToAdd = (String) scope.getArg("path", IType.STRING);
 		final String filter = (String) scope.getArg("filter", IType.STRING);
 
-		List<Document> documents = loadDocumentsRecursively(Paths.get(pathToAdd), glob(filter));
-		if (documents.size() > 0) {
+		List<Document> documents;
+		if (filter != null) {
+			documents = loadDocumentsRecursively(Paths.get(pathToAdd), glob(filter));
+		} else {
+			documents = loadDocumentsRecursively(Paths.get(pathToAdd));
+		}
+		if (documents!=null && documents.size() > 0) {
 
 			// Here, we create an empty in-memory store for our documents and their
 			// embeddings.
