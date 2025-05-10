@@ -21,7 +21,7 @@ global {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
 			chat_memory <- create_chat_memory(role: roleMsg);
 
-			unknown cr <- create_rag(path: "/Users/hqn/git/langchain4j-examples/rag-examples/src/main/resources/a",filter:"*");
+			unknown cr <- create_rag(path: "/Users/hqn/git/gama.experimental/gama.experimental.mcp/models/MCP/includes/documents/",filter:"*.txt");
 			my_assistant <- create_assistant(llm: chat_model, memory: chat_memory,  contentRetriever: cr);
 			mymsg <- send_to_assistant(assistant: my_assistant, message: "Can I cancel my reservation?");
 			write mymsg;
@@ -59,12 +59,5 @@ species cricket {
 
 }
 
-experiment main type: gui {
-	output {
-		display Field type: opengl {
-			species cricket;
-		}
-
-	}
-
+experiment main type: gui { 
 }

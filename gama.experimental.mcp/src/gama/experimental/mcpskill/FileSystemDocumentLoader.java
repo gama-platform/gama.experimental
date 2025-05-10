@@ -20,13 +20,9 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.stream.Stream; 
 
 public class FileSystemDocumentLoader {
-
-    private static final Logger log = LoggerFactory.getLogger(FileSystemDocumentLoader.class);
 
     private static final DocumentParser DEFAULT_DOCUMENT_PARSER = new TextDocumentParser();
 
@@ -503,8 +499,7 @@ public class FileSystemDocumentLoader {
                         // blank/empty documents are ignored
                     } catch (Exception e) {
                         String message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
-                        log.warn("Failed to load '{}': {}", file, message);
-                    }
+                     }
                 });
 
         return documents;

@@ -470,20 +470,23 @@ public class MCPSkill extends Skill {
 		// final IAgent agent = scope.getAgent();
 		final String pathToAdd = (String) scope.getArg("path", IType.STRING);
 		final String filter = (String) scope.getArg("filter", IType.STRING);
- 
-		List<Document> documents = loadDocumentsRecursively(Paths.get(pathToAdd),glob(filter));
 
-		// Here, we create an empty in-memory store for our documents and their
-		// embeddings.
-		InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+		List<Document> documents = loadDocumentsRecursively(Paths.get(pathToAdd), glob(filter));
+		if (documents.size() > 0) {
 
-		// Here, we are ingesting our documents into the store.
-		// Under the hood, a lot of "magic" is happening, but we can ignore it for now.
-		EmbeddingStoreIngestor.ingest(documents, embeddingStore);
+			// Here, we create an empty in-memory store for our documents and their
+			// embeddings.
+			InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
 
-		// Lastly, let's create a content retriever from an embedding store.
-		ContentRetriever cr = EmbeddingStoreContentRetriever.from(embeddingStore);
-		return cr;
+			// Here, we are ingesting our documents into the store.
+			// Under the hood, a lot of "magic" is happening, but we can ignore it for now.
+			EmbeddingStoreIngestor.ingest(documents, embeddingStore);
+
+			// Lastly, let's create a content retriever from an embedding store.
+			ContentRetriever cr = EmbeddingStoreContentRetriever.from(embeddingStore);
+			return cr;
+		}
+		return null;
 
 	}
 

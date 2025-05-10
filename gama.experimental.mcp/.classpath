@@ -32,5 +32,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/api-0.31.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/opennlp-tools-2.5.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/onnxruntime-1.20.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-2.0.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
