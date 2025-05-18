@@ -69,7 +69,7 @@
 									<serverId>p2Repo</serverId>
 									<url>${ftp.url}</url>
 									<commands>
-										<command>rm -rf ${ftp.url}</command>
+										<command>rm -rf ${ftp.toDir}</command>
 									</commands>
 								</configuration>
 							</execution>
