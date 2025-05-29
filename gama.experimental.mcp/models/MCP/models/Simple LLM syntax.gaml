@@ -26,7 +26,9 @@ global {
 			has_memory <- true;
 		} } }
 
-species A skills: [mcp_skill] {
+species A skills: [mcp_skill] { 
+	
+	provider llm_provider;//<-new_provider("s");
 	unknown chat_model;
 	unknown chat_memory;
 	unknown mcp_transport;

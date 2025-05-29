@@ -31,6 +31,8 @@ import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.document.BlankDocumentException;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentParser;
+import dev.langchain4j.data.document.parser.TextDocumentParser; 
+import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.message.UserMessage;
@@ -54,7 +56,8 @@ import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
 import dev.langchain4j.model.openai.OpenAiTokenCountEstimator;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
-import static gama.experimental.mcpskill.FileSystemDocumentLoader.loadDocumentsRecursively;
+//import static gama.experimental.mcpskill.FileSystemDocumentLoader.loadDocumentsRecursively;
+import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocumentsRecursively;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProvider;
@@ -65,18 +68,22 @@ import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import gama.annotations.precompiler.GamlAnnotations.action;
 import gama.annotations.precompiler.GamlAnnotations.arg;
 import gama.annotations.precompiler.GamlAnnotations.doc;
+import gama.annotations.precompiler.GamlAnnotations.example;
+import gama.annotations.precompiler.GamlAnnotations.no_test;
+import gama.annotations.precompiler.GamlAnnotations.operator;
 import gama.annotations.precompiler.GamlAnnotations.skill;
 import gama.annotations.precompiler.GamlAnnotations.variable;
 import gama.annotations.precompiler.GamlAnnotations.vars;
 import gama.annotations.precompiler.IConcept;
 import gama.core.messaging.MessagingSkill;
 import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaList;
 import gama.core.util.GamaListFactory;
 import gama.core.util.GamaPair;
 import gama.core.util.IList;
 import gama.core.util.IMap;
-import gama.dev.DEBUG;
+import gama.dev.DEBUG; 
 import gama.gaml.descriptions.ActionDescription;
 import gama.gaml.skills.Skill;
 import gama.gaml.types.IType;
@@ -93,7 +100,31 @@ public class MCPSkill extends Skill {
 	static {
 		DEBUG.ON();
 	}
-
+	/**
+	 * New predicate.
+	 *
+	 * @param name
+	 *            the name
+	 * @return the predicate
+	 * @throws GamaRuntimeException
+	 *             the gama runtime exception
+	 */
+	@operator (
+			value = "new_provider",
+			can_be_const = true,
+			category = { "BDI" },
+			concept = { IConcept.BDI })
+	@doc (
+			value = "creates a new predicate with a given name and adidtional properties (values, agent causing the predicate, whether it is true...)",
+			masterDoc = true,
+			examples = @example (
+					value = "new_predicate(\"people to meet\")",
+					isExecutable = false))
+	@no_test
+	public static Provider newPredicate(final String name) throws GamaRuntimeException {
+		return new Provider(name);
+	}
+	
 	@action(name = "create_chat_model", args = {
 			@arg(name = "llm", type = IType.STRING, doc = @doc("LLM name: openai or ollama")),
 			@arg(name = "model_name", type = IType.STRING, doc = @doc("model to use gpt-4o-mini,llama3.2 ... ")),
@@ -469,9 +500,9 @@ public class MCPSkill extends Skill {
 
 		List<Document> documents;
 		if (filter != null) {
-			documents = loadDocumentsRecursively(Paths.get(pathToAdd), glob(filter));
+			documents = loadDocumentsRecursively(Paths.get(pathToAdd), glob(filter),new ApacheTikaDocumentParser());
 		} else {
-			documents = loadDocumentsRecursively(Paths.get(pathToAdd));
+			documents = loadDocumentsRecursively(Paths.get(pathToAdd),new ApacheTikaDocumentParser());
 		}
 		if (documents!=null && documents.size() > 0) {
 

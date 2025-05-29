@@ -12,7 +12,7 @@ import dev.langchain4j.data.document.DocumentLoader;
 import dev.langchain4j.data.document.DocumentParser;
 import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
-import dev.langchain4j.spi.data.document.parser.DocumentParserFactory;
+ import dev.langchain4j.spi.data.document.parser.DocumentParserFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 public class FileSystemDocumentLoader {
 
-    private static final DocumentParser DEFAULT_DOCUMENT_PARSER = new TextDocumentParser();
+    private static final DocumentParser DEFAULT_DOCUMENT_PARSER = new ApacheTikaDocumentParser();
 
     private FileSystemDocumentLoader() {}
 
