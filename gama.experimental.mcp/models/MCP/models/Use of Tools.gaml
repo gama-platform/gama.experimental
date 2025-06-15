@@ -20,7 +20,7 @@ global {
 	init {
 		create A {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(role: roleMsg);
+			chat_memory <- create_chat_memory(roleMsg);
 			unknown toolSpecification <- specify_tool(tool: "create a cricket", description: "it will increase but never decrease the population");
 			unknown toolExecutor <- create_tool_executor(execute: world.toto);
 			unknown toolProvider <- create_tool_provider([toolSpecification::toolExecutor]);

@@ -48,15 +48,15 @@ public class ProviderType extends GamaType<Provider> {
 			throws GamaRuntimeException {
 		if (obj instanceof Provider p) return p;
 		if (obj instanceof String s) return new Provider(s);
-		if (obj instanceof Map) {
-			final Map<String, Object> map = (Map<String, Object>) obj;
-			String nm = (String) map.get("name");
-			if (nm == null) {
-				nm ="provider";
-			}
-			final IMap values = (IMap) map.get("values");
-			return new Provider(nm, values);
-		}
+//		if (obj instanceof Map) {
+//			final Map<String, Object> map = (Map<String, Object>) obj;
+//			String nm = (String) map.get("name");
+//			if (nm == null) {
+//				nm ="provider";
+//			}
+//			final IMap values = (IMap) map.get("values");
+//			return new Provider(nm, values);
+//		}
 		return null;
 	}
 

@@ -67,7 +67,7 @@ global {
 		}
 		
 		ask Farmer {
-			memory <- context + role;
+			ai_memory <- context + role;
 		}
 	}
 
@@ -79,9 +79,9 @@ global {
 }
 
 species Farmer skills: [mcp_skill] {
-	unknown chat_model;
+	provider chat_model;
 	string role <- "";
-	string memory <- "";
+	string ai_memory <- "";
 	bool wish_to_talk <- true;
 	string already_given <- "";
 	string already_received <- "";
@@ -121,7 +121,7 @@ species Farmer skills: [mcp_skill] {
 	}
 
 	init {
-		chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.1");
+		chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
 	}
 
 	reflex chating when: wish_to_talk and flip(proba_chatting) {
@@ -129,7 +129,7 @@ species Farmer skills: [mcp_skill] {
 		Farmer to_who <- one_of(Farmer - self);
 		string firstmsg <- " Give a single argument to " + to_who.name + " to explain why " + (adoption ?
 		"smart water meters should be adopted " : "smart water meters should not be adopted ") + "as a farmer, avoiding repeating arguments that have already been mentioned. Return only the argument.";
-		string msg <- send_to_llm(llm: chat_model, message: memory + adoption_current()+ firstmsg);
+		string msg <- send_to_llm( ai_memory + adoption_current()+ firstmsg, chat_model);
 		last_word <- msg;
 		speak_with <- to_who;
 		ask experiment {
@@ -138,14 +138,14 @@ species Farmer skills: [mcp_skill] {
 
 		write ("\n" + name + " to " + to_who.name + " -> " + (msg)) color: color;
 		string msg_to_send <- name + "  gives an argument regarding smart water meters: " + msg;
-		memory <- memory + " Argument I have already given:" ;
+		ai_memory <- ai_memory + " Argument I have already given:" ;
 		ask to_who {
-			memory <- memory + msg_to_send;
+			ai_memory <- ai_memory + msg_to_send;
 			
 			string
 			msg_ <- " Do you want to use smart water meters (or continue using them)? Answer just with ‘YES, I plan to use smart water meters’ or ‘NO, I do not want to use smart water meters’";
 			
-			string adotion_str <- send_to_llm(llm: chat_model, message: memory + adoption_current() + msg_);
+			string adotion_str <- send_to_llm(ai_memory + adoption_current() + msg_, chat_model);
 			last_word <- adotion_str;
 			write ("\n" + name + " - Adoption -> " + adotion_str) color: color;
 			if "yes" in lower_case(adotion_str) {
@@ -163,7 +163,7 @@ species Farmer skills: [mcp_skill] {
 
 		string	msg_c <- "\nDo you still have new things to say knowing that you have already said this? Answer either YES or NO regarding whether you have new arguments to provide";
 		
-		string continue_str <- send_to_llm(llm: chat_model, message: memory + adoption_current()+ msg_c);
+		string continue_str <- send_to_llm(ai_memory + adoption_current()+ msg_c, chat_model);
 		write ("\n" + name + " - Continue talking -> " + (continue_str)) color: color;
 		if "yes" in lower_case(continue_str) {
 			wish_to_talk <- true;

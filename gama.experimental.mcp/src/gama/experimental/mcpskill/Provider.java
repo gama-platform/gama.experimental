@@ -29,6 +29,7 @@ import gama.core.util.GamaMap;
 import gama.core.util.IMap;
 import gama.core.util.file.json.Json;
 import gama.core.util.file.json.JsonValue;
+import dev.langchain4j.model.chat.ChatModel;
 import gama.gaml.types.IType;
 import gama.gaml.types.Types;
 
@@ -63,6 +64,8 @@ public class Provider implements IValue {
 
 	/** The values. */
 	IMap<String, Object> values;
+
+	ChatModel chatModel;
 
 	/** The date. */
 	Double date;
@@ -159,91 +162,11 @@ public class Provider implements IValue {
 	 * @param ist
 	 *            the ist
 	 */
-	public Provider(final String name, final boolean ist) {
-		this.name = name;
-		is_true = ist;
-		this.agentCause = null;
+	public Provider(final String name, final ChatModel cm) {
+		this.name = name; 
+		this.chatModel = cm;
 	}
-
-	/**
-	 * Instantiates a new predicate.
-	 *
-	 * @param name
-	 *            the name
-	 * @param values
-	 *            the values
-	 */
-	public Provider(final String name, final IMap<String, Object> values) {
-		this.name = name;
-		this.values = values;
-		this.agentCause = null;
-	}
-
-	/**
-	 * Instantiates a new predicate.
-	 *
-	 * @param name
-	 *            the name
-	 * @param ag
-	 *            the ag
-	 */
-	public Provider(final String name, final IAgent ag) {
-		this.name = name;
-		this.agentCause = ag;
-	}
-
-	/**
-	 * Instantiates a new predicate.
-	 *
-	 * @param name
-	 *            the name
-	 * @param values
-	 *            the values
-	 * @param truth
-	 *            the truth
-	 */
-	public Provider(final String name, final IMap<String, Object> values, final Boolean truth) {
-		this.name = name;
-		this.values = values;
-		this.is_true = truth;
-		this.agentCause = null;
-	}
-
-	/**
-	 * Instantiates a new predicate.
-	 *
-	 * @param name
-	 *            the name
-	 * @param values
-	 *            the values
-	 * @param ag
-	 *            the ag
-	 */
-	public Provider(final String name, final IMap<String, Object> values, final IAgent ag) {
-		this.name = name;
-		this.values = values;
-		this.agentCause = ag;
-	}
-
-	/**
-	 * Instantiates a new predicate.
-	 *
-	 * @param name
-	 *            the name
-	 * @param values
-	 *            the values
-	 * @param truth
-	 *            the truth
-	 * @param ag
-	 *            the ag
-	 */
-	public Provider(final String name, final IMap<String, Object> values, final Boolean truth, final IAgent ag) {
-		this.name = name;
-		this.values = values;
-		this.is_true = truth;
-		this.agentCause = ag;
-	}
-
+ 
 	/**
 	 * Sets the name.
 	 *
@@ -272,7 +195,7 @@ public class Provider implements IValue {
 
 	@Override
 	public Provider copy(final IScope scope) throws GamaRuntimeException {
-		return new Provider(name, values == null ? null : ((GamaMap<String, Object>) values).copy(scope));
+		return new Provider(name, chatModel == null ? null :  chatModel);
 	}
 
 	/**
@@ -282,12 +205,9 @@ public class Provider implements IValue {
 	 * @throws GamaRuntimeException
 	 *             the gama runtime exception
 	 */
-	public Provider copy() throws GamaRuntimeException {
-		if (values != null && agentCause != null) { 
-			return new Provider(name,((GamaMap<String, Object>) values).copy(GAMA.getRuntimeScope()), is_true, agentCause);
-		}
-		if (values != null) {
-			return new Provider(name, ((GamaMap<String, Object>) values).copy(GAMA.getRuntimeScope()));
+	public Provider copy() throws GamaRuntimeException { 
+		if (chatModel != null) {
+			return new Provider(name, chatModel);
 		}
 		return new Provider(name);
 	}
@@ -303,20 +223,9 @@ public class Provider implements IValue {
 		if (this == obj) return true;
 		if (obj == null || getClass() != obj.getClass()) return false;
 		final Provider other = (Provider) obj;
-		if (!Objects.equals(name, other.name) || is_true != other.is_true) return false;
-		if (values == null && agentCause == null || other.values == null && other.agentCause == null) return true; //TODO: this is a weird condition for equality
-		if (values != null && other.values != null && !values.isEmpty() && !other.values.isEmpty()) {
-			final Set<String> keys = values.keySet();
-			keys.retainAll(other.values.keySet());
-			for (final String k : keys) {
-				if (this.values.get(k) == null && other.values.get(k) != null
-						|| !values.get(k).equals(other.values.get(k)))
-					return false;
-			}
-			return true;
-		}
+		if (!Objects.equals(name, other.name) || is_true != other.is_true) return false; 
 
-		if (agentCause != null && other.agentCause != null && !agentCause.equals(other.agentCause)) return false;
+		if (chatModel != null && other.chatModel != null && !chatModel.equals(other.chatModel)) return false;
 		return true;
 	}
 

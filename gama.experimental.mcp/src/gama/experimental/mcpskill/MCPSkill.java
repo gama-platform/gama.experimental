@@ -31,7 +31,7 @@ import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.document.BlankDocumentException;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.DocumentParser;
-import dev.langchain4j.data.document.parser.TextDocumentParser; 
+import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.parser.apache.tika.ApacheTikaDocumentParser;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.ToolExecutionResultMessage;
@@ -76,6 +76,7 @@ import gama.annotations.precompiler.GamlAnnotations.variable;
 import gama.annotations.precompiler.GamlAnnotations.vars;
 import gama.annotations.precompiler.IConcept;
 import gama.core.messaging.MessagingSkill;
+import gama.core.metamodel.agent.IAgent;
 import gama.core.runtime.IScope;
 import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaList;
@@ -100,31 +101,21 @@ public class MCPSkill extends Skill {
 	static {
 		DEBUG.ON();
 	}
+
 	/**
 	 * New predicate.
 	 *
-	 * @param name
-	 *            the name
+	 * @param name the name
 	 * @return the predicate
-	 * @throws GamaRuntimeException
-	 *             the gama runtime exception
+	 * @throws GamaRuntimeException the gama runtime exception
 	 */
-	@operator (
-			value = "new_provider",
-			can_be_const = true,
-			category = { "BDI" },
-			concept = { IConcept.BDI })
-	@doc (
-			value = "creates a new predicate with a given name and adidtional properties (values, agent causing the predicate, whether it is true...)",
-			masterDoc = true,
-			examples = @example (
-					value = "new_predicate(\"people to meet\")",
-					isExecutable = false))
+	@operator(value = "new_provider", can_be_const = true, category = { "BDI" }, concept = { IConcept.BDI })
+	@doc(value = "creates a new predicate with a given name and adidtional properties (values, agent causing the predicate, whether it is true...)", masterDoc = true, examples = @example(value = "new_predicate(\"people to meet\")", isExecutable = false))
 	@no_test
 	public static Provider newPredicate(final String name) throws GamaRuntimeException {
 		return new Provider(name);
 	}
-	
+
 	@action(name = "create_chat_model", args = {
 			@arg(name = "llm", type = IType.STRING, doc = @doc("LLM name: openai or ollama")),
 			@arg(name = "model_name", type = IType.STRING, doc = @doc("model to use gpt-4o-mini,llama3.2 ... ")),
@@ -147,7 +138,7 @@ public class MCPSkill extends Skill {
 			@arg(name = "timeout", type = IType.INT, doc = @doc("timeout (for OpenAI)")),
 
 	}, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
-	public Object create_chat_model(final IScope scope) {
+	public Provider create_chat_model(final IScope scope) {
 		// final IAgent agent = scope.getAgent();
 		final String llmToBuild = (String) scope.getArg("llm", IType.STRING);
 		final String modelnameToBuild = (String) scope.getArg("model_name", IType.STRING);
@@ -206,7 +197,7 @@ public class MCPSkill extends Skill {
 			}
 
 			ChatModel model = modelTobuild.logRequests(true).build();
-			return model;
+			return new Provider(llmToBuild, model);
 		} else {
 
 			OllamaChatModelBuilder modelTobuild = OllamaChatModel.builder().baseUrl(urlToBuild)
@@ -248,24 +239,39 @@ public class MCPSkill extends Skill {
 			}
 			ChatModel model = modelTobuild.logRequests(true).build();
 
-			return model;
+			return new Provider(llmToBuild, model);
 
 		}
 
 	}
 
-	@action(name = "create_chat_memory", args = {
-			@arg(name = "role", type = IType.STRING, doc = @doc("command to execute")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
-	public Object create_chat_memory(final IScope scope) {
+	@operator(value = "create_chat_memory", can_be_const = true, category = { "BDI" }, concept = { IConcept.BDI })
+	@doc(value = "a new mental state with an additional predicate and lifetime", examples = @example(value = "new_mental_state(\"belief\", raining, 10)", isExecutable = false))
+	@no_test
+	public static Memory create_chat_memory(final String msgToAdd) throws GamaRuntimeException {
 		// final IAgent agent = scope.getAgent();
-		final String msgToAdd = (String) scope.getArg("role", IType.STRING);
+//				final String msgToAdd = (String) scope.getArg("role", IType.STRING);
 		ChatMemory chatMemory = TokenWindowChatMemory.withMaxTokens(1000, new OpenAiTokenCountEstimator(GPT_4_O_MINI));
 		SystemMessage systemMessage = SystemMessage.from(msgToAdd);
 		chatMemory.add(systemMessage);
 
-		return chatMemory;
+//				return chatMemory;
 
+		return new Memory(msgToAdd, chatMemory);
 	}
+
+//	@action(name = "create_chat_memory", args = {
+//			@arg(name = "role", type = IType.STRING, doc = @doc("command to execute")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+//	public Object create_chat_memory(final IScope scope) {
+//		// final IAgent agent = scope.getAgent();
+//		final String msgToAdd = (String) scope.getArg("role", IType.STRING);
+//		ChatMemory chatMemory = TokenWindowChatMemory.withMaxTokens(1000, new OpenAiTokenCountEstimator(GPT_4_O_MINI));
+//		SystemMessage systemMessage = SystemMessage.from(msgToAdd);
+//		chatMemory.add(systemMessage);
+//
+//		return chatMemory;
+//
+//	}
 
 	@action(name = "create_assistant", args = { @arg(name = "llm", type = IType.NONE, doc = @doc("llm ai")),
 			@arg(name = "memory", type = IType.NONE, doc = @doc("memory")),
@@ -362,14 +368,35 @@ public class MCPSkill extends Skill {
 		return msgs;
 
 	}
-
+//	@operator (
+//			value = "add_to_chat_memory",
+//			can_be_const = true,
+//			category = { "BDI" },
+//			concept = { IConcept.BDI })
+//	@doc (
+//			value = "change the lifetime value of the given mental state",
+//			examples = @example (
+//					value = "mental state set_lifetime 1",
+//					isExecutable = false))
+//	@no_test
+//	public static String add_to_chat_memory(final String msgToAdd, final Memory mem) { 
+//		final ChatMemory chatMemory =mem.chatMemory;
+//		if (chatMemory != null) {
+//			UserMessage userMessage1 = userMessage(msgToAdd);
+//			chatMemory.add(userMessage1);
+//
+//		}
+//
+//		return ""; 
+//	}
 	@action(name = "add_to_chat_memory", args = {
 			@arg(name = "message", type = IType.STRING, doc = @doc("command to execute")),
-			@arg(name = "memory", type = IType.NONE, doc = @doc("command to execute")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+			@arg(name = "memory", 				type = MemoryType.id,
+ doc = @doc("command to execute")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
 	public String add_to_chat_memory(final IScope scope) {
 		// final IAgent agent = scope.getAgent();
 		final String msgToAdd = (String) scope.getArg("message", IType.STRING);
-		final ChatMemory chatMemory = (ChatMemory) scope.getArg("memory", IType.NONE);
+		final ChatMemory chatMemory = ((Memory) scope.getArg("memory", IType.NONE)).chatMemory;
 		if (chatMemory != null) {
 			UserMessage userMessage1 = userMessage(msgToAdd);
 			chatMemory.add(userMessage1);
@@ -380,22 +407,46 @@ public class MCPSkill extends Skill {
 
 	}
 
-	@action(name = "send_to_llm", args = { @arg(name = "llm", type = IType.NONE, doc = @doc("command to execute")),
-			@arg(name = "message", type = IType.STRING, doc = @doc("command to execute")),
-			@arg(name = "with_memory", type = IType.NONE, doc = @doc("command to execute")), }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
-	public String send_to_llm(final IScope scope) {
+	@operator (
+			value = "send_to_llm",
+			can_be_const = true,
+			category = { "BDI" },
+			concept = { IConcept.BDI })
+	@doc (
+			value = "a new mental state with an additional emotion it is about, a strength, a lifetime, and an owner agent.",
+			examples = @example (
+					value = "new_mental_state(\"belief\", my_joy, 12.3, 10, agent1)",
+					isExecutable = false))
+	@no_test
+	public static String newMentalState(final String msgToAdd, final Provider prov, final Memory mem) throws GamaRuntimeException {
+		final ChatModel model = (ChatModel)prov.chatModel;
+		if (mem!=null) {
 
-		final String msgToAdd = (String) scope.getArg("message", IType.STRING);
-		final ChatModel model = (ChatModel) scope.getArg("llm", IType.NONE);
-		if (scope.hasArg("with_memory")) {
-
-			final ChatMemory memory = (ChatMemory) scope.getArg("with_memory", IType.NONE);
+			final ChatMemory memory = (ChatMemory) mem.chatMemory;
 			if (model != null) {
 				ChatResponse ans = model.chat(memory.messages());
 
 				return ans.aiMessage().text();
 			}
-		}
+		} 
+
+		return "";
+	}
+	
+
+	@operator (
+			value = "send_to_llm",
+			can_be_const = true,
+			category = { "BDI" },
+			concept = { IConcept.BDI })
+	@doc (
+			value = "a new mental state with an additional emotion it is about, a strength, a lifetime, and an owner agent.",
+			examples = @example (
+					value = "new_mental_state(\"belief\", my_joy, 12.3, 10, agent1)",
+					isExecutable = false))
+	@no_test
+	public static String newMentalState(final String msgToAdd, final Provider prov) throws GamaRuntimeException {
+		final ChatModel model = (ChatModel)prov.chatModel; 
 
 		if (model != null) {
 			String ans = model.chat(msgToAdd);
@@ -404,8 +455,33 @@ public class MCPSkill extends Skill {
 		}
 
 		return "";
-
 	}
+//	@action(name = "send_to_llm", args = { @arg(name = "llm", type = IType.NONE, doc = @doc("command to execute")),
+//			@arg(name = "message", type = IType.STRING, doc = @doc("command to execute")),
+//			@arg(name = "with_memory", type = IType.NONE, doc = @doc("command to execute")), }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+//	public String send_to_llm(final IScope scope) {
+//
+//		final String msgToAdd = (String) scope.getArg("message", IType.STRING);
+//		final ChatModel model = (ChatModel) scope.getArg("llm", IType.NONE);
+//		if (scope.hasArg("with_memory")) {
+//
+//			final ChatMemory memory = (ChatMemory) scope.getArg("with_memory", IType.NONE);
+//			if (model != null) {
+//				ChatResponse ans = model.chat(memory.messages());
+//
+//				return ans.aiMessage().text();
+//			}
+//		}
+//
+//		if (model != null) {
+//			String ans = model.chat(msgToAdd);
+//
+//			return ans;
+//		}
+//
+//		return "";
+//
+//	}
 
 	@action(name = "send_to_assistant", args = {
 			@arg(name = "assistant", type = IType.NONE, doc = @doc("command to execute")),
@@ -500,11 +576,11 @@ public class MCPSkill extends Skill {
 
 		List<Document> documents;
 		if (filter != null) {
-			documents = loadDocumentsRecursively(Paths.get(pathToAdd), glob(filter),new ApacheTikaDocumentParser());
+			documents = loadDocumentsRecursively(Paths.get(pathToAdd), glob(filter), new ApacheTikaDocumentParser());
 		} else {
-			documents = loadDocumentsRecursively(Paths.get(pathToAdd),new ApacheTikaDocumentParser());
+			documents = loadDocumentsRecursively(Paths.get(pathToAdd), new ApacheTikaDocumentParser());
 		}
-		if (documents!=null && documents.size() > 0) {
+		if (documents != null && documents.size() > 0) {
 
 			// Here, we create an empty in-memory store for our documents and their
 			// embeddings.

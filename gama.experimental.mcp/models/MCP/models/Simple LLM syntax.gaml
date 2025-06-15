@@ -16,36 +16,32 @@ global {
 	init {
 		create A {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(role: roleMsg);
+			chat_memory <- create_chat_memory(roleMsg);
 			has_memory <- false;
 		}
 
 		create A {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(role: roleMsg);
+			chat_memory <- create_chat_memory(roleMsg);
 			has_memory <- true;
 		} } }
 
 species A skills: [mcp_skill] { 
-	
-	provider llm_provider;//<-new_provider("s");
-	unknown chat_model;
-	unknown chat_memory;
-	unknown mcp_transport;
-	unknown mcp_client;
-	unknown mcp_tool;
-	unknown my_bot;
+	 
+	provider chat_model;
+	memory chat_memory;  
 	bool has_memory;
 	string mymsg;
 
 	reflex chating {
 		write self;
 		if (has_memory) {
-			do add_to_chat_memory message: msgto[cycle] memory: chat_memory;
-			mymsg <- send_to_llm(llm: chat_model, message: msgto[cycle], with_memory: chat_memory);
-			do add_to_chat_memory message: mymsg memory: chat_memory;
+			do add_to_chat_memory( msgto[cycle],chat_memory);
+//			mymsg <- send_to_llm(llm: chat_model, message: msgto[cycle], with_memory: chat_memory);
+			mymsg <- send_to_llm(msgto[cycle],chat_model, chat_memory);
+			do add_to_chat_memory(mymsg, chat_memory);
 		} else {
-			mymsg <- send_to_llm(llm: chat_model, message: msgto[cycle]);
+			mymsg <- send_to_llm(msgto[cycle],chat_model);
 		}
 
 		write mymsg;

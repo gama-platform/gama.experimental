@@ -13,25 +13,25 @@ global {
 		write msg0;
 		create A {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(role: "You are a computer scientist");
+			chat_memory <- create_chat_memory("You are a computer scientist");
 			comingmsg <- msg0;
 		}
 
 		create A {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(role: "You are a teenager.");
+			chat_memory <- create_chat_memory("You are a teenager.");
 			do add_to_chat_memory message: msg0 memory: chat_memory;
 		} } }
 
 species A skills: [mcp_skill] {
-	unknown chat_model;
-	unknown chat_memory;
+	provider chat_model;
+	memory chat_memory;
 	string mymsg;
 	string comingmsg;
 
 	reflex chating when: comingmsg != nil {
 		do add_to_chat_memory message: comingmsg memory: chat_memory;
-		mymsg <- send_to_llm(llm:chat_model, message: comingmsg);
+		mymsg <- send_to_llm(   comingmsg, chat_model);
 		write self;
 //		write fetch_chat_memory(chat_memory);
 		write mymsg;

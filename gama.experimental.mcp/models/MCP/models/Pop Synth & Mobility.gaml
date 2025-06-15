@@ -60,7 +60,7 @@ Do not include any explanatory text—only the list in the specified format.";
 		}	
 		
 		ask genPop {
-			string answer <- send_to_llm(llm:chat_model, message: msg);
+			string answer <- send_to_llm(msg,chat_model);
 			write "Answer of the LLM." color: #blue;		
 			write sample(answer);
 			
@@ -115,8 +115,8 @@ Do not include any explanatory text—only the list in the specified format.";
 }
 
 species genPop skills: [mcp_skill] {
-	unknown chat_model;
-	unknown chat_memory;
+	provider chat_model;
+	memory chat_memory;
 }
 
 
@@ -146,8 +146,8 @@ species people skills:[moving,mcp_skill] {
 	string objective ; 
 	point the_target <- nil ;
 	
-	unknown chat_model_people;
-	unknown chat_memory_people;
+	provider chat_model_people;
+	memory chat_memory_people;
 	string role;
 	
 	string mobility_mode;
@@ -162,7 +162,7 @@ species people skills:[moving,mcp_skill] {
 		
 //		write prompt_mob color: #green;
 		
-		string answer <- lower_case(send_to_llm(llm:chat_model_people, message: role+prompt_mob));
+		string answer <- lower_case(send_to_llm(role+prompt_mob,chat_model_people));
 		mobility_mode <- (answer contains "car")?"car": ((answer contains "bike")?"bike":"bus");
 		
 		write role+prompt_mob color: #blue;

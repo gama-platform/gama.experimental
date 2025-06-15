@@ -16,7 +16,7 @@ global {
 	init {
 		create A {
 			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(role: roleMsg);
+			chat_memory <- create_chat_memory(roleMsg);
 //			mcp_transport<-create_mcp_transport(url:"https://router.mcp.so/sse",timeout:260);
 //			mcp_client<-create_mcp_client(transport: mcp_transport);
 //			mcp_tool<-create_mcp_tool(client: mcp_client);
@@ -31,8 +31,8 @@ global {
 }
 
 species A skills: [mcp_skill] {
-	unknown chat_model;
-	unknown chat_memory;
+	provider chat_model;
+	memory chat_memory;
 	unknown mcp_transport;
 	unknown mcp_client;
 	unknown mcp_tool;
@@ -42,7 +42,7 @@ species A skills: [mcp_skill] {
 	reflex chating { 		
 		do add_to_chat_memory message: msgto[cycle] memory: chat_memory;
 	
-		mymsg<- send_to_llm(llm:chat_model, message:msgto[cycle], with_memory:chat_memory);
+		mymsg<- send_to_llm( msgto[cycle],chat_model, chat_memory);
 		write mymsg;
 		do add_to_chat_memory message: mymsg memory: chat_memory;
 	}
