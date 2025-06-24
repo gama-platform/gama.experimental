@@ -541,6 +541,7 @@ public class FileSystemDocumentLoader {
                         // blank/empty documents are ignored
                     } catch (Exception e) {
                         String message = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+                        System.err.println("message: " + message);
                      }
                 });
 

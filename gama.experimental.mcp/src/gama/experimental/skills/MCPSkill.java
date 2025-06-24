@@ -322,6 +322,8 @@ public class MCPSkill extends Skill {
 		return assistant.askQuestion(msgToAdd);
 
 	}
+	
+
 
 	@action(name = "create_mcp_transport", args = {
 			@arg(name = "url", type = IType.STRING, doc = @doc("command to execute")),
@@ -358,27 +360,12 @@ public class MCPSkill extends Skill {
 		// final IAgent agent = scope.getAgent();
 		final ChatModel chatModel = (ChatModel) scope.getArg("llm", ChatModelType.id);
 		final Provider toolProvider = scope.hasArg("tools") ? (Provider) scope.getArg("tools", ProviderType.id) : null; 
-		final ContentRetriever contentRetriever =  scope.hasArg("content_retriever") ? (ContentRetriever) scope.getArg("content_retriever", ProviderType.id) : null; 
+		final ContentRetriever contentRetriever =  scope.hasArg("content_retriever") ? (ContentRetriever) scope.getArg("content_retriever", ContentRetrieverType.id) : null; 
 		  
 		final Memory memory = scope.hasArg("memory") ?(Memory) scope.getArg("memory", MemoryType.id) : null;   
 		return new Assistant(chatModel, toolProvider, contentRetriever, memory);  
 	}
 
-
-
-
-	@action(name = "send_to_ai_service", args = {
-			@arg(name = "assistant", type = AssistantType.id, doc = @doc("command to execute")),
-			@arg(name = "message", type = IType.STRING, doc = @doc("command to execute")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
-	public String send_to_ai_service(final IScope scope) {
-		final Assistant bot = (Assistant) scope.getArg("assistant", IType.NONE);
-
-		final String msgToAdd = (String) scope.getArg("message", IType.STRING);
-		String response = bot.askQuestion(msgToAdd);
-
-		return response;
-
-	}
 
 	@action(name = "create_rag", args = { @arg(name = "path", type = IType.STRING, doc = @doc("path to rag"))
 			 }, doc = @doc(value = "path to rag learn docs.", returns = "The error message if any"))

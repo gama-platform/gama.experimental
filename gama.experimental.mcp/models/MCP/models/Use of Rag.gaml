@@ -16,13 +16,15 @@ global {
 		
 		ask Agent_without_RAG {
 			bot <- create_assistant(llm:llm);
+			
 		} 
 		ask Agent_with_RAG {
 			content_retriever cr <- create_rag("../includes/RAG");
-			bot <- create_assistant(llm:llm, content_retriever: cr);
+			memory mem <- create_chat_memory(llm,"You are an expert assistant who only answers using the provided documents");
+			bot <- create_assistant(llm:llm, content_retriever: cr, memory:mem);
 		} 
 		
-		string question <- "Who is John Doe?";
+		string question <- "Who is Jonh Doe?";
 		write " ***** " + question + " ***** " ;
 		ask first(Agent_without_RAG) {do answer_question(question);}
 		ask first(Agent_with_RAG) {do answer_question(question);}

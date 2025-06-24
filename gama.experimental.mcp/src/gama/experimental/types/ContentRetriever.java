@@ -53,18 +53,18 @@ public class ContentRetriever implements IValue {
 			e.printStackTrace();
 		} 
 		if (documents!=null && documents.size() > 0) {
+			
 
 			// Here, we create an empty in-memory store for our documents and their
 			// embeddings.
 			InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
-
 			// Here, we are ingesting our documents into the store.
 			// Under the hood, a lot of "magic" is happening, but we can ignore it for now.
 			EmbeddingStoreIngestor.ingest(documents, embeddingStore);
-
 			
 			// Lastly, let's create a content retriever from an embedding store.
 			contentRetriever = EmbeddingStoreContentRetriever.from(embeddingStore);
+			
 			
 		}
 	}
