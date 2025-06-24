@@ -12,35 +12,33 @@ global {
 	init {
 		write msg0;
 		create A {
-			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory("You are a computer scientist");
+			llm <- create_ollama_chat_model(url: "http://localhost:11434", model_name: "llama3.2");
+			chat_memory <- create_chat_memory(llm,"You are a computer scientist");
+			 
 			comingmsg <- msg0;
 		}
 
 		create A {
-			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory("You are a teenager.");
+			llm <- create_ollama_chat_model(url: "http://localhost:11434", model_name: "llama3.2");
+			chat_memory <- create_chat_memory(llm,"You are a teenager.");
 			do add_to_chat_memory message: msg0 memory: chat_memory;
 		} } }
 
 species A skills: [mcp_skill] {
-	provider chat_model;
+	chat_model llm; 
 	memory chat_memory;
 	string mymsg;
 	string comingmsg;
 
-	reflex chating when: comingmsg != nil {
-		do add_to_chat_memory message: comingmsg memory: chat_memory;
-		mymsg <- send_to_llm(   comingmsg, chat_model);
-		write self;
-//		write fetch_chat_memory(chat_memory);
-		write mymsg;
+	reflex chating when: comingmsg != nil { 
+		mymsg <- send_to_llm(llm,  comingmsg, true, true); 
+		write name + " -> " + mymsg;
 		comingmsg <- nil;
 		ask ((A as list) - self) {
 			comingmsg <- myself.mymsg ;
 		}
 
-		do add_to_chat_memory message: mymsg memory: chat_memory;
+		//do add_to_chat_memory message: mymsg memory: chat_memory;
 	}
 
 	aspect default {

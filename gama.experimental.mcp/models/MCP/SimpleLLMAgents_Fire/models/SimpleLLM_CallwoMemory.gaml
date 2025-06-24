@@ -30,16 +30,16 @@ global {
 		create AI {
 			role <- "<<SYS>> You are a father of two kids, aware of a fire in the building. <</SYS>> ";
 			// Create a connection to the local LLM via Ollama
-			chat_model <- create_chat_model(llm: "ollama", url: ollamaPort, model_name: llmmodel);
-			chat_memory <- ""; // No previous conversation yet
+			llm <- create_ollama_chat_model(url: ollamaPort, model_name: llmmodel);
+			chat_memory <- create_chat_memory(llm, role); // No previous conversation yet
 
 			// The initial message sent to the LLM to start the conversation
 			llm_querry <-
 			" There is a fire in my buiding. My son is on another floor. I want him to escape the building. What should I tell him ? just answer the sentence I should tell him. Nothing else";
 
 			// Send the prompt to the LLM and store its answer
-			mymsg <- send_to_llm(role + chat_memory + llm_querry, chat_model);
-			mymsglit <- send_to_llm("respond only the translation in" + language + " of'''" + mymsg + ".", chat_model);
+			mymsg <- send_to_llm(llm, llm_querry);
+			mymsglit <- send_to_llm_without_memory(llm, "respond only the translation in" + language + " of'''" + mymsg + ".");
 			chat_desire <- true; // Indicates that the agent wants to send a message
 			icon <- image_file("../Images/father.png"); // Image to represent the father
 			location <- {20, 20}; // Position in the world
@@ -48,17 +48,19 @@ global {
 		// Create the second agent: the Teenager
 		create AI {
 			role <- "[INST] <<SYS>> You are a Teenager <</SYS>> ";
-			chat_model <- create_chat_model(llm: "ollama", url: ollamaPort, model_name: llmmodel);
+			llm <- create_ollama_chat_model(url: ollamaPort, model_name: llmmodel);
 			mymsg <- ""; // No message yet
 			chat_desire <- false; // Does not initiate conversation
 			icon <- image_file("../Images/young.png"); // Image to represent the teenager
 			location <- {20, 80}; // Position in the world
-		} } }
+		} 
+	} 
+}
 
 species AI skills: [mcp_skill] {
 // LLM interface and memory attributes
-	provider chat_model;
-	string chat_memory <- ""; // Stores dialogue history
+	chat_model llm;
+	memory chat_memory; // Stores dialogue history
 	string role <- ""; // Role prompt for the LLM
 	string llm_querry <- ""; // Dynamic question sent to the LLM
 	bool chat_desire <- false; // True if the agent wants to speak
@@ -80,7 +82,7 @@ species AI skills: [mcp_skill] {
 			}
 
 			// Update the conversation history
-			chat_memory <- chat_memory + " I told him " + mymsg;
+			do add_to_chat_memory(chat_memory, " I told him " + mymsg);
 			mymsg <- "";
 			chat_desire <- false; // Reset desire to talk
 		}
@@ -91,11 +93,12 @@ species AI skills: [mcp_skill] {
 
 			// Create a new query to the LLM based on the incoming message
 			llm_querry <- "I receive this message " + comingmsg + " What should I reply ? just answer the sentence I should reply. Nothing else";
-			mymsg <- send_to_llm(role + chat_memory + llm_querry + "[/INST]", chat_model);
-			mymsglit <- send_to_llm("respond only the translation in" + language + " of'''" + mymsg + ". [/INST]", chat_model);
+			mymsg <- send_to_llm(llm, llm_querry + "[/INST]");
+			mymsglit <- send_to_llm_without_memory(llm, "respond only the translation in" + language + " of'''" + mymsg + ". [/INST]");
 
 			// Update memory and signal desire to respond
-			chat_memory <- chat_memory + " He then told me " + comingmsg;
+			do add_to_chat_memory(chat_memory,  " He then told me "  + comingmsg);
+			
 			chat_desire <- true;
 			comingmsg <- nil;
 		}

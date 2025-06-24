@@ -15,36 +15,29 @@ global {
 
 	init {
 		create A {
-			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(roleMsg);
-//			mcp_transport<-create_mcp_transport(url:"https://router.mcp.so/sse",timeout:260);
-//			mcp_client<-create_mcp_client(transport: mcp_transport);
-//			mcp_tool<-create_mcp_tool(client: mcp_client);
-//			my_bot<-create_mcp_ai_service(llm: chat_model, tool: mcp_tool);
-//			string res<- send_to_ai_service(bot:my_bot, message: "What is 5+12? Use the provided tool to answer " +
-//                    "and always assume that the tool is correct.");
-//            write res;
-//            mymsg<-msg1;
+			llm <- create_ollama_chat_model( url: "http://localhost:11434", model_name: "llama3.2");
+			chat_memory <- create_chat_memory(llm,roleMsg);
+			transport<-create_mcp_transport(url:"https://router.mcp.so/sse",timeout:260);
+			client<-create_mcp_client(transport: transport);
+			mcp_tool<-create_client_executor(client); 
+			my_bot<-create_assistant(llm: llm, tools: mcp_tool);
       
 		} 
 	}
 }
 
 species A skills: [mcp_skill] {
-	provider chat_model;
+	chat_model llm; 
 	memory chat_memory;
-	unknown mcp_transport;
-	unknown mcp_client;
-	unknown mcp_tool;
-	unknown my_bot;
+	mcp_transport transport;
+	mcp_client client;
+	provider mcp_tool;
+	assistant my_bot;
 
 	string mymsg;
 	reflex chating { 		
-		do add_to_chat_memory message: msgto[cycle] memory: chat_memory;
-	
-		mymsg<- send_to_llm( msgto[cycle],chat_model, chat_memory);
+		mymsg<- send_to_llm(llm, msgto[cycle], true, true);
 		write mymsg;
-		do add_to_chat_memory message: mymsg memory: chat_memory;
 	}
 
 }

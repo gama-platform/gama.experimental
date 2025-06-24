@@ -55,12 +55,12 @@ Do not include any explanatory text—only the list in the specified format.";
 		write sample(role);
 		write sample(msg);
 		create genPop {
-			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.1");
+			llm <- create_ollama_chat_model( url: "http://localhost:11434", model_name: "llama3.1");
 		//	chat_memory <- create_chat_memory(role:role);	
 		}	
 		
 		ask genPop {
-			string answer <- send_to_llm(msg,chat_model);
+			string answer <- send_to_llm(llm, msg);
 			write "Answer of the LLM." color: #blue;		
 			write sample(answer);
 			
@@ -92,8 +92,7 @@ Do not include any explanatory text—only the list in the specified format.";
 				role <- "I am " + name + ". I am " + ((gender = 'M') ? "a man. " : "a woman. ");
 				role <- role + "My workplace is " + distance_to_work + " meters away. ";
 				
-				chat_model_people <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.1");
-				// chat_memory_people <- create_chat_memory(role:role);	
+				llm_people <- create_ollama_chat_model( url: "http://localhost:11434", model_name: "llama3.1");
 				
 				write role + " has been created.";
 			}
@@ -115,7 +114,7 @@ Do not include any explanatory text—only the list in the specified format.";
 }
 
 species genPop skills: [mcp_skill] {
-	provider chat_model;
+	chat_model llm;
 	memory chat_memory;
 }
 
@@ -146,7 +145,7 @@ species people skills:[moving,mcp_skill] {
 	string objective ; 
 	point the_target <- nil ;
 	
-	provider chat_model_people;
+	chat_model llm_people;
 	memory chat_memory_people;
 	string role;
 	
@@ -162,7 +161,7 @@ species people skills:[moving,mcp_skill] {
 		
 //		write prompt_mob color: #green;
 		
-		string answer <- lower_case(send_to_llm(role+prompt_mob,chat_model_people));
+		string answer <- lower_case(send_to_llm(llm_people, role+prompt_mob));
 		mobility_mode <- (answer contains "car")?"car": ((answer contains "bike")?"bike":"bus");
 		
 		write role+prompt_mob color: #blue;

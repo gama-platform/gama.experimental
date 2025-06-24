@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+	<classpathentry exported="true" kind="lib" path="lib/okio-jvm-3.6.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/okio-3.6.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/kotlin-stdlib-1.9.23.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/okhttp-4.12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/okhttp-sse-4.12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/api-0.31.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-annotations-2.19.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.19.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.19.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jspecify-1.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jtokkit-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-core-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-document-parser-apache-tika-1.1.0-beta7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-easy-rag-1.1.0-beta7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-embeddings-1.1.0-beta7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-embeddings-bge-small-en-1.1.0-beta7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-google-ai-gemini-1.1.0-rc1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-http-client-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-http-client-jdk-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-mcp-1.1.0-beta7.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-ollama-1.1.0-rc1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/langchain4j-open-ai-1.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/onnxruntime-1.20.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/opennlp-tools-2.5.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-2.0.17.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/tika-core-3.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/tika-parsers-standard-package-3.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/tokenizers-0.31.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
@@ -12,26 +41,5 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-1.0.0-rc1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-core-1.0.0-rc1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-document-parser-apache-tika-1.0.0-beta4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-easy-rag-1.0.0-beta4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-embeddings-1.0.0-beta4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-embeddings-bge-small-en-v15-q-1.0.0-beta4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-http-client-1.0.0-rc1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-http-client-jdk-1.0.0-rc1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-mcp-1.0.0-beta4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-ollama-1.0.0-beta4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/langchain4j-open-ai-1.0.0-rc1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jtokkit-1.1.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.19.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jackson-annotations-2.19.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.19.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/tika-core-3.0.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/tokenizers-0.31.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/api-0.31.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/opennlp-tools-2.5.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/onnxruntime-1.20.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-2.0.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -15,38 +15,35 @@ global {
 
 	init {
 		create A {
-			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(roleMsg);
+			llm <- create_ollama_chat_model(url: "http://localhost:11434", model_name: "llama3.2");
+			chat_memory <- create_chat_memory(llm,roleMsg);
 			has_memory <- false;
 		}
 
 		create A {
-			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(roleMsg);
+			llm <- create_ollama_chat_model( url: "http://localhost:11434", model_name: "llama3.2");
+			chat_memory <- create_chat_memory(llm,roleMsg);
 			has_memory <- true;
 		} } }
 
 species A skills: [mcp_skill] { 
 	 
-	provider chat_model;
+	chat_model llm;
 	memory chat_memory;  
 	bool has_memory;
 	string mymsg;
 
-	reflex chating {
+	reflex chating when: cycle < length(msgto)  {
 		write self;
 		if (has_memory) {
-			do add_to_chat_memory( msgto[cycle],chat_memory);
-//			mymsg <- send_to_llm(llm: chat_model, message: msgto[cycle], with_memory: chat_memory);
-			mymsg <- send_to_llm(msgto[cycle],chat_model, chat_memory);
-			do add_to_chat_memory(mymsg, chat_memory);
+			//the first boolean is used to define if the prompt has to be added to the memory, the second one if the answer has to be added to the memory
+			mymsg <- send_to_llm(llm, msgto[cycle], true, true);
 		} else {
-			mymsg <- send_to_llm(msgto[cycle],chat_model);
+			mymsg <- send_to_llm_without_memory(llm, msgto[cycle]);
 		}
-
 		write mymsg;
 	} 
-	}
+}
 
 experiment main type: gui {
 	output {

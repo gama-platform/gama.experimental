@@ -19,36 +19,32 @@ global {
 
 	init {
 		create A {
-			chat_model <- create_chat_model(llm: "ollama", url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(roleMsg);
-			unknown toolSpecification <- specify_tool(tool: "create a cricket", description: "it will increase but never decrease the population");
-			unknown toolExecutor <- create_tool_executor(execute: world.toto);
-			unknown toolProvider <- create_tool_provider([toolSpecification::toolExecutor]);
-			//			write fetch_chat_memory(chat_memory);
-			my_assistant <- create_assistant(llm: chat_model, memory: chat_memory, tools: toolProvider);
+			llm <- create_ollama_chat_model( url: "http://localhost:11434", model_name: "llama3.2");
+			chat_memory <- create_chat_memory(llm,roleMsg);
+			tool_provider <- create_tool_executor(tool_name: "create a cricket",description: "it will increase but never decrease the population", execute: world.toto );
+			my_assistant <- create_assistant(llm: llm, memory: chat_memory, tools: tool_provider);
 			mymsg<- send_to_assistant(assistant: my_assistant, message: "i want to decrease the green house gas");
 			write mymsg;
-			//			write "\n\n\n";
-			//			write fetch_chat_memory(chat_memory);
-		} } }
+		} 
+	} 
+}
 
 species A skills: [mcp_skill] {
-	unknown chat_model;
-	unknown chat_memory;
-	unknown mcp_transport;
-	unknown mcp_client;
-	unknown mcp_tool;
-	unknown my_bot;
-	unknown my_assistant;
+	chat_model llm;
+	memory chat_memory;
+	mcp_transport transport;
+	mcp_client client;
+	provider tool_provider;
+	assistant my_assistant;
 	string mymsg;
 
 	reflex chating {
 		do add_to_chat_memory message: mymsg memory: chat_memory;
-		//		mymsg <- send_to_llm(llm: chat_model, message: msgto[cycle], with_memory: chat_memory);
 		mymsg <- send_to_assistant(assistant: my_assistant, message: mymsg);
 		write mymsg;
 		do add_to_chat_memory message: mymsg memory: chat_memory;
-	} }
+	} 
+}
 
 species cricket {
 
