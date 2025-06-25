@@ -26,7 +26,7 @@ global {
 			has_memory <- true;
 		} } }
 
-species A skills: [mcp_skill] { 
+species A skills: [llm] { 
 	 
 	chat_model llm;
 	memory chat_memory;  

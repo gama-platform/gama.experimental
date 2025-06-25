@@ -11,6 +11,7 @@
 package gama.experimental.skills;
 
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -23,7 +24,10 @@ import gama.annotations.precompiler.GamlAnnotations.arg;
 import gama.annotations.precompiler.GamlAnnotations.doc;
 import gama.annotations.precompiler.GamlAnnotations.skill;
 import gama.annotations.precompiler.GamlAnnotations.vars;
+import gama.core.common.util.FileUtils;
+import gama.core.runtime.GAMA;
 import gama.core.runtime.IScope;
+import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.GamaListFactory;
 import gama.core.util.IList;
 import gama.dev.DEBUG;
@@ -40,8 +44,8 @@ import gama.experimental.types.MCPTransport;
 import gama.experimental.types.MCPTransportType;
 import gama.experimental.types.Memory;
 import gama.experimental.types.MemoryType;
-import gama.experimental.types.Provider;
-import gama.experimental.types.ProviderType;
+import gama.experimental.types.ToolProvider;
+import gama.experimental.types.ToolProviderType;
 import gama.gaml.descriptions.ActionDescription;
 import gama.gaml.skills.Skill;
 import gama.gaml.types.IType;
@@ -50,13 +54,13 @@ import gama.gaml.types.IType;
  * The Class NetworkSkill.
  */
 
-@skill(name = MCPConstants.MCP_SKILL, concept = { MCPConstants.LLM_MODEL}, doc = @doc("The " + MCPConstants.MCP_SKILL + " skill provides new features that allow agents to ask questions to a chatbot (LLM)"))
+@skill(name = MCPConstants.LLM_SKILL, concept = { MCPConstants.LLM_MODEL}, doc = @doc("The " + MCPConstants.LLM_SKILL + " skill provides new features that allow agents to ask questions to a chatbot (LLM)"))
 @vars({
 	// @variable(name = MCPConstants.LLM_MODEL, type = ChatModelType.id, init = "nil",doc = @doc("A chat model (to be built) that can answer questions and be used as a key element of the chat bot")),
 //	@variable(name = MCPConstants.CHAT_BOT, type = AssistantType.id, init = "nil",doc = @doc("A chat bot (to be built) that can answer questions taking into account external data (RAG) and trigger actions")),
 //	@variable(name = MCPConstants.CHAT_MEMORY, type = MemoryType.id, init = "nil",doc = @doc("A chat memory (to be built) that can be used to store data for the chat model"))
 })
-public class MCPSkill extends Skill {
+public class LLMSkill extends Skill {
 
 	static {
 		DEBUG.ON();
@@ -179,10 +183,10 @@ public class MCPSkill extends Skill {
 
 	}
 
-	@action(name = "create_chat_memory", args = {@arg(name = "llm", type = ChatModelType.id, doc = @doc("llm ai")),
-			@arg(name = "init_memory", type = IType.STRING, doc = @doc("init_memory Specifies the initial content of the memory (optional)"), optional = true),
+	@action(name = "create_chat_memory", args = {@arg(name = "llm", type = ChatModelType.id, doc = @doc("llm specifies the chat model to which the memory will be linked")),
+			@arg(name = "init_memory", type = IType.STRING, doc = @doc("init_memory Specifies the initial content of the memory (by default, blank)"), optional = true),
 			@arg(name = "max_tokens", type = IType.INT, doc = @doc("max_tokens defines the maximum number of tokens that can be stored or retained in memory to maintain the conversation context (by default: 1000)"), optional = true)
-			 }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+			 }, doc = @doc(value = "Action that builds a memory linked to a chat model — the memory will be used to construct the message sent to the chat model", returns = "The memory built"))
 	public Memory create_chat_memory(final IScope scope) {
 		final ChatModel chatModel = (ChatModel) scope.getArg("llm", ChatModelType.id);
 		final String msgToAdd = (String) scope.getArg("init_memory", IType.STRING);
@@ -197,7 +201,7 @@ public class MCPSkill extends Skill {
 
 
 	
-	private void addToolExecutor(IScope scope, Provider provider,String name, String description, ActionDescription executor) {
+	private void addToolExecutor(IScope scope, ToolProvider provider,String name, String description, ActionDescription executor) {
 		ToolExecutor toolExecutor = (toolExecutionRequest, memoryId) -> {
 			String aname = executor.getName();
 			if (scope.getModel() != null && scope.getModel().getAction(aname) != null) {
@@ -216,8 +220,8 @@ public class MCPSkill extends Skill {
 			@arg(name = "execute", type = IType.ACTION, doc = @doc("action to execute")), 
 			
 	}, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
-	public Provider create_tool_executor(final IScope scope) {
-		final Provider provider = new Provider();
+	public ToolProvider create_tool_executor(final IScope scope) {
+		final ToolProvider provider = new ToolProvider();
 		final String name = scope.getStringArg("tool_name");
 		final String description = scope.getStringArg("description");
 		final ActionDescription executor = (ActionDescription) scope.getArg("execute", IType.ACTION);
@@ -229,21 +233,21 @@ public class MCPSkill extends Skill {
 	@action(name = "create_client_executor", args = {
 			@arg(name = "client", type = MCPClientType.id, doc = @doc("significant name")) 
 	}, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
-	public Provider create_tool_executor_from_client(final IScope scope) {
+	public ToolProvider create_tool_executor_from_client(final IScope scope) {
 		final MCPClient client = (MCPClient) scope.getArg("client", MCPClientType.id);
-		return client == null ? new Provider() : new Provider(client) ;
+		return client == null ? new ToolProvider() : new ToolProvider(client) ;
 
 	}
 	
 	@action(name = "add_tool_executor", args = {
-			@arg(name = "provider", type = ProviderType.id, doc = @doc("the provider to add the tool executor to")),
+			@arg(name = "provider", type = ToolProviderType.id, doc = @doc("the provider to add the tool executor to")),
 			@arg(name = "tool_name", type = IType.STRING, doc = @doc("significant name")),
 			@arg(name = "description", type = IType.STRING, doc = @doc("clear detailed description for the tool")),
 			@arg(name = "execute", type = IType.ACTION, doc = @doc("action to execute")), 
 			
 	}, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
-	public Provider add_tool_executor(final IScope scope) {
-		final Provider provider = (Provider) scope.getArg("provider", ProviderType.id);
+	public ToolProvider add_tool_executor(final IScope scope) {
+		final ToolProvider provider = (ToolProvider) scope.getArg("provider", ToolProviderType.id);
 		final String name = scope.getStringArg("tool_name");
 		final String description = scope.getStringArg("description");
 		final ActionDescription executor = (ActionDescription) scope.getArg("execute", IType.ACTION);
@@ -340,26 +344,21 @@ public class MCPSkill extends Skill {
 	@action(name = "create_mcp_client", args = {
 			@arg(name = "transport", type =  MCPTransportType.id, doc = @doc("command to execute")) }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
 	public Object create_mcp_client(final IScope scope) {
-
 		final MCPTransport transport = (MCPTransport) scope.getArg("transport", MCPTransportType.id);
-
 		McpClient mcpClient = new DefaultMcpClient.Builder().transport(transport.getTransport()).build();
-
 		return mcpClient;
-
 	}
-
-
+ 
 	
-	
-	@action(name = "create_assistant", args = { @arg(name = "llm", type = ChatModelType.id, doc = @doc("llm ai"), optional = false),
-			@arg(name = "memory", type = MemoryType.id, doc = @doc("memory"), optional = true),
-			@arg(name = "tools", type = ProviderType.id, doc = @doc("toolprovider"), optional = true), 
-			@arg(name = "content_retriever", type = ContentRetrieverType.id, doc = @doc("content_retriever"), optional = true), }, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+	@action(name = "create_assistant", args = { @arg(name = "llm", type = ChatModelType.id, doc = @doc("llm specifies the chat model used by the assistant"), optional = false),
+			@arg(name = "memory", type = MemoryType.id, doc = @doc("memory specifies the chat memory used by the assistant (optional)"), optional = true),
+			@arg(name = "tool_provider", type = ToolProviderType.id, doc = @doc("tool_provider specifies the tools used by the assistant (optional)"), optional = true), 
+			@arg(name = "content_retriever", type = ContentRetrieverType.id, doc = @doc("content_retriever specifies the content retriever(RAG) used by the assistant (optional)"), optional = true), }, 
+			doc = @doc(value = "Action that builds an LLM assistant, enabling structured interactions with chat models by incorporating memory, RAG, and executor tools", returns = "Returns the assistant built"))
 	public Assistant create_assistant(final IScope scope) {
 		// final IAgent agent = scope.getAgent();
 		final ChatModel chatModel = (ChatModel) scope.getArg("llm", ChatModelType.id);
-		final Provider toolProvider = scope.hasArg("tools") ? (Provider) scope.getArg("tools", ProviderType.id) : null; 
+		final ToolProvider toolProvider = scope.hasArg("tools") ? (ToolProvider) scope.getArg("tools", ToolProviderType.id) : null; 
 		final ContentRetriever contentRetriever =  scope.hasArg("content_retriever") ? (ContentRetriever) scope.getArg("content_retriever", ContentRetrieverType.id) : null; 
 		  
 		final Memory memory = scope.hasArg("memory") ?(Memory) scope.getArg("memory", MemoryType.id) : null;   
@@ -367,18 +366,17 @@ public class MCPSkill extends Skill {
 	}
 
 
-	@action(name = "create_rag", args = { @arg(name = "path", type = IType.STRING, doc = @doc("path to rag"))
-			 }, doc = @doc(value = "path to rag learn docs.", returns = "The error message if any"))
+	@action(name = "create_rag", args = { @arg(name = "directoty_path", type = IType.STRING, doc = @doc("path of the directory containing the data"))
+			 }, doc = @doc(value = "Action that builds a content_retriever contaning the data loaded from the directory path", returns = "Returns a content_retriever (RAG) with the specified data; Return nil if the folder does not exist"))
 	public ContentRetriever create_rag(final IScope scope) {
-		// final IAgent agent = scope.getAgent();
-		final String pathToAdd = (String) scope.getArg("path", IType.STRING);
-		return new ContentRetriever(pathToAdd);
+		final String pathToAdd = (String) scope.getArg("directoty_path", IType.STRING);
+		String pathToAddAP = FileUtils.constructAbsoluteFilePath(GAMA.getRuntimeScope(), pathToAdd,true);
+		Path p = Paths.get(pathToAddAP);
+		if (Files.exists(p) && Files.isDirectory(p)) 
+			return new ContentRetriever(p);
+		GamaRuntimeException.error(pathToAddAP + " does not exist or is not a directory", scope);
+		return null;
 
-	}
-
-	public static Path toPath(String relativePath) {
-	//	URL fileUrl = MCPSkill.class.getClassLoader().getResource(relativePath);
-		return Paths.get(relativePath);
 	}
 
 

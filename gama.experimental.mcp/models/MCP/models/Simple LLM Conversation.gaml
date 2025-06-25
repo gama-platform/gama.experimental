@@ -24,7 +24,7 @@ global {
 			do add_to_chat_memory message: msg0 memory: chat_memory;
 		} } }
 
-species A skills: [mcp_skill] {
+species A skills: [llm] {
 	chat_model llm; 
 	memory chat_memory;
 	string mymsg;

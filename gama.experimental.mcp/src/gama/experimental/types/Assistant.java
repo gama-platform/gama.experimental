@@ -56,7 +56,7 @@ public class Assistant implements IValue {
 		super(); 
 	}
 	
-	public Assistant(ChatModel model, Provider providerArg, ContentRetriever contentRetriever, Memory memoryArg) {
+	public Assistant(ChatModel model, ToolProvider providerArg, ContentRetriever contentRetriever, Memory memoryArg) {
 		super();
 		this.chatModel = model;
 		AiServices<AIAssistant> assistantBD = AiServices.builder(AIAssistant.class).chatModel(model.getModel());

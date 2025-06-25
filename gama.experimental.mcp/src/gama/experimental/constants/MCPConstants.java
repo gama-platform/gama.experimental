@@ -37,33 +37,9 @@ public interface MCPConstants {
 	/** The base url. */
 	public static final String BASE_URL = "baseUrl";
 
-	/** The model name. */
 	
-	/** The login. */
-	public static final String LOGIN = "login";
-	
-	/** The password. */
-	public static final String PASSWORD = "password";
-	
-	/** The withname. */
-	public static final String WITHNAME = "with_name";
-	
-	/** The protocol. */
-	public static final String PROTOCOL = "protocol";
-	
-	/** The port. */
-	public static final String PORT = "port";
-
-	/** The net agent name. */
-	// Agent Data
-	public static final String NET_AGENT_NAME = "network_name";
-	 
-	/** For HTTP requests. */
-	public static final String HTTP_REQUEST = "http";
-
-	/** The network skill. */
-	///// SKILL NETWORK
-	public static final String MCP_SKILL = "mcp_skill";
+	/** The llm skill. */
+	public static final String LLM_SKILL = "llm";
 	
 	/** The fetch message. */
 	public static final String FETCH_MESSAGE = "fetch_message";

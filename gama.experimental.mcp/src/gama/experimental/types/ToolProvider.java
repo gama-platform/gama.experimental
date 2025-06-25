@@ -15,7 +15,6 @@ import java.util.List;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.mcp.McpToolProvider;
 import dev.langchain4j.service.tool.ToolExecutor;
-import dev.langchain4j.service.tool.ToolProvider;
 import dev.langchain4j.service.tool.ToolProviderResult;
 import dev.langchain4j.service.tool.ToolProviderResult.Builder;
 import gama.annotations.precompiler.GamlAnnotations.vars;
@@ -34,7 +33,7 @@ import gama.gaml.types.Types;
  * The Class Predicate.
  */
 @vars ({  })
-public class Provider implements IValue {
+public class ToolProvider implements IValue {
 
 	
 	@Override
@@ -42,7 +41,7 @@ public class Provider implements IValue {
 		return json.typedObject(getGamlType(),"parameters", parameters, "toolProvider", toolProvider);
 	}
 
-	private ToolProvider toolProvider = null;
+	private dev.langchain4j.service.tool.ToolProvider toolProvider = null;
 	private MCPClient client = null;
 	
 	private IMap<ToolSpecification,ToolExecutor> parameters = null;
@@ -53,11 +52,11 @@ public class Provider implements IValue {
 	
 	
 	
-	public Provider() {
+	public ToolProvider() {
 		super();
 	}
 
-	public Provider(MCPClient client) {
+	public ToolProvider(MCPClient client) {
 		super();
 		this.client = client;
 	}
@@ -74,7 +73,7 @@ public class Provider implements IValue {
 	}
 
 
-	public Provider(Provider p) {
+	public ToolProvider(ToolProvider p) {
 		parameters = GamaMapFactory.concurrentMap();
 		parameters.putAll(p.parameters);
 		init();
@@ -82,7 +81,7 @@ public class Provider implements IValue {
 	
 
 	
-	public ToolProvider getToolProvider() {
+	public dev.langchain4j.service.tool.ToolProvider getToolProvider() {
 		return toolProvider;
 	}
 
@@ -138,8 +137,8 @@ public class Provider implements IValue {
 	}
 
 	@Override
-	public Provider copy(final IScope scope) throws GamaRuntimeException {
-		return new Provider(this);
+	public ToolProvider copy(final IScope scope) throws GamaRuntimeException {
+		return new ToolProvider(this);
 	}
 
 	
@@ -153,7 +152,7 @@ public class Provider implements IValue {
 	public boolean equals(final Object obj) {
 		if (this == obj) return true;
 		if (obj == null || getClass() != obj.getClass()) return false;
-		final Provider other = (Provider) obj;
+		final ToolProvider other = (ToolProvider) obj;
 		return toolProvider.equals(other.toolProvider);
 	}
 
@@ -163,6 +162,6 @@ public class Provider implements IValue {
 	 * @see gama.core.common.interfaces.ITyped#getGamlType()
 	 */
 	@Override
-	public IType<?> getGamlType() { return Types.get(ProviderType.id); }
+	public IType<?> getGamlType() { return Types.get(ToolProviderType.id); }
 
 }

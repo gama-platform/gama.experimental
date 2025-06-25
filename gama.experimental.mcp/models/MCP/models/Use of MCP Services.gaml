@@ -20,18 +20,18 @@ global {
 			transport<-create_mcp_transport(url:"https://router.mcp.so/sse",timeout:260);
 			client<-create_mcp_client(transport: transport);
 			mcp_tool<-create_client_executor(client); 
-			my_bot<-create_assistant(llm: llm, tools: mcp_tool);
+			my_bot<-create_assistant(llm: llm, tool_provider: mcp_tool);
       
 		} 
 	}
 }
 
-species A skills: [mcp_skill] {
+species A skills: [llm] {
 	chat_model llm; 
 	memory chat_memory;
 	mcp_transport transport;
 	mcp_client client;
-	provider mcp_tool;
+	tool_provider mcp_tool;
 	assistant my_bot;
 
 	string mymsg;

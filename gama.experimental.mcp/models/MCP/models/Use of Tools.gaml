@@ -21,20 +21,20 @@ global {
 		create A {
 			llm <- create_ollama_chat_model( url: "http://localhost:11434", model_name: "llama3.2");
 			chat_memory <- create_chat_memory(llm,roleMsg);
-			tool_provider <- create_tool_executor(tool_name: "create a cricket",description: "it will increase but never decrease the population", execute: world.toto );
-			my_assistant <- create_assistant(llm: llm, memory: chat_memory, tools: tool_provider);
+			tool <- create_tool_executor(tool_name: "create a cricket",description: "it will increase but never decrease the population", execute: world.toto );
+			my_assistant <- create_assistant(llm: llm, memory: chat_memory, tool_provider: tool);
 			mymsg<- send_to_assistant(assistant: my_assistant, message: "i want to decrease the green house gas");
 			write mymsg;
 		} 
 	} 
 }
 
-species A skills: [mcp_skill] {
+species A skills: [llm] {
 	chat_model llm;
 	memory chat_memory;
 	mcp_transport transport;
 	mcp_client client;
-	provider tool_provider;
+	tool_provider tool;
 	assistant my_assistant;
 	string mymsg;
 

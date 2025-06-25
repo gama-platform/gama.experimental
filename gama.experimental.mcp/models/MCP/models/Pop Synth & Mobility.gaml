@@ -113,7 +113,7 @@ Do not include any explanatory text—only the list in the specified format.";
 
 }
 
-species genPop skills: [mcp_skill] {
+species genPop skills: [llm] {
 	chat_model llm;
 	memory chat_memory;
 }
@@ -135,7 +135,7 @@ species road  {
 	}
 }
 
-species people skills:[moving,mcp_skill] {
+species people skills:[moving,llm] {
 	string gender;
 	rgb color <- (gender ='F')?#yellow:#green ;
 	building living_place <- nil ;

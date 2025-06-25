@@ -34,7 +34,7 @@ global {
 }
 
  
-species LLM_Agent skills: [mcp_skill] {
+species LLM_Agent skills: [llm] {
 	chat_model llm;
 	assistant bot;
 	rgb color;

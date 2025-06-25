@@ -11,7 +11,7 @@
 package gama.experimental.types;
 
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 
 import dev.langchain4j.data.document.Document;
@@ -20,8 +20,6 @@ import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import gama.core.common.interfaces.IValue;
-import gama.core.common.util.FileUtils;
-import gama.core.runtime.GAMA;
 import gama.core.runtime.IScope;
 import gama.core.runtime.exceptions.GamaRuntimeException;
 import gama.core.util.file.json.Json;
@@ -41,12 +39,11 @@ public class ContentRetriever implements IValue {
 		return json.typedObject(getGamlType(),"content_retriever", contentRetriever);
 	}
 
-	public ContentRetriever(String path) {
-		String pathToAdd = FileUtils.constructAbsoluteFilePath(GAMA.getRuntimeScope(), path,true);
+	public ContentRetriever(Path path) {
 		List<Document> documents = null;
 		try {
 			documents = FileSystemDocumentLoader.loadAllFromDirectory(
-			           Paths.get(pathToAdd)
+			          path
 			    );
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

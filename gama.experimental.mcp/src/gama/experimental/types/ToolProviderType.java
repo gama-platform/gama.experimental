@@ -24,12 +24,12 @@ import gama.gaml.types.IType;
  * The Class PredicateType.
  */
 @type (
-		name = "provider",
-		id = ProviderType.id,
-		wraps = { Provider.class },
+		name = "tool_provider",
+		id = ToolProviderType.id,
+		wraps = { ToolProvider.class },
 		concept = { IConcept.TYPE, MCPConstants.LLM_MODEL })
-@doc ("represents a provider")
-public class ProviderType extends GamaType<Provider> {
+@doc ("represents a tool provider")
+public class ToolProviderType extends GamaType<ToolProvider> {
 
 	/** The Constant id. */
 	public final static int id = IType.AVAILABLE_TYPES + 146657;
@@ -40,19 +40,19 @@ public class ProviderType extends GamaType<Provider> {
 	}
 
 	@Override
-	@doc ("cast an object as a provider")
-	public Provider cast(final IScope scope, final Object obj, final Object val, final boolean copy)
+	@doc ("cast an object as a tool provider")
+	public ToolProvider cast(final IScope scope, final Object obj, final Object val, final boolean copy)
 			throws GamaRuntimeException {
-		if (obj instanceof Provider p) return p;
+		if (obj instanceof ToolProvider p) return p;
 		
 		return null; 
 	}
 
 	@Override
-	public Provider getDefault() { return null; }
+	public ToolProvider getDefault() { return null; }
 
 	@Override
-	public Provider deserializeFromJson(final IScope scope, final IMap<String, Object> map2) {
+	public ToolProvider deserializeFromJson(final IScope scope, final IMap<String, Object> map2) {
 		return null;
 	}
 

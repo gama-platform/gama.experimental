@@ -78,7 +78,7 @@ global {
 
 } 
 
-species Farmer skills: [mcp_skill] {
+species Farmer skills: [llm] {
 	chat_model llm; 
 	string role <- "";
 	string ai_memory <- ""; 

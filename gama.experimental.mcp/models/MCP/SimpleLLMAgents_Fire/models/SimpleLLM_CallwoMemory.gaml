@@ -57,7 +57,7 @@ global {
 	} 
 }
 
-species AI skills: [mcp_skill] {
+species AI skills: [llm] {
 // LLM interface and memory attributes
 	chat_model llm;
 	memory chat_memory; // Stores dialogue history
