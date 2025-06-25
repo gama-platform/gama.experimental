@@ -30,7 +30,7 @@ global {
 		ask first(Agent_with_RAG) {do answer_question(question);}
 		
 	} 
-	
+	 
 }
 
  

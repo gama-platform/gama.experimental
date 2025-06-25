@@ -17,8 +17,10 @@ public interface MCPConstants {
 	
 	
 	public static final String MEMORY = "memory";
-
+	
 	public static final String LLM_MODEL = "llm";
+	
+	public static final String CHAT_BOT = "chat_bot";
 	
 	/** The connect topic. */
 	public static final String CONNECT_TOPIC = "connect";

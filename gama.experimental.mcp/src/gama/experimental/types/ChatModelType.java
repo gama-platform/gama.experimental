@@ -26,7 +26,7 @@ import gama.gaml.types.IType;
 @type (
 		name = "chat_model",
 		id = ChatModelType.id,
-		wraps = { ChatModelType.class },
+		wraps = { ChatModel.class },
 		concept = { IConcept.TYPE, MCPConstants.LLM_MODEL })
 @doc ("represents a chat model")
 public class ChatModelType extends GamaType<ChatModel> {
