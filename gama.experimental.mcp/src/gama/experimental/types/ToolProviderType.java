@@ -28,7 +28,7 @@ import gama.gaml.types.IType;
 		id = ToolProviderType.id,
 		wraps = { ToolProvider.class },
 		concept = { IConcept.TYPE, MCPConstants.LLM_MODEL })
-@doc ("represents a tool provider")
+@doc ("represents a tool provider that is in charge of executing a GAMA action or an external tool when it is invoked by the assistant during a conversation")
 public class ToolProviderType extends GamaType<ToolProvider> {
 
 	/** The Constant id. */

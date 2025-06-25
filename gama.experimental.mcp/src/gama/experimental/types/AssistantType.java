@@ -28,7 +28,7 @@ import gama.gaml.types.IType;
 		id = AssistantType.id,
 		wraps = { Assistant.class },
 		concept = { IConcept.TYPE, MCPConstants.LLM_MODEL })
-@doc ("represents an assistant, i.e. a high-level API to interact with a chat model")
+@doc ("represents a LLM assistant, enabling structured interactions with chat models by incorporating memory, RAG, and executor tools")
 public class AssistantType extends GamaType<Assistant> {
 
 	/** The Constant id. */

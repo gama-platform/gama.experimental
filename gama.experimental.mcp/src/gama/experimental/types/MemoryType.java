@@ -28,7 +28,7 @@ import gama.gaml.types.IType;
 		id = MemoryType.id,
 		wraps = { Memory.class },
 		concept = { IConcept.TYPE, MCPConstants.LLM_MODEL })
-@doc ("represents a memory")
+@doc ("represents a memory linked to a chat model — the memory will be used to construct the message sent to the chat model")
 public class MemoryType extends GamaType<Memory> {
 
 	/** The Constant id. */

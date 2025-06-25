@@ -28,7 +28,7 @@ import gama.gaml.types.IType;
 		id = ChatModelType.id,
 		wraps = { ChatModel.class },
 		concept = { IConcept.TYPE, MCPConstants.LLM_MODEL })
-@doc ("represents a chat model")
+@doc ("represents a chat model (e.g., LLaMA, OpenAI) that allows sending messages and receiving responses in a conversational manner")
 public class ChatModelType extends GamaType<ChatModel> {
 
 	/** The Constant id. */
@@ -40,7 +40,7 @@ public class ChatModelType extends GamaType<ChatModel> {
 	}
 
 	@Override
-	@doc ("cast an object as a memory")
+	@doc ("cast an object as a chat_model")
 	public ChatModel cast(final IScope scope, final Object obj, final Object val, final boolean copy)
 			throws GamaRuntimeException {
 		if (obj instanceof ChatModel p) return p;

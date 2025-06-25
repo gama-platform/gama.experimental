@@ -28,7 +28,7 @@ import gama.gaml.types.IType;
 		id = ContentRetrieverType.id,
 		wraps = { ContentRetriever.class },
 		concept = { IConcept.TYPE, MCPConstants.LLM_MODEL })
-@doc ("represents a content_retriever")
+@doc ("represents a content_retriever that enables linking to data used by an LLM assistant")
 public class ContentRetrieverType extends GamaType<ContentRetriever> {
 
 	/** The Constant id. */
@@ -40,7 +40,7 @@ public class ContentRetrieverType extends GamaType<ContentRetriever> {
 	}
 
 	@Override
-	@doc ("cast an object as a memory")
+	@doc ("cast an object as a content_retriever")
 	public ContentRetriever cast(final IScope scope, final Object obj, final Object val, final boolean copy)
 			throws GamaRuntimeException {
 		if (obj instanceof ContentRetriever p) return p;

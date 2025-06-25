@@ -38,26 +38,26 @@ import gama.gaml.types.Types;
 /**
  * The Class Predicate.
  */
-@vars ({ @variable(name = MCPConstants.MODEL_TYPE, type = IType.STRING, doc = @doc("LLM type: openai or ollama")),
-	@variable(name = MCPConstants.MODEL_NAME, type = IType.STRING, doc = @doc("model to use gpt-4o-mini,llama3.2 ... ")),
-	@variable(name = MCPConstants.MEMORY, type = IType.STRING, doc = @doc("model to use gpt-4o-mini,llama3.2 ... ")),
-	@variable(name = MCPConstants.OLLAMA_URL, type = IType.STRING, doc = @doc("URL of LLM (for Ollama)")), // "http://localhost:11434"
-	@variable(name = MCPConstants.API_KEY, type = IType.STRING, doc = @doc("API Key (for OpenAi)")),
-	@variable(name = MCPConstants.RESPONSE_FORMAT, type = IType.STRING, doc = @doc("responseFormat:'json', 'text' by default")),
-	@variable(name = MCPConstants.NUM_CTX, type = IType.INT, doc = @doc("numCtx (for Ollama)")),
-	@variable(name = MCPConstants.NUM_PREDICT, type = IType.INT, doc = @doc("numPredict (for Ollama)")),
-	@variable(name = MCPConstants.REPEAT_PENALTY, type = IType.FLOAT, doc = @doc("repeatPenalty (for Ollama)")),
-	@variable(name = MCPConstants.SEED, type = IType.INT, doc = @doc("seed")),
-	@variable(name = MCPConstants.TEMPERATURE, type = IType.FLOAT, doc = @doc("temperature")),
-	@variable(name = MCPConstants.TOP_K, type = IType.INT, doc = @doc("topK (for Ollama)")),
-	@variable(name = MCPConstants.TOP_P, type = IType.FLOAT, doc = @doc("topP")),
-	@variable(name = MCPConstants.FREQUENCY_PENALTY, type = IType.FLOAT, doc = @doc("frequencyPenalty (for OpenAI)")),
-	@variable(name = MCPConstants.MAX_COMPLETION_TOKENS, type = IType.INT, doc = @doc("maxCompletionTokens (for OpenAI)")),
-	@variable(name = MCPConstants.MAX_RETRIES, type = IType.INT, doc = @doc("maxRetries (for OpenAI)")),
-	@variable(name = MCPConstants.MAX_TOKENS, type = IType.INT, doc = @doc("maxTokens (for OpenAI)")),
-	@variable(name = MCPConstants.PRESENCE_PENALTY, type = IType.FLOAT, doc = @doc("presencePenalty (for OpenAI)")),
-	@variable(name = MCPConstants.STORE, type = IType.BOOL, doc = @doc("presencePenalty (for OpenAI)")),
-	@variable(name = MCPConstants.TIME_OUT, type = IType.INT, doc = @doc("timeout (for OpenAI)"))})
+@vars ({ @variable(name = MCPConstants.MODEL_TYPE, type = IType.STRING, doc = @doc("model_type specifies the chat model type: 'openai' or 'ollama'")),
+	@variable(name = MCPConstants.MODEL_NAME, type = IType.STRING, doc = @doc("model_name specifies the exact name or identifier of the language model to be used for generating responses (e.g. 'gpt-4o-mini') ")),
+	@variable(name = MCPConstants.MEMORY, type = IType.STRING, doc = @doc("memory represents the integrated memory")),
+	@variable(name = MCPConstants.OLLAMA_URL, type = IType.STRING, doc = @doc("url specifies the endpoint URL of the local or remote Ollama server that the model communicates with (for Ollama)")), // "http://localhost:11434"
+	@variable(name = MCPConstants.API_KEY, type = IType.STRING, doc = @doc("key refers to the API key used to authenticate requests to the OpenAI service (for OpenAi)")),
+	@variable(name = MCPConstants.RESPONSE_FORMAT, type = IType.STRING, doc = @doc("response_format specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
+	@variable(name = MCPConstants.NUM_CTX, type = IType.INT, doc = @doc("num_ctx specifies the maximum number of context tokens the model can use to process a prompt, including instructions, documents, and conversation history (for Ollama)")),
+	@variable(name = MCPConstants.NUM_PREDICT, type = IType.INT, doc = @doc("num_predict specifies the maximum number of tokens the model is allowed to generate in its response (for Ollama)")),
+	@variable(name = MCPConstants.REPEAT_PENALTY, type = IType.FLOAT, doc = @doc("repeat_penalty controls how strongly the model is discouraged from repeating the same tokens or phrases in its response (for Ollama)")),
+	@variable(name = MCPConstants.SEED, type = IType.INT, doc = @doc("seed sets the random number generator seed to make the model’s output deterministic and reproducible")),
+	@variable(name = MCPConstants.TEMPERATURE, type = IType.FLOAT, doc = @doc("temperature controls the randomness of the model’s output, with higher values producing more creative and varied responses")),
+	@variable(name = MCPConstants.TOP_K, type = IType.INT, doc = @doc("top_k limits the model’s token selection to the top K most probable tokens, influencing the diversity and focus of the generated output (for Ollama)")),
+	@variable(name = MCPConstants.TOP_P, type = IType.FLOAT, doc = @doc("top_p (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value")),
+	@variable(name = MCPConstants.FREQUENCY_PENALTY, type = IType.FLOAT, doc = @doc("frequency_penalty reduces the likelihood of the model repeating tokens by penalizing tokens based on their frequency in the generated text (for OpenAI)")),
+	@variable(name = MCPConstants.MAX_COMPLETION_TOKENS, type = IType.INT, doc = @doc("max_completion_tokens sets the maximum number of tokens the model can generate in its completion or response (for OpenAI)")),
+	@variable(name = MCPConstants.MAX_RETRIES, type = IType.INT, doc = @doc("max_retries specifies the maximum number of times the system will retry a failed request to the model (for OpenAI)")),
+	@variable(name = MCPConstants.MAX_TOKENS, type = IType.INT, doc = @doc("max_tokens defines the total maximum number of tokens allowed for both the input (prompt) and the output (completion) combined (for OpenAI)")),
+	@variable(name = MCPConstants.PRESENCE_PENALTY, type = IType.FLOAT, doc = @doc("presence_penalty reduces the likelihood of the model mentioning new topics or tokens that have already appeared, encouraging more diverse and novel content (for OpenAI)")),
+	@variable(name = MCPConstants.STORE, type = IType.BOOL, doc = @doc("store is a boolean that indicates whether the generated data (such as embeddings or chat history) should be saved or not (for OpenAI)")),
+	@variable(name = MCPConstants.TIME_OUT, type = IType.INT, doc = @doc("timeout specifies the maximum amount of time the system will wait for a response from the model before aborting the request (for OpenAI)"))})
 public class ChatModel implements IValue {
 
 	private String modelType;

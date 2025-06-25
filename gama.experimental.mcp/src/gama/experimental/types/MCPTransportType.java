@@ -28,7 +28,7 @@ import gama.gaml.types.IType;
 		id = MCPTransportType.id,
 		wraps = { MCPTransport.class },
 		concept = { IConcept.TYPE, MCPConstants.LLM_MODEL })
-@doc ("represents a MCP Transport")
+@doc ("represents a MCP Transport that defines how messages are exchanged between an agent and an assistant, allowing customizable communication mechanisms")
 public class MCPTransportType extends GamaType<MCPTransport> {
 
 	/** The Constant id. */

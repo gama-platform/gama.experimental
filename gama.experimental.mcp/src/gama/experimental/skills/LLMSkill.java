@@ -71,13 +71,13 @@ public class LLMSkill extends Skill {
 			@arg(name = "model_name", type = IType.STRING, doc = @doc(" model_name specifies the exact name or identifier of the language model to be used for generating responses (e.g. 'llama3.2') ")),
 			@arg(name = "url", type = IType.STRING, doc = @doc("url specifies the endpoint URL of the local or remote Ollama server that the model communicates with (for Ollama)")), // "http://localhost:11434"
 			@arg(name = "responseFormat", type = IType.STRING, doc = @doc("responseFormat specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
-			@arg(name = "numCtx", type = IType.INT, doc = @doc("numCtx specifies the maximum number of context tokens the model can use to process a prompt, including instructions, documents, and conversation history (for Ollama)")),
-			@arg(name = "numPredict", type = IType.INT, doc = @doc("numPredict specifies the maximum number of tokens the model is allowed to generate in its response (for Ollama)")),
-			@arg(name = "repeatPenalty", type = IType.FLOAT, doc = @doc("repeatPenalty controls how strongly the model is discouraged from repeating the same tokens or phrases in its response. (for Ollama)")),
+			@arg(name = "numCtx", type = IType.INT, doc = @doc("num_ctx specifies the maximum number of context tokens the model can use to process a prompt, including instructions, documents, and conversation history (for Ollama)")),
+			@arg(name = "numPredict", type = IType.INT, doc = @doc("num_predict specifies the maximum number of tokens the model is allowed to generate in its response (for Ollama)")),
+			@arg(name = "repeatPenalty", type = IType.FLOAT, doc = @doc("repeat_penalty controls how strongly the model is discouraged from repeating the same tokens or phrases in its response (for Ollama)")),
 			@arg(name = "seed", type = IType.INT, doc = @doc("seed sets the random number generator seed to make the model’s output deterministic and reproducible")),
 			@arg(name = "temperature", type = IType.FLOAT, doc = @doc("temperature controls the randomness of the model’s output, with higher values producing more creative and varied responses")),
-			@arg(name = "topK", type = IType.INT, doc = @doc(" topK limits the model’s token selection to the top K most probable tokens, influencing the diversity and focus of the generated output (for Ollama)")),
-			@arg(name = "topP", type = IType.FLOAT, doc = @doc("topP (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value."))
+			@arg(name = "topK", type = IType.INT, doc = @doc("top_k limits the model’s token selection to the top K most probable tokens, influencing the diversity and focus of the generated output (for Ollama)")),
+			@arg(name = "topP", type = IType.FLOAT, doc = @doc("top_p (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value"))
 	}, doc = @doc(value = "Action that builds a chat model based on a connection with Ollama", returns = "The chat_model built"))
 	public ChatModel create_ollama_chat_model(final IScope scope) {
 		final String modelnameToBuild = (String) scope.getArg("model_name", IType.STRING);
@@ -96,16 +96,16 @@ public class LLMSkill extends Skill {
 	@action(name = "create_openai_chat_model", args = {
 			@arg(name = "model_name", type = IType.STRING, doc = @doc(" model_name specifies the exact name or identifier of the language model to be used for generating responses (e.g. 'gpt-4o-mini') ")),
 			@arg(name = "key", type = IType.STRING, doc = @doc("key refers to the API key used to authenticate requests to the OpenAI service (for OpenAi)")),
-			@arg(name = "responseFormat", type = IType.STRING, doc = @doc("responseFormat specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
+			@arg(name = "responseFormat", type = IType.STRING, doc = @doc("response_format specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
 			@arg(name = "seed", type = IType.INT, doc = @doc("seed sets the random number generator seed to make the model’s output deterministic and reproducible")),
 			@arg(name = "temperature", type = IType.FLOAT, doc = @doc("temperature controls the randomness of the model’s output, with higher values producing more creative and varied responses")),
-			@arg(name = "topP", type = IType.FLOAT, doc = @doc("topP (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value.")),
-			@arg(name = "frequencyPenalty", type = IType.FLOAT, doc = @doc("frequencyPenalty reduces the likelihood of the model repeating tokens by penalizing tokens based on their frequency in the generated text (for OpenAI)")),
-			@arg(name = "maxCompletionTokens", type = IType.INT, doc = @doc("maxCompletionTokens sets the maximum number of tokens the model can generate in its completion or response (for OpenAI)")),
-			@arg(name = "maxRetries", type = IType.INT, doc = @doc("maxRetries specifies the maximum number of times the system will retry a failed request to the model (for OpenAI)")),
-			@arg(name = "maxTokens", type = IType.INT, doc = @doc("maxTokens defines the total maximum number of tokens allowed for both the input (prompt) and the output (completion) combined (for OpenAI)")),
-			@arg(name = "presencePenalty", type = IType.FLOAT, doc = @doc("presencePenalty reduces the likelihood of the model mentioning new topics or tokens that have already appeared, encouraging more diverse and novel content (for OpenAI)")),
-			@arg(name = "store", type = IType.BOOL, doc = @doc("tore is a boolean that indicates whether the generated data (such as embeddings or chat history) should be saved or not (for OpenAI)")),
+			@arg(name = "topP", type = IType.FLOAT, doc = @doc("top_p (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value.")),
+			@arg(name = "frequencyPenalty", type = IType.FLOAT, doc = @doc("frequency_penalty reduces the likelihood of the model repeating tokens by penalizing tokens based on their frequency in the generated text (for OpenAI)")),
+			@arg(name = "maxCompletionTokens", type = IType.INT, doc = @doc("max_completion_tokens sets the maximum number of tokens the model can generate in its completion or response (for OpenAI)")),
+			@arg(name = "maxRetries", type = IType.INT, doc = @doc("max_retries specifies the maximum number of times the system will retry a failed request to the model (for OpenAI)")),
+			@arg(name = "maxTokens", type = IType.INT, doc = @doc("max_tokens defines the total maximum number of tokens allowed for both the input (prompt) and the output (completion) combined (for OpenAI)")),
+			@arg(name = "presencePenalty", type = IType.FLOAT, doc = @doc("presence_penalty reduces the likelihood of the model mentioning new topics or tokens that have already appeared, encouraging more diverse and novel content (for OpenAI)")),
+			@arg(name = "store", type = IType.BOOL, doc = @doc("store is a boolean that indicates whether the generated data (such as embeddings or chat history) should be saved or not (for OpenAI)")),
 			@arg(name = "timeout", type = IType.INT, doc = @doc("timeout specifies the maximum amount of time the system will wait for a response from the model before aborting the request (for OpenAI)"))
 
 	}, doc = @doc(value = "Action that builds a chat model based on a connection with OpenAI", returns = "The chat_model built"))
@@ -129,7 +129,7 @@ public class LLMSkill extends Skill {
 	
 	@action(name = "create_chat_model", args = {
 			@arg(name = "model_type", type = IType.STRING, doc = @doc("model_type specifies the chat model type: 'openai' or 'ollama'")),
-			@arg(name = "model_name", type = IType.STRING, doc = @doc(" model_name specifies the exact name or identifier of the language model to be used for generating responses (e.g. 'gpt-4o-mini') ")),
+			@arg(name = "model_name", type = IType.STRING, doc = @doc("model_name specifies the exact name or identifier of the language model to be used for generating responses (e.g. 'gpt-4o-mini')")),
 			@arg(name = "key", type = IType.STRING, doc = @doc("key refers to the API key used to authenticate requests to the OpenAI service (for OpenAi)")),
 			@arg(name = "responseFormat", type = IType.STRING, doc = @doc("responseFormat specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
 			@arg(name = "seed", type = IType.INT, doc = @doc("seed sets the random number generator seed to make the model’s output deterministic and reproducible")),
@@ -331,7 +331,7 @@ public class LLMSkill extends Skill {
 
 	@action(name = "create_mcp_client", args = {
 			@arg(name = "transport", type =  MCPTransportType.id, doc = @doc("transport specifies the mcp_transport used for message exchanged")) }, 
-			doc = @doc(value = "Action that builds a mcp_client, that manages interactions with an assistant by sending messages through the specified mcp_transport and handling the responses.", returns = "The mcp_client built"))
+			doc = @doc(value = "Action that builds a mcp_client, that manages interactions with an assistant by sending messages through the specified mcp_transport and handling the responses", returns = "The mcp_client built"))
 	public Object create_mcp_client(final IScope scope) {
 		final MCPTransport transport = (MCPTransport) scope.getArg("transport", MCPTransportType.id);
 		McpClient mcpClient = new DefaultMcpClient.Builder().transport(transport.getTransport()).build();

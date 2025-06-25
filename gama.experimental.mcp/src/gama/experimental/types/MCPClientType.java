@@ -28,7 +28,7 @@ import gama.gaml.types.IType;
 		id = MCPClientType.id,
 		wraps = { MCPClient.class },
 		concept = { IConcept.TYPE, MCPConstants.LLM_MODEL })
-@doc ("represents a MCP Client")
+@doc ("represents a MCP client that manages interactions with an assistant by sending messages through the specified mcp_transport and handling the responses")
 public class MCPClientType extends GamaType<MCPClient> {
 
 	/** The Constant id. */

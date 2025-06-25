@@ -56,7 +56,7 @@ public interface MCPConstants {
     public static final String MODEL_TYPE = "model_type";
     public static final String MODEL_NAME = "model_name";
     public static final String OLLAMA_URL = "ollama_url";
-    public static final String API_KEY = "api_key";
+    public static final String API_KEY = "key";
     public static final String RESPONSE_FORMAT = "response_format";
     public static final String NUM_CTX = "num_ctx";
     public static final String NUM_PREDICT = "num_predict";
