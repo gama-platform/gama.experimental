@@ -26,6 +26,7 @@ import gama.core.util.GamaPair;
 import gama.core.util.IMap;
 import gama.core.util.file.json.Json;
 import gama.core.util.file.json.JsonValue;
+import gama.gaml.descriptions.ActionDescription;
 import gama.gaml.types.IType;
 import gama.gaml.types.Types;
 
@@ -50,7 +51,18 @@ public class ToolProvider implements IValue {
 	 */
 	
 	
-	
+	public void addToolExecutor(IScope scope, String name, String description, ActionDescription executor) {
+		ToolExecutor toolExecutor = (toolExecutionRequest, memoryId) -> {
+			String aname = executor.getName();
+			if (scope.getModel() != null && scope.getModel().getAction(aname) != null) {
+				return scope.getModel().getAction(aname).executeOn(scope).toString();
+			}
+			return toolExecutionRequest.arguments();
+		};
+		ToolSpecification toolSpecification = ToolSpecification.builder().name(name).description(description).build();
+		addTool(toolSpecification, toolExecutor);
+		
+	}
 	
 	public ToolProvider() {
 		super();

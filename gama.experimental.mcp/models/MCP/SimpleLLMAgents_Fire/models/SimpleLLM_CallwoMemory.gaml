@@ -82,7 +82,7 @@ species AI skills: [llm] {
 			}
 
 			// Update the conversation history
-			do add_to_chat_memory(chat_memory, " I told him " + mymsg);
+			do add_to_memory(chat_memory, " I told him " + mymsg);
 			mymsg <- "";
 			chat_desire <- false; // Reset desire to talk
 		}
@@ -97,7 +97,7 @@ species AI skills: [llm] {
 			mymsglit <- send_to_llm_without_memory(llm, "respond only the translation in" + language + " of'''" + mymsg + ". [/INST]");
 
 			// Update memory and signal desire to respond
-			do add_to_chat_memory(chat_memory,  " He then told me "  + comingmsg);
+			do add_to_memory(chat_memory,  " He then told me "  + comingmsg);
 			
 			chat_desire <- true;
 			comingmsg <- nil;

@@ -21,7 +21,7 @@ global {
 		create A {
 			llm <- create_ollama_chat_model(url: "http://localhost:11434", model_name: "llama3.2");
 			chat_memory <- create_chat_memory(llm,"You are a teenager.");
-			do add_to_chat_memory message: msg0 memory: chat_memory;
+			do add_to_memory message: msg0 memory: chat_memory;
 		} } }
 
 species A skills: [llm] {

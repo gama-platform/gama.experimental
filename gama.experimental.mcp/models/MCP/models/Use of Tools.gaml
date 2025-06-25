@@ -39,10 +39,10 @@ species A skills: [llm] {
 	string mymsg;
 
 	reflex chating {
-		do add_to_chat_memory message: mymsg memory: chat_memory;
+		do add_to_memory message: mymsg memory: chat_memory;
 		mymsg <- send_to_assistant(assistant: my_assistant, message: mymsg);
 		write mymsg;
-		do add_to_chat_memory message: mymsg memory: chat_memory;
+		do add_to_memory message: mymsg memory: chat_memory;
 	} 
 }
 
