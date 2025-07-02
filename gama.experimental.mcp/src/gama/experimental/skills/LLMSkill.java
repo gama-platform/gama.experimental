@@ -57,9 +57,9 @@ import gama.gaml.types.IType;
 
 @skill(name = MCPConstants.LLM_SKILL, concept = { MCPConstants.LLM_MODEL}, doc = @doc("The " + MCPConstants.LLM_SKILL + " skill provides new features that allow agents to ask questions to a chatbot (LLM)"))
 @vars({
-	// @variable(name = MCPConstants.LLM_MODEL, type = ChatModelType.id, init = "nil",doc = @doc("A chat model (to be built) that can answer questions and be used as a key element of the chat bot")),
-//	@variable(name = MCPConstants.CHAT_BOT, type = AssistantType.id, init = "nil",doc = @doc("A chat bot (to be built) that can answer questions taking into account external data (RAG) and trigger actions")),
-	//@variable(name = MCPConstants.CHAT_MEMORY, type = MemoryType.id, init = "nil",doc = @doc("A chat memory (to be built) that can be used to store data for the chat model"))
+ @variable(name = MCPConstants.LLM_MODEL, type = ChatModelType.id, init = "nil",doc = @doc("A chat model (to be built) that can answer questions and be used as a key element of the chat bot")),
+	@variable(name = MCPConstants.CHAT_BOT, type = AssistantType.id, init = "nil",doc = @doc("A chat bot (to be built) that can answer questions taking into account external data (RAG) and trigger actions")),
+	@variable(name = MCPConstants.CHAT_MEMORY, type = MemoryType.id, init = "nil",doc = @doc("A chat memory (to be built) that can be used to store data for the chat model"))
 }) 
 public class LLMSkill extends Skill {
 
@@ -70,41 +70,41 @@ public class LLMSkill extends Skill {
 	@action(name = "create_ollama_chat_model", args = {
 			@arg(name = "model_name", type = IType.STRING, doc = @doc(" model_name specifies the exact name or identifier of the language model to be used for generating responses (e.g. 'llama3.2') ")),
 			@arg(name = "url", type = IType.STRING, doc = @doc("url specifies the endpoint URL of the local or remote Ollama server that the model communicates with (for Ollama)")), // "http://localhost:11434"
-			@arg(name = "responseFormat", type = IType.STRING, doc = @doc("responseFormat specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
-			@arg(name = "numCtx", type = IType.INT, doc = @doc("num_ctx specifies the maximum number of context tokens the model can use to process a prompt, including instructions, documents, and conversation history (for Ollama)")),
-			@arg(name = "numPredict", type = IType.INT, doc = @doc("num_predict specifies the maximum number of tokens the model is allowed to generate in its response (for Ollama)")),
-			@arg(name = "repeatPenalty", type = IType.FLOAT, doc = @doc("repeat_penalty controls how strongly the model is discouraged from repeating the same tokens or phrases in its response (for Ollama)")),
+			@arg(name = "response_format", type = IType.STRING, doc = @doc("response_format specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
+			@arg(name = "num_ctx", type = IType.INT, doc = @doc("num_ctx specifies the maximum number of context tokens the model can use to process a prompt, including instructions, documents, and conversation history (for Ollama)")),
+			@arg(name = "num_predict", type = IType.INT, doc = @doc("num_predict specifies the maximum number of tokens the model is allowed to generate in its response (for Ollama)")),
+			@arg(name = "repeat_penalty", type = IType.FLOAT, doc = @doc("repeat_penalty controls how strongly the model is discouraged from repeating the same tokens or phrases in its response (for Ollama)")),
 			@arg(name = "seed", type = IType.INT, doc = @doc("seed sets the random number generator seed to make the model’s output deterministic and reproducible")),
 			@arg(name = "temperature", type = IType.FLOAT, doc = @doc("temperature controls the randomness of the model’s output, with higher values producing more creative and varied responses")),
-			@arg(name = "topK", type = IType.INT, doc = @doc("top_k limits the model’s token selection to the top K most probable tokens, influencing the diversity and focus of the generated output (for Ollama)")),
-			@arg(name = "topP", type = IType.FLOAT, doc = @doc("top_p (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value"))
+			@arg(name = "top_k", type = IType.INT, doc = @doc("top_k limits the model’s token selection to the top K most probable tokens, influencing the diversity and focus of the generated output (for Ollama)")),
+			@arg(name = "top_p", type = IType.FLOAT, doc = @doc("top_p (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value"))
 	}, doc = @doc(value = "Action that builds a chat model based on a connection with Ollama", returns = "The chat_model built"))
 	public ChatModel create_ollama_chat_model(final IScope scope) {
 		final String modelnameToBuild = (String) scope.getArg("model_name", IType.STRING);
 		final String urlToBuild = (String) scope.getArg("url", IType.STRING); 
-		final String responseFormat = scope.hasArg("responseFormat") ? (String) scope.getArg("responseFormat", IType.STRING) : null;
+		final String responseFormat = scope.hasArg("response_format") ? (String) scope.getArg("response_format", IType.STRING) : null;
 		final Integer seed = scope.hasArg("seed") ? (Integer) scope.getArg("seed", IType.INT) : null;
-		final Integer numCtx = scope.hasArg("numCtx") ? (Integer) scope.getArg("numCtx", IType.INT) : null;
+		final Integer numCtx = scope.hasArg("num_ctx") ? (Integer) scope.getArg("num_ctx", IType.INT) : null;
 		final Double temperature = scope.hasArg("temperature") ? (Double) scope.getArg("temperature", IType.FLOAT) : null;
-		final Double topP = scope.hasArg("topP") ? (Double) scope.getArg("topP", IType.FLOAT) : null;
-		final Integer numPredict = scope.hasArg("numPredict") ? (Integer) scope.getArg("numPredict", IType.INT) : null;
-		final Double repeatPenalty = scope.hasArg("repeatPenalty") ? (Double) scope.getArg("repeatPenalty", IType.FLOAT) : null;
-		final Integer topK = scope.hasArg("topK") ? (Integer) scope.getArg("topK", IType.INT) : null;
+		final Double topP = scope.hasArg("top_p") ? (Double) scope.getArg("top_p", IType.FLOAT) : null;
+		final Integer numPredict = scope.hasArg("num_predict") ? (Integer) scope.getArg("num_predict", IType.INT) : null;
+		final Double repeatPenalty = scope.hasArg("repeat_penalty") ? (Double) scope.getArg("repeat_penalty", IType.FLOAT) : null;
+		final Integer topK = scope.hasArg("top_k") ? (Integer) scope.getArg("top_k", IType.INT) : null;
 		return new ChatModel( modelnameToBuild, urlToBuild, responseFormat, numCtx, seed, temperature, topP, numPredict, repeatPenalty, topK);
 	}
 	
 	@action(name = "create_openai_chat_model", args = {
 			@arg(name = "model_name", type = IType.STRING, doc = @doc(" model_name specifies the exact name or identifier of the language model to be used for generating responses (e.g. 'gpt-4o-mini') ")),
 			@arg(name = "key", type = IType.STRING, doc = @doc("key refers to the API key used to authenticate requests to the OpenAI service (for OpenAi)")),
-			@arg(name = "responseFormat", type = IType.STRING, doc = @doc("response_format specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
+			@arg(name = "response_format", type = IType.STRING, doc = @doc("response_format specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
 			@arg(name = "seed", type = IType.INT, doc = @doc("seed sets the random number generator seed to make the model’s output deterministic and reproducible")),
 			@arg(name = "temperature", type = IType.FLOAT, doc = @doc("temperature controls the randomness of the model’s output, with higher values producing more creative and varied responses")),
-			@arg(name = "topP", type = IType.FLOAT, doc = @doc("top_p (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value.")),
-			@arg(name = "frequencyPenalty", type = IType.FLOAT, doc = @doc("frequency_penalty reduces the likelihood of the model repeating tokens by penalizing tokens based on their frequency in the generated text (for OpenAI)")),
-			@arg(name = "maxCompletionTokens", type = IType.INT, doc = @doc("max_completion_tokens sets the maximum number of tokens the model can generate in its completion or response (for OpenAI)")),
-			@arg(name = "maxRetries", type = IType.INT, doc = @doc("max_retries specifies the maximum number of times the system will retry a failed request to the model (for OpenAI)")),
-			@arg(name = "maxTokens", type = IType.INT, doc = @doc("max_tokens defines the total maximum number of tokens allowed for both the input (prompt) and the output (completion) combined (for OpenAI)")),
-			@arg(name = "presencePenalty", type = IType.FLOAT, doc = @doc("presence_penalty reduces the likelihood of the model mentioning new topics or tokens that have already appeared, encouraging more diverse and novel content (for OpenAI)")),
+			@arg(name = "top_p", type = IType.FLOAT, doc = @doc("top_p (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value.")),
+			@arg(name = "frequency_penalty", type = IType.FLOAT, doc = @doc("frequency_penalty reduces the likelihood of the model repeating tokens by penalizing tokens based on their frequency in the generated text (for OpenAI)")),
+			@arg(name = "max_completion_tokens", type = IType.INT, doc = @doc("max_completion_tokens sets the maximum number of tokens the model can generate in its completion or response (for OpenAI)")),
+			@arg(name = "max_retries", type = IType.INT, doc = @doc("max_retries specifies the maximum number of times the system will retry a failed request to the model (for OpenAI)")),
+			@arg(name = "max_tokens", type = IType.INT, doc = @doc("max_tokens defines the total maximum number of tokens allowed for both the input (prompt) and the output (completion) combined (for OpenAI)")),
+			@arg(name = "presence_penalty", type = IType.FLOAT, doc = @doc("presence_penalty reduces the likelihood of the model mentioning new topics or tokens that have already appeared, encouraging more diverse and novel content (for OpenAI)")),
 			@arg(name = "store", type = IType.BOOL, doc = @doc("store is a boolean that indicates whether the generated data (such as embeddings or chat history) should be saved or not (for OpenAI)")),
 			@arg(name = "timeout", type = IType.INT, doc = @doc("timeout specifies the maximum amount of time the system will wait for a response from the model before aborting the request (for OpenAI)"))
 
@@ -112,15 +112,15 @@ public class LLMSkill extends Skill {
 	public ChatModel create_openai_chat_model(final IScope scope) {
 		final String modelnameToBuild = (String) scope.getArg("model_name", IType.STRING);
 		final String keyToBuild = (String) scope.getArg("key", IType.STRING);
-		final String responseFormat = scope.hasArg("responseFormat") ? (String) scope.getArg("responseFormat", IType.STRING) : null;
-		final Double frequencyPenalty = scope.hasArg("frequencyPenalty") ? (Double) scope.getArg("frequencyPenalty", IType.FLOAT) : null;
-		final Integer maxCompletionTokens = scope.hasArg("maxCompletionTokens") ? (Integer) scope.getArg("maxCompletionTokens", IType.INT) : null;
-		final Integer maxRetries = scope.hasArg("maxRetries") ? (Integer) scope.getArg("maxRetries", IType.INT) : null;
-		final Integer maxTokens = scope.hasArg("maxTokens") ? (Integer) scope.getArg("maxTokens", IType.INT) : null;
-		final Double presencePenalty = scope.hasArg("presencePenalty") ? (Double) scope.getArg("presencePenalty", IType.FLOAT) : null;
+		final String responseFormat = scope.hasArg("response_format") ? (String) scope.getArg("response_format", IType.STRING) : null;
+		final Double frequencyPenalty = scope.hasArg("frequency_penalty") ? (Double) scope.getArg("frequency_penalty", IType.FLOAT) : null;
+		final Integer maxCompletionTokens = scope.hasArg("max_completion_tokens") ? (Integer) scope.getArg("max_completion_tokens", IType.INT) : null;
+		final Integer maxRetries = scope.hasArg("max_retries") ? (Integer) scope.getArg("max_retries", IType.INT) : null;
+		final Integer maxTokens = scope.hasArg("max_tokens") ? (Integer) scope.getArg("max_tokens", IType.INT) : null;
+		final Double presencePenalty = scope.hasArg("presence_penalty") ? (Double) scope.getArg("presence_penalty", IType.FLOAT) : null;
 		final Integer seed = scope.hasArg("seed") ? (Integer) scope.getArg("seed", IType.INT) : null;
 		final Double temperature = scope.hasArg("temperature") ? (Double) scope.getArg("temperature", IType.FLOAT) : null;
-		final Double topP = scope.hasArg("topP") ? (Double) scope.getArg("topP", IType.FLOAT) : null;
+		final Double topP = scope.hasArg("top_p") ? (Double) scope.getArg("top_p", IType.FLOAT) : null;
 		final Integer timeout = scope.hasArg("timeout") ? (Integer) scope.getArg("timeout", IType.INT) : null;
 		final Boolean store = scope.hasArg("store") ? (Boolean) scope.getArg("store", IType.BOOL) : null;
 		return new ChatModel(keyToBuild, modelnameToBuild, responseFormat, frequencyPenalty, maxCompletionTokens, maxRetries, maxTokens, presencePenalty, seed, store, temperature, timeout, topP);
@@ -131,22 +131,22 @@ public class LLMSkill extends Skill {
 			@arg(name = "model_type", type = IType.STRING, doc = @doc("model_type specifies the chat model type: 'openai' or 'ollama'")),
 			@arg(name = "model_name", type = IType.STRING, doc = @doc("model_name specifies the exact name or identifier of the language model to be used for generating responses (e.g. 'gpt-4o-mini')")),
 			@arg(name = "key", type = IType.STRING, doc = @doc("key refers to the API key used to authenticate requests to the OpenAI service (for OpenAi)")),
-			@arg(name = "responseFormat", type = IType.STRING, doc = @doc("responseFormat specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
+			@arg(name = "response_format", type = IType.STRING, doc = @doc("response_format specifies the format in which the model should return its output, such as plain text or structured JSON. 2 possible values: 'json' or 'text' (by default)")),
 			@arg(name = "seed", type = IType.INT, doc = @doc("seed sets the random number generator seed to make the model’s output deterministic and reproducible")),
 			@arg(name = "temperature", type = IType.FLOAT, doc = @doc("temperature controls the randomness of the model’s output, with higher values producing more creative and varied responses")),
-			@arg(name = "topP", type = IType.FLOAT, doc = @doc("topP (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value.")),
-			@arg(name = "frequencyPenalty", type = IType.FLOAT, doc = @doc("frequencyPenalty reduces the likelihood of the model repeating tokens by penalizing tokens based on their frequency in the generated text (for OpenAI)")),
-			@arg(name = "maxCompletionTokens", type = IType.INT, doc = @doc("maxCompletionTokens sets the maximum number of tokens the model can generate in its completion or response (for OpenAI)")),
-			@arg(name = "maxRetries", type = IType.INT, doc = @doc("maxRetries specifies the maximum number of times the system will retry a failed request to the model (for OpenAI)")),
-			@arg(name = "maxTokens", type = IType.INT, doc = @doc("maxTokens defines the total maximum number of tokens allowed for both the input (prompt) and the output (completion) combined (for OpenAI)")),
-			@arg(name = "presencePenalty", type = IType.FLOAT, doc = @doc("presencePenalty reduces the likelihood of the model mentioning new topics or tokens that have already appeared, encouraging more diverse and novel content (for OpenAI)")),
+			@arg(name = "top_p", type = IType.FLOAT, doc = @doc("top_p (nucleus sampling) sets the probability threshold for choosing the next token, allowing the model to sample from the most likely tokens whose cumulative probability exceeds this value.")),
+			@arg(name = "frequency_penalty", type = IType.FLOAT, doc = @doc("frequency_penalty reduces the likelihood of the model repeating tokens by penalizing tokens based on their frequency in the generated text (for OpenAI)")),
+			@arg(name = "max_completion_tokens", type = IType.INT, doc = @doc("max_completion_tokens sets the maximum number of tokens the model can generate in its completion or response (for OpenAI)")),
+			@arg(name = "max_retries", type = IType.INT, doc = @doc("max_retries specifies the maximum number of times the system will retry a failed request to the model (for OpenAI)")),
+			@arg(name = "max_tokens", type = IType.INT, doc = @doc("max_tokens defines the total maximum number of tokens allowed for both the input (prompt) and the output (completion) combined (for OpenAI)")),
+			@arg(name = "presence_penalty", type = IType.FLOAT, doc = @doc("presence_penalty reduces the likelihood of the model mentioning new topics or tokens that have already appeared, encouraging more diverse and novel content (for OpenAI)")),
 			@arg(name = "store", type = IType.BOOL, doc = @doc("tore is a boolean that indicates whether the generated data (such as embeddings or chat history) should be saved or not (for OpenAI)")),
 			@arg(name = "timeout", type = IType.INT, doc = @doc("timeout specifies the maximum amount of time the system will wait for a response from the model before aborting the request (for OpenAI)")),
 			@arg(name = "url", type = IType.STRING, doc = @doc("url specifies the endpoint URL of the local or remote Ollama server that the model communicates with (for Ollama)")), // "http://localhost:11434"
-			@arg(name = "numCtx", type = IType.INT, doc = @doc("numCtx specifies the maximum number of context tokens the model can use to process a prompt, including instructions, documents, and conversation history (for Ollama)")),
-			@arg(name = "numPredict", type = IType.INT, doc = @doc("numPredict specifies the maximum number of tokens the model is allowed to generate in its response (for Ollama)")),
-			@arg(name = "repeatPenalty", type = IType.FLOAT, doc = @doc("repeatPenalty controls how strongly the model is discouraged from repeating the same tokens or phrases in its response. (for Ollama)")),
-			@arg(name = "topK", type = IType.INT, doc = @doc(" topK limits the model’s token selection to the top K most probable tokens, influencing the diversity and focus of the generated output (for Ollama)"))
+			@arg(name = "num_ctx", type = IType.INT, doc = @doc("num_ctx specifies the maximum number of context tokens the model can use to process a prompt, including instructions, documents, and conversation history (for Ollama)")),
+			@arg(name = "num_predict", type = IType.INT, doc = @doc("num_predict specifies the maximum number of tokens the model is allowed to generate in its response (for Ollama)")),
+			@arg(name = "repeat_penalty", type = IType.FLOAT, doc = @doc("repeat_penalty controls how strongly the model is discouraged from repeating the same tokens or phrases in its response. (for Ollama)")),
+			@arg(name = "top_k", type = IType.INT, doc = @doc(" top_k limits the model’s token selection to the top K most probable tokens, influencing the diversity and focus of the generated output (for Ollama)"))
 			
 	}, doc = @doc(value = "Action that builds a chat model", returns = "The chat_model built"))
 	public ChatModel create_chat_model(final IScope scope) {
@@ -157,28 +157,28 @@ public class LLMSkill extends Skill {
 		final String keyToBuild = (String) scope.getArg("key", IType.STRING);
 
 		if ("openai".equals(modelType)) {
-			final String responseFormat = scope.hasArg("responseFormat") ? (String) scope.getArg("responseFormat", IType.STRING) : null;
-			final Double frequencyPenalty = scope.hasArg("frequencyPenalty") ? (Double) scope.getArg("frequencyPenalty", IType.FLOAT) : null;
-			final Integer maxCompletionTokens = scope.hasArg("maxCompletionTokens") ? (Integer) scope.getArg("maxCompletionTokens", IType.INT) : null;
-			final Integer maxRetries = scope.hasArg("maxRetries") ? (Integer) scope.getArg("maxRetries", IType.INT) : null;
-			final Integer maxTokens = scope.hasArg("maxTokens") ? (Integer) scope.getArg("maxTokens", IType.INT) : null;
-			final Double presencePenalty = scope.hasArg("presencePenalty") ? (Double) scope.getArg("presencePenalty", IType.FLOAT) : null;
+			final String responseFormat = scope.hasArg("response_format") ? (String) scope.getArg("response_format", IType.STRING) : null;
+			final Double frequencyPenalty = scope.hasArg("frequency_penalty") ? (Double) scope.getArg("frequency_penalty", IType.FLOAT) : null;
+			final Integer maxCompletionTokens = scope.hasArg("max_completion_tokens") ? (Integer) scope.getArg("max_completion_tokens", IType.INT) : null;
+			final Integer maxRetries = scope.hasArg("max_retries") ? (Integer) scope.getArg("max_retries", IType.INT) : null;
+			final Integer maxTokens = scope.hasArg("max_tokens") ? (Integer) scope.getArg("max_tokens", IType.INT) : null;
+			final Double presencePenalty = scope.hasArg("presence_penalty") ? (Double) scope.getArg("presence_penalty", IType.FLOAT) : null;
 			final Integer seed = scope.hasArg("seed") ? (Integer) scope.getArg("seed", IType.INT) : null;
 			final Double temperature = scope.hasArg("temperature") ? (Double) scope.getArg("temperature", IType.FLOAT) : null;
-			final Double topP = scope.hasArg("topP") ? (Double) scope.getArg("topP", IType.FLOAT) : null;
+			final Double topP = scope.hasArg("top_p") ? (Double) scope.getArg("top_p", IType.FLOAT) : null;
 			final Integer timeout = scope.hasArg("timeout") ? (Integer) scope.getArg("timeout", IType.INT) : null;
 			final Boolean store = scope.hasArg("store") ? (Boolean) scope.getArg("store", IType.BOOL) : null;
 			return new ChatModel(keyToBuild, modelnameToBuild, responseFormat, frequencyPenalty, maxCompletionTokens, maxRetries, maxTokens, presencePenalty, seed, store, temperature, timeout, topP);
 			
 		} else {
-			final String responseFormat = scope.hasArg("responseFormat") ? (String) scope.getArg("responseFormat", IType.STRING) : null;
+			final String responseFormat = scope.hasArg("response_format") ? (String) scope.getArg("response_format", IType.STRING) : null;
 			final Integer seed = scope.hasArg("seed") ? (Integer) scope.getArg("seed", IType.INT) : null;
-			final Integer numCtx = scope.hasArg("numCtx") ? (Integer) scope.getArg("numCtx", IType.INT) : null;
+			final Integer numCtx = scope.hasArg("num_ctx") ? (Integer) scope.getArg("num_ctx", IType.INT) : null;
 			final Double temperature = scope.hasArg("temperature") ? (Double) scope.getArg("temperature", IType.FLOAT) : null;
-			final Double topP = scope.hasArg("topP") ? (Double) scope.getArg("topP", IType.FLOAT) : null;
-			final Integer numPredict = scope.hasArg("numPredict") ? (Integer) scope.getArg("numPredict", IType.INT) : null;
-			final Double repeatPenalty = scope.hasArg("repeatPenalty") ? (Double) scope.getArg("repeatPenalty", IType.FLOAT) : null;
-			final Integer topK = scope.hasArg("topK") ? (Integer) scope.getArg("topK", IType.INT) : null;
+			final Double topP = scope.hasArg("top_p") ? (Double) scope.getArg("top_p", IType.FLOAT) : null;
+			final Integer numPredict = scope.hasArg("num_predict") ? (Integer) scope.getArg("num_predict", IType.INT) : null;
+			final Double repeatPenalty = scope.hasArg("repeat_penalty") ? (Double) scope.getArg("repeat_penalty", IType.FLOAT) : null;
+			final Integer topK = scope.hasArg("top_k") ? (Integer) scope.getArg("top_k", IType.INT) : null;
 			return new ChatModel(modelnameToBuild, urlToBuild, responseFormat, numCtx, seed, temperature, topP, numPredict, repeatPenalty, topK);
 		} 
 

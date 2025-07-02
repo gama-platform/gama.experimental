@@ -113,10 +113,7 @@ Do not include any explanatory text—only the list in the specified format.";
 
 }
 
-species genPop skills: [llm] {
-	chat_model llm;
-	memory chat_memory;
-}
+species genPop skills: [llm] ;
 
 
 species building {

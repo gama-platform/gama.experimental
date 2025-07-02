@@ -79,7 +79,6 @@ global {
 } 
 
 species Farmer skills: [llm] {
-	chat_model llm; 
 	string role <- "";
 	string ai_memory <- ""; 
 	bool wish_to_talk <- true;

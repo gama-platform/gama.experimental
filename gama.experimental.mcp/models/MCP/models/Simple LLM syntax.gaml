@@ -28,8 +28,6 @@ global {
 
 species A skills: [llm] { 
 	 
-	chat_model llm;
-	memory chat_memory;  
 	bool has_memory;
 	string mymsg;
 

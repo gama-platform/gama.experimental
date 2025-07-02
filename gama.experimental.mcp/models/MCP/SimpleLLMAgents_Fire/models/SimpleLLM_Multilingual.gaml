@@ -58,8 +58,6 @@ global {
 
 species AI skills: [llm] {
 // LLM interface and memory attributes
-	chat_model llm;
-	memory chat_memory ; // Stores dialogue history
 	string role <- ""; // Role prompt for the LLM
 	string llm_querry <- ""; // Dynamic question sent to the LLM
 	bool chat_desire <- false; // True if the agent wants to speak
@@ -145,7 +143,7 @@ species AI skills: [llm] {
 experiment Dialog type: gui {
 	parameter "Langue" var: language among:
 	["Français", "Vietnamese", "English", "Español", "Deutsch", "Italiano", "Русский", "العربية", "中文", "日本語", "한국어", "Tiếng Việt", "Português"] init: "Vietnamese";
-	parameter "llmmodel" var: llmmodel among: ["llama3.2", "llama3:8b", "mistral", "gemma:2b", "phi3", "phi2", "codellama:7b", "neural-chat", "orca-mini", "tinyllama", "llava:7b"]
+	parameter "llm model" var: llmmodel among: ["llama3.2", "llama3:8b", "mistral", "gemma:2b", "phi3", "phi2", "codellama:7b", "neural-chat", "orca-mini", "tinyllama", "llava:7b"]
 	init: "llama3.2";
 	output {
 		display Field type: opengl axes: false {

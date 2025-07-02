@@ -25,8 +25,6 @@ global {
 		} } }
 
 species A skills: [llm] {
-	chat_model llm; 
-	memory chat_memory;
 	string mymsg;
 	string comingmsg;
 

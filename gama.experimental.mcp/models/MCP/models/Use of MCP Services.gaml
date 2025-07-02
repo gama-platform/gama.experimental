@@ -27,8 +27,6 @@ global {
 }
 
 species A skills: [llm] {
-	chat_model llm; 
-	memory chat_memory;
 	mcp_transport transport;
 	mcp_client client;
 	tool_provider mcp_tool;

@@ -59,8 +59,6 @@ global {
 
 species AI skills: [llm] {
 // LLM interface and memory attributes
-	chat_model llm;
-	memory chat_memory; // Stores dialogue history
 	string role <- ""; // Role prompt for the LLM
 	string llm_querry <- ""; // Dynamic question sent to the LLM
 	bool chat_desire <- false; // True if the agent wants to speak

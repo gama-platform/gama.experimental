@@ -15,13 +15,13 @@ global {
 		create Agent_with_RAG with:(color: #green);
 		
 		ask Agent_without_RAG {
-			bot <- create_assistant(llm:llm);
+			chat_bot <- create_assistant(llm:llm);
 			
 		} 
 		ask Agent_with_RAG {
 			content_retriever cr <- create_rag("../includes/RAG");
 			memory mem <- create_chat_memory(llm,"You are an expert assistant who only answers using the provided documents");
-			bot <- create_assistant(llm:llm, content_retriever: cr, memory:mem);
+			chat_bot <- create_assistant(llm:llm, content_retriever: cr, memory:mem);
 		} 
 		
 		string question <- "Who is Jonh Doe?";
@@ -35,8 +35,6 @@ global {
 
  
 species LLM_Agent skills: [llm] {
-	chat_model llm;
-	assistant bot;
 	rgb color;
 	init {
 		llm <- create_ollama_chat_model( url: "http://localhost:11434", model_name: "llama3.2");
@@ -44,7 +42,7 @@ species LLM_Agent skills: [llm] {
 	
 	action answer_question(string question) {
 		write "\n ****** " + name + "*****" color: color;
-		write send_to_assistant(bot, question) color: color;
+		write send_to_assistant(chat_bot, question) color: color;
 	} 
 }
 species Agent_without_RAG parent: LLM_Agent;
