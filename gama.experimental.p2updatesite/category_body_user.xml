@@ -1,6 +1,6 @@
- <feature url="features/gama.experimental.feature.matlab_.jar" id="gama.experimental.feature.matlab" version=""> 
+<!--  <feature url="features/gama.experimental.feature.matlab_.jar" id="gama.experimental.feature.matlab" version=""> 
  	<category name="gama.optional.connectors"/> 
- </feature> 
+ </feature>  -->
  <feature url="features/gama.experimental.feature.rjava_.jar" id="gama.experimental.feature.rjava" version=""> 
  	<category name="gama.optional.connectors"/> 
 </feature>
