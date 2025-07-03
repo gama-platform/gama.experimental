@@ -13,9 +13,9 @@
  <feature url="features/gama.experimental.feature.bayesiannetwork_.jar" id="gama.experimental.feature.bayesiannetwork" version="1.0.0.qualifier"> 
  	<category name="gama.optional.ia"/> 
 </feature> 
- <feature url="features/gama.experimental.feature.fuzzylogic_.jar" id="gama.experimental.feature.fuzzylogic" version=""> 
+<!-- <feature url="features/gama.experimental.feature.fuzzylogic_.jar" id="gama.experimental.feature.fuzzylogic" version=""> 
  	<category name="gama.optional.ia"/> 
-</feature> 
+</feature>  -->
  <feature url="features/gama.experimental.feature.cim_.jar" id="gama.experimental.feature.cim" version="1.0.0.qualifier"> 
  	<category name="gama.optional.formats"/> 
 </feature> 
