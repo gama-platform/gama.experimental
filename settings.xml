@@ -10,13 +10,4 @@
                         <directoryPermissions>775</directoryPermissions>
                 </server> 
         </servers>
-
-        <mirrors>
-                <mirror>
-                        <id>insecure-repo</id>
-                        <mirrorOf>p2Repo</mirrorOf> 
-                        <url>https://updates.gama-platform.org/experimental/2024-06</url>
-                        <blocked>false</blocked>
-                </mirror>
-        </mirrors>
 </settings>

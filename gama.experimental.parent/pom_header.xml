@@ -7,9 +7,9 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho.version>4.0.8</tycho.version>
+		<tycho.version>4.0.11</tycho.version>
 		<jdk.version>21</jdk.version>
-		<gama.version>[2024.6.0,)</gama.version>
+		<gama.version>[2025.6.0,)</gama.version>
 		<gama.p2.version>2025.6.4</gama.p2.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<wagon.version>3.5.3</wagon.version>
@@ -46,7 +46,7 @@
 		</repository>
 		<repository>
 			<id>eclipse-swt</id>
-			<url>https://download.eclipse.org/releases/2024-06</url>
+			<url>https://download.eclipse.org/releases/2025-03</url>
 			<layout>p2</layout>
 			<releases>
 				<enabled>true</enabled>
