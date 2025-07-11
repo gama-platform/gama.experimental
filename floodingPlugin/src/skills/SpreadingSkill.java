@@ -35,10 +35,14 @@ import gama.gaml.types.*;
 		@variable(name = "simulation_step", type = IType.INT, init = "0", doc = @doc("Current simulation step counter")),
 		@variable(name = "grid_width", type = IType.INT, init = "0", doc = @doc("Width of the internal grid")),
 		@variable(name = "grid_height", type = IType.INT, init = "0", doc = @doc("Height of the internal grid")),
-		@variable(name = "water_field", type = IType.MATRIX, doc = @doc("Field representing water elevations for visualization"))
+		@variable(name = "water_field", type = IType.MATRIX, doc = @doc("Field representing water elevations for visualization")),
+		// NEW RAIN VARIABLES
+		@variable(name = "rain_active", type = IType.BOOL, init = "false", doc = @doc("Whether rain is currently active")),
+		@variable(name = "rain_rate", type = IType.FLOAT, init = "0.0", doc = @doc("Rate of rain affecting water rising and spreading (in meters per step)")),
+		@variable(name = "rain_intensity", type = IType.FLOAT, init = "1.0", doc = @doc("Multiplier for rain effects on spreading (1.0 = normal, >1.0 = more aggressive spreading)"))
 })
 @skill(name = "spreading", concept = { "spreading", "simulation", "water",
-		"flood" }, doc = @doc("A skill for managing spreading simulations with optimized water flow mechanics"))
+		"flood", "rain" }, doc = @doc("A skill for managing spreading simulations with optimized water flow mechanics and rain system"))
 public class SpreadingSkill extends Skill {
 	// === SKILL VARIABLES ===
 	public static final String FLOW_THRESHOLD = "flow_threshold";
@@ -50,6 +54,10 @@ public class SpreadingSkill extends Skill {
 	public static final String SIMULATION_STEP = "simulation_step";
 	public static final String GRID_WIDTH = "grid_width";
 	public static final String GRID_HEIGHT = "grid_height";
+	// NEW RAIN CONSTANTS
+	public static final String RAIN_ACTIVE = "rain_active";
+	public static final String RAIN_RATE = "rain_rate";
+	public static final String RAIN_INTENSITY = "rain_intensity";
 	
 	// === INTERNAL GRID CELL CLASS ===
 	public static class GridCell {
@@ -318,6 +326,22 @@ public class SpreadingSkill extends Skill {
 		}
 	}
 	
+	// === RAIN APPLICATION METHOD ===
+	private void applyRainfall(IScope scope, IField waterField) {
+		final IAgent agent = getCurrentAgent(scope);
+		final double rainRate = getFloatAttribute(agent, RAIN_RATE);
+		
+		if (rainRate > 0.0) {
+			// Apply rain to all water cells (increases water level uniformly)
+			for (GridCell cell : activeWaterCells) {
+				cell.waterElevation += rainRate;
+				if (waterField != null) {
+					waterField.set(scope, cell.x, cell.y, cell.waterElevation);
+				}
+			}
+		}
+	}
+	
 	// === SIMULATION ACTIONS ===
 	@action(name = "simulate_spreading_step", doc = @doc("Executes one step of the spreading simulation"))
 	public Boolean simulateSpreadingStep(final IScope scope) throws GamaRuntimeException {
@@ -337,32 +361,68 @@ public class SpreadingSkill extends Skill {
 		double minFlowDiff = getFloatAttribute(agent, MIN_FLOW_DIFF);
 		double equalizationThreshold = getFloatAttribute(agent, EQUALIZATION_THRESHOLD);
 		
+		// NEW: Get rain parameters
+		boolean rainActive = getBoolAttribute(agent, RAIN_ACTIVE);
+		double rainRate = getFloatAttribute(agent, RAIN_RATE);
+		double rainIntensity = getFloatAttribute(agent, RAIN_INTENSITY);
+		
+		// NEW: Apply rain effects to parameters
+		double effectiveRisingRate = risingRate;
+		double effectiveFlowThreshold = flowThreshold;
+		double effectiveMinFlowDiff = minFlowDiff;
+		
+		if (rainActive && rainRate > 0.0) {
+			// Rain increases rising speed
+			effectiveRisingRate += rainRate;
+			
+			// Rain makes spreading easier (reduces thresholds)
+			effectiveFlowThreshold = flowThreshold * (1.0 / rainIntensity);
+			effectiveMinFlowDiff = minFlowDiff * (1.0 / rainIntensity);
+		}
+		
 		// Get water field for immediate updates
 		IField waterField = (IField) agent.getAttribute(WATER_FIELD);
 		
-		// 1. SPREAD WATER - only from current edge cells
+		// NEW: Apply rainfall first if rain is active
+		if (rainActive) {
+			applyRainfall(scope, waterField);
+		}
+		
+		// 1. SPREAD WATER - only from current edge cells (NOW WITH RAIN EFFECTS)
 		List<GridCell> newWaterCells = new ArrayList<>();
 		HashSet<GridCell> affectedNeighbors = new HashSet<>();
 		
+		final double finalEffectiveFlowThreshold = effectiveFlowThreshold;
+		final double finalEffectiveRisingRate = effectiveRisingRate;
+		
 		// PARALLEL: Find minimum spreading level (safe - only reading)
 		double minSpreadingLevel = edgeWaterCells.parallelStream()
-			.filter(cell -> cell.waterElevation > cell.terrainElevation + flowThreshold)
+			.filter(cell -> cell.waterElevation > cell.terrainElevation + finalEffectiveFlowThreshold)
 			.mapToDouble(cell -> cell.waterElevation)
 			.min()
 			.orElse(Double.MAX_VALUE);
 		
-		// Sequential spreading (modifies neighbor states)
+		// Sequential spreading (modifies neighbor states) - NOW WITH RAIN EFFECTS
 		for (GridCell edgeCell : edgeWaterCells) {
-			if (edgeCell.waterElevation > edgeCell.terrainElevation + flowThreshold) {
+			if (edgeCell.waterElevation > edgeCell.terrainElevation + effectiveFlowThreshold) {
 				for (GridCell neighbor : edgeCell.neighbors) {
 					if (!neighbor.isWater &&
-						(edgeCell.waterElevation - neighbor.terrainElevation) > minFlowDiff) {
+						(edgeCell.waterElevation - neighbor.terrainElevation) > effectiveMinFlowDiff) {
 						
 						neighbor.isWater = true;
-						neighbor.waterElevation = Math.max(
-							neighbor.terrainElevation + flowThreshold,
+						
+						// NEW: Rain affects initial water level in newly flooded cells
+						double baseWaterLevel = Math.max(
+							neighbor.terrainElevation + effectiveFlowThreshold,
 							minSpreadingLevel - 0.01
 						);
+						
+						// Add rain bonus to new water cells for faster spreading
+						if (rainActive && rainRate > 0.0) {
+							baseWaterLevel += rainRate * rainIntensity * 0.5; // 50% of rain effect for new cells
+						}
+						
+						neighbor.waterElevation = baseWaterLevel;
 						newWaterCells.add(neighbor);
 						
 						if (waterField != null) {
@@ -386,7 +446,7 @@ public class SpreadingSkill extends Skill {
 			smoothWaterSurface(scope, waterField, 0.5);
 		}
 		
-		// 3. RISE WATER - REALISTIC PHYSICS: Equalize levels first, then rise together
+		// 3. RISE WATER - REALISTIC PHYSICS WITH RAIN EFFECTS
 		if (newWaterCells.isEmpty()) {
 			// PARALLEL: Find water level range (safe - only reading)
 			double minWaterLevel = activeWaterCells.parallelStream()
@@ -408,7 +468,7 @@ public class SpreadingSkill extends Skill {
 				Map<GridCell, Double> newElevations = new ConcurrentHashMap<>();
 				activeWaterCells.parallelStream().forEach(cell -> {
 					if (cell.waterElevation < targetLevel) {
-						newElevations.put(cell, Math.min(cell.waterElevation + risingRate, targetLevel));
+						newElevations.put(cell, Math.min(cell.waterElevation + finalEffectiveRisingRate, targetLevel));
 					}
 				});
 				
@@ -424,8 +484,8 @@ public class SpreadingSkill extends Skill {
 				smoothWaterSurface(scope, waterField, 0.3);
 				
 			} else {
-				// Uniform rise - update all cells
-				final double uniformRise = risingRate;
+				// Uniform rise - update all cells (NOW WITH RAIN EFFECTS)
+				final double uniformRise = effectiveRisingRate;
 				
 				// Sequential update (GAMA field operations must be sequential)
 				for (GridCell cell : activeWaterCells) {
@@ -473,6 +533,63 @@ public class SpreadingSkill extends Skill {
 		}
 	}
 	
+	// === NEW RAIN CONTROL ACTIONS ===
+	@action(name = "start_rain", args = {
+			@arg(name = "rain_rate", type = IType.FLOAT, doc = @doc("Rate of rainfall (meters per step)")),
+			@arg(name = "rain_intensity", type = IType.FLOAT, optional = true, doc = @doc("Intensity multiplier for rain effects (default: 1.0)")) }, doc = @doc("Starts rainfall with specified rate"))
+	public Boolean startRain(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		final double rainRate = scope.getFloatArg("rain_rate");
+		final double rainIntensity = scope.hasArg("rain_intensity") ? scope.getFloatArg("rain_intensity") : 1.0;
+		
+		setBoolAttribute(agent, RAIN_ACTIVE, true);
+		setFloatAttribute(agent, RAIN_RATE, rainRate);
+		setFloatAttribute(agent, RAIN_INTENSITY, rainIntensity);
+		
+		return true;
+	}
+	
+	@action(name = "stop_rain", doc = @doc("Stops the rainfall"))
+	public Boolean stopRain(final IScope scope) {
+		final IAgent agent = getCurrentAgent(scope);
+		setBoolAttribute(agent, RAIN_ACTIVE, false);
+		setFloatAttribute(agent, RAIN_RATE, 0.0);
+		return true;
+	}
+	
+	@action(name = "set_rain_rate", args = {
+			@arg(name = "rain_rate", type = IType.FLOAT, doc = @doc("New rain rate (meters per step)")) }, doc = @doc("Updates the rain rate while rain is active"))
+	public Boolean setRainRate(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		final double rainRate = scope.getFloatArg("rain_rate");
+		setFloatAttribute(agent, RAIN_RATE, rainRate);
+		return true;
+	}
+	
+	@action(name = "set_rain_intensity", args = {
+			@arg(name = "rain_intensity", type = IType.FLOAT, doc = @doc("Rain intensity multiplier")) }, doc = @doc("Updates the rain intensity while rain is active"))
+	public Boolean setRainIntensity(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		final double rainIntensity = scope.getFloatArg("rain_intensity");
+		setFloatAttribute(agent, RAIN_INTENSITY, rainIntensity);
+		return true;
+	}
+	
+	@action(name = "is_rain_active", doc = @doc("Returns whether rain is currently active"))
+	public Boolean isRainActive(final IScope scope) {
+		return getBoolAttribute(getCurrentAgent(scope), RAIN_ACTIVE);
+	}
+	
+	@action(name = "get_rain_rate", doc = @doc("Returns the current rain rate"))
+	public Double getRainRate(final IScope scope) {
+		return getFloatAttribute(getCurrentAgent(scope), RAIN_RATE);
+	}
+	
+	@action(name = "get_rain_intensity", doc = @doc("Returns the current rain intensity"))
+	public Double getRainIntensity(final IScope scope) {
+		return getFloatAttribute(getCurrentAgent(scope), RAIN_INTENSITY);
+	}
+	
 	// === SIMULATION CONTROL ACTIONS ===
 	@action(
 		name = "start_spreading_simulation",
@@ -499,6 +616,11 @@ public class SpreadingSkill extends Skill {
 		
 		setBoolAttribute(agent, SIMULATION_ACTIVE, false);
 		setIntAttribute(agent, SIMULATION_STEP, 0);
+		
+		// NEW: Also reset rain state
+		setBoolAttribute(agent, RAIN_ACTIVE, false);
+		setFloatAttribute(agent, RAIN_RATE, 0.0);
+		setFloatAttribute(agent, RAIN_INTENSITY, 1.0);
 		
 		final IList<IShape> waterGeometries = scope.getListArg("water_geometries");
 		final Double initialWaterDepth = scope.hasArg("initial_water_depth") ? scope.getFloatArg("initial_water_depth")
@@ -607,3 +729,4 @@ public class SpreadingSkill extends Skill {
 		return getIntAttribute(getCurrentAgent(scope), SIMULATION_STEP);
 	}
 }
+
