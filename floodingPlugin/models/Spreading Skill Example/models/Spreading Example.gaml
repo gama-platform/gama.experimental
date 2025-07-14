@@ -1,272 +1,673 @@
 model SpreadingSkillExample
 
 global {
-// Load DEM and water data (same as your original model)
-	file dem_file <- file("../includes/SRTM_DEM_NHATLE_30M_RESIZED_BY_FOUR.tif");
-	// file dem_file <- file("../includes/terrain_large.tif");
-	// file dem_file <- file("../includes/hanoi.tif");
-	field elevation_map <- field(dem_file);
-	geometry shape <- envelope(dem_file);
-	file water_shapefile <- file("../includes/water_multipolygon.shp");
-	// file water_shapefile <- file("../includes/river_clean.shp");
-	// file water_shapefile <- file("../includes/water_polygon_hanoi.shp");
-	list<geometry> water_geometries <- [];
-
-	// Global water field for display (updated by simulation manager)
-	field display_water_field;
-
-	init {
-	// Load water geometries
-		water_geometries <- water_shapefile.contents;
-		write "Loaded " + length(water_geometries) + " water geometries";
-
-		// Initialize display water field with same dimensions as DEM
-		display_water_field <- field(elevation_map.columns, elevation_map.rows);
-
-		// Create simulation manager agent
-		create simulation_manager number: 1;
-		write "SpreadingSkill with Rain example initialized";
-		write "Use simulation manager actions to control the simulation and rain";
-	}
-
+    // === DATA FILES ===
+    file dem_file <- file("../includes/SRTM_DEM_NHATLE_30M_RESIZED_BY_FOUR.tif");
+    // Alternative DEM files (uncomment as needed):
+    // file dem_file <- file("../includes/terrain_large.tif");
+    // file dem_file <- file("../includes/hanoi.tif");
+    
+    field elevation_map <- field(dem_file);
+    geometry shape <- envelope(dem_file);
+    
+    file water_shapefile <- file("../includes/water_multipolygon.shp");
+    // Alternative water files (uncomment as needed):
+    // file water_shapefile <- file("../includes/river_clean.shp");
+    // file water_shapefile <- file("../includes/water_polygon_hanoi.shp");
+    
+    list<geometry> water_geometries <- [];
+    
+    // === GLOBAL DISPLAY FIELDS ===
+    field display_water_field;
+    field display_dyke_field;
+    
+    // === DYKE BUILDING STATE ===
+    bool dyke_building_active <- false;
+    point dyke_point1 <- nil;
+    point dyke_point2 <- nil;
+    bool waiting_for_first_point <- false;
+    bool waiting_for_second_point <- false;
+    
+    // === SIMULATION STATISTICS ===
+    int total_cycles <- 0;
+    float simulation_start_time <- 0.0;
+    
+    init {
+        // Load water geometries
+        water_geometries <- water_shapefile.contents;
+        write "=== INITIALIZATION ===";
+        write "Loaded " + length(water_geometries) + " water geometries";
+        write "DEM dimensions: " + elevation_map.columns + "x" + elevation_map.rows;
+        write "World bounds: " + shape;
+        
+        // Initialize display fields with same dimensions as DEM
+        display_water_field <- field(elevation_map.columns, elevation_map.rows);
+        display_dyke_field <- field(elevation_map.columns, elevation_map.rows);
+        
+        // Initialize fields to zero
+        loop i from: 0 to: elevation_map.columns - 1 {
+            loop j from: 0 to: elevation_map.rows - 1 {
+                display_water_field[i, j] <- 0.0;
+                display_dyke_field[i, j] <- 0.0;
+            }
+        }
+        
+        // Create simulation manager agent
+        create simulation_manager number: 1;
+        
+        write "SpreadingSkill with Rain and Dykes system initialized";
+        write "Use buttons and controls to manage simulation, rain, and dyke building";
+        write "========================";
+    }
+    
+    // === GLOBAL DYKE BUILDING ACTIONS ===
+    action toggle_dyke_building {
+        ask simulation_manager {
+            do toggle_dyke_building_mode();
+            dyke_building_active <- is_dyke_building_mode();
+            
+            if (dyke_building_active) {
+                write "🔨 DYKE BUILDING MODE ACTIVATED";
+                write "   → Click first point in the 3D view";
+                write "   → World bounds: " + world.shape;
+                waiting_for_first_point <- true;
+                waiting_for_second_point <- false;
+                dyke_point1 <- nil;
+                dyke_point2 <- nil;
+            } else {
+                write "🔨 DYKE BUILDING MODE DEACTIVATED";
+                waiting_for_first_point <- false;
+                waiting_for_second_point <- false;
+                dyke_point1 <- nil;
+                dyke_point2 <- nil;
+            }
+        }
+    }
+    
+    // === GLOBAL MOUSE CLICK HANDLER FOR DYKE BUILDING ===
+    action handle_dyke_click(point click_location) {
+        if (dyke_building_active) {
+            if (waiting_for_first_point) {
+                dyke_point1 <- click_location;
+                waiting_for_first_point <- false;
+                waiting_for_second_point <- true;
+                write "✓ First point selected: " + dyke_point1;
+                write "   → Click second point to complete dyke";
+            } else if (waiting_for_second_point) {
+                dyke_point2 <- click_location;
+                waiting_for_second_point <- false;
+                write "✓ Second point selected: " + dyke_point2;
+                write "   → Building dyke...";
+                // write "   Distance: " + (distance(dyke_point1, dyke_point2) with_precision 1) + "m";
+                
+                // Build the dyke
+                ask simulation_manager {
+                    bool success <- build_dyke(dyke_point1, dyke_point2);
+                    if (success) {
+                        write "🏗️ Dyke built successfully!";
+                        // write "   Length: ~" + (distance(dyke_point1, dyke_point2) with_precision 1) + "m";
+                        write "   Active dykes: " + get_active_dyke_count();
+                        
+                        // Update global display field safely
+                        if (dyke_field != nil) {
+                            display_dyke_field <- copy(dyke_field);
+                        }
+                        write display_dyke_field where (each > 0);
+                    } else {
+                        write "❌ Failed to build dyke";
+                        write "   Possible reasons: not in building mode, area has water, or coordinates invalid";
+                    }
+                }
+                
+                // Reset for next dyke
+                waiting_for_first_point <- true;
+                dyke_point1 <- nil;
+                dyke_point2 <- nil;
+                write "   → Ready for next dyke (click first point)";
+            }
+        } else {
+            // Not in dyke building mode - show information at click location
+            if (display_water_field != nil) {
+                float water_level <- display_water_field[click_location];
+                if (water_level > 0.01) {
+                    write "💧 Water level: " + (water_level with_precision 2) + "m";
+                } else {
+                    write "🏞️ No water at this location";
+                }
+            }
+            
+            // Show terrain elevation
+            if (elevation_map != nil) {
+                float terrain_height <- elevation_map[click_location];
+                write "🏔️ Terrain elevation: " + (terrain_height with_precision 2) + "m";
+            }
+            
+            // Show dyke elevation if present
+            if (display_dyke_field != nil) {
+                float dyke_height <- display_dyke_field[click_location];
+                if (dyke_height > 0.01) {
+                    write "🏗️ Dyke total elevation: " + (dyke_height with_precision 2) + "m";
+                }
+            }
+            
+            write "📍 Click coordinates: " + click_location;
+        }
+    }
+    
+    // === GLOBAL STATUS REPORTING ===
+    action report_global_status {
+        write "=== GLOBAL SIMULATION STATUS ===";
+        write "Total simulation cycles: " + total_cycles;
+        write "Dyke building mode: " + (dyke_building_active ? "ACTIVE" : "INACTIVE");
+        if (dyke_building_active) {
+            string status <- waiting_for_first_point ? "Waiting for first point" :
+                            (waiting_for_second_point ? "Waiting for second point" : "Ready");
+            write "Dyke building status: " + status;
+            if (dyke_point1 != nil) {
+                write "First point: " + dyke_point1;
+            }
+        }
+        write "World envelope: " + world.shape;
+        write "DEM grid size: " + elevation_map.columns + "x" + elevation_map.rows;
+        ask simulation_manager {
+            do report_status();
+        }
+    }
+    
+    // Track simulation cycles
+    reflex count_cycles {
+        total_cycles <- total_cycles + 1;
+    }
 }
 
 species simulation_manager skills: [spreading] {
-
-	init {
-		write "Simulation manager created with SpreadingSkill and Rain system";
-
-		// Initialize the spreading grid with your data and parameters
-		do initialize_spreading_grid(elevation_map, // DEM field
-		water_geometries, // Water polygons
-		1.5 #m, // Initial water depth (1.5m)
-		0.01 #m, // Flow threshold
-		0.3 #m, // Rising rate 
-		0.001 #m, // Min flow difference
-		0.1 #m // Equalization threshold
-);
-
-		// Update global display field
-		if (water_field != nil) {
-			display_water_field <- water_field;
-		}
-
-		write "Spreading grid initialized successfully";
-		write "Active water cells: " + get_active_water_count();
-		write "Edge cells: " + get_edge_cell_count();
-	}
-
-	// Automatic simulation step when active
-	reflex simulation_step when: is_simulation_active() {
-		do simulate_spreading_step();
-
-		// Update global display field for visualization
-		if (water_field != nil) {
-			display_water_field <- water_field;
-		}
-
-	}
-
-	// Manual control actions for simulation
-	action start_simulation {
-		do start_spreading_simulation();
-		write "Simulation started at step " + get_current_step();
-	}
-
-	action stop_simulation {
-		do stop_spreading_simulation();
-		write "Simulation stopped at step " + get_current_step();
-	}
-
-	action reset_simulation {
-		do reset_spreading_simulation(water_geometries, 1.5);
-
-		// Update global display field
-		if (water_field != nil) {
-			display_water_field <- water_field;
-		}
-
-		write "Simulation reset. Active cells: " + get_active_water_count();
-	}
-
-	// NEW: Rain control actions
-	action start_light_rain {
-		do start_rain(0.1, 1.0); // 0.1m/step rain rate, normal intensity
-		write "Light rain started (0.1m/step)";
-	}
-
-	action start_heavy_rain {
-		do start_rain(0.3, 1.5); // 0.3m/step rain rate, 1.5x intensity
-		write "Heavy rain started (0.3m/step, 1.5x intensity)";
-	}
-
-	action start_custom_rain (float rate, float intensity) {
-		do start_rain(rate, intensity);
-		write "Custom rain started (rate: " + rate + "m/step, intensity: " + intensity + "x)";
-	}
-
-	action increase_rain {
-		if (is_rain_active()) {
-			float current_rate <- get_rain_rate();
-			do set_rain_rate(current_rate + 0.05);
-			write "Rain increased to " + get_rain_rate() + "m/step";
-		} else {
-			write "No rain active to increase";
-		}
-
-	}
-
-	action decrease_rain {
-		if (is_rain_active()) {
-			float current_rate <- get_rain_rate();
-			float new_rate <- max(0.0, current_rate - 0.05);
-			if (new_rate <= 0.0) {
-				do stop_rain();
-				write "Rain stopped (rate reached 0)";
-			} else {
-				do set_rain_rate(new_rate);
-				write "Rain decreased to " + get_rain_rate() + "m/step";
-			}
-
-		} else {
-			write "No rain active to decrease";
-		}
-
-	}
-
-	// Status reporting
-	action report_status {
-		write "=== SIMULATION STATUS ===";
-		write "Active: " + is_simulation_active();
-		write "Step: " + get_current_step();
-		write "Active water cells: " + get_active_water_count();
-		write "Edge cells: " + get_edge_cell_count();
-		write "Flow threshold: " + flow_threshold;
-		write "Rising rate: " + rising_rate;
-		write "=== RAIN STATUS ===";
-		write "Rain active: " + is_rain_active();
-		write "Rain rate: " + get_rain_rate() + "m/step";
-		write "Rain intensity: " + get_rain_intensity() + "x";
-		write "========================";
-	}
-
+    
+    // === PERFORMANCE TRACKING ===
+    int steps_since_spread <- 0;
+    int last_water_count <- 0;
+    
+    init {
+        write "=== SIMULATION MANAGER INITIALIZATION ===";
+        write "Creating simulation manager with full SpreadingSkill capabilities:";
+        write "  • Water spreading simulation with realistic physics";
+        write "  • Rain system with intensity control";
+        write "  • Dyke building with continuity and destruction mechanics";
+        
+        // FIXED: Create dyke field in GAMA to ensure proper coordinate system alignment
+        field dyke_field_for_java <- field(elevation_map.columns, elevation_map.rows);
+        
+        // Initialize dyke field with same bounds as elevation map
+        loop i from: 0 to: elevation_map.columns - 1 {
+            loop j from: 0 to: elevation_map.rows - 1 {
+                dyke_field_for_java[i, j] <- 0.0;
+            }
+        }
+        
+        // FIXED: Use correct parameter names and order for the Java method
+        do initialize_spreading_grid_with_dyke_field(
+            dem_field: elevation_map,
+            dyke_field: dyke_field_for_java,
+            water_geometries: water_geometries,
+            initial_water_depth: 1.5,
+            flow_threshold: 0.01,
+            rising_rate: 0.3,
+            min_flow_diff: 0.001,
+            equalization_threshold: 0.1
+        );
+        
+        // Update global display fields
+        if (water_field != nil) {
+            display_water_field <- water_field;
+        }
+        if (dyke_field != nil) {
+            display_dyke_field <- copy(dyke_field);
+        }
+        
+        last_water_count <- get_active_water_count();
+        
+        write "✓ Spreading grid initialized successfully";
+        write "✓ Initial water cells: " + get_active_water_count();
+        write "✓ Initial edge cells: " + get_edge_cell_count();
+        write "✓ Grid dimensions: " + grid_width + "x" + grid_height;
+        write "✓ Dyke field created with proper coordinate alignment";
+        write "✓ Simulation parameters:";
+        write "    Flow threshold: " + (flow_threshold with_precision 3) + "m";
+        write "    Rising rate: " + (rising_rate with_precision 3) + "m/step";
+        write "    Dyke height: " + (dyke_height with_precision 1) + "m";
+        write "    Dyke destruction time: " + (dyke_destruction_time with_precision 1) + " cycles";
+        write "============================================";
+    }
+    
+    // === AUTOMATIC SIMULATION STEP ===
+    reflex simulation_step when: is_simulation_active() {
+        do simulate_spreading_step();
+        
+        // Update global display fields for visualization
+        if (water_field != nil) {
+            display_water_field <- water_field;
+        }
+        if (dyke_field != nil) {
+            display_dyke_field <- copy(dyke_field);
+        }
+        
+        // Track progress
+        int current_water_count <- get_active_water_count();
+        if (current_water_count != last_water_count) {
+            steps_since_spread <- 0;
+            last_water_count <- current_water_count;
+        } else {
+            steps_since_spread <- steps_since_spread + 1;
+        }
+        
+        // Alert if dykes are in danger
+        int attacked_dykes <- get_surrounded_dyke_count();
+        if (attacked_dykes > 0) {
+            write "⚔️ WARNING: " + attacked_dykes + " dyke cell(s) under water attack!";
+        }
+    }
+    
+    // === SIMULATION CONTROL ACTIONS ===
+    action start_simulation {
+        do start_spreading_simulation();
+        simulation_start_time <- gama.machine_time;
+        write "🚀 SIMULATION STARTED at step " + get_current_step();
+        write "   Water cells: " + get_active_water_count() + " | Edge cells: " + get_edge_cell_count();
+        if (get_active_dyke_count() > 0) {
+            write "   Active dykes: " + get_active_dyke_count();
+        }
+    }
+    
+    action stop_simulation {
+        do stop_spreading_simulation();
+        write "⏸️ SIMULATION STOPPED at step " + get_current_step();
+        write "   Total runtime: " + ((gama.machine_time - simulation_start_time) / 1000.0 with_precision 1) + " seconds";
+        write "   Final water cells: " + get_active_water_count();
+    }
+    
+    action reset_simulation {
+        do reset_spreading_simulation(water_geometries, 1.5);
+        
+        // FIXED: Recreate dyke field with proper coordinate system after reset
+        field dyke_field_for_reset <- field(elevation_map.columns, elevation_map.rows);
+        loop i from: 0 to: elevation_map.columns - 1 {
+            loop j from: 0 to: elevation_map.rows - 1 {
+                dyke_field_for_reset[i, j] <- 0.0;
+            }
+        }
+        
+        // FIXED: Re-initialize with correct parameter names and order
+        do initialize_spreading_grid_with_dyke_field(
+            dem_field: elevation_map,
+            dyke_field: dyke_field_for_reset,
+            water_geometries: water_geometries,
+            initial_water_depth: 1.5,
+            flow_threshold: 0.01,
+            rising_rate: 0.3,
+            min_flow_diff: 0.001,
+            equalization_threshold: 0.1
+        );
+        
+        // Update global display fields
+        if (water_field != nil) {
+            display_water_field <- water_field;
+        }
+        if (dyke_field != nil) {
+            display_dyke_field <- copy(dyke_field);
+        }
+        
+        // Reset tracking variables
+        steps_since_spread <- 0;
+        last_water_count <- get_active_water_count();
+        
+        write "🔄 SIMULATION RESET";
+        write "   Active water cells: " + get_active_water_count();
+        write "   Edge cells: " + get_edge_cell_count();
+        write "   All dykes cleared, rain stopped, building mode disabled";
+        write "   Dyke field recreated with proper coordinate alignment";
+    }
+    
+    // === RAIN CONTROL ACTIONS ===
+    action start_light_rain {
+        do start_rain(0.1, 1.0); // 0.1m/step rain rate, normal intensity
+        write "🌧️ Light rain started (0.1m/step, normal intensity)";
+    }
+    
+    action start_heavy_rain {
+        do start_rain(0.3, 1.5); // 0.3m/step rain rate, 1.5x intensity
+        write "⛈️ Heavy rain started (0.3m/step, 1.5x intensity)";
+    }
+    
+    action start_extreme_rain {
+        do start_rain(0.5, 2.0); // 0.5m/step rain rate, 2.0x intensity
+        write "🌪️ EXTREME rain started (0.5m/step, 2x intensity)";
+    }
+    
+    action start_custom_rain(float rate, float intensity) {
+        do start_rain(rate, intensity);
+        write "🌦️ Custom rain started (rate: " + rate + "m/step, intensity: " + intensity + "x)";
+    }
+    
+    action increase_rain {
+        if (is_rain_active()) {
+            float current_rate <- get_rain_rate();
+            float new_rate <- current_rate + 0.05;
+            do set_rain_rate(new_rate);
+            write "📈 Rain increased to " + (get_rain_rate() with_precision 2) + "m/step";
+        } else {
+            write "❌ No rain active to increase";
+        }
+    }
+    
+    action decrease_rain {
+        if (is_rain_active()) {
+            float current_rate <- get_rain_rate();
+            float new_rate <- max(0.0, current_rate - 0.05);
+            if (new_rate <= 0.0) {
+                do stop_rain();
+                write "🌤️ Rain stopped (rate reached 0)";
+            } else {
+                do set_rain_rate(new_rate);
+                write "📉 Rain decreased to " + (get_rain_rate() with_precision 2) + "m/step";
+            }
+        } else {
+            write "❌ No rain active to decrease";
+        }
+    }
+    
+    action stop_rain_completely {
+        do stop_rain();
+        write "☀️ Rain stopped completely";
+    }
+    
+    // === DYKE CONTROL ACTIONS ===
+    action clear_dykes {
+        int dyke_count <- get_active_dyke_count();
+        do clear_all_dykes();
+        
+        // Update global display field
+        if (dyke_field != nil) {
+            display_dyke_field <- copy(dyke_field);
+        }
+        
+        write "💥 All dykes cleared (" + dyke_count + " dyke cells removed)";
+    }
+    
+    action emergency_dyke_clear {
+        ask world {
+            do toggle_dyke_building(); // Turn off building mode
+        }
+        do clear_dykes();
+        write "🚨 EMERGENCY: All dykes cleared and building mode disabled";
+    }
+    
+    // === ENHANCED STATUS REPORTING ===
+    action report_status {
+        write "=== DETAILED SIMULATION STATUS ===";
+        write "SIMULATION:";
+        write "  • Active: " + is_simulation_active();
+        write "  • Step: " + get_current_step();
+        write "  • Steps since last spread: " + steps_since_spread;
+        
+        write "WATER:";
+        write "  • Active water cells: " + get_active_water_count();
+        write "  • Edge cells: " + get_edge_cell_count();
+        write "  • Flow threshold: " + (flow_threshold with_precision 3) + "m";
+        write "  • Rising rate: " + (rising_rate with_precision 3) + "m/step";
+        
+        write "RAIN:";
+        write "  • Rain active: " + is_rain_active();
+        if (is_rain_active()) {
+            write "  • Rain rate: " + (get_rain_rate() with_precision 3) + "m/step";
+            write "  • Rain intensity: " + (get_rain_intensity() with_precision 1) + "x";
+            float rain_volume <- get_rain_rate() * get_active_water_count();
+            write "  • Total rain volume/step: " + (rain_volume with_precision 1) + "m³";
+        }
+        
+        write "DYKES:";
+        write "  • Building mode: " + is_dyke_building_mode();
+        write "  • Active dyke cells: " + get_active_dyke_count();
+        write "  • Dyke cells under attack: " + get_surrounded_dyke_count();
+        write "  • Dyke height: " + (dyke_height with_precision 1) + "m";
+        write "  • Destruction time: " + (dyke_destruction_time with_precision 1) + " cycles";
+        
+        if (get_surrounded_dyke_count() > 0) {
+            write "  ⚔️ ALERT: Dyke cells under water attack!";
+        }
+        
+        write "GRID:";
+        write "  • Grid size: " + grid_width + "x" + grid_height;
+        write "  • Total cells: " + (grid_width * grid_height);
+        write "  • Water coverage: " + ((get_active_water_count() / (grid_width * grid_height)) * 100.0 with_precision 1) + "%";
+        
+        write "===================================";
+    }
+    
+    action quick_status {
+        string sim_status <- is_simulation_active() ? "RUNNING" : "STOPPED";
+        string rain_status <- is_rain_active() ? ("RAIN " + (get_rain_rate() with_precision 1) + "m/s") : "NO RAIN";
+        string dyke_status <- " " + get_active_dyke_count() + " dyke cells";
+        if (get_surrounded_dyke_count() > 0) {
+            dyke_status <- dyke_status + " (" + get_surrounded_dyke_count() + " under attack)";
+        }
+        
+        write "📊 QUICK STATUS: " + sim_status + " | " + rain_status + " | " + dyke_status + 
+              " | Water: " + get_active_water_count() + " cells";
+    }
 }
 
-experiment spreading_with_rain_experiment type: gui {
-	output {
-		display "Water Spreading Simulation with Rain" type: opengl {
-		// Display terrain elevation
-			mesh elevation_map scale: 20 triangulation: true grayscale: true;
-
-			// Display water field from the skill
-			mesh display_water_field scale: 20 triangulation: true color: rgb(0, 100, 255, 150);
-
-			// Display simulation manager (optional)
-			species simulation_manager;
-			event #mouse_move {
-				write display_water_field[#user_location];
-			}
-
-		}
-
-		display "Simulation Controls" type: java2D {
-			chart "Water Spread Progress" type: series {
-				data "Active Water Cells" value: first(simulation_manager).get_active_water_count() color: #blue;
-				data "Edge Cells" value: first(simulation_manager).get_edge_cell_count() color: #red;
-				data "Simulation Step" value: first(simulation_manager).get_current_step() color: #green;
-				data "Rain Rate x100" value: first(simulation_manager).get_rain_rate() * 100 color: #purple;
-			}
-
-		}
-
-		// Basic monitors
-		monitor "Simulation Active" value: first(simulation_manager).is_simulation_active();
-		monitor "Current Step" value: first(simulation_manager).get_current_step();
-		monitor "Active Water Cells" value: first(simulation_manager).get_active_water_count();
-		monitor "Edge Cells" value: first(simulation_manager).get_edge_cell_count();
-
-		// Rain monitors
-		monitor "Rain Active" value: first(simulation_manager).is_rain_active() color: first(simulation_manager).is_rain_active() ? #red : #green;
-		monitor "Rain Rate (m/step)" value: first(simulation_manager).get_rain_rate();
-		monitor "Rain Intensity" value: first(simulation_manager).get_rain_intensity();
-	}
-
-	// Simulation control actions
-	action ask_start_simulation {
-		ask simulation_manager {
-			do start_simulation();
-		}
-
-	}
-
-	action ask_stop_simulation {
-		ask simulation_manager {
-			do stop_simulation();
-		}
-
-	}
-
-	action ask_reset_simulation {
-		ask simulation_manager {
-			do reset_simulation();
-		}
-
-	}
-
-	action ask_report_status {
-		ask simulation_manager {
-			do report_status();
-		}
-
-	}
-
-	// NEW: Rain control actions
-	action ask_start_light_rain {
-		ask simulation_manager {
-			do start_light_rain();
-		}
-
-	}
-
-	action ask_start_heavy_rain {
-		ask simulation_manager {
-			do start_heavy_rain();
-		}
-
-	}
-
-	action ask_stop_rain {
-		ask simulation_manager {
-			do stop_rain();
-		}
-
-	}
-
-	action ask_increase_rain {
-		ask simulation_manager {
-			do increase_rain();
-		}
-
-	}
-
-	action ask_decrease_rain {
-		ask simulation_manager {
-			do decrease_rain();
-		}
-
-	}
-
-	// User commands for manual control
-	user_command "Start Simulation" action: ask_start_simulation;
-	user_command "Stop Simulation" action: ask_stop_simulation;
-	user_command "Reset Simulation" action: ask_reset_simulation;
-	user_command "Report Status" action: ask_report_status;
-
-	// NEW: Rain user commands
-	user_command "Start Light Rain" action: ask_start_light_rain;
-	user_command "Start Heavy Rain" action: ask_start_heavy_rain;
-	user_command "Stop Rain" action: ask_stop_rain;
-	user_command "Increase Rain" action: ask_increase_rain;
-	user_command "Decrease Rain" action: ask_decrease_rain;
+experiment FloodSimulationWithDykesComplete type: gui {
+    
+    // === EXPERIMENT PARAMETERS ===
+    // parameter "Auto-report interval (cycles)" var: auto_report_interval category: "Monitoring" min: 0 max: 100 init: 50;
+    
+    int auto_report_interval <- 50;
+    
+    // === EXPERIMENT REFLEXES ===
+    reflex auto_report when: auto_report_interval > 0 and (cycle mod auto_report_interval = 0) and cycle > 0 {
+        ask simulation_manager {
+            do quick_status();
+        }
+    }
+    
+    output {
+        // === MAIN 3D VISUALIZATION ===
+        display "Flood Simulation with Rain and Dykes" type: opengl  refresh: true {
+            // Terrain elevation (grayscale with slight transparency)
+            mesh elevation_map scale: 20 triangulation: true grayscale: true transparency: 0.1 refresh: false;
+            light #ambient intensity:100;
+            // Water field (blue with transparency)
+            mesh display_water_field /*scale: 20 triangulation: true*/ color: rgb(0, 100, 255, 180) refresh: true;
+            
+            // Dyke field (brown/orange for visibility)
+            mesh display_dyke_field scale: 20 triangulation: true color: rgb(139, 69, 19, 255) refresh: true;
+            
+            // Simulation manager (optional visualization)
+            species simulation_manager transparency: 0.8;
+            
+            // === EVENT HANDLERS ===
+            event #mouse_down {
+                ask world {do handle_dyke_click(#user_location);}
+            }
+            
+            event #mouse_move {
+                // Show information on mouse move
+                if (!dyke_building_active) {
+                    if (display_water_field != nil) {
+                        float water_level <- display_water_field[#user_location];
+                        if (water_level > 0.01) {
+                            draw string("💧 " + (water_level with_precision 1) + "m") 
+                                 at: #user_location + {0, 0, 10} color: #cyan font: font("Arial", 12, #bold);
+                        }
+                    }
+                    
+                    if (display_dyke_field != nil) {
+                        float dyke_height <- display_dyke_field[#user_location];
+                        if (dyke_height > 0.01) {
+                            draw string("🏗️ " + (dyke_height with_precision 1) + "m") 
+                                 at: #user_location + {0, 0, 15} color: #orange font: font("Arial", 12, #bold);
+                        }
+                    }
+                }
+            }
+            
+            // === VISUAL OVERLAYS ===
+            overlay position: {5, 5} size: {350, 140} background: #black transparency: 0.3 border: #white {
+                string title <- "🌊 FLOOD SIMULATION CONTROL";
+                string sim_text <- "Simulation: " + (first(simulation_manager).is_simulation_active() ? "RUNNING" : "STOPPED");
+                string water_text <- "Water Cells: " + first(simulation_manager).get_active_water_count();
+                string rain_text <- "Rain: " + (first(simulation_manager).is_rain_active() ? 
+                    ("Active (" + (first(simulation_manager).get_rain_rate() with_precision 1) + "m/s)") : "None");
+                string dyke_text <- "Dyke Cells: " + first(simulation_manager).get_active_dyke_count() + " active";
+                if (first(simulation_manager).get_surrounded_dyke_count() > 0) {
+                    dyke_text <- dyke_text + " (" + first(simulation_manager).get_surrounded_dyke_count() + " under attack)";
+                }
+                string mode_text <- "Mode: " + (dyke_building_active ? 
+                    (waiting_for_first_point ? "🔨 Click 1st point" : 
+                     (waiting_for_second_point ? "🔨 Click 2nd point" : "🔨 Building")) : "Normal");
+                
+                draw title at: {10, 20} color: #yellow font: font("Arial", 14, #bold);
+                draw sim_text at: {10, 40} color: (first(simulation_manager).is_simulation_active() ? #green : #red);
+                draw water_text at: {10, 55} color: #cyan;
+                draw rain_text at: {10, 70} color: (first(simulation_manager).is_rain_active() ? #blue : #gray);
+                draw dyke_text at: {10, 85} color: #brown;
+                draw mode_text at: {10, 100} color: (dyke_building_active ? #orange : #white);
+                
+                if (dyke_building_active and dyke_point1 != nil) {
+                    draw ("First: " + dyke_point1) at: {10, 115} color: #orange;
+                }
+            }
+        }
+        
+        // === CONTROL CHARTS ===
+        display "Simulation Progress" type: java2D {
+            chart "Water Spread and System Status" type: series x_serie_labels: "Step" {
+                data "Active Water Cells" value: first(simulation_manager).get_active_water_count() color: #blue;
+                data "Edge Cells" value: first(simulation_manager).get_edge_cell_count() color: #red;
+                data "Simulation Step" value: first(simulation_manager).get_current_step() color: #green;
+                data "Rain Rate x100" value: first(simulation_manager).get_rain_rate() * 100 color: #purple;
+                data "Active Dyke Cells" value: first(simulation_manager).get_active_dyke_count() color: #brown;
+                data "Attacked Dyke Cells x10" value: first(simulation_manager).get_surrounded_dyke_count() * 10 color: #orange;
+            }
+        }
+        
+        // === STATUS MONITORS ===
+        // Simulation monitors
+        monitor "🚀 Simulation Active" value: first(simulation_manager).is_simulation_active() 
+               color: first(simulation_manager).is_simulation_active() ? #green : #red;
+        monitor "📊 Current Step" value: first(simulation_manager).get_current_step();
+        monitor "💧 Active Water Cells" value: first(simulation_manager).get_active_water_count();
+        monitor "🔥 Edge Cells" value: first(simulation_manager).get_edge_cell_count();
+        
+        // Rain monitors  
+        monitor "🌧️ Rain Active" value: first(simulation_manager).is_rain_active() 
+               color: first(simulation_manager).is_rain_active() ? #blue : #gray;
+        monitor "📈 Rain Rate (m/step)" value: first(simulation_manager).get_rain_rate() with_precision 3;
+        monitor "⚡ Rain Intensity" value: first(simulation_manager).get_rain_intensity() with_precision 1;
+        
+        // Dyke monitors
+        monitor "🔨 Dyke Building Mode" value: dyke_building_active 
+               color: dyke_building_active ? #orange : #gray;
+        monitor "🏗️ Active Dyke Cells" value: first(simulation_manager).get_active_dyke_count();
+        monitor "⚔️ Dyke Cells Under Attack" value: first(simulation_manager).get_surrounded_dyke_count() 
+               color: first(simulation_manager).get_surrounded_dyke_count() > 0 ? #red : #green;
+        monitor "🎯 Building Status" value: dyke_building_active ? 
+               (waiting_for_first_point ? "First Point" : 
+                (waiting_for_second_point ? "Second Point" : "Ready")) : "Inactive";
+        
+        // Performance monitors
+        monitor "⏱️ Total Cycles" value: total_cycles;
+        monitor "📏 Grid Size" value: string(first(simulation_manager).grid_width) + "x" + string(first(simulation_manager).grid_height);
+        monitor "💧 Water Coverage %" value: ((first(simulation_manager).get_active_water_count() / 
+               (first(simulation_manager).grid_width * first(simulation_manager).grid_height)) * 100.0) with_precision 1;
+    }
+    
+    // === ACTION DEFINITIONS ===
+    // Simulation control actions
+    action ask_start_simulation {
+        ask simulation_manager { do start_simulation(); }
+    }
+    
+    action ask_stop_simulation {
+        ask simulation_manager { do stop_simulation(); }
+    }
+    
+    action ask_reset_simulation {
+        ask simulation_manager { do reset_simulation(); }
+    }
+    
+    action ask_report_status {
+        ask simulation_manager { do report_status(); }
+    }
+    
+    action ask_quick_status {
+        ask simulation_manager { do quick_status(); }
+    }
+    
+    action ask_global_status {
+        ask world {do report_global_status();}
+    }
+    
+    // Rain control actions
+    action ask_start_light_rain {
+        ask simulation_manager { do start_light_rain(); }
+    }
+    
+    action ask_start_heavy_rain {
+        ask simulation_manager { do start_heavy_rain(); }
+    }
+    
+    action ask_start_extreme_rain {
+        ask simulation_manager { do start_extreme_rain(); }
+    }
+    
+    action ask_stop_rain {
+        ask simulation_manager { do stop_rain_completely(); }
+    }
+    
+    action ask_increase_rain {
+        ask simulation_manager { do increase_rain(); }
+    }
+    
+    action ask_decrease_rain {
+        ask simulation_manager { do decrease_rain(); }
+    }
+    
+    // Dyke control actions
+    action ask_toggle_dyke_building {
+        ask world {do toggle_dyke_building();}
+    }
+    
+    action ask_clear_dykes {
+        ask simulation_manager { do clear_dykes(); }
+    }
+    
+    action ask_emergency_clear {
+        ask simulation_manager { do emergency_dyke_clear(); }
+    }
+    
+    // === USER COMMAND INTERFACE ===
+    // Primary simulation controls
+    user_command "🚀 Start Simulation" action: ask_start_simulation category: "Simulation";
+    user_command "⏸️ Stop Simulation" action: ask_stop_simulation category: "Simulation";
+    user_command "🔄 Reset Simulation" action: ask_reset_simulation category: "Simulation";
+    
+    // Rain controls
+    user_command "🌧️ Light Rain" action: ask_start_light_rain category: "Rain";
+    user_command "⛈️ Heavy Rain" action: ask_start_heavy_rain category: "Rain";
+    user_command "🌪️ Extreme Rain" action: ask_start_extreme_rain category: "Rain";
+    user_command "☀️ Stop Rain" action: ask_stop_rain category: "Rain";
+    user_command "📈 Increase Rain" action: ask_increase_rain category: "Rain";
+    user_command "📉 Decrease Rain" action: ask_decrease_rain category: "Rain";
+    
+    // Dyke controls  
+    user_command "🔨 Build Dykes (Toggle)" action: ask_toggle_dyke_building category: "Dykes";
+    user_command "💥 Clear All Dykes" action: ask_clear_dykes category: "Dykes";
+    user_command "🚨 Emergency Clear" action: ask_emergency_clear category: "Dykes";
+    
+    // Status and monitoring
+    user_command "📊 Quick Status" action: ask_quick_status category: "Status";
+    user_command "📋 Full Report" action: ask_report_status category: "Status";
+    user_command "🌍 Global Status" action: ask_global_status category: "Status";
 }
+
 

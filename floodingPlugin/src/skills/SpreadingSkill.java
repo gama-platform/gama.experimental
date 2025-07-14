@@ -1,5 +1,4 @@
 package skills;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
-
 import gama.annotations.precompiler.GamlAnnotations.action;
 import gama.annotations.precompiler.GamlAnnotations.arg;
 import gama.annotations.precompiler.GamlAnnotations.doc;
@@ -26,6 +24,13 @@ import gama.gaml.operators.spatial.SpatialProperties;
 import gama.gaml.skills.Skill;
 import gama.gaml.types.IType;
 import gama.gaml.types.*;
+import gama.core.metamodel.topology.ITopology;
+import gama.gaml.types.GamaFieldType;
+import gama.gaml.types.Types;
+import gama.core.util.GamaListFactory;
+import gama.core.common.interfaces.IKeyword;
+import gama.gaml.operators.Maths;
+import gama.core.metamodel.shape.GamaPoint;
 
 @vars({ @variable(name = "flow_threshold", type = IType.FLOAT, init = "0.01", doc = @doc("Minimum water depth required for flow (in meters)")),
 		@variable(name = "rising_rate", type = IType.FLOAT, init = "0.3", doc = @doc("Rate at which water rises (in meters per step)")),
@@ -36,13 +41,18 @@ import gama.gaml.types.*;
 		@variable(name = "grid_width", type = IType.INT, init = "0", doc = @doc("Width of the internal grid")),
 		@variable(name = "grid_height", type = IType.INT, init = "0", doc = @doc("Height of the internal grid")),
 		@variable(name = "water_field", type = IType.MATRIX, doc = @doc("Field representing water elevations for visualization")),
-		// NEW RAIN VARIABLES
+		// RAIN VARIABLES
 		@variable(name = "rain_active", type = IType.BOOL, init = "false", doc = @doc("Whether rain is currently active")),
 		@variable(name = "rain_rate", type = IType.FLOAT, init = "0.0", doc = @doc("Rate of rain affecting water rising and spreading (in meters per step)")),
-		@variable(name = "rain_intensity", type = IType.FLOAT, init = "1.0", doc = @doc("Multiplier for rain effects on spreading (1.0 = normal, >1.0 = more aggressive spreading)"))
+		@variable(name = "rain_intensity", type = IType.FLOAT, init = "1.0", doc = @doc("Multiplier for rain effects on spreading (1.0 = normal, >1.0 = more aggressive spreading)")),
+		// DYKE VARIABLES
+		@variable(name = "dyke_field", type = IType.MATRIX, doc = @doc("Field representing dyke elevations for visualization")),
+		@variable(name = "dyke_building_mode", type = IType.BOOL, init = "false", doc = @doc("Whether dyke building mode is active")),
+		@variable(name = "dyke_height", type = IType.FLOAT, init = "5.0", doc = @doc("Height of dykes in meters")),
+		@variable(name = "dyke_destruction_time", type = IType.FLOAT, init = "10.0", doc = @doc("Time in cycles before dyke cell under water attack is destroyed"))
 })
 @skill(name = "spreading", concept = { "spreading", "simulation", "water",
-		"flood", "rain" }, doc = @doc("A skill for managing spreading simulations with optimized water flow mechanics and rain system"))
+		"flood", "rain", "dykes" }, doc = @doc("A skill for managing spreading simulations with optimized water flow mechanics, rain system, and dyke building"))
 public class SpreadingSkill extends Skill {
 	// === SKILL VARIABLES ===
 	public static final String FLOW_THRESHOLD = "flow_threshold";
@@ -54,10 +64,15 @@ public class SpreadingSkill extends Skill {
 	public static final String SIMULATION_STEP = "simulation_step";
 	public static final String GRID_WIDTH = "grid_width";
 	public static final String GRID_HEIGHT = "grid_height";
-	// NEW RAIN CONSTANTS
+	// RAIN CONSTANTS
 	public static final String RAIN_ACTIVE = "rain_active";
 	public static final String RAIN_RATE = "rain_rate";
 	public static final String RAIN_INTENSITY = "rain_intensity";
+	// DYKE CONSTANTS
+	public static final String DYKE_FIELD = "dyke_field";
+	public static final String DYKE_BUILDING_MODE = "dyke_building_mode";
+	public static final String DYKE_HEIGHT = "dyke_height";
+	public static final String DYKE_DESTRUCTION_TIME = "dyke_destruction_time";
 	
 	// === INTERNAL GRID CELL CLASS ===
 	public static class GridCell {
@@ -65,6 +80,7 @@ public class SpreadingSkill extends Skill {
 		public boolean isWater;
 		public double waterElevation;
 		public double terrainElevation;
+		public double originalTerrainElevation; // Store original elevation for dyke management
 		public boolean isEdgeCell;
 		public List<GridCell> neighbors;
 		public IShape shape;
@@ -75,9 +91,27 @@ public class SpreadingSkill extends Skill {
 			this.isWater = false;
 			this.waterElevation = 0.0;
 			this.terrainElevation = terrainElev;
+			this.originalTerrainElevation = terrainElev;
 			this.isEdgeCell = false;
 			this.neighbors = new ArrayList<>();
 			this.shape = cellShape;
+		}
+	}
+	
+	// === DYKE CELL CLASS ===
+	public static class DykeCell {
+		public GridCell gridCell;
+		public double creationTime;
+		public double waterAttackStartTime;  // Track when water attack started
+		public boolean isUnderWaterAttack;   // Track if adjacent to water
+		public boolean isDestroyed;
+		
+		public DykeCell(GridCell cell, double time) {
+			this.gridCell = cell;
+			this.creationTime = time;
+			this.waterAttackStartTime = -1;
+			this.isUnderWaterAttack = false;
+			this.isDestroyed = false;
 		}
 	}
 	
@@ -85,6 +119,8 @@ public class SpreadingSkill extends Skill {
 	private GridCell[][] internalGrid;
 	private List<GridCell> activeWaterCells;
 	private HashSet<GridCell> edgeWaterCells;
+	private List<DykeCell> activeDykes;
+	private HashSet<GridCell> dykeGridCells;
 	private Map<IAgent, SpreadingSkill> skillInstances = new ConcurrentHashMap<>();
 	
 	// === CONSTRUCTOR ===
@@ -92,6 +128,8 @@ public class SpreadingSkill extends Skill {
 		super();
 		this.activeWaterCells = new ArrayList<>();
 		this.edgeWaterCells = new HashSet<>();
+		this.activeDykes = new ArrayList<>();
+		this.dykeGridCells = new HashSet<>();
 	}
 	
 	// === HELPER METHODS ===
@@ -119,7 +157,7 @@ public class SpreadingSkill extends Skill {
 		agent.setAttribute(attr, value);
 	}
 	
-	// === GRID INITIALIZATION ===
+	// === ORIGINAL GRID INITIALIZATION (FOR BACKWARDS COMPATIBILITY) ===
 	@action(name = "initialize_spreading_grid", args = {
 			@arg(name = "dem_field", type = IType.MATRIX, doc = @doc("Digital elevation model field")),
 			@arg(name = "water_geometries", type = IType.LIST, doc = @doc("List of water polygon geometries")),
@@ -162,16 +200,118 @@ public class SpreadingSkill extends Skill {
 		internalGrid = new GridCell[gridWidth][gridHeight];
 		activeWaterCells.clear();
 		edgeWaterCells.clear();
+		activeDykes.clear();
+		dykeGridCells.clear();
 		
-		// Create water field properly initialized to 0
+		// Create water field
 		IField waterField = GamaFieldType.withObject(scope, 0.0, gridWidth, gridHeight, Types.FLOAT);
-		
-		// Sequential initialization of field (GAMA fields are not thread-safe)
 		for (int i = 0; i < gridWidth; i++) {
 			for (int j = 0; j < gridHeight; j++) {
 				waterField.set(scope, i, j, 0.0);
 			}
 		}
+		
+		// Create dyke field
+		IField dykeField = GamaFieldType.withObject(scope, 0.0, gridWidth, gridHeight, Types.FLOAT);
+		for (int i = 0; i < gridWidth; i++) {
+			for (int j = 0; j < gridHeight; j++) {
+				dykeField.set(scope, i, j, 0.0);
+			}
+		}
+		
+		// Initialize grid (same as dyke version)
+		initializeGridCells(scope, demField, waterGeometries, initialWaterDepth, waterField);
+		
+		// Store the fields
+		agent.setAttribute(WATER_FIELD, waterField);
+		agent.setAttribute(DYKE_FIELD, dykeField);
+		
+		return true;
+	}
+	
+	// === NEW GRID INITIALIZATION WITH PRE-CREATED DYKE FIELD ===
+	@action(name = "initialize_spreading_grid_with_dyke_field", args = {
+			@arg(name = "dem_field", type = IType.MATRIX, doc = @doc("Digital elevation model field")),
+			@arg(name = "dyke_field", type = IType.MATRIX, doc = @doc("Pre-created dyke field with correct coordinate system")),
+			@arg(name = "water_geometries", type = IType.LIST, doc = @doc("List of water polygon geometries")),
+			@arg(name = "initial_water_depth", type = IType.FLOAT, optional = true, doc = @doc("Initial water depth (default: 1.5m)")),
+			@arg(name = "flow_threshold", type = IType.FLOAT, optional = true, doc = @doc("Flow threshold parameter")),
+			@arg(name = "rising_rate", type = IType.FLOAT, optional = true, doc = @doc("Rising rate parameter")),
+			@arg(name = "min_flow_diff", type = IType.FLOAT, optional = true, doc = @doc("Minimum flow difference parameter")),
+			@arg(name = "equalization_threshold", type = IType.FLOAT, optional = true, doc = @doc("Equalization threshold parameter")) }, doc = @doc("Initializes the spreading grid with DEM and pre-created dyke field"))
+	public Boolean initializeSpreadingGridWithDykeField(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		
+		// Get parameters
+		final IField demField = (IField) scope.getArg("dem_field", IType.FIELD);
+		final IField dykeField = (IField) scope.getArg("dyke_field", IType.FIELD);
+		final IList<IShape> waterGeometries = scope.getListArg("water_geometries");
+		final Double initialWaterDepth = scope.hasArg("initial_water_depth")
+				? scope.getFloatArg("initial_water_depth")
+				: 1.5;
+		
+		// Set parameters if provided
+		if (scope.hasArg("flow_threshold")) {
+			agent.setAttribute(FLOW_THRESHOLD, scope.getFloatArg("flow_threshold"));
+		}
+		if (scope.hasArg("rising_rate")) {
+			agent.setAttribute(RISING_RATE, scope.getFloatArg("rising_rate"));
+		}
+		if (scope.hasArg("min_flow_diff")) {
+			agent.setAttribute(MIN_FLOW_DIFF, scope.getFloatArg("min_flow_diff"));
+		}
+		if (scope.hasArg("equalization_threshold")) {
+			agent.setAttribute(EQUALIZATION_THRESHOLD, scope.getFloatArg("equalization_threshold"));
+		}
+		
+		// Get grid dimensions
+		int gridWidth = demField.getCols(scope);
+		int gridHeight = demField.getRows(scope);
+		setIntAttribute(agent, GRID_WIDTH, gridWidth);
+		setIntAttribute(agent, GRID_HEIGHT, gridHeight);
+		
+		// Initialize internal grid
+		internalGrid = new GridCell[gridWidth][gridHeight];
+		activeWaterCells.clear();
+		edgeWaterCells.clear();
+		activeDykes.clear();
+		dykeGridCells.clear();
+		
+		// Create water field
+		IField waterField = GamaFieldType.withObject(scope, 0.0, gridWidth, gridHeight, Types.FLOAT);
+		for (int i = 0; i < gridWidth; i++) {
+			for (int j = 0; j < gridHeight; j++) {
+				waterField.set(scope, i, j, 0.0);
+			}
+		}
+		
+		// Use the pre-created dyke field (already has correct coordinate system)
+		// Just ensure it's initialized to zero
+		for (int i = 0; i < gridWidth; i++) {
+			for (int j = 0; j < gridHeight; j++) {
+				dykeField.set(scope, i, j, 0.0);
+			}
+		}
+		
+		// Initialize grid cells
+		initializeGridCells(scope, demField, waterGeometries, initialWaterDepth, waterField);
+		
+		// Store the fields
+		agent.setAttribute(WATER_FIELD, waterField);
+		agent.setAttribute(DYKE_FIELD, dykeField);
+		
+		System.out.println("Grid initialized successfully with coordinate-aligned dyke field:");
+		System.out.println("  Grid dimensions: " + gridWidth + "x" + gridHeight);
+		System.out.println("  Dyke field properly aligned with DEM coordinate system");
+		
+		return true;
+	}
+	
+	// === SHARED GRID CELL INITIALIZATION METHOD ===
+	private void initializeGridCells(IScope scope, IField demField, IList<IShape> waterGeometries, 
+									 Double initialWaterDepth, IField waterField) throws GamaRuntimeException {
+		int gridWidth = demField.getCols(scope);
+		int gridHeight = demField.getRows(scope);
 		
 		// Create grid cells and determine water areas
 		int waterCellCount = 0;
@@ -243,10 +383,7 @@ public class SpreadingSkill extends Skill {
 		// Identify initial edge cells
 		identifyEdgeCells();
 		
-		// Store the water field
-		agent.setAttribute(WATER_FIELD, waterField);
-		
-		return true;
+		System.out.println("Grid cells initialized: " + waterCellCount + " water cells");
 	}
 	
 	private void buildNeighborRelationships(int width, int height) {
@@ -342,6 +479,76 @@ public class SpreadingSkill extends Skill {
 		}
 	}
 	
+	// === DYKE STATUS UPDATE METHOD ===
+	private void updateDykeStatus(IScope scope, IField waterField) {
+		final IAgent agent = getCurrentAgent(scope);
+		final double destructionTime = getFloatAttribute(agent, DYKE_DESTRUCTION_TIME);
+		final double currentTime = scope.getSimulation().getClock().getCycle();
+		final IField dykeField = (IField) agent.getAttribute(DYKE_FIELD);
+		
+		List<DykeCell> dykesToRemove = new ArrayList<>();
+		
+		for (DykeCell dykeCell : activeDykes) {
+			if (dykeCell.isDestroyed) continue;
+			
+			GridCell cell = dykeCell.gridCell;
+			
+			// Check if dyke cell is under water attack (adjacent to water)
+			boolean currentlyUnderAttack = false;
+			for (GridCell neighbor : cell.neighbors) {
+				if (neighbor.isWater) {
+					currentlyUnderAttack = true;
+					break;
+				}
+			}
+			
+			// Update water attack status for individual cells
+			if (currentlyUnderAttack && !dykeCell.isUnderWaterAttack) {
+				// Water attack just started
+				dykeCell.isUnderWaterAttack = true;
+				dykeCell.waterAttackStartTime = currentTime;
+				System.out.println("Dyke at (" + cell.x + "," + cell.y + ") under water attack! Time: " + currentTime);
+			} else if (!currentlyUnderAttack && dykeCell.isUnderWaterAttack) {
+				// No longer under attack (water receded)
+				dykeCell.isUnderWaterAttack = false;
+				dykeCell.waterAttackStartTime = -1;
+				System.out.println("Dyke at (" + cell.x + "," + cell.y + ") no longer under attack");
+			}
+			
+			// Check for destruction after sustained water attack
+			if (dykeCell.isUnderWaterAttack && 
+				(currentTime - dykeCell.waterAttackStartTime) >= destructionTime) {
+				
+				// Destroy the individual dyke cell
+				dykeCell.isDestroyed = true;
+				
+				// Restore original terrain elevation
+				cell.terrainElevation = cell.originalTerrainElevation;
+				
+				// Clear individual dyke cell in field
+				if (dykeField != null) {
+					dykeField.set(scope, cell.x, cell.y, 0.0);
+				}
+				
+				// Remove from dyke structures
+				dykeGridCells.remove(cell);
+				dykesToRemove.add(dykeCell);
+				
+				System.out.println("Dyke at (" + cell.x + "," + cell.y + ") DESTROYED after " + 
+					(currentTime - dykeCell.waterAttackStartTime) + " cycles under water attack!");
+			}
+		}
+		
+		// Remove destroyed dykes
+		activeDykes.removeAll(dykesToRemove);
+		
+		// Debug: Show current status if there are dykes under attack
+		long attackedDykes = activeDykes.stream().filter(d -> !d.isDestroyed && d.isUnderWaterAttack).count();
+		if (attackedDykes > 0) {
+			System.out.println("Current dykes under water attack: " + attackedDykes);
+		}
+	}
+	
 	// === SIMULATION ACTIONS ===
 	@action(name = "simulate_spreading_step", doc = @doc("Executes one step of the spreading simulation"))
 	public Boolean simulateSpreadingStep(final IScope scope) throws GamaRuntimeException {
@@ -361,12 +568,12 @@ public class SpreadingSkill extends Skill {
 		double minFlowDiff = getFloatAttribute(agent, MIN_FLOW_DIFF);
 		double equalizationThreshold = getFloatAttribute(agent, EQUALIZATION_THRESHOLD);
 		
-		// NEW: Get rain parameters
+		// Get rain parameters
 		boolean rainActive = getBoolAttribute(agent, RAIN_ACTIVE);
 		double rainRate = getFloatAttribute(agent, RAIN_RATE);
 		double rainIntensity = getFloatAttribute(agent, RAIN_INTENSITY);
 		
-		// NEW: Apply rain effects to parameters
+		// Apply rain effects to parameters
 		double effectiveRisingRate = risingRate;
 		double effectiveFlowThreshold = flowThreshold;
 		double effectiveMinFlowDiff = minFlowDiff;
@@ -383,12 +590,15 @@ public class SpreadingSkill extends Skill {
 		// Get water field for immediate updates
 		IField waterField = (IField) agent.getAttribute(WATER_FIELD);
 		
-		// NEW: Apply rainfall first if rain is active
+		// Apply rainfall first if rain is active
 		if (rainActive) {
 			applyRainfall(scope, waterField);
 		}
 		
-		// 1. SPREAD WATER - only from current edge cells (NOW WITH RAIN EFFECTS)
+		// Check and update dyke status
+		updateDykeStatus(scope, waterField);
+		
+		// 1. SPREAD WATER - only from current edge cells (WITH RAIN EFFECTS)
 		List<GridCell> newWaterCells = new ArrayList<>();
 		HashSet<GridCell> affectedNeighbors = new HashSet<>();
 		
@@ -402,16 +612,16 @@ public class SpreadingSkill extends Skill {
 			.min()
 			.orElse(Double.MAX_VALUE);
 		
-		// Sequential spreading (modifies neighbor states) - NOW WITH RAIN EFFECTS
+		// Sequential spreading (modifies neighbor states) - WITH RAIN AND DYKE EFFECTS
 		for (GridCell edgeCell : edgeWaterCells) {
 			if (edgeCell.waterElevation > edgeCell.terrainElevation + effectiveFlowThreshold) {
 				for (GridCell neighbor : edgeCell.neighbors) {
-					if (!neighbor.isWater &&
+					if (!neighbor.isWater && !dykeGridCells.contains(neighbor) &&
 						(edgeCell.waterElevation - neighbor.terrainElevation) > effectiveMinFlowDiff) {
 						
 						neighbor.isWater = true;
 						
-						// NEW: Rain affects initial water level in newly flooded cells
+						// Rain affects initial water level in newly flooded cells
 						double baseWaterLevel = Math.max(
 							neighbor.terrainElevation + effectiveFlowThreshold,
 							minSpreadingLevel - 0.01
@@ -484,7 +694,7 @@ public class SpreadingSkill extends Skill {
 				smoothWaterSurface(scope, waterField, 0.3);
 				
 			} else {
-				// Uniform rise - update all cells (NOW WITH RAIN EFFECTS)
+				// Uniform rise - update all cells (WITH RAIN EFFECTS)
 				final double uniformRise = effectiveRisingRate;
 				
 				// Sequential update (GAMA field operations must be sequential)
@@ -533,7 +743,7 @@ public class SpreadingSkill extends Skill {
 		}
 	}
 	
-	// === NEW RAIN CONTROL ACTIONS ===
+	// === RAIN CONTROL ACTIONS ===
 	@action(name = "start_rain", args = {
 			@arg(name = "rain_rate", type = IType.FLOAT, doc = @doc("Rate of rainfall (meters per step)")),
 			@arg(name = "rain_intensity", type = IType.FLOAT, optional = true, doc = @doc("Intensity multiplier for rain effects (default: 1.0)")) }, doc = @doc("Starts rainfall with specified rate"))
@@ -590,6 +800,231 @@ public class SpreadingSkill extends Skill {
 		return getFloatAttribute(getCurrentAgent(scope), RAIN_INTENSITY);
 	}
 	
+	// === DYKE BUILDING ACTIONS ===
+	@action(name = "toggle_dyke_building_mode", doc = @doc("Toggles dyke building mode on/off"))
+	public Boolean toggleDykeBuildingMode(final IScope scope) {
+		final IAgent agent = getCurrentAgent(scope);
+		boolean currentMode = getBoolAttribute(agent, DYKE_BUILDING_MODE);
+		setBoolAttribute(agent, DYKE_BUILDING_MODE, !currentMode);
+		return !currentMode;
+	}
+	
+	@action(name = "is_dyke_building_mode", doc = @doc("Returns whether dyke building mode is active"))
+	public Boolean isDykeBuildingMode(final IScope scope) {
+		return getBoolAttribute(getCurrentAgent(scope), DYKE_BUILDING_MODE);
+	}
+	
+	@action(name = "build_dyke", args = {
+			@arg(name = "point1", type = IType.POINT, doc = @doc("First point of the dyke")),
+			@arg(name = "point2", type = IType.POINT, doc = @doc("Second point of the dyke")) }, 
+			doc = @doc("Builds a dyke between two points"))
+	public Boolean buildDyke(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		
+		if (!getBoolAttribute(agent, DYKE_BUILDING_MODE)) {
+			return false; // Not in building mode
+		}
+		
+		// Get points
+		GamaPoint point1 = (GamaPoint) scope.getArg("point1", IType.POINT);
+		GamaPoint point2 = (GamaPoint) scope.getArg("point2", IType.POINT);
+		
+		// Get grid dimensions and fields
+		int width = getIntAttribute(agent, GRID_WIDTH);
+		int height = getIntAttribute(agent, GRID_HEIGHT);
+		IField dykeField = (IField) agent.getAttribute(DYKE_FIELD);
+		
+		if (dykeField == null) {
+			System.out.println("ERROR: Dyke field is null!");
+			return false;
+		}
+		
+		// Calculate grid coordinates using simulation world bounds
+		double worldMinX = scope.getSimulation().getEnvelope().getMinX();
+		double worldMinY = scope.getSimulation().getEnvelope().getMinY();
+		double worldMaxX = scope.getSimulation().getEnvelope().getMaxX();
+		double worldMaxY = scope.getSimulation().getEnvelope().getMaxY();
+		
+		// Calculate world size
+		double worldWidth = worldMaxX - worldMinX;
+		double worldHeight = worldMaxY - worldMinY;
+		
+		// Calculate cell size in world coordinates
+		double cellWorldWidth = worldWidth / width;
+		double cellWorldHeight = worldHeight / height;
+		
+		// Convert world coordinates to grid coordinates
+		int x1 = (int) Math.floor((point1.getX() - worldMinX) / cellWorldWidth);
+		int y1 = (int) Math.floor((point1.getY() - worldMinY) / cellWorldHeight);
+		int x2 = (int) Math.floor((point2.getX() - worldMinX) / cellWorldWidth);
+		int y2 = (int) Math.floor((point2.getY() - worldMinY) / cellWorldHeight);
+		
+		// Clamp coordinates to grid bounds
+		x1 = Math.max(0, Math.min(width - 1, x1));
+		y1 = Math.max(0, Math.min(height - 1, y1));
+		x2 = Math.max(0, Math.min(width - 1, x2));
+		y2 = Math.max(0, Math.min(height - 1, y2));
+		
+		// Debug output for coordinate conversion
+		System.out.println("=== DYKE BUILDING DEBUG ===");
+		System.out.println("World bounds: (" + worldMinX + "," + worldMinY + ") to (" + worldMaxX + "," + worldMaxY + ")");
+		System.out.println("Grid size: " + width + " x " + height);
+		System.out.println("Cell size: " + cellWorldWidth + " x " + cellWorldHeight + " world units");
+		System.out.println("Point1: " + point1 + " -> Grid (" + x1 + "," + y1 + ")");
+		System.out.println("Point2: " + point2 + " -> Grid (" + x2 + "," + y2 + ")");
+		
+		// Get dyke height
+		double dykeHeight = getFloatAttribute(agent, DYKE_HEIGHT);
+		double currentTime = scope.getSimulation().getClock().getCycle();
+		
+		// Use Bresenham's line algorithm to get cells between points
+		List<int[]> dykeCoords = getLineCoordinates(x1, y1, x2, y2);
+		System.out.println("Bresenham line contains " + dykeCoords.size() + " points");
+		
+		// Build dykes with individual cell heights
+		List<GridCell> dykeCells = new ArrayList<>();
+		
+		// Find all valid cells for dyke construction
+		for (int[] coord : dykeCoords) {
+			int x = coord[0];
+			int y = coord[1];
+			
+			if (x >= 0 && x < width && y >= 0 && y < height) {
+				GridCell cell = internalGrid[x][y];
+				
+				// Allow building over water (bridges) and exclude only existing dykes
+				if (!dykeGridCells.contains(cell)) {
+					dykeCells.add(cell);
+					System.out.println("Valid cell at (" + x + "," + y + ") terrain=" + cell.originalTerrainElevation + "m");
+				} else {
+					System.out.println("Skipped existing dyke cell at (" + x + "," + y + ")");
+				}
+			} else {
+				System.out.println("Out of bounds cell at (" + x + "," + y + ")");
+			}
+		}
+		
+		if (dykeCells.isEmpty()) {
+			System.out.println("No valid cells for dyke construction (area already has dykes)");
+			return false;
+		}
+		
+		int dykesBuilt = 0;
+		double minElevation = Double.MAX_VALUE;
+		double maxElevation = Double.MIN_VALUE;
+		
+		// Build dykes with individual cell elevations
+		System.out.println("Building dykes with individual elevations:");
+		for (GridCell cell : dykeCells) {
+			// Each cell gets its own terrain elevation + dyke height
+			double cellDykeElevation = cell.originalTerrainElevation + dykeHeight;
+			
+			// Add to dyke structures
+			DykeCell dykeCell = new DykeCell(cell, currentTime);
+			activeDykes.add(dykeCell);
+			dykeGridCells.add(cell);
+			
+			// Set individual elevation for each cell in dyke field
+			dykeField.set(scope, cell.x, cell.y, cellDykeElevation);
+			
+			// Set terrain elevation for this specific cell
+			cell.terrainElevation = cellDykeElevation;
+			
+			// Track elevation range for debug
+			minElevation = Math.min(minElevation, cellDykeElevation);
+			maxElevation = Math.max(maxElevation, cellDykeElevation);
+			
+			System.out.println("  Cell (" + cell.x + "," + cell.y + "): terrain=" + cell.originalTerrainElevation + 
+				"m + dyke=" + dykeHeight + "m = " + cellDykeElevation + "m");
+			
+			dykesBuilt++;
+		}
+		
+		// Debug output
+		System.out.println("=== DYKE CONSTRUCTION COMPLETE ===");
+		System.out.println("Built " + dykesBuilt + " dyke segments from (" + x1 + "," + y1 + ") to (" + x2 + "," + y2 + ")");
+		System.out.println("Dyke elevation range: " + minElevation + "m to " + maxElevation + "m (individual heights)");
+		System.out.println("Dyke height added: " + dykeHeight + "m to each cell's terrain");
+		System.out.println("Total active dykes now: " + activeDykes.size());
+		System.out.println("===================================");
+		
+		return dykesBuilt > 0;
+	}
+	
+	// Helper method for Bresenham's line algorithm
+	private List<int[]> getLineCoordinates(int x1, int y1, int x2, int y2) {
+		List<int[]> coordinates = new ArrayList<>();
+		
+		int dx = Math.abs(x2 - x1);
+		int dy = Math.abs(y2 - y1);
+		int sx = x1 < x2 ? 1 : -1;
+		int sy = y1 < y2 ? 1 : -1;
+		int err = dx - dy;
+		
+		int x = x1;
+		int y = y1;
+		
+		while (true) {
+			coordinates.add(new int[]{x, y});
+			
+			if (x == x2 && y == y2) break;
+			
+			int e2 = 2 * err;
+			if (e2 > -dy) {
+				err -= dy;
+				x += sx;
+			}
+			if (e2 < dx) {
+				err += dx;
+				y += sy;
+			}
+		}
+		
+		return coordinates;
+	}
+	
+	// === DYKE STATUS ACTIONS ===
+	@action(name = "get_active_dyke_count", doc = @doc("Returns the number of active dykes"))
+	public Integer getActiveDykeCount(final IScope scope) {
+		return (int) activeDykes.stream().filter(d -> !d.isDestroyed).count();
+	}
+	
+	@action(name = "get_surrounded_dyke_count", doc = @doc("Returns the number of dykes currently under water attack"))
+	public Integer getSurroundedDykeCount(final IScope scope) {
+		return (int) activeDykes.stream().filter(d -> !d.isDestroyed && d.isUnderWaterAttack).count();
+	}
+	
+	@action(name = "clear_all_dykes", doc = @doc("Removes all dykes from the simulation"))
+	public Boolean clearAllDykes(final IScope scope) {
+		final IAgent agent = getCurrentAgent(scope);
+		final IField dykeField = (IField) agent.getAttribute(DYKE_FIELD);
+		final int width = getIntAttribute(agent, GRID_WIDTH);
+		final int height = getIntAttribute(agent, GRID_HEIGHT);
+		
+		System.out.println("Clearing " + activeDykes.size() + " dykes");
+		
+		// Restore terrain elevations for all dykes
+		for (DykeCell dykeCell : activeDykes) {
+			if (!dykeCell.isDestroyed) {
+				GridCell cell = dykeCell.gridCell;
+				// Restore original terrain elevation
+				cell.terrainElevation = cell.originalTerrainElevation;
+				
+				// Clear dyke field at this specific location
+				if (dykeField != null) {
+					dykeField.set(scope, cell.x, cell.y, 0.0);
+				}
+			}
+		}
+		
+		// Clear data structures
+		activeDykes.clear();
+		dykeGridCells.clear();
+		
+		System.out.println("All dykes cleared successfully");
+		return true;
+	}
+	
 	// === SIMULATION CONTROL ACTIONS ===
 	@action(
 		name = "start_spreading_simulation",
@@ -617,10 +1052,14 @@ public class SpreadingSkill extends Skill {
 		setBoolAttribute(agent, SIMULATION_ACTIVE, false);
 		setIntAttribute(agent, SIMULATION_STEP, 0);
 		
-		// NEW: Also reset rain state
+		// Reset rain state
 		setBoolAttribute(agent, RAIN_ACTIVE, false);
 		setFloatAttribute(agent, RAIN_RATE, 0.0);
 		setFloatAttribute(agent, RAIN_INTENSITY, 1.0);
+		
+		// Clear dykes during reset
+		clearAllDykes(scope);
+		setBoolAttribute(agent, DYKE_BUILDING_MODE, false);
 		
 		final IList<IShape> waterGeometries = scope.getListArg("water_geometries");
 		final Double initialWaterDepth = scope.hasArg("initial_water_depth") ? scope.getFloatArg("initial_water_depth")
@@ -653,6 +1092,9 @@ public class SpreadingSkill extends Skill {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				GridCell cell = internalGrid[i][j];
+				
+				// Restore original terrain elevation
+				cell.terrainElevation = cell.originalTerrainElevation;
 				
 				boolean isWaterCell = false;
 				if (cell.shape != null && waterGeometries != null && !waterGeometries.isEmpty()) {
@@ -729,4 +1171,5 @@ public class SpreadingSkill extends Skill {
 		return getIntAttribute(getCurrentAgent(scope), SIMULATION_STEP);
 	}
 }
+
 
