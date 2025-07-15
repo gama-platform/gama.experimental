@@ -157,22 +157,6 @@ public class SpreadingSkill extends Skill {
 		agent.setAttribute(attr, value);
 	}
 	
-	// === LIGHTWEIGHT FIELD REFRESH (PERFORMANCE FIX) ===
-	private void refreshFieldVisualization(IScope scope, IField field) {
-		// Lightweight field refresh for visualization without rebuilding
-		if (field != null) {
-			try {
-				// Try different refresh methods depending on GAMA version
-				if (field instanceof GamaField) {
-					// ((GamaField) field).invalidateGeometry();
-				}
-			} catch (Exception e) {
-				// Fallback - some GAMA versions don't have these methods
-				// The field updates from individual cell updates should be sufficient
-			}
-		}
-	}
-	
 	// === ORIGINAL GRID INITIALIZATION (FOR BACKWARDS COMPATIBILITY) ===
 	@action(name = "initialize_spreading_grid", args = {
 			@arg(name = "dem_field", type = IType.MATRIX, doc = @doc("Digital elevation model field")),
@@ -717,9 +701,6 @@ public class SpreadingSkill extends Skill {
 			}
 		}
 		
-		// PERFORMANCE FIX: Lightweight field refresh instead of complete rebuild
-		// refreshFieldVisualization(scope, waterField);
-		
 		return true;
 	}
 	
@@ -927,9 +908,7 @@ public class SpreadingSkill extends Skill {
 			
 			dykesBuilt++;
 		}
-		
-		// PERFORMANCE: Lightweight field refresh instead of complete rebuild
-		// refreshFieldVisualization(scope, dykeField);
+
 		
 		return dykesBuilt > 0;
 	}
@@ -1001,9 +980,7 @@ public class SpreadingSkill extends Skill {
 		// Clear data structures
 		activeDykes.clear();
 		dykeGridCells.clear();
-		
-		// PERFORMANCE: Lightweight field refresh instead of complete rebuild
-		// refreshFieldVisualization(scope, dykeField);
+
 		
 		return true;
 	}
@@ -1130,10 +1107,7 @@ public class SpreadingSkill extends Skill {
 		
 		// Rebuild initial edge list
 		identifyEdgeCells();
-		
-		// PERFORMANCE: Lightweight field refresh instead of complete rebuild
-		// refreshFieldVisualization(scope, waterField);
-		
+
 		System.out.println("Reset complete: " + activeWaterCells.size() + " water cells restored");
 		
 		return true;
