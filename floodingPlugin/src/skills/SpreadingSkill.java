@@ -4,8 +4,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 import gama.annotations.precompiler.GamlAnnotations.action;
 import gama.annotations.precompiler.GamlAnnotations.arg;
 import gama.annotations.precompiler.GamlAnnotations.doc;
@@ -84,6 +88,7 @@ public class SpreadingSkill extends Skill {
 		public boolean isEdgeCell;
 		public List<GridCell> neighbors;
 		public IShape shape;
+		private Map<String, Object> attributes; // For temporary data storage
 		
 		public GridCell(int x, int y, double terrainElev, IShape cellShape) {
 			this.x = x;
@@ -95,6 +100,15 @@ public class SpreadingSkill extends Skill {
 			this.isEdgeCell = false;
 			this.neighbors = new ArrayList<>();
 			this.shape = cellShape;
+			this.attributes = new HashMap<>();
+		}
+		
+		public void setAttribute(String key, Object value) {
+			attributes.put(key, value);
+		}
+		
+		public Object getAttribute(String key) {
+			return attributes.get(key);
 		}
 	}
 	
@@ -808,109 +822,311 @@ public class SpreadingSkill extends Skill {
 		return getBoolAttribute(getCurrentAgent(scope), DYKE_BUILDING_MODE);
 	}
 	
+	// === IMPROVED DYKE BUILDING METHOD ===
 	@action(name = "build_dyke", args = {
 			@arg(name = "point1", type = IType.POINT, doc = @doc("First point of the dyke")),
 			@arg(name = "point2", type = IType.POINT, doc = @doc("Second point of the dyke")) },
-			doc = @doc("Builds a dyke between two points"))
+			doc = @doc("Builds a dyke between two points with terrain-following and water-aware adaptive heights"))
 	public Boolean buildDyke(final IScope scope) throws GamaRuntimeException {
 		final IAgent agent = getCurrentAgent(scope);
 		
 		if (!getBoolAttribute(agent, DYKE_BUILDING_MODE)) {
-			return false; // Not in building mode
+			return false;
 		}
 		
-		// Get points
+		// Get points and basic setup
 		GamaPoint point1 = (GamaPoint) scope.getArg("point1", IType.POINT);
 		GamaPoint point2 = (GamaPoint) scope.getArg("point2", IType.POINT);
 		
-		// Get grid dimensions and fields
 		int width = getIntAttribute(agent, GRID_WIDTH);
 		int height = getIntAttribute(agent, GRID_HEIGHT);
 		IField dykeField = (IField) agent.getAttribute(DYKE_FIELD);
+		IField waterField = (IField) agent.getAttribute(WATER_FIELD);
 		
 		if (dykeField == null) {
 			System.out.println("ERROR: Dyke field is null!");
 			return false;
 		}
 		
-		// Calculate grid coordinates using simulation world bounds
+		// Convert world coordinates to grid coordinates
+		int[] coords1 = worldToGrid(point1, scope, width, height);
+		int[] coords2 = worldToGrid(point2, scope, width, height);
+		
+		double dykeHeight = getFloatAttribute(agent, DYKE_HEIGHT);
+		double currentTime = scope.getSimulation().getClock().getCycle();
+		
+		// STEP 1: Get main dyke line cells
+		List<int[]> dykeCoords = getLineCoordinates(coords1[0], coords1[1], coords2[0], coords2[1]);
+		List<GridCell> mainDykeCells = new ArrayList<>();
+		
+		for (int[] coord : dykeCoords) {
+			int x = coord[0], y = coord[1];
+			if (x >= 0 && x < width && y >= 0 && y < height) {
+				GridCell cell = internalGrid[x][y];
+				if (!dykeGridCells.contains(cell)) {
+					mainDykeCells.add(cell);
+				}
+			}
+		}
+		
+		if (mainDykeCells.isEmpty()) {
+			return false;
+		}
+		
+		// STEP 2: Calculate adaptive heights for main dyke line
+		Map<GridCell, Double> dykeElevations = new HashMap<>();
+		
+		for (GridCell cell : mainDykeCells) {
+			double adaptiveHeight = calculateAdaptiveDykeHeight(cell, dykeHeight);
+			dykeElevations.put(cell, adaptiveHeight);
+		}
+		
+		// STEP 3: Apply smoothing along dyke line (like water initialization)
+		smoothDykeElevations(dykeElevations, mainDykeCells);
+		
+		// STEP 4: Add neighbor cells for continuity and thickness
+		Set<GridCell> allDykeCells = new HashSet<>(mainDykeCells);
+		
+		for (GridCell mainCell : mainDykeCells) {
+			double mainHeight = dykeElevations.get(mainCell);
+			
+			// Add neighboring cells for thickness
+			for (GridCell neighbor : mainCell.neighbors) {
+				if (!dykeGridCells.contains(neighbor) && !allDykeCells.contains(neighbor)) {
+					double neighborHeight = calculateNeighborDykeHeight(neighbor, mainHeight, dykeHeight);
+					dykeElevations.put(neighbor, neighborHeight);
+					allDykeCells.add(neighbor);
+				}
+			}
+		}
+		
+		// STEP 5: Build all dyke cells (handle water displacement)
+		int dykesBuilt = 0;
+		List<GridCell> displacedWaterCells = new ArrayList<>();
+		
+		for (GridCell cell : allDykeCells) {
+			double elevation = dykeElevations.get(cell);
+			
+			// Handle water displacement if building through water
+			if (cell.isWater) {
+				displacedWaterCells.add(cell);
+				displaceWaterFromCell(cell, waterField, scope);
+			}
+			
+			// Build dyke cell
+			DykeCell dykeCell = new DykeCell(cell, currentTime);
+			activeDykes.add(dykeCell);
+			dykeGridCells.add(cell);
+			
+			// Set elevations
+			dykeField.set(scope, cell.x, cell.y, elevation);
+			cell.terrainElevation = elevation;
+			
+			dykesBuilt++;
+		}
+		
+		// STEP 6: Update water system after displacement
+		if (!displacedWaterCells.isEmpty()) {
+			redistributeDisplacedWater(displacedWaterCells, waterField, scope);
+			identifyEdgeCells(); // Recalculate edge cells
+		}
+		
+		System.out.println("Dyke built: " + dykesBuilt + " cells, " + displacedWaterCells.size() + " water cells displaced");
+		return dykesBuilt > 0;
+	}
+	
+	// === DYKE BUILDING HELPER METHODS ===
+	
+	// Helper method: Calculate adaptive dyke height
+	private double calculateAdaptiveDykeHeight(GridCell cell, double standardDykeHeight) {
+		// 1. Local terrain average (prevents floating walls)
+		double localAvgTerrain = getLocalTerrainAverage(cell, 3);
+		
+		// 2. Terrain-based height
+		double terrainBasedHeight = localAvgTerrain + standardDykeHeight;
+		
+		// 3. Water-threat-based height (like water initialization)
+		double nearbyMaxWater = getNearbyMaxWaterLevel(cell, 5);
+		double waterThreatHeight = nearbyMaxWater + 2.0; // 2m safety margin
+		
+		// 4. Use the higher of the two for effective protection
+		return Math.max(terrainBasedHeight, waterThreatHeight);
+	}
+	
+	// Helper method: Get local terrain average
+	private double getLocalTerrainAverage(GridCell cell, int radius) {
+		double sum = cell.originalTerrainElevation;
+		int count = 1;
+		
+		// BFS to get cells within radius
+		Set<GridCell> visited = new HashSet<>();
+		Queue<GridCell> queue = new LinkedList<>();
+		queue.add(cell);
+		visited.add(cell);
+		
+		for (int r = 0; r < radius && !queue.isEmpty(); r++) {
+			int levelSize = queue.size();
+			for (int i = 0; i < levelSize; i++) {
+				GridCell current = queue.poll();
+				
+				for (GridCell neighbor : current.neighbors) {
+					if (!visited.contains(neighbor)) {
+						visited.add(neighbor);
+						queue.add(neighbor);
+						sum += neighbor.originalTerrainElevation;
+						count++;
+					}
+				}
+			}
+		}
+		
+		return sum / count;
+	}
+	
+	// Helper method: Get nearby maximum water level
+	private double getNearbyMaxWaterLevel(GridCell cell, int radius) {
+		double maxWaterLevel = 0.0;
+		
+		Set<GridCell> visited = new HashSet<>();
+		Queue<GridCell> queue = new LinkedList<>();
+		queue.add(cell);
+		visited.add(cell);
+		
+		if (cell.isWater) {
+			maxWaterLevel = Math.max(maxWaterLevel, cell.waterElevation);
+		}
+		
+		for (int r = 0; r < radius && !queue.isEmpty(); r++) {
+			int levelSize = queue.size();
+			for (int i = 0; i < levelSize; i++) {
+				GridCell current = queue.poll();
+				
+				for (GridCell neighbor : current.neighbors) {
+					if (!visited.contains(neighbor)) {
+						visited.add(neighbor);
+						queue.add(neighbor);
+						
+						if (neighbor.isWater) {
+							maxWaterLevel = Math.max(maxWaterLevel, neighbor.waterElevation);
+						}
+					}
+				}
+			}
+		}
+		
+		return maxWaterLevel;
+	}
+	
+	// Helper method: Smooth dyke elevations (like water initialization)
+	private void smoothDykeElevations(Map<GridCell, Double> elevations, List<GridCell> dykeList) {
+		// Apply smoothing iterations
+		for (int iteration = 0; iteration < 3; iteration++) {
+			Map<GridCell, Double> smoothedElevations = new HashMap<>();
+			
+			for (GridCell cell : dykeList) {
+				double sum = elevations.get(cell);
+				int count = 1;
+				
+				// Average with neighboring dyke cells
+				for (GridCell neighbor : cell.neighbors) {
+					if (elevations.containsKey(neighbor)) {
+						sum += elevations.get(neighbor);
+						count++;
+					}
+				}
+				
+				smoothedElevations.put(cell, sum / count);
+			}
+			
+			// Update elevations
+			elevations.putAll(smoothedElevations);
+		}
+	}
+	
+	// Helper method: Calculate neighbor dyke height
+	private double calculateNeighborDykeHeight(GridCell neighbor, double mainHeight, double standardDykeHeight) {
+		// Supporting cells are 70% of main dyke height
+		double reductionFactor = 0.7;
+		double neighborLocalTerrain = getLocalTerrainAverage(neighbor, 2);
+		
+		// Ensure neighbor is still effective but not as tall
+		double minHeight = neighborLocalTerrain + (standardDykeHeight * reductionFactor);
+		double adaptiveHeight = mainHeight * reductionFactor;
+		
+		return Math.max(minHeight, adaptiveHeight);
+	}
+	
+	// Helper method: Displace water from cell
+	private void displaceWaterFromCell(GridCell cell, IField waterField, IScope scope) {
+		if (cell.isWater) {
+			double waterVolume = Math.max(0, cell.waterElevation - cell.terrainElevation);
+			
+			// Remove from water system
+			cell.isWater = false;
+			cell.waterElevation = 0.0;
+			activeWaterCells.remove(cell);
+			edgeWaterCells.remove(cell);
+			
+			// Clear water field
+			if (waterField != null) {
+				waterField.set(scope, cell.x, cell.y, 0.0);
+			}
+			
+			// Store for redistribution
+			cell.setAttribute("displaced_water", waterVolume);
+		}
+	}
+	
+	// Helper method: Redistribute displaced water
+	private void redistributeDisplacedWater(List<GridCell> displacedCells, IField waterField, IScope scope) {
+		for (GridCell displacedCell : displacedCells) {
+			Double waterVolumeObj = (Double) displacedCell.getAttribute("displaced_water");
+			double waterVolume = waterVolumeObj != null ? waterVolumeObj : 0.0;
+			
+			if (waterVolume > 0) {
+				// Find valid neighbors for redistribution
+				List<GridCell> validNeighbors = displacedCell.neighbors.stream()
+					.filter(n -> n.isWater && !dykeGridCells.contains(n))
+					.collect(Collectors.toList());
+				
+				if (!validNeighbors.isEmpty()) {
+					double waterPerNeighbor = waterVolume / validNeighbors.size();
+					
+					for (GridCell neighbor : validNeighbors) {
+						neighbor.waterElevation += waterPerNeighbor;
+						if (waterField != null) {
+							waterField.set(scope, neighbor.x, neighbor.y, neighbor.waterElevation);
+						}
+					}
+				}
+			}
+			
+			// Clean up
+			displacedCell.setAttribute("displaced_water", 0.0);
+		}
+	}
+	
+	// Helper method: Convert world coordinates to grid coordinates
+	private int[] worldToGrid(GamaPoint point, IScope scope, int width, int height) {
 		double worldMinX = scope.getSimulation().getEnvelope().getMinX();
 		double worldMinY = scope.getSimulation().getEnvelope().getMinY();
 		double worldMaxX = scope.getSimulation().getEnvelope().getMaxX();
 		double worldMaxY = scope.getSimulation().getEnvelope().getMaxY();
 		
-		// Calculate world size
 		double worldWidth = worldMaxX - worldMinX;
 		double worldHeight = worldMaxY - worldMinY;
 		
-		// Calculate cell size in world coordinates
 		double cellWorldWidth = worldWidth / width;
 		double cellWorldHeight = worldHeight / height;
 		
-		// Convert world coordinates to grid coordinates
-		int x1 = (int) Math.floor((point1.getX() - worldMinX) / cellWorldWidth);
-		int y1 = (int) Math.floor((point1.getY() - worldMinY) / cellWorldHeight);
-		int x2 = (int) Math.floor((point2.getX() - worldMinX) / cellWorldWidth);
-		int y2 = (int) Math.floor((point2.getY() - worldMinY) / cellWorldHeight);
+		int x = (int) Math.floor((point.getX() - worldMinX) / cellWorldWidth);
+		int y = (int) Math.floor((point.getY() - worldMinY) / cellWorldHeight);
 		
-		// Clamp coordinates to grid bounds
-		x1 = Math.max(0, Math.min(width - 1, x1));
-		y1 = Math.max(0, Math.min(height - 1, y1));
-		x2 = Math.max(0, Math.min(width - 1, x2));
-		y2 = Math.max(0, Math.min(height - 1, y2));
+		// Clamp to grid bounds
+		x = Math.max(0, Math.min(width - 1, x));
+		y = Math.max(0, Math.min(height - 1, y));
 		
-		// Get dyke height
-		double dykeHeight = getFloatAttribute(agent, DYKE_HEIGHT);
-		double currentTime = scope.getSimulation().getClock().getCycle();
-		
-		// Use Bresenham's line algorithm to get cells between points
-		List<int[]> dykeCoords = getLineCoordinates(x1, y1, x2, y2);
-		
-		// Build dykes with individual cell heights
-		List<GridCell> dykeCells = new ArrayList<>();
-		
-		// Find all valid cells for dyke construction
-		for (int[] coord : dykeCoords) {
-			int x = coord[0];
-			int y = coord[1];
-			
-			if (x >= 0 && x < width && y >= 0 && y < height) {
-				GridCell cell = internalGrid[x][y];
-				
-				// Allow building over water (bridges) and exclude only existing dykes
-				if (!dykeGridCells.contains(cell)) {
-					dykeCells.add(cell);
-				}
-			}
-		}
-		
-		if (dykeCells.isEmpty()) {
-			return false;
-		}
-		
-		int dykesBuilt = 0;
-		
-		// Build dykes with individual cell elevations
-		for (GridCell cell : dykeCells) {
-			// Each cell gets its own terrain elevation + dyke height
-			double cellDykeElevation = cell.originalTerrainElevation + dykeHeight;
-			
-			// Add to dyke structures
-			DykeCell dykeCell = new DykeCell(cell, currentTime);
-			activeDykes.add(dykeCell);
-			dykeGridCells.add(cell);
-			
-			// Set individual elevation for each cell in dyke field
-			dykeField.set(scope, cell.x, cell.y, cellDykeElevation);
-			
-			// Set terrain elevation for this specific cell
-			cell.terrainElevation = cellDykeElevation;
-			
-			dykesBuilt++;
-		}
-
-		
-		return dykesBuilt > 0;
+		return new int[]{x, y};
 	}
 	
 	// Helper method for Bresenham's line algorithm
@@ -980,7 +1196,6 @@ public class SpreadingSkill extends Skill {
 		// Clear data structures
 		activeDykes.clear();
 		dykeGridCells.clear();
-
 		
 		return true;
 	}
@@ -1107,7 +1322,6 @@ public class SpreadingSkill extends Skill {
 		
 		// Rebuild initial edge list
 		identifyEdgeCells();
-
 		System.out.println("Reset complete: " + activeWaterCells.size() + " water cells restored");
 		
 		return true;
@@ -1134,5 +1348,4 @@ public class SpreadingSkill extends Skill {
 		return getIntAttribute(getCurrentAgent(scope), SIMULATION_STEP);
 	}
 }
-
 
