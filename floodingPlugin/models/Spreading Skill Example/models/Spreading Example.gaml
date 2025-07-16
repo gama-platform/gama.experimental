@@ -276,7 +276,7 @@ species simulation_manager skills: [spreading] {
    }
   
    // === SIMULATION CONTROL ACTIONS ===
-   action start_simulation {
+   action start_spreading {
        do start_spreading_simulation();
        simulation_start_time <- gama.machine_time;
        write "🚀 SIMULATION STARTED at step " + get_current_step();
@@ -286,14 +286,14 @@ species simulation_manager skills: [spreading] {
        }
    }
   
-   action stop_simulation {
+   action stop_spreading {
        do stop_spreading_simulation();
-       write "⏸️ SIMULATION STOPPED at step " + get_current_step();
+       write "⏸️ SPREADING STOPPED at step " + get_current_step();
        write "   Total runtime: " + ((gama.machine_time - simulation_start_time) / 1000.0 with_precision 1) + " seconds";
        write "   Final water cells: " + get_active_water_count();
    }
   
-   action reset_simulation {
+   action reset_spreading {
        do reset_spreading_simulation(water_geometries, 1.5);
       
        // Recreate dyke field with same dimensions after reset
@@ -591,16 +591,16 @@ experiment FloodSimulationWithDykesComplete type: gui {
   
    // === ACTION DEFINITIONS ===
    // Simulation control actions
-   action ask_start_simulation {
-       ask simulation_manager { do start_simulation(); }
+   action ask_start_spreading {
+       ask simulation_manager { do start_spreading(); }
    }
   
-   action ask_stop_simulation {
-       ask simulation_manager { do stop_simulation(); }
+   action ask_stop_spreading {
+       ask simulation_manager { do stop_spreading(); }
    }
   
-   action ask_reset_simulation {
-       ask simulation_manager { do reset_simulation(); }
+   action ask_reset_spreading {
+       ask simulation_manager { do reset_spreading(); }
    }
   
    action ask_report_status {
@@ -655,9 +655,9 @@ experiment FloodSimulationWithDykesComplete type: gui {
   
    // === USER COMMAND INTERFACE ===
    // Primary simulation controls
-   user_command "🚀 Start Simulation" action: ask_start_simulation category: "Simulation";
-   user_command "⏸️ Stop Simulation" action: ask_stop_simulation category: "Simulation";
-   user_command "🔄 Reset Simulation" action: ask_reset_simulation category: "Simulation";
+   user_command "🚀 Start Spreading" action: ask_start_spreading category: "Simulation";
+   user_command "⏸️ Stop Spreading" action: ask_stop_spreading category: "Simulation";
+   user_command "🔄 Reset Spreading" action: ask_reset_spreading category: "Simulation";
   
    // Rain controls
    user_command "🌧️ Light Rain" action: ask_start_light_rain category: "Rain";
