@@ -23,17 +23,8 @@ jobs:
           java-version: "21"
           java-package: jdk
 
-      - name: Update Maven to 3.9.X
+      - name: Update Maven to >3.9.X
         run: |
-          # Needed for Tycho 4.X.X and support for JDK 21
-          wget $(curl https://maven.apache.org/download.cgi | grep /3.9 | head -n 1 | cut -d '"' -f 2) -O "apache-maven.tar.gz"
-          tar -xvf apache-maven.tar.gz
-          mv apache-maven-* /opt/
-          M2_HOME=/opt/$(ls /opt/ | head -n 1)
-          PATH="$M2_HOME/bin:$PATH"
-          export PATH
-          # Overwrite PATH with updated maven install
-          echo $PATH > $GITHUB_PATH
           echo "=== Check if well installed ==="
           echo "$ mvn -version"
           mvn -version
