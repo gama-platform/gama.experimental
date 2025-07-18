@@ -182,7 +182,56 @@ global {
    // Track simulation cycles
    reflex count_cycles {
    	total_cycles <- total_cycles + 1;
-   } }
+   }
+   
+	bool eval_finish (map<string, map> input_map) {
+		write input_map["page1"]["file"];
+		return input_map["page1"]["file"] != nil;
+	}
+   
+		// === FILE BROWSING ACTIONS ===
+	action browse_dem_file {
+		map<string, map> results <- wizard("My wizard", eval_finish, [wizard_page("page1", "Browse DEM file (.tif)", [enter("file", file)], font("Helvetica", 14, #bold))]);
+		string new_dem_path <- nil;
+		if (results != nil) {
+			if (results["page1"] != nil) {
+				if (results["page1"]["file"] != nil) {
+					new_dem_path <- results["page1"]["file"];
+				}
+
+			}
+		}
+
+		if (new_dem_path != nil and new_dem_path != "") {
+			selected_dem_path <- new_dem_path;
+			write "📁 DEM file selected: " + selected_dem_path;
+			write "   → Press 'Update Files' to apply changes";
+		} else {
+			write "❌ DEM file selection cancelled";
+		}
+	} 
+	
+	action browse_water_file {
+		map<string, map> results <- wizard("My wizard", eval_finish, [wizard_page("page1", "Browse Water file (.shp)", [enter("file", file)], font("Helvetica", 14, #bold))]);
+		string new_water_path <- nil;
+		if (results != nil) {
+			if (results["page1"] != nil) {
+				if (results["page1"]["file"] != nil) {
+					new_water_path <- results["page1"]["file"];
+				}
+
+			}
+		}
+
+		if (new_water_path != nil and new_water_path != "") {
+			selected_water_path <- new_water_path;
+			write "📁 Water file selected: " + selected_water_path;
+			write "   → Press 'Update Files' to apply changes";
+		} else {
+			write "❌ Water file selection cancelled";
+		}
+	}
+}
 
    species simulation_manager skills: [spreading] {
 
@@ -692,6 +741,29 @@ global {
    	}
 
    }
+   
+   	action ask_browse_dem {
+		ask world {
+			do browse_dem_file();
+		}
+
+	}
+	
+	action ask_browse_water {
+		ask world {
+			do browse_water_file();
+		}
+	}
+	
+	action ask_update_files {
+		string new_selected_dem_path <- selected_dem_path;
+		string new_selected_water_path <- selected_water_path;
+		ask simulation {
+			do die;
+		}
+
+		create simulation with: [selected_dem_path::new_selected_dem_path, selected_water_path::new_selected_water_path];
+	}
 
    // === USER COMMAND INTERFACE ===
    // Primary simulation controls
@@ -716,6 +788,11 @@ global {
    user_command "📊 Quick Status" action: ask_quick_status category: "Status";
    user_command "📋 Full Report" action: ask_report_status category: "Status";
    user_command "🌍 Global Status" action: ask_global_status category: "Status";
+   
+   // Browse file
+   user_command "📁 Browse DEM File" action: ask_browse_dem category: "Files";
+   user_command "📁 Browse Water File" action: ask_browse_water category: "Files";
+   user_command "📁 Update Files"  action: ask_update_files category: "Files";
 }
 
 
