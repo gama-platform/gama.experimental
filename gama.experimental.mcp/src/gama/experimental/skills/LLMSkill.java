@@ -347,7 +347,7 @@ public class LLMSkill extends Skill {
 	public Assistant create_assistant(final IScope scope) {
 		// final IAgent agent = scope.getAgent();
 		final ChatModel chatModel = (ChatModel) scope.getArg("llm", ChatModelType.id);
-		final ToolProvider toolProvider = scope.hasArg("tools") ? (ToolProvider) scope.getArg("tools", ToolProviderType.id) : null; 
+		final ToolProvider toolProvider = scope.hasArg("tool_provider") ? (ToolProvider) scope.getArg("tool_provider", ToolProviderType.id) : null; 
 		final ContentRetriever contentRetriever =  scope.hasArg("content_retriever") ? (ContentRetriever) scope.getArg("content_retriever", ContentRetrieverType.id) : null; 
 		  
 		final Memory memory = scope.hasArg("memory") ?(Memory) scope.getArg("memory", MemoryType.id) : null;   

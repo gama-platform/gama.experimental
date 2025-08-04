@@ -11,9 +11,14 @@
 package gama.experimental.types;
 
 import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.mcp.McpToolProvider;
+import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
 import dev.langchain4j.service.tool.ToolExecutor;
 import dev.langchain4j.service.tool.ToolProviderResult;
 import dev.langchain4j.service.tool.ToolProviderResult.Builder;
@@ -27,8 +32,13 @@ import gama.core.util.IMap;
 import gama.core.util.file.json.Json;
 import gama.core.util.file.json.JsonValue;
 import gama.gaml.descriptions.ActionDescription;
+import gama.gaml.descriptions.ConstantExpressionDescription;
+import gama.gaml.species.ISpecies;
+import gama.gaml.statements.Arguments;
+import gama.gaml.statements.IStatement;
 import gama.gaml.types.IType;
 import gama.gaml.types.Types;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  * The Class Predicate.
@@ -50,16 +60,47 @@ public class ToolProvider implements IValue {
 	 * Instantiates a new predicate.
 	 */
 	
-	
+
+
+    private static Map<String, Object> toMap(String arguments) {
+        try {
+            return new ObjectMapper().readValue(arguments, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 	public void addToolExecutor(IScope scope, String name, String description, ActionDescription executor) {
 		ToolExecutor toolExecutor = (toolExecutionRequest, memoryId) -> {
 			String aname = executor.getName();
+			
 			if (scope.getModel() != null && scope.getModel().getAction(aname) != null) {
-				return scope.getModel().getAction(aname).executeOn(scope).toString();
+
+			    String message = toolExecutionRequest.arguments();//"";
+//			    Map<String, Object> arguments =  toMap(toolExecutionRequest.arguments());
+//			    if(arguments.get("msg") != null) {
+//			    	message=arguments.get("msg").toString(); 
+//			    }else {
+//			    	
+//			    	message =  arguments.get("description").toString(); 
+//			    }
+
+				final ISpecies context = scope.getModel();
+				final IStatement.WithArgs actionTNR = context.getAction(aname);
+				final Arguments argsTNR = new Arguments();
+				argsTNR.put("msg", ConstantExpressionDescription.create(message));
+				actionTNR.setRuntimeArgs(scope, argsTNR);
+
+				return actionTNR.executeOn(scope).toString();
+//				return scope.getModel().getAction(aname).executeOn(scope).toString();
 			}
 			return toolExecutionRequest.arguments();
 		};
-		ToolSpecification toolSpecification = ToolSpecification.builder().name(name).description(description).build();
+		ToolSpecification toolSpecification = ToolSpecification.builder().name(name).description(description) 
+				.parameters(JsonObjectSchema.builder()
+		        .addStringProperty("msg", "The message give to the tool as input, it can be any") 
+//		        .required("msg") // the required properties should be specified explicitly
+		        .build()).build();
 		addTool(toolSpecification, toolExecutor);
 		
 	}
