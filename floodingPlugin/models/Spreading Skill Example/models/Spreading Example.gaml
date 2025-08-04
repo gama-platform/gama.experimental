@@ -11,8 +11,7 @@ global {
    geometry shape <- envelope(dem_file);
    string selected_water_path <- "../includes/water_multipolygon.shp";
    // Alternative water files (uncomment as needed):
-   // file water_shapefile <- file(selected_water_path);
-   // file water_shapefile <- file(selected_water_path);
+   // string selected_water_path <- "../includes/river_clean.shp";
    file water_shapefile <- file(selected_water_path);
    list<geometry> water_geometries <- [];
 
