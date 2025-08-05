@@ -52,11 +52,12 @@ import gama.core.metamodel.shape.GamaPoint;
 		// DYKE VARIABLES
 		@variable(name = "dyke_field", type = IType.MATRIX, doc = @doc("Field representing dyke elevations for visualization")),
 		@variable(name = "dyke_building_mode", type = IType.BOOL, init = "false", doc = @doc("Whether dyke building mode is active")),
+		@variable(name = "dyke_removal_mode", type = IType.BOOL, init = "false", doc = @doc("Whether dyke removal mode is active")),
 		@variable(name = "dyke_height", type = IType.FLOAT, init = "5.0", doc = @doc("Height of dykes in meters")),
 		@variable(name = "dyke_destruction_time", type = IType.FLOAT, init = "10.0", doc = @doc("Time in cycles before dyke cell under water attack is destroyed"))
 })
 @skill(name = "spreading", concept = { "spreading", "simulation", "water",
-		"flood", "rain", "dykes" }, doc = @doc("A skill for managing spreading simulations with optimized water flow mechanics, rain system, and dyke building"))
+		"flood", "rain", "dykes" }, doc = @doc("A skill for managing spreading simulations with optimized water flow mechanics, rain system, dyke building and removal"))
 public class SpreadingSkill extends Skill {
 	// === SKILL VARIABLES ===
 	public static final String FLOW_THRESHOLD = "flow_threshold";
@@ -75,6 +76,7 @@ public class SpreadingSkill extends Skill {
 	// DYKE CONSTANTS
 	public static final String DYKE_FIELD = "dyke_field";
 	public static final String DYKE_BUILDING_MODE = "dyke_building_mode";
+	public static final String DYKE_REMOVAL_MODE = "dyke_removal_mode";
 	public static final String DYKE_HEIGHT = "dyke_height";
 	public static final String DYKE_DESTRUCTION_TIME = "dyke_destruction_time";
 	
@@ -822,6 +824,20 @@ public class SpreadingSkill extends Skill {
 		return getBoolAttribute(getCurrentAgent(scope), DYKE_BUILDING_MODE);
 	}
 	
+	// === DYKE REMOVAL MODE CONTROL ===
+	@action(name = "toggle_dyke_removal_mode", doc = @doc("Toggles dyke removal mode on/off"))
+	public Boolean toggleDykeRemovalMode(final IScope scope) {
+		final IAgent agent = getCurrentAgent(scope);
+		boolean currentMode = getBoolAttribute(agent, DYKE_REMOVAL_MODE);
+		setBoolAttribute(agent, DYKE_REMOVAL_MODE, !currentMode);
+		return !currentMode;
+	}
+	
+	@action(name = "is_dyke_removal_mode", doc = @doc("Returns whether dyke removal mode is active"))
+	public Boolean isDykeRemovalMode(final IScope scope) {
+		return getBoolAttribute(getCurrentAgent(scope), DYKE_REMOVAL_MODE);
+	}
+	
 	// === IMPROVED DYKE BUILDING METHOD ===
 	@action(name = "build_dyke", args = {
 			@arg(name = "point1", type = IType.POINT, doc = @doc("First point of the dyke")),
@@ -933,6 +949,215 @@ public class SpreadingSkill extends Skill {
 		
 		System.out.println("Dyke built: " + dykesBuilt + " cells, " + displacedWaterCells.size() + " water cells displaced");
 		return dykesBuilt > 0;
+	}
+	
+	// === DYKE AREA REMOVAL METHOD ===
+	@action(name = "remove_dyke_area", args = {
+			@arg(name = "click_point", type = IType.POINT, doc = @doc("Point where user clicked to remove dyke area"))
+	}, doc = @doc("Removes a connected component of dyke cells starting from the clicked point"))
+	public Boolean removeDykeArea(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		
+		if (!getBoolAttribute(agent, DYKE_REMOVAL_MODE)) {
+			return false;
+		}
+		
+		// Get click point and convert to grid coordinates
+		GamaPoint clickPoint = (GamaPoint) scope.getArg("click_point", IType.POINT);
+		int width = getIntAttribute(agent, GRID_WIDTH);
+		int height = getIntAttribute(agent, GRID_HEIGHT);
+		
+		int[] coords = worldToGrid(clickPoint, scope, width, height);
+		int x = coords[0], y = coords[1];
+		
+		// Check if clicked cell is within bounds and is a dyke cell
+		if (x < 0 || x >= width || y < 0 || y >= height) {
+			return false;
+		}
+		
+		GridCell clickedCell = internalGrid[x][y];
+		if (!dykeGridCells.contains(clickedCell)) {
+			System.out.println("Clicked point is not a dyke cell");
+			return false;
+		}
+		
+		// Find connected component of dyke cells using BFS
+		Set<GridCell> connectedDykes = findConnectedDykeComponent(clickedCell);
+		
+		if (connectedDykes.isEmpty()) {
+			return false;
+		}
+		
+		// Remove the connected component
+		int removedCount = removeConnectedDykes(scope, connectedDykes);
+		
+		System.out.println("Dyke area removed: " + removedCount + " connected dyke cells");
+		return removedCount > 0;
+	}
+	
+	// === DYKE AREA ANALYSIS METHODS ===
+	@action(name = "get_dyke_area_size", args = {
+			@arg(name = "click_point", type = IType.POINT, doc = @doc("Point to analyze dyke area size"))
+	}, doc = @doc("Returns the size of the connected dyke component at the clicked point (for preview)"))
+	public Integer getDykeAreaSize(final IScope scope) throws GamaRuntimeException {
+		GamaPoint clickPoint = (GamaPoint) scope.getArg("click_point", IType.POINT);
+		int width = getIntAttribute(getCurrentAgent(scope), GRID_WIDTH);
+		int height = getIntAttribute(getCurrentAgent(scope), GRID_HEIGHT);
+		
+		int[] coords = worldToGrid(clickPoint, scope, width, height);
+		int x = coords[0], y = coords[1];
+		
+		if (x < 0 || x >= width || y < 0 || y >= height) {
+			return 0;
+		}
+		
+		GridCell clickedCell = internalGrid[x][y];
+		if (!dykeGridCells.contains(clickedCell)) {
+			return 0;
+		}
+		
+		Set<GridCell> connectedDykes = findConnectedDykeComponent(clickedCell);
+		return connectedDykes.size();
+	}
+	
+	// === HELPER METHODS FOR DYKE REMOVAL ===
+	
+	/**
+	 * Finds all dyke cells connected to the starting cell using BFS
+	 */
+	private Set<GridCell> findConnectedDykeComponent(GridCell startCell) {
+		Set<GridCell> visited = new HashSet<>();
+		Set<GridCell> connectedComponent = new HashSet<>();
+		Queue<GridCell> queue = new LinkedList<>();
+		
+		// Start BFS from the clicked dyke cell
+		queue.add(startCell);
+		visited.add(startCell);
+		connectedComponent.add(startCell);
+		
+		while (!queue.isEmpty()) {
+			GridCell current = queue.poll();
+			
+			// Check all neighbors
+			for (GridCell neighbor : current.neighbors) {
+				// If neighbor is a dyke cell and not yet visited
+				if (dykeGridCells.contains(neighbor) && !visited.contains(neighbor)) {
+					visited.add(neighbor);
+					connectedComponent.add(neighbor);
+					queue.add(neighbor);
+				}
+			}
+		}
+		
+		return connectedComponent;
+	}
+	
+	/**
+	 * Removes a connected component of dyke cells and handles cleanup
+	 */
+	private int removeConnectedDykes(IScope scope, Set<GridCell> dykesToRemove) {
+		final IAgent agent = getCurrentAgent(scope);
+		final IField dykeField = (IField) agent.getAttribute(DYKE_FIELD);
+		final IField waterField = (IField) agent.getAttribute(WATER_FIELD);
+		
+		int removedCount = 0;
+		List<DykeCell> dykeCellsToRemove = new ArrayList<>();
+		
+		// Remove dyke cells and restore terrain
+		for (GridCell dykeCell : dykesToRemove) {
+			// Find corresponding DykeCell object
+			DykeCell correspondingDykeCell = null;
+			for (DykeCell dc : activeDykes) {
+				if (dc.gridCell == dykeCell && !dc.isDestroyed) {
+					correspondingDykeCell = dc;
+					break;
+				}
+			}
+			
+			if (correspondingDykeCell != null) {
+				// Mark as destroyed
+				correspondingDykeCell.isDestroyed = true;
+				dykeCellsToRemove.add(correspondingDykeCell);
+			}
+			
+			// Restore original terrain elevation
+			dykeCell.terrainElevation = dykeCell.originalTerrainElevation;
+			
+			// Clear dyke field at this location
+			if (dykeField != null) {
+				dykeField.set(scope, dykeCell.x, dykeCell.y, 0.0);
+			}
+			
+			// Remove from dyke tracking structures
+			dykeGridCells.remove(dykeCell);
+			removedCount++;
+		}
+		
+		// Remove destroyed dyke cells from active list
+		activeDykes.removeAll(dykeCellsToRemove);
+		
+		// Check if water should flow into newly opened areas
+		handleWaterFlowAfterDykeRemoval(scope, dykesToRemove, waterField);
+		
+		return removedCount;
+	}
+	
+	/**
+	 * Handles potential water flow when dykes are removed
+	 */
+	private void handleWaterFlowAfterDykeRemoval(IScope scope, Set<GridCell> removedDykes, IField waterField) {
+		// Check if any removed dyke cells are adjacent to water
+		Set<GridCell> potentialFlowCells = new HashSet<>();
+		
+		for (GridCell removedDyke : removedDykes) {
+			// Check if this cell should become a water cell
+			for (GridCell neighbor : removedDyke.neighbors) {
+				if (neighbor.isWater) {
+					// There's water adjacent to this removed dyke
+					// The removed dyke cell might become flooded
+					double waterLevel = neighbor.waterElevation;
+					if (waterLevel > removedDyke.terrainElevation + getFloatAttribute(getCurrentAgent(scope), FLOW_THRESHOLD)) {
+						potentialFlowCells.add(removedDyke);
+						break;
+					}
+				}
+			}
+		}
+		
+		// Convert potential flow cells to water cells if appropriate
+		for (GridCell flowCell : potentialFlowCells) {
+			if (!flowCell.isWater) {
+				// Find the highest adjacent water level
+				double maxAdjacentWater = 0.0;
+				boolean hasWaterNeighbor = false;
+				
+				for (GridCell neighbor : flowCell.neighbors) {
+					if (neighbor.isWater) {
+						hasWaterNeighbor = true;
+						maxAdjacentWater = Math.max(maxAdjacentWater, neighbor.waterElevation);
+					}
+				}
+				
+				if (hasWaterNeighbor && maxAdjacentWater > flowCell.terrainElevation + getFloatAttribute(getCurrentAgent(scope), FLOW_THRESHOLD)) {
+					// Convert to water cell
+					flowCell.isWater = true;
+					flowCell.waterElevation = Math.max(flowCell.terrainElevation + getFloatAttribute(getCurrentAgent(scope), FLOW_THRESHOLD), 
+													 maxAdjacentWater - 0.1); // Slightly lower than source
+					
+					activeWaterCells.add(flowCell);
+					
+					// Update water field
+					if (waterField != null) {
+						waterField.set(scope, flowCell.x, flowCell.y, flowCell.waterElevation);
+					}
+				}
+			}
+		}
+		
+		// Recalculate edge cells after potential new water cells
+		if (!potentialFlowCells.isEmpty()) {
+			identifyEdgeCells();
+		}
 	}
 	
 	// === DYKE BUILDING HELPER METHODS ===
@@ -1236,6 +1461,7 @@ public class SpreadingSkill extends Skill {
 		// Clear dykes during reset
 		clearAllDykes(scope);
 		setBoolAttribute(agent, DYKE_BUILDING_MODE, false);
+		setBoolAttribute(agent, DYKE_REMOVAL_MODE, false);
 		
 		final IList<IShape> waterGeometries = scope.getListArg("water_geometries");
 		final Double initialWaterDepth = scope.hasArg("initial_water_depth") ? scope.getFloatArg("initial_water_depth")
@@ -1348,4 +1574,3 @@ public class SpreadingSkill extends Skill {
 		return getIntAttribute(getCurrentAgent(scope), SIMULATION_STEP);
 	}
 }
-
