@@ -92,6 +92,10 @@ public class SpreadingSkill extends Skill {
 		public IShape shape;
 		private Map<String, Object> attributes; // For temporary data storage
 		
+		// NEW: Store original water topology for restoration
+		public boolean wasOriginalWater; // Track if this was originally a water cell
+		public double originalWaterElevation; // Store original water level
+		
 		public GridCell(int x, int y, double terrainElev, IShape cellShape) {
 			this.x = x;
 			this.y = y;
@@ -103,6 +107,9 @@ public class SpreadingSkill extends Skill {
 			this.neighbors = new ArrayList<>();
 			this.shape = cellShape;
 			this.attributes = new HashMap<>();
+			// Initialize water topology tracking
+			this.wasOriginalWater = false;
+			this.originalWaterElevation = 0.0;
 		}
 		
 		public void setAttribute(String key, Object value) {
@@ -121,6 +128,8 @@ public class SpreadingSkill extends Skill {
 		public double creationTime;
 		public boolean isDestroyed;
 		public Map<GridCell, Double> cellElevations; // Store individual cell elevations
+		// NEW: Store displaced water cells for restoration
+		public Set<GridCell> displacedWaterCells;
 		
 		public DykeStructure(int id, double time) {
 			this.dykeId = id;
@@ -128,11 +137,17 @@ public class SpreadingSkill extends Skill {
 			this.creationTime = time;
 			this.isDestroyed = false;
 			this.cellElevations = new HashMap<>();
+			this.displacedWaterCells = new HashSet<>(); // NEW: Track displaced water
 		}
 		
 		public void addCell(GridCell cell, double elevation) {
 			dykeCells.add(cell);
 			cellElevations.put(cell, elevation);
+		}
+		
+		// NEW: Track displaced water cells
+		public void addDisplacedWaterCell(GridCell cell) {
+			displacedWaterCells.add(cell);
 		}
 		
 		public boolean containsCell(GridCell cell) {
@@ -425,6 +440,8 @@ public class SpreadingSkill extends Skill {
 				
 				if (isWaterCell) {
 					cell.isWater = true;
+					// NEW: Mark as original water for restoration
+					cell.wasOriginalWater = true;
 					activeWaterCells.add(cell);
 					waterCellCount++;
 				}
@@ -442,6 +459,8 @@ public class SpreadingSkill extends Skill {
 		final double finalWaterLevel = uniformWaterLevel;
 		for (GridCell cell : activeWaterCells) {
 			cell.waterElevation = finalWaterLevel;
+			// NEW: Store original water elevation
+			cell.originalWaterElevation = finalWaterLevel;
 			waterField.set(scope, cell.x, cell.y, cell.waterElevation);
 		}
 		
@@ -1014,6 +1033,8 @@ public class SpreadingSkill extends Skill {
 			// Handle water displacement if building through water
 			if (cell.isWater) {
 				displacedWaterCells.add(cell);
+				// NEW: Track which dyke displaced this water cell
+				newDyke.addDisplacedWaterCell(cell);
 				displaceWaterFromCell(cell, waterField, scope);
 			}
 			
@@ -1113,7 +1134,7 @@ public class SpreadingSkill extends Skill {
 		return removedCount > 0;
 	}
 	
-	// === NEW: REMOVE SPECIFIC DYKE METHOD ===
+	// === NEW: REMOVE SPECIFIC DYKE METHOD WITH ENHANCED WATER RESTORATION ===
 	private int removeSpecificDyke(IScope scope, int dykeId) {
 		final IAgent agent = getCurrentAgent(scope);
 		final IField dykeField = (IField) agent.getAttribute(DYKE_FIELD);
@@ -1130,6 +1151,7 @@ public class SpreadingSkill extends Skill {
 		int removedCount = 0;
 		Set<GridCell> cellsToUpdate = new HashSet<>();
 		List<DykeCell> dykeCellsToRemove = new ArrayList<>();
+		Set<GridCell> waterCellsToRestore = new HashSet<>();
 		
 		for (GridCell cell : dykeToRemove.dykeCells) {
 			// Remove this dyke ID from the cell's dyke set
@@ -1146,6 +1168,11 @@ public class SpreadingSkill extends Skill {
 					cell.terrainElevation = cell.originalTerrainElevation;
 					dykeField.set(scope, cell.x, cell.y, 0.0);
 					cellsToUpdate.add(cell);
+					
+					// NEW: Check if this cell should be restored as water
+					if (cell.wasOriginalWater) {
+						waterCellsToRestore.add(cell);
+					}
 					
 				} else {
 					// Cell still has other dykes - recalculate elevation
@@ -1179,12 +1206,106 @@ public class SpreadingSkill extends Skill {
 		// Remove destroyed dyke cells from active list
 		activeDykes.removeAll(dykeCellsToRemove);
 		
+		// NEW: ENHANCED WATER RESTORATION FOR RIVERS
+		if (!waterCellsToRestore.isEmpty()) {
+			restoreOriginalWaterCells(scope, waterCellsToRestore, waterField);
+		}
+		
 		// Check if water should flow into newly opened areas
 		if (!cellsToUpdate.isEmpty()) {
 			handleWaterFlowAfterDykeRemoval(scope, cellsToUpdate, waterField);
 		}
 		
 		return removedCount;
+	}
+	
+	// === NEW: RESTORE ORIGINAL WATER CELLS METHOD ===
+	private void restoreOriginalWaterCells(IScope scope, Set<GridCell> cellsToRestore, IField waterField) {
+		List<GridCell> newWaterCells = new ArrayList<>();
+		
+		for (GridCell cell : cellsToRestore) {
+			if (!cell.isWater && cell.wasOriginalWater) {
+				// Restore as water cell
+				cell.isWater = true;
+				cell.waterElevation = cell.originalWaterElevation;
+				activeWaterCells.add(cell);
+				newWaterCells.add(cell);
+				
+				// Update water field
+				if (waterField != null) {
+					waterField.set(scope, cell.x, cell.y, cell.waterElevation);
+				}
+				
+				System.out.println("Restored original water cell at (" + cell.x + "," + cell.y + ")");
+			}
+		}
+		
+		// If we restored water cells, need to recalculate water network
+		if (!newWaterCells.isEmpty()) {
+			// Reconnect water network and equalize levels
+			reconnectWaterNetwork(scope, newWaterCells, waterField);
+			// Recalculate edge cells
+			identifyEdgeCells();
+			
+			System.out.println("Restored " + newWaterCells.size() + " original water cells");
+		}
+	}
+	
+	// === NEW: RECONNECT WATER NETWORK METHOD ===
+	private void reconnectWaterNetwork(IScope scope, List<GridCell> newWaterCells, IField waterField) {
+		// Find connected water regions and equalize water levels
+		Set<GridCell> processedCells = new HashSet<>();
+		
+		for (GridCell newWaterCell : newWaterCells) {
+			if (!processedCells.contains(newWaterCell)) {
+				// Find all connected water cells using BFS
+				Set<GridCell> connectedRegion = findConnectedWaterRegion(newWaterCell);
+				processedCells.addAll(connectedRegion);
+				
+				// Calculate average water level for this region
+				double totalWaterLevel = 0.0;
+				int count = 0;
+				
+				for (GridCell cell : connectedRegion) {
+					totalWaterLevel += cell.waterElevation;
+					count++;
+				}
+				
+				if (count > 0) {
+					double averageLevel = totalWaterLevel / count;
+					
+					// Apply average level to all cells in this region
+					for (GridCell cell : connectedRegion) {
+						cell.waterElevation = averageLevel;
+						if (waterField != null) {
+							waterField.set(scope, cell.x, cell.y, cell.waterElevation);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	// === NEW: FIND CONNECTED WATER REGION METHOD ===
+	private Set<GridCell> findConnectedWaterRegion(GridCell startCell) {
+		Set<GridCell> region = new HashSet<>();
+		Queue<GridCell> queue = new LinkedList<>();
+		
+		queue.add(startCell);
+		region.add(startCell);
+		
+		while (!queue.isEmpty()) {
+			GridCell current = queue.poll();
+			
+			for (GridCell neighbor : current.neighbors) {
+				if (neighbor.isWater && !region.contains(neighbor)) {
+					region.add(neighbor);
+					queue.add(neighbor);
+				}
+			}
+		}
+		
+		return region;
 	}
 	
 	// === NEW: GET SPECIFIC DYKE AT LOCATION ===
@@ -1275,6 +1396,11 @@ public class SpreadingSkill extends Skill {
 		Set<GridCell> potentialFlowCells = new HashSet<>();
 		
 		for (GridCell removedDyke : removedDykes) {
+			// Skip if this was already restored as original water
+			if (removedDyke.isWater) {
+				continue;
+			}
+			
 			// Check if this cell should become a water cell
 			for (GridCell neighbor : removedDyke.neighbors) {
 				if (neighbor.isWater) {
@@ -1446,7 +1572,7 @@ public class SpreadingSkill extends Skill {
 		return Math.max(minHeight, adaptiveHeight);
 	}
 	
-	// Helper method: Displace water from cell
+	// Helper method: Displace water from cell - ENHANCED WITH TRACKING
 	private void displaceWaterFromCell(GridCell cell, IField waterField, IScope scope) {
 		if (cell.isWater) {
 			double waterVolume = Math.max(0, cell.waterElevation - cell.terrainElevation);
@@ -1571,14 +1697,23 @@ public class SpreadingSkill extends Skill {
 	public Boolean clearAllDykes(final IScope scope) {
 		final IAgent agent = getCurrentAgent(scope);
 		final IField dykeField = (IField) agent.getAttribute(DYKE_FIELD);
+		final IField waterField = (IField) agent.getAttribute(WATER_FIELD);
 		final int width = getIntAttribute(agent, GRID_WIDTH);
 		final int height = getIntAttribute(agent, GRID_HEIGHT);
+		
+		// NEW: Track cells that should be restored as water
+		Set<GridCell> waterCellsToRestore = new HashSet<>();
 		
 		// Restore terrain elevations for all dyke cells
 		for (GridCell cell : dykeGridCells) {
 			cell.terrainElevation = cell.originalTerrainElevation;
 			if (dykeField != null) {
 				dykeField.set(scope, cell.x, cell.y, 0.0);
+			}
+			
+			// NEW: Check if this cell should be restored as water
+			if (cell.wasOriginalWater) {
+				waterCellsToRestore.add(cell);
 			}
 		}
 		
@@ -1589,8 +1724,116 @@ public class SpreadingSkill extends Skill {
 		dykeGridCells.clear();
 		nextDykeId = 1; // Reset ID counter
 		
-		System.out.println("All individual dykes cleared");
+		// NEW: RESTORE ORIGINAL WATER CELLS
+		if (!waterCellsToRestore.isEmpty()) {
+			restoreOriginalWaterCells(scope, waterCellsToRestore, waterField);
+			System.out.println("All dykes cleared and " + waterCellsToRestore.size() + " original water cells restored");
+		} else {
+			System.out.println("All individual dykes cleared");
+		}
+		
 		return true;
+	}
+	
+	// === NEW: EMERGENCY CLEAR ALL DYKES METHOD ===
+	@action(name = "emergency_clear_all_dykes", doc = @doc("Emergency removal of all dykes with immediate water restoration and normalization"))
+	public Boolean emergencyClearAllDykes(final IScope scope) {
+		final IAgent agent = getCurrentAgent(scope);
+		final IField dykeField = (IField) agent.getAttribute(DYKE_FIELD);
+		final IField waterField = (IField) agent.getAttribute(WATER_FIELD);
+		final int width = getIntAttribute(agent, GRID_WIDTH);
+		final int height = getIntAttribute(agent, GRID_HEIGHT);
+		
+		System.out.println("EMERGENCY: Clearing all dykes and restoring original water topology...");
+		
+		// Stop simulation during emergency clear
+		boolean wasActive = getBoolAttribute(agent, SIMULATION_ACTIVE);
+		setBoolAttribute(agent, SIMULATION_ACTIVE, false);
+		
+		// NEW: Track cells that should be restored as water
+		Set<GridCell> waterCellsToRestore = new HashSet<>();
+		
+		// Restore terrain elevations for all dyke cells
+		for (GridCell cell : dykeGridCells) {
+			cell.terrainElevation = cell.originalTerrainElevation;
+			if (dykeField != null) {
+				dykeField.set(scope, cell.x, cell.y, 0.0);
+			}
+			
+			// Check if this cell should be restored as water
+			if (cell.wasOriginalWater) {
+				waterCellsToRestore.add(cell);
+			}
+		}
+		
+		// Clear all data structures
+		individualDykes.clear();
+		cellToDykeIds.clear();
+		activeDykes.clear();
+		dykeGridCells.clear();
+		nextDykeId = 1; // Reset ID counter
+		
+		// RESTORE ORIGINAL WATER CELLS
+		if (!waterCellsToRestore.isEmpty()) {
+			restoreOriginalWaterCells(scope, waterCellsToRestore, waterField);
+			
+			// EMERGENCY: Additional water level normalization
+			normalizeAllWaterLevels(scope, waterField);
+			
+			System.out.println("EMERGENCY CLEAR COMPLETE: " + waterCellsToRestore.size() + " water cells restored, levels normalized");
+		} else {
+			System.out.println("EMERGENCY CLEAR COMPLETE: All dykes removed, no water restoration needed");
+		}
+		
+		// Restart simulation if it was active
+		if (wasActive) {
+			setBoolAttribute(agent, SIMULATION_ACTIVE, true);
+		}
+		
+		return true;
+	}
+	
+	// === NEW: NORMALIZE ALL WATER LEVELS METHOD ===
+	private void normalizeAllWaterLevels(IScope scope, IField waterField) {
+		if (activeWaterCells.isEmpty()) {
+			return;
+		}
+		
+		// Find all connected water regions and normalize each separately
+		Set<GridCell> processedCells = new HashSet<>();
+		int regionsNormalized = 0;
+		
+		for (GridCell cell : activeWaterCells) {
+			if (!processedCells.contains(cell)) {
+				// Find connected region
+				Set<GridCell> region = findConnectedWaterRegion(cell);
+				processedCells.addAll(region);
+				
+				if (region.size() > 1) {
+					// Calculate average water level for the region
+					double totalLevel = 0.0;
+					for (GridCell regionCell : region) {
+						totalLevel += regionCell.waterElevation;
+					}
+					double averageLevel = totalLevel / region.size();
+					
+					// Apply normalized level to all cells in region
+					for (GridCell regionCell : region) {
+						regionCell.waterElevation = averageLevel;
+						if (waterField != null) {
+							waterField.set(scope, regionCell.x, regionCell.y, regionCell.waterElevation);
+						}
+					}
+					
+					regionsNormalized++;
+				}
+			}
+		}
+		
+		// Recalculate edge cells after normalization
+		identifyEdgeCells();
+		
+		System.out.println("Water normalization complete: " + regionsNormalized + " regions normalized");
 	}
 	
 	// === SIMULATION CONTROL ACTIONS ===
@@ -1688,6 +1931,8 @@ public class SpreadingSkill extends Skill {
 				if (isWaterCell) {
 					cell.isWater = true;
 					cell.isEdgeCell = false;
+					// NEW: Restore original water tracking
+					cell.wasOriginalWater = true;
 					activeWaterCells.add(cell);
 					totalWaterTerrainElev += cell.terrainElevation;
 					waterCellCount++;
@@ -1695,6 +1940,8 @@ public class SpreadingSkill extends Skill {
 					cell.isWater = false;
 					cell.waterElevation = 0.0;
 					cell.isEdgeCell = false;
+					// NEW: Clear original water tracking if not water
+					cell.wasOriginalWater = false;
 				}
 			}
 		}
@@ -1709,6 +1956,8 @@ public class SpreadingSkill extends Skill {
 		// Set uniform water elevation
 		for (GridCell cell : activeWaterCells) {
 			cell.waterElevation = uniformWaterLevel;
+			// NEW: Store original water elevation
+			cell.originalWaterElevation = uniformWaterLevel;
 			if (waterField != null) {
 				waterField.set(scope, cell.x, cell.y, cell.waterElevation);
 			}
