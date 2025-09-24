@@ -1,34 +1,34 @@
-model SpreadingSkillExample
+model SpreadingSkillObstacleExample
 
 global {
    // === DATA FILES ===
-   // string selected_dem_path <- "../includes/SRTM_DEM_NHATLE_30M_RESIZED_BY_FOUR.tif";
+   string selected_dem_path <- "../includes/SRTM_DEM_NHATLE_30M_RESIZED_BY_FOUR.tif";
    // Alternative DEM files (uncomment as needed):
-   string selected_dem_path <- "../includes/terrain_large.tif";
+   // string selected_dem_path <- "../includes/terrain_large.tif";
    // string selected_dem_path <- "../includes/hanoi.tif";
    file dem_file <- file(selected_dem_path);
    field elevation_map <- field(dem_file);
    geometry shape <- envelope(dem_file);
-   // string selected_water_path <- "../includes/water_multipolygon.shp";
+   string selected_water_path <- "../includes/water_multipolygon.shp";
    // Alternative water files (uncomment as needed):
-   string selected_water_path <- "../includes/river_clean.shp";
+   // string selected_water_path <- "../includes/river_clean.shp";
    file water_shapefile <- file(selected_water_path);
    list<geometry> water_geometries <- [];
 
    // === GLOBAL DISPLAY FIELDS ===
    field display_water_field;
-   field display_dyke_field;
+   field display_obstacle_field;
 
-   // === DYKE BUILDING STATE ===
-   bool dyke_building_active <- false;
-   point dyke_point1 <- nil;
-   point dyke_point2 <- nil;
+   // === OBSTACLE BUILDING STATE ===
+   bool obstacle_building_active <- false;
+   point obstacle_point1 <- nil;
+   point obstacle_point2 <- nil;
    bool waiting_for_first_point <- false;
    bool waiting_for_second_point <- false;
 
-   // === DYKE REMOVAL STATE ===
-   bool dyke_removal_active <- false;
-   bool waiting_for_dyke_removal <- false;
+   // === OBSTACLE REMOVAL STATE ===
+   bool obstacle_removal_active <- false;
+   bool waiting_for_obstacle_removal <- false;
 
    // === SIMULATION STATISTICS ===
    int total_cycles <- 0;
@@ -44,76 +44,76 @@ global {
 
    	// Initialize display fields with same dimensions as DEM  
    	display_water_field <- field(elevation_map.columns, elevation_map.rows);
-   	display_dyke_field <- field(elevation_map.columns, elevation_map.rows);
+   	display_obstacle_field <- field(elevation_map.columns, elevation_map.rows);
 
    	// Initialize fields to zero
    	loop i from: 0 to: elevation_map.columns - 1 {
    		loop j from: 0 to: elevation_map.rows - 1 {
    			display_water_field[i, j] <- 0.0;
-   			display_dyke_field[i, j] <- 0.0;
+   			display_obstacle_field[i, j] <- 0.0;
    		}
 
    	}
 
    	// Create simulation manager agent
    	create simulation_manager number: 1;
-   	write "SpreadingSkill with Rain, Dykes, and Removal system initialized";
-   	write "Use buttons and controls to manage simulation, rain, dyke building, and dyke removal";
+   	write "SpreadingSkill with Rain, Obstacles, and Removal system initialized";
+   	write "Use buttons and controls to manage simulation, rain, obstacle building, and obstacle removal";
    	write "========================";
    }
    
-      // === NEW DYKE REMOVAL ACTION ===
-   action toggle_dyke_removal {
+      // === OBSTACLE REMOVAL ACTION ===
+   action toggle_obstacle_removal {
    	ask simulation_manager {
-   		do toggle_dyke_removal_mode();
-   		dyke_removal_active <- is_dyke_removal_mode();
-   		if (dyke_removal_active) {
-   			write "🗑️ DYKE REMOVAL MODE ACTIVATED";
-   			write "   → Click on any dyke cell to remove connected dyke area";
-   			write "   → All connected dyke cells will be removed at once";
-   			waiting_for_dyke_removal <- true;
+   		do toggle_obstacle_removal_mode();
+   		obstacle_removal_active <- is_obstacle_removal_mode();
+   		if (obstacle_removal_active) {
+   			write "🗑️ OBSTACLE REMOVAL MODE ACTIVATED";
+   			write "   → Click on any obstacle cell to remove connected obstacle area";
+   			write "   → All connected obstacle cells will be removed at once";
+   			waiting_for_obstacle_removal <- true;
    			
-   			// Disable dyke building mode if it was active
-   			if (dyke_building_active) {
+   			// Disable obstacle building mode if it was active
+   			if (obstacle_building_active) {
    				ask world {
-   				do toggle_dyke_building();
+   				do toggle_obstacle_building();
    				
    				}
    			}
    		} else {
-   			write "🗑️ DYKE REMOVAL MODE DEACTIVATED";
-   			waiting_for_dyke_removal <- false;
+   			write "🗑️ OBSTACLE REMOVAL MODE DEACTIVATED";
+   			waiting_for_obstacle_removal <- false;
    		}
    	}
    }
 
-   // === ENHANCED DYKE BUILDING ACTIONS ===
-   action toggle_dyke_building {
+   // === ENHANCED OBSTACLE BUILDING ACTIONS ===
+   action toggle_obstacle_building {
    	ask simulation_manager {
-   		do toggle_dyke_building_mode();
-   		dyke_building_active <- is_dyke_building_mode();
-   		if (dyke_building_active) {
-   			write "🔨 DYKE BUILDING MODE ACTIVATED";
+   		do toggle_obstacle_building_mode();
+   		obstacle_building_active <- is_obstacle_building_mode();
+   		if (obstacle_building_active) {
+   			write "🔨 OBSTACLE BUILDING MODE ACTIVATED";
    			write "   → Click first point in the 3D view";
    			write "   → World bounds: " + world.shape;
    			waiting_for_first_point <- true;
    			waiting_for_second_point <- false;
-   			dyke_point1 <- nil;
-   			dyke_point2 <- nil;
+   			obstacle_point1 <- nil;
+   			obstacle_point2 <- nil;
    			
-   			// Disable dyke removal mode if it was active
-   			if (dyke_removal_active) {
+   			// Disable obstacle removal mode if it was active
+   			if (obstacle_removal_active) {
    				ask world {
-   				do toggle_dyke_removal();
+   				do toggle_obstacle_removal();
    				
    				}
    			}
    		} else {
-   			write "🔨 DYKE BUILDING MODE DEACTIVATED";
+   			write "🔨 OBSTACLE BUILDING MODE DEACTIVATED";
    			waiting_for_first_point <- false;
    			waiting_for_second_point <- false;
-   			dyke_point1 <- nil;
-   			dyke_point2 <- nil;
+   			obstacle_point1 <- nil;
+   			obstacle_point2 <- nil;
    		}
    	}
    }
@@ -121,73 +121,73 @@ global {
 
 
    // === ENHANCED MOUSE CLICK HANDLER ===
-   action handle_dyke_click (point click_location) {
-   	if (dyke_building_active) {
-   		// EXISTING DYKE BUILDING LOGIC
+   action handle_obstacle_click (point click_location) {
+   	if (obstacle_building_active) {
+   		// OBSTACLE BUILDING LOGIC
    		if (waiting_for_first_point) {
-   			dyke_point1 <- click_location;
+   			obstacle_point1 <- click_location;
    			waiting_for_first_point <- false;
    			waiting_for_second_point <- true;
-   			write "✓ First point selected: " + dyke_point1;
-   			write "   → Click second point to complete dyke";
+   			write "✓ First point selected: " + obstacle_point1;
+   			write "   → Click second point to complete obstacle";
    		} else if (waiting_for_second_point) {
-   			dyke_point2 <- click_location;
+   			obstacle_point2 <- click_location;
    			waiting_for_second_point <- false;
-   			write "✓ Second point selected: " + dyke_point2;
-   			write "   → Building dyke...";
+   			write "✓ Second point selected: " + obstacle_point2;
+   			write "   → Building obstacle...";
 
-   			// Build the dyke
+   			// Build the obstacle
    			ask simulation_manager {
-   				bool success <- build_dyke(dyke_point1, dyke_point2);
+   				bool success <- build_obstacle(obstacle_point1, obstacle_point2);
    				if (success) {
-   					write "🏗️ Dyke built successfully!";
-   					write "   Active dykes: " + get_active_dyke_count();
+   					write "🏗️ Obstacle built successfully!";
+   					write "   Active obstacles: " + get_active_obstacle_count();
 
    					// Update display field
-   					if (dyke_field != nil) {
-   						display_dyke_field <- dyke_field;
+   					if (obstacle_field != nil) {
+   						display_obstacle_field <- obstacle_field;
    					}
    				} else {
-   					write "❌ Failed to build dyke";
+   					write "❌ Failed to build obstacle";
    					write "   Possible reasons: not in building mode, area has water, or coordinates invalid";
    				}
    			}
 
-   			// Reset for next dyke
+   			// Reset for next obstacle
    			waiting_for_first_point <- true;
-   			dyke_point1 <- nil;
-   			dyke_point2 <- nil;
-   			write "   → Ready for next dyke (click first point)";
+   			obstacle_point1 <- nil;
+   			obstacle_point2 <- nil;
+   			write "   → Ready for next obstacle (click first point)";
    		}
-   	} else if (dyke_removal_active) {
-   		// NEW DYKE REMOVAL LOGIC
-   		write "🗑️ Attempting to remove dyke area at: " + click_location;
+   	} else if (obstacle_removal_active) {
+   		// OBSTACLE REMOVAL LOGIC
+   		write "🗑️ Attempting to remove obstacle area at: " + click_location;
    		
-   		// First, check if there's a dyke at this location (for user feedback)
+   		// First, check if there's an obstacle at this location (for user feedback)
    		ask simulation_manager {
-   			int area_size <- get_dyke_area_size(click_location);
+   			int area_size <- get_obstacle_area_size(click_location);
    			if (area_size > 0) {
-   				write "   → Found connected dyke area of " + area_size + " cells";
-   				write "   → Removing dyke area...";
+   				write "   → Found connected obstacle area of " + area_size + " cells";
+   				write "   → Removing obstacle area...";
    				
-   				bool success <- remove_dyke_area(click_location);
+   				bool success <- remove_obstacle_area(click_location);
    				if (success) {
-   					write "✅ Dyke area removed successfully!";
-   					write "   Remaining active dykes: " + get_active_dyke_count();
+   					write "✅ Obstacle area removed successfully!";
+   					write "   Remaining active obstacles: " + get_active_obstacle_count();
    					
    					// Update display fields
-   					if (dyke_field != nil) {
-   						display_dyke_field <- dyke_field;
+   					if (obstacle_field != nil) {
+   						display_obstacle_field <- obstacle_field;
    					}
    					if (water_field != nil) {
    						display_water_field <- water_field;
    					}
    				} else {
-   					write "❌ Failed to remove dyke area";
+   					write "❌ Failed to remove obstacle area";
    				}
    			} else {
-   				write "❌ No dyke found at clicked location";
-   				write "   → Click on a dyke cell to remove connected dyke area";
+   				write "❌ No obstacle found at clicked location";
+   				write "   → Click on an obstacle cell to remove connected obstacle area";
    			}
    		}
    	} else {
@@ -207,18 +207,21 @@ global {
    			write "🏔️ Terrain elevation: " + (terrain_height with_precision 2) + "m";
    		}
 
-   		// Show dyke elevation if present
-   		if (display_dyke_field != nil) {
-   			float dyke_height <- display_dyke_field[click_location];
-   			if (dyke_height > 0.01) {
-   				write "🏗️ Dyke total elevation: " + (dyke_height with_precision 2) + "m";
+   		// Show obstacle elevation if present
+   		if (display_obstacle_field != nil) {
+   			float obstacle_height <- display_obstacle_field[click_location];
+   			if (obstacle_height > 0.01) {
+   				write "🏗️ Obstacle total elevation: " + (obstacle_height with_precision 2) + "m";
    				
-   				// Show dyke area size for information
+   				// Show obstacle area size for information
    				ask simulation_manager {
-   					int area_size <- get_dyke_area_size(click_location);
+   					int area_size <- get_obstacle_area_size(click_location);
    					if (area_size > 0) {
-   						write "🔗 Connected dyke area size: " + area_size + " cells";
+   						write "🔗 Connected obstacle area size: " + area_size + " cells";
    					}
+   					// Show obstacle type and properties
+   					string obstacle_info <- get_obstacle_info_at_point(click_location);
+   					write "ℹ️ " + obstacle_info;
    				}
    			}
    		}
@@ -231,19 +234,19 @@ global {
    action report_global_status {
    	write "=== GLOBAL SIMULATION STATUS ===";
    	write "Total simulation cycles: " + total_cycles;
-   	write "Dyke building mode: " + (dyke_building_active ? "ACTIVE" : "INACTIVE");
-   	write "Dyke removal mode: " + (dyke_removal_active ? "ACTIVE" : "INACTIVE");
+   	write "Obstacle building mode: " + (obstacle_building_active ? "ACTIVE" : "INACTIVE");
+   	write "Obstacle removal mode: " + (obstacle_removal_active ? "ACTIVE" : "INACTIVE");
    	
-   	if (dyke_building_active) {
+   	if (obstacle_building_active) {
    		string status <- waiting_for_first_point ? "Waiting for first point" : (waiting_for_second_point ? "Waiting for second point" : "Ready");
-   		write "Dyke building status: " + status;
-   		if (dyke_point1 != nil) {
-   			write "First point: " + dyke_point1;
+   		write "Obstacle building status: " + status;
+   		if (obstacle_point1 != nil) {
+   			write "First point: " + obstacle_point1;
    		}
    	}
    	
-   	if (dyke_removal_active) {
-   		write "Dyke removal status: " + (waiting_for_dyke_removal ? "Click on dyke to remove" : "Ready");
+   	if (obstacle_removal_active) {
+   		write "Obstacle removal status: " + (waiting_for_obstacle_removal ? "Click on obstacle to remove" : "Ready");
    	}
 
    	write "World envelope: " + world.shape;
@@ -305,6 +308,44 @@ global {
 			write "❌ Water file selection cancelled";
 		}
 	}
+	
+	// === NEW: ADD OBSTACLES FROM SHAPEFILE ACTION ===
+	action add_obstacles_from_shapefile(file shapefile_to_load, string obstacle_type, float height, bool uniform_height, bool destroyable, float destruction_time) {
+		list<geometry> obstacle_geometries <- shapefile_to_load.contents;
+		if (length(obstacle_geometries) = 0) {
+			write "❌ No geometries found in shapefile";
+			return;
+		}
+		
+		ask simulation_manager {
+			bool success <- add_obstacles_from_shapefile(
+				obstacle_shapefile: obstacle_geometries,
+				obstacle_type: obstacle_type,
+				height: height,
+				uniform_height: uniform_height,
+				destroyable: destroyable,
+				destruction_time: destruction_time
+			);
+			
+			if (success) {
+				write "✅ Obstacles added from shapefile successfully!";
+				write "   Type: " + obstacle_type;
+				write "   Height: " + height + "m";
+				write "   Uniform height: " + uniform_height;
+				write "   Destroyable: " + destroyable;
+				if (destroyable) {
+					write "   Destruction time: " + destruction_time + " cycles";
+				}
+				
+				// Update display field
+				if (obstacle_field != nil) {
+					display_obstacle_field <- obstacle_field;
+				}
+			} else {
+				write "❌ Failed to add obstacles from shapefile";
+			}
+		}
+	}
 }
 
    species simulation_manager skills: [spreading] {
@@ -319,31 +360,32 @@ global {
    	write "Creating simulation manager with full SpreadingSkill capabilities:";
    	write "  • Water spreading simulation with realistic physics";
    	write "  • Rain system with intensity control";
-   	write "  • Dyke building with continuity and destruction mechanics";
-   	write "  • Dyke removal with connected component detection";
+   	write "  • Obstacle building with continuity and destruction mechanics";
+   	write "  • Obstacle removal with connected component detection";
+   	write "  • Support for multiple obstacle types (dyke, building, wall, earthwork, barrier)";
 
-   	// Create dyke field with same dimensions as DEM
-   	field dyke_field_for_java <- field(elevation_map.columns, elevation_map.rows);
+   	// Create obstacle field with same dimensions as DEM
+   	field obstacle_field_for_java <- field(elevation_map.columns, elevation_map.rows);
 
-   	// Initialize dyke field with proper bounds
+   	// Initialize obstacle field with proper bounds
    	loop i from: 0 to: elevation_map.columns - 1 {
    		loop j from: 0 to: elevation_map.rows - 1 {
-   			dyke_field_for_java[i, j] <- 0.0;
+   			obstacle_field_for_java[i, j] <- 0.0;
    		}
 
    	}
 
    	// Use coordinate-aligned initialization
    	do
-   	initialize_spreading_grid_with_dyke_field(dem_field: elevation_map, dyke_field: dyke_field_for_java, water_geometries: water_geometries, initial_water_depth: 1.5, flow_threshold: 0.01, rising_rate: 0.3, min_flow_diff: 0.001, equalization_threshold: 0.1);
+   	initialize_spreading_grid_with_obstacle_field(dem_field: elevation_map, obstacle_field: obstacle_field_for_java, water_geometries: water_geometries, initial_water_depth: 1.5, flow_threshold: 0.01, rising_rate: 0.3, min_flow_diff: 0.001, equalization_threshold: 0.1);
 
    	// PERFORMANCE FIX: Simple initial field sync, let Java handle the details
    	if (water_field != nil) {
    		display_water_field <- water_field;
    	}
 
-   	if (dyke_field != nil) {
-   		display_dyke_field <- dyke_field;
+   	if (obstacle_field != nil) {
+   		display_obstacle_field <- obstacle_field;
    	}
 
    	last_water_count <- get_active_water_count();
@@ -352,12 +394,12 @@ global {
    	write "✓ Initial edge cells: " + get_edge_cell_count();
    	write "✓ Grid dimensions: " + grid_width + "x" + grid_height;
    	write "✓ Performance-optimized field synchronization enabled";
-   	write "✓ Dyke removal system ready";
+   	write "✓ Obstacle removal system ready";
    	write "✓ Simulation parameters:";
    	write "    Flow threshold: " + (flow_threshold with_precision 3) + "m";
    	write "    Rising rate: " + (rising_rate with_precision 3) + "m/step";
-   	write "    Dyke height: " + (dyke_height with_precision 1) + "m";
-   	write "    Dyke destruction time: " + (dyke_destruction_time with_precision 1) + " cycles";
+   	write "    Default obstacle height: " + (default_obstacle_height with_precision 1) + "m";
+   	write "    Obstacle destruction time: " + (obstacle_destruction_time with_precision 1) + " cycles";
    	write "============================================";
    }
 
@@ -371,9 +413,9 @@ global {
    		display_water_field <- water_field;
    	}
 
-   	// Update dyke field less frequently (dykes change rarely)
-   	if (dyke_field != nil and (cycle mod 10 = 0 or last_field_update = 0)) {
-   		display_dyke_field <- dyke_field;
+   	// Update obstacle field less frequently (obstacles change rarely)
+   	if (obstacle_field != nil and (cycle mod 10 = 0 or last_field_update = 0)) {
+   		display_obstacle_field <- obstacle_field;
    		last_field_update <- cycle;
    	}
 
@@ -392,11 +434,11 @@ global {
    		steps_since_spread <- steps_since_spread + 1;
    	}
 
-   	// Alert if dykes are in danger (but not too frequently)
+   	// Alert if obstacles are in danger (but not too frequently)
    	if (cycle mod 20 = 0) {
-   		int attacked_dykes <- get_surrounded_dyke_count();
-   		if (attacked_dykes > 0) {
-   			write "⚔️ WARNING: " + attacked_dykes + " dyke cell(s) under water attack!";
+   		int attacked_obstacles <- get_obstacles_under_attack();
+   		if (attacked_obstacles > 0) {
+   			write "⚔️ WARNING: " + attacked_obstacles + " obstacle cell(s) under water attack!";
    		}
 
    	}
@@ -409,8 +451,8 @@ global {
    	simulation_start_time <- gama.machine_time;
    	write "🚀 SIMULATION STARTED at step " + get_current_step();
    	write "   Water cells: " + get_active_water_count() + " | Edge cells: " + get_edge_cell_count();
-   	if (get_active_dyke_count() > 0) {
-   		write "   Active dykes: " + get_active_dyke_count();
+   	if (get_active_obstacle_count() > 0) {
+   		write "   Active obstacles: " + get_active_obstacle_count();
    	}
 
    }
@@ -425,26 +467,26 @@ global {
    action reset_spreading {
    	do reset_spreading_simulation(water_geometries, 1.5);
 
-   	// Recreate dyke field with same dimensions after reset
-   	field dyke_field_for_reset <- field(elevation_map.columns, elevation_map.rows);
+   	// Recreate obstacle field with same dimensions after reset
+   	field obstacle_field_for_reset <- field(elevation_map.columns, elevation_map.rows);
    	loop i from: 0 to: elevation_map.columns - 1 {
    		loop j from: 0 to: elevation_map.rows - 1 {
-   			dyke_field_for_reset[i, j] <- 0.0;
+   			obstacle_field_for_reset[i, j] <- 0.0;
    		}
 
    	}
 
    	// Re-initialize with proper coordinate alignment
    	do
-   	initialize_spreading_grid_with_dyke_field(dem_field: elevation_map, dyke_field: dyke_field_for_reset, water_geometries: water_geometries, initial_water_depth: 1.5, flow_threshold: 0.01, rising_rate: 0.3, min_flow_diff: 0.001, equalization_threshold: 0.1);
+   	initialize_spreading_grid_with_obstacle_field(dem_field: elevation_map, obstacle_field: obstacle_field_for_reset, water_geometries: water_geometries, initial_water_depth: 1.5, flow_threshold: 0.01, rising_rate: 0.3, min_flow_diff: 0.001, equalization_threshold: 0.1);
 
    	// PERFORMANCE FIX: Simple field sync after reset
    	if (water_field != nil) {
    		display_water_field <- water_field;
    	}
 
-   	if (dyke_field != nil) {
-   		display_dyke_field <- dyke_field;
+   	if (obstacle_field != nil) {
+   		display_obstacle_field <- obstacle_field;
    	}
 
    	// Reset tracking variables
@@ -454,7 +496,7 @@ global {
    	write "🔄 SIMULATION RESET";
    	write "   Active water cells: " + get_active_water_count();
    	write "   Edge cells: " + get_edge_cell_count();
-   	write "   All dykes cleared, rain stopped, building/removal modes disabled";
+   	write "   All obstacles cleared, rain stopped, building/removal modes disabled";
    	write "   Performance-optimized field synchronization restored";
    }
 
@@ -514,58 +556,58 @@ global {
    	write "☀️ Rain stopped completely";
    }
 
-   // === DYKE CONTROL ACTIONS ===
-   action clear_dykes {
-   	int dyke_count <- get_active_dyke_count();
-   	do clear_all_dykes();
+   // === OBSTACLE CONTROL ACTIONS ===
+   action clear_obstacles {
+   	int obstacle_count <- get_active_obstacle_count();
+   	do clear_all_obstacles();
 
-   	// Simple field update after clearing dykes
-   	if (dyke_field != nil) {
-   		display_dyke_field <- dyke_field;
+   	// Simple field update after clearing obstacles
+   	if (obstacle_field != nil) {
+   		display_obstacle_field <- obstacle_field;
    	}
 
-   	write "💥 All dykes cleared (" + dyke_count + " dyke cells removed)";
+   	write "💥 All obstacles cleared (" + obstacle_count + " obstacle cells removed)";
    }
 
-   action emergency_dyke_clear {
+   action emergency_obstacle_clear {
    	ask world {
-   		if (dyke_building_active) {
-   			do toggle_dyke_building(); // Turn off building mode
+   		if (obstacle_building_active) {
+   			do toggle_obstacle_building(); // Turn off building mode
    		}
-   		if (dyke_removal_active) {
-   			do toggle_dyke_removal(); // Turn off removal mode
+   		if (obstacle_removal_active) {
+   			do toggle_obstacle_removal(); // Turn off removal mode
    		}
    	}
 
-   	do clear_dykes();
-   	write "🚨 EMERGENCY: All dykes cleared and all dyke modes disabled";
+   	do clear_obstacles();
+   	write "🚨 EMERGENCY: All obstacles cleared and all obstacle modes disabled";
    }
 
-   // === NEW DYKE REMOVAL CONTROL ACTIONS ===
+   // === OBSTACLE REMOVAL CONTROL ACTIONS ===
    action toggle_removal_mode {
    	ask world {
-   		do toggle_dyke_removal();
+   		do toggle_obstacle_removal();
    	}
    }
 
-   action remove_dyke_at_point (point location) {
-   	int area_size <- get_dyke_area_size(location);
+   action remove_obstacle_at_point (point location) {
+   	int area_size <- get_obstacle_area_size(location);
    	if (area_size > 0) {
-   		write "🗑️ Removing dyke area of " + area_size + " cells...";
-   		bool success <- remove_dyke_area(location);
+   		write "🗑️ Removing obstacle area of " + area_size + " cells...";
+   		bool success <- remove_obstacle_area(location);
    		if (success) {
-   			write "✅ Dyke area removed successfully!";
+   			write "✅ Obstacle area removed successfully!";
    			
    			// Update display fields
-   			if (dyke_field != nil) {
-   				display_dyke_field <- dyke_field;
+   			if (obstacle_field != nil) {
+   				display_obstacle_field <- obstacle_field;
    			}
    			if (water_field != nil) {
    				display_water_field <- water_field;
    			}
    		}
    	} else {
-   		write "❌ No dyke area found at specified location";
+   		write "❌ No obstacle area found at specified location";
    	}
    }
 
@@ -590,15 +632,15 @@ global {
    		write "  • Total rain volume/step: " + (rain_volume with_precision 1) + "m³";
    	}
 
-   	write "DYKES:";
-   	write "  • Building mode: " + is_dyke_building_mode();
-   	write "  • Removal mode: " + is_dyke_removal_mode();
-   	write "  • Active dyke cells: " + get_active_dyke_count();
-   	write "  • Dyke cells under attack: " + get_surrounded_dyke_count();
-   	write "  • Dyke height: " + (dyke_height with_precision 1) + "m";
-   	write "  • Destruction time: " + (dyke_destruction_time with_precision 1) + " cycles";
-   	if (get_surrounded_dyke_count() > 0) {
-   		write "  ⚔️ ALERT: Dyke cells under water attack!";
+   	write "OBSTACLES:";
+   	write "  • Building mode: " + is_obstacle_building_mode();
+   	write "  • Removal mode: " + is_obstacle_removal_mode();
+   	write "  • Active obstacle cells: " + get_active_obstacle_count();
+   	write "  • Obstacle cells under attack: " + get_obstacles_under_attack();
+   	write "  • Default obstacle height: " + (default_obstacle_height with_precision 1) + "m";
+   	write "  • Destruction time: " + (obstacle_destruction_time with_precision 1) + " cycles";
+   	if (get_obstacles_under_attack() > 0) {
+   		write "  ⚔️ ALERT: Obstacle cells under water attack!";
    	}
 
    	write "GRID:";
@@ -611,21 +653,22 @@ global {
    action quick_status {
    	string sim_status <- is_simulation_active() ? "RUNNING" : "STOPPED";
    	string rain_status <- is_rain_active() ? ("RAIN " + (get_rain_rate() with_precision 1) + "m/s") : "NO RAIN";
-   	string dyke_status <- " " + get_active_dyke_count() + " dyke cells";
-   	if (get_surrounded_dyke_count() > 0) {
-   		dyke_status <- dyke_status + " (" + get_surrounded_dyke_count() + " under attack)";
+   	string obstacle_status <- " " + get_active_obstacle_count() + " obstacle cells";
+   	if (get_obstacles_under_attack() > 0) {
+   		obstacle_status <- obstacle_status + " (" + get_obstacles_under_attack() + " under attack)";
    	}
    	string mode_status <- "";
-   	if (is_dyke_building_mode()) {
+   	if (is_obstacle_building_mode()) {
    		mode_status <- " | BUILDING";
-   	} else if (is_dyke_removal_mode()) {
+   	} else if (is_obstacle_removal_mode()) {
    		mode_status <- " | REMOVAL";
    	}
 
-   	write "📊 QUICK STATUS: " + sim_status + " | " + rain_status + " | " + dyke_status + mode_status + " | Water: " + get_active_water_count() + " cells";
-   } }
+   	write "📊 QUICK STATUS: " + sim_status + " | " + rain_status + " | " + obstacle_status + mode_status + " | Water: " + get_active_water_count() + " cells";
+   } 
+   }
 
-   experiment FloodSimulationWithDykesComplete type: gui {
+   experiment FloodSimulationWithObstaclesComplete type: gui {
    int auto_report_interval <- 50;
 
    // === EXPERIMENT REFLEXES ===
@@ -638,7 +681,7 @@ global {
 
    output {
    // === MAIN 3D VISUALIZATION WITH ENHANCED INTERACTIONS ===
-   	display "Flood Simulation with Dykes and Removal" type: opengl refresh: true {
+   	display "Flood Simulation with Obstacles and Removal" type: opengl refresh: true {
    	// Terrain elevation (grayscale with proper scaling)
    		mesh elevation_map scale: 20 triangulation: true grayscale: true transparency: 0.1 refresh: false;
    		light #ambient intensity: 100;
@@ -646,8 +689,8 @@ global {
    		// Water field with proper scale and triangulation
    		mesh display_water_field scale: 20 triangulation: true color: rgb(0, 100, 255, 180) refresh: true;
 
-   		// Dyke field with proper scale and triangulation  
-   		mesh display_dyke_field scale: 20 triangulation: true color: rgb(139, 69, 19, 255) refresh: true;
+   		// Obstacle field with proper scale and triangulation  
+   		mesh display_obstacle_field scale: 20 triangulation: true color: rgb(139, 69, 19, 255) refresh: true;
 
    		// Simulation manager (optional visualization)
    		species simulation_manager transparency: 0.8;
@@ -655,14 +698,14 @@ global {
    		// === EVENT HANDLERS ===
    		event #mouse_down {
    			ask world {
-   				do handle_dyke_click(#user_location);
+   				do handle_obstacle_click(#user_location);
    			}
 
    		}
 
    		event #mouse_move {
    		// Show information on mouse move
-   			if (!dyke_building_active and !dyke_removal_active) {
+   			if (!obstacle_building_active and !obstacle_removal_active) {
    				if (display_water_field != nil) {
    					float water_level <- display_water_field[#user_location];
    					if (water_level > 0.01) {
@@ -671,19 +714,19 @@ global {
 
    				}
 
-   				if (display_dyke_field != nil) {
-   					float dyke_height <- display_dyke_field[#user_location];
-   					if (dyke_height > 0.01) {
-   						draw string("🏗️ " + (dyke_height with_precision 1) + "m") at: #user_location + {0, 0, 15} color: #orange font: font("Arial", 12, #bold);
+   				if (display_obstacle_field != nil) {
+   					float obstacle_height <- display_obstacle_field[#user_location];
+   					if (obstacle_height > 0.01) {
+   						draw string("🏗️ " + (obstacle_height with_precision 1) + "m") at: #user_location + {0, 0, 15} color: #orange font: font("Arial", 12, #bold);
    					}
    				}
-   			} else if (dyke_removal_active) {
-   				// Show dyke area size preview during removal mode
-   				if (display_dyke_field != nil) {
-   					float dyke_height <- display_dyke_field[#user_location];
-   					if (dyke_height > 0.01) {
+   			} else if (obstacle_removal_active) {
+   				// Show obstacle area size preview during removal mode
+   				if (display_obstacle_field != nil) {
+   					float obstacle_height <- display_obstacle_field[#user_location];
+   					if (obstacle_height > 0.01) {
    						ask first(simulation_manager) {
-   							int area_size <- get_dyke_area_size(#user_location);
+   							int area_size <- get_obstacle_area_size(#user_location);
    							if (area_size > 0) {
    								draw string("🗑️ Remove " + area_size + " cells") at: #user_location + {0, 0, 20} color: #red font: font("Arial", 12, #bold);
    							}
@@ -694,21 +737,21 @@ global {
    		}
 
    		// === ENHANCED VISUAL OVERLAYS ===
-   		overlay position: {5, 5} size: {400, 180} background: #black transparency: 0.3 border: #white {
+   		overlay position: {5, 5} size: {400, 200} background: #black transparency: 0.3 border: #white {
    			string title <- "🌊 FLOOD SIMULATION CONTROL";
    			string sim_text <- "Simulation: " + (first(simulation_manager).is_simulation_active() ? "RUNNING" : "STOPPED");
    			string water_text <- "Water Cells: " + first(simulation_manager).get_active_water_count();
    			string rain_text <- "Rain: " + (first(simulation_manager).is_rain_active() ? ("Active (" + (first(simulation_manager).get_rain_rate() with_precision 1) + "m/s)") : "None");
-   			string dyke_text <- "Dyke Cells: " + first(simulation_manager).get_active_dyke_count() + " active";
-   			if (first(simulation_manager).get_surrounded_dyke_count() > 0) {
-   				dyke_text <- dyke_text + " (" + first(simulation_manager).get_surrounded_dyke_count() + " under attack)";
+   			string obstacle_text <- "Obstacle Cells: " + first(simulation_manager).get_active_obstacle_count() + " active";
+   			if (first(simulation_manager).get_obstacles_under_attack() > 0) {
+   				obstacle_text <- obstacle_text + " (" + first(simulation_manager).get_obstacles_under_attack() + " under attack)";
    			}
 
    			string mode_text <- "Mode: ";
-   			if (dyke_building_active) {
+   			if (obstacle_building_active) {
    				mode_text <- mode_text + (waiting_for_first_point ? "🔨 Click 1st point" : (waiting_for_second_point ? "🔨 Click 2nd point" : "🔨 Building"));
-   			} else if (dyke_removal_active) {
-   				mode_text <- mode_text + "🗑️ Click dyke to remove";
+   			} else if (obstacle_removal_active) {
+   				mode_text <- mode_text + "🗑️ Click obstacle to remove";
    			} else {
    				mode_text <- mode_text + "Normal";
    			}
@@ -717,18 +760,21 @@ global {
    			draw sim_text at: {10, 40} color: (first(simulation_manager).is_simulation_active() ? #green : #red);
    			draw water_text at: {10, 55} color: #cyan;
    			draw rain_text at: {10, 70} color: (first(simulation_manager).is_rain_active() ? #blue : #gray);
-   			draw dyke_text at: {10, 85} color: #brown;
-   			draw mode_text at: {10, 100} color: (dyke_building_active ? #orange : (dyke_removal_active ? #red : #white));
+   			draw obstacle_text at: {10, 85} color: #brown;
+   			draw mode_text at: {10, 100} color: (obstacle_building_active ? #orange : (obstacle_removal_active ? #red : #white));
    			
-   			if (dyke_building_active and dyke_point1 != nil) {
-   				draw ("First: " + dyke_point1) at: {10, 115} color: #orange;
+   			if (obstacle_building_active and obstacle_point1 != nil) {
+   				draw ("First: " + obstacle_point1) at: {10, 115} color: #orange;
    			}
-   			if (dyke_removal_active) {
-   				draw "Click dyke cell to remove area" at: {10, 130} color: #red font: font("Arial", 10, #italic);
+   			if (obstacle_removal_active) {
+   				draw "Click obstacle cell to remove area" at: {10, 130} color: #red font: font("Arial", 10, #italic);
    			}
-   			if (dyke_building_active or dyke_removal_active) {
+   			if (obstacle_building_active or obstacle_removal_active) {
    				draw "Modes are mutually exclusive" at: {10, 145} color: #gray font: font("Arial", 9, #italic);
    			}
+   			
+   			// NEW: Show supported obstacle types
+   			draw "Obstacle types: dyke, building, wall, earthwork, barrier" at: {10, 160} color: #lightgray font: font("Arial", 9, #italic);
    		}
 
    	}
@@ -740,8 +786,8 @@ global {
    			data "Edge Cells" value: first(simulation_manager).get_edge_cell_count() color: #red;
    			data "Simulation Step" value: first(simulation_manager).get_current_step() color: #green;
    			data "Rain Rate x100" value: first(simulation_manager).get_rain_rate() * 100 color: #purple;
-   			data "Active Dyke Cells" value: first(simulation_manager).get_active_dyke_count() color: #brown;
-   			data "Attacked Dyke Cells x10" value: first(simulation_manager).get_surrounded_dyke_count() * 10 color: #orange;
+   			data "Active Obstacle Cells" value: first(simulation_manager).get_active_obstacle_count() color: #brown;
+   			data "Attacked Obstacle Cells x10" value: first(simulation_manager).get_obstacles_under_attack() * 10 color: #orange;
    		}
 
    	}
@@ -758,14 +804,14 @@ global {
    	monitor "📈 Rain Rate (m/step)" value: first(simulation_manager).get_rain_rate() with_precision 3;
    	monitor "⚡ Rain Intensity" value: first(simulation_manager).get_rain_intensity() with_precision 1;
 
-   	// Enhanced dyke monitors
-   	monitor "🔨 Dyke Building Mode" value: dyke_building_active color: dyke_building_active ? #orange : #gray;
-   	monitor "🗑️ Dyke Removal Mode" value: dyke_removal_active color: dyke_removal_active ? #red : #gray;
-   	monitor "🏗️ Active Dyke Cells" value: first(simulation_manager).get_active_dyke_count();
-   	monitor "⚔️ Dyke Cells Under Attack" value: first(simulation_manager).get_surrounded_dyke_count() color: first(simulation_manager).get_surrounded_dyke_count() > 0 ?
+   	// Enhanced obstacle monitors
+   	monitor "🔨 Obstacle Building Mode" value: obstacle_building_active color: obstacle_building_active ? #orange : #gray;
+   	monitor "🗑️ Obstacle Removal Mode" value: obstacle_removal_active color: obstacle_removal_active ? #red : #gray;
+   	monitor "🏗️ Active Obstacle Cells" value: first(simulation_manager).get_active_obstacle_count();
+   	monitor "⚔️ Obstacle Cells Under Attack" value: first(simulation_manager).get_obstacles_under_attack() color: first(simulation_manager).get_obstacles_under_attack() > 0 ?
    	#red : #green;
-   	monitor "🎯 Building Status" value: dyke_building_active ? (waiting_for_first_point ? "First Point" : (waiting_for_second_point ? "Second Point" : "Ready")) : "Inactive";
-   	monitor "🎯 Removal Status" value: dyke_removal_active ? (waiting_for_dyke_removal ? "Click Dyke" : "Ready") : "Inactive";
+   	monitor "🎯 Building Status" value: obstacle_building_active ? (waiting_for_first_point ? "First Point" : (waiting_for_second_point ? "Second Point" : "Ready")) : "Inactive";
+   	monitor "🎯 Removal Status" value: obstacle_removal_active ? (waiting_for_obstacle_removal ? "Click Obstacle" : "Ready") : "Inactive";
 
    	// Performance monitors
    	monitor "⏱️ Total Cycles" value: total_cycles;
@@ -861,31 +907,31 @@ global {
 
    }
 
-   // Enhanced dyke control actions
-   action ask_toggle_dyke_building {
+   // Enhanced obstacle control actions
+   action ask_toggle_obstacle_building {
    	ask world {
-   		do toggle_dyke_building();
+   		do toggle_obstacle_building();
    	}
 
    }
 
-   action ask_toggle_dyke_removal {
+   action ask_toggle_obstacle_removal {
    	ask world {
-   		do toggle_dyke_removal();
+   		do toggle_obstacle_removal();
    	}
 
    }
 
-   action ask_clear_dykes {
+   action ask_clear_obstacles {
    	ask simulation_manager {
-   		do clear_dykes();
+   		do clear_obstacles();
    	}
 
    }
 
    action ask_emergency_clear {
    	ask simulation_manager {
-   		do emergency_dyke_clear();
+   		do emergency_obstacle_clear();
    	}
 
    }
@@ -927,11 +973,11 @@ global {
    user_command "📈 Increase Rain" action: ask_increase_rain category: "Rain";
    user_command "📉 Decrease Rain" action: ask_decrease_rain category: "Rain";
 
-   // Enhanced dyke controls 
-   user_command "🔨 Build Dykes (Toggle)" action: ask_toggle_dyke_building category: "Dykes";
-   user_command "🗑️ Remove Dykes (Toggle)" action: ask_toggle_dyke_removal category: "Dykes";
-   user_command "💥 Clear All Dykes" action: ask_clear_dykes category: "Dykes";
-   user_command "🚨 Emergency Clear" action: ask_emergency_clear category: "Dykes";
+   // Enhanced obstacle controls 
+   user_command "🔨 Build Obstacles (Toggle)" action: ask_toggle_obstacle_building category: "Obstacles";
+   user_command "🗑️ Remove Obstacles (Toggle)" action: ask_toggle_obstacle_removal category: "Obstacles";
+   user_command "💥 Clear All Obstacles" action: ask_clear_obstacles category: "Obstacles";
+   user_command "🚨 Emergency Clear" action: ask_emergency_clear category: "Obstacles";
 
    // Status and monitoring
    user_command "📊 Quick Status" action: ask_quick_status category: "Status";
