@@ -229,6 +229,22 @@ public class LLMSkill extends Skill {
 		return provider; 
 
 	}
+
+	
+	@action(name = "add_tool_executor_by_json", args = {
+			@arg(name = "provider", type = ToolProviderType.id, doc = @doc("provider specifies the tool provider to which the tool executor should be added")),
+			@arg(name = "json", type = IType.STRING, doc = @doc("name defines the unique identifier used to reference the tool when it is called by the assistant")),
+			@arg(name = "execute", type = IType.ACTION, doc = @doc("execute specifies the GAMA action that must be triggered by the assistant"))
+			
+	}, doc = @doc(value = "Action that executes a command in the OS, as if it is executed from a terminal.", returns = "The error message if any"))
+	public ToolProvider add_tool_executor_by_json(final IScope scope) {
+		final ToolProvider provider = (ToolProvider) scope.getArg("provider", ToolProviderType.id);
+		final String json = scope.getStringArg("json"); 
+		final ActionDescription executor = (ActionDescription) scope.getArg("execute", IType.ACTION);
+		provider.addToolExecutor(scope,json, executor);
+		return provider; 
+
+	}
 	
 	
 	@action(name = "create_client_executor", args = {
@@ -296,6 +312,8 @@ public class LLMSkill extends Skill {
 		final ChatModel model = (ChatModel) scope.getArg("llm", ChatModelType.id);
 		if (model != null) {
 			return model.askQuestion(msgToAdd, true, addPromptToMemory, addAnswerToMemory);
+
+//			return model.askQuestion(msgToAdd, true, addPromptToMemory, addAnswerToMemory).replaceAll("(?s)<think>.*?</think>", "");
 		}
 
 		return "";

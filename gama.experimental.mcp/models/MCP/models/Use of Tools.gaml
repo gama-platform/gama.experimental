@@ -16,14 +16,38 @@ global {
 	action toto {
 		create cricket;
 	}
+	string weather(string loc) {
+		write loc;
+		return "1000 Celcius";
+	}
 
 	init {
 		create A {
 			llm <- create_ollama_chat_model( url: "http://localhost:11434", model_name: "llama3.2");
 			chat_memory <- create_chat_memory(llm,roleMsg);
 			tool <- create_tool_executor(tool_name: "create a cricket",description: "it will increase but never decrease the population", execute: world.toto );
+			
+			tool<-add_tool_executor_by_json(provider:tool,
+				json: '{
+				  "name": "get_weather",
+				  "description": "Returns the current weather for a specified location.",
+				  "parameters": {
+				    "type": "object",
+				    "properties": {
+				      "loc": {
+				        "type": "string",
+				        "description": "The city and state, e.g. San Francisco, CA"
+				      }
+				    },
+				    "required": [
+				      "loc"
+				    ]
+				  }
+				}',
+				execute: world.weather
+			);
 			chat_bot <- create_assistant(llm: llm, memory: chat_memory, tool_provider: tool);
-			mymsg<- send_to_assistant(assistant: chat_bot, message: "i want to decrease the green house gas");
+			mymsg<- send_to_assistant(assistant: chat_bot, message: "what is the weather now in new york?");
 			write mymsg;
 		} 
 	} 
