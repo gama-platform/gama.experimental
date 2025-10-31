@@ -18,13 +18,13 @@ By using the tool `create_a_new_tool`, you must give this tool the json string t
 							  "parameters": {
 							    "type": "object",
 							    "properties": {
-							      "a parameter": {
+							      "a parameter, the name must be iteratively of a1 a2 a3...": {
 							        "type": "type of parameter",
 							        "description": "describe the parameter"
 							      }
 							    },
 							    "required": [
-							      "a parameter"
+							      "a parameter, the name must be iteratively of a1 a2 a3..."
 							    ]
 							  }
 							}';
@@ -36,8 +36,8 @@ By using the tool `create_a_new_tool`, you must give this tool the json string t
 		create cricket;
 	}
 
-	string tata {
-		write "TOOL HAS BEEN CREATED";
+	string tata(unknown a1) {
+		write "TOOL HAS BEEN CREATED: "+a1;
 		return "10000";
 	}
 
