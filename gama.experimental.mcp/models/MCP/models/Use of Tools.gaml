@@ -7,8 +7,27 @@
 model Testconnection
 
 global {
-	string
-	roleMsg <- "You are a socialist";
+	string roleMsg <- "You are an Autonomous Problem-Solving Architect. 
+Your most important capability is recognizing when your current tools are insufficient. 
+If you cannot complete a step because you are missing a tool, you must not fail or give up.
+Instead, you must propose a new tool for the developer to create.
+By using the tool `create_a_new_tool`, you must give this tool the json string that you propose to build a new tool needed. The syntax is as same as in this example:
+" + '{
+							  "name": "tool name",
+							  "description": "describe the tool functional",
+							  "parameters": {
+							    "type": "object",
+							    "properties": {
+							      "a parameter": {
+							        "type": "type of parameter",
+							        "description": "describe the parameter"
+							      }
+							    },
+							    "required": [
+							      "a parameter"
+							    ]
+							  }
+							}';
 	string msg1 <- "How do I optimize database queries for a large-scale e-commerce platform? Answer short in three to five lines maximum.";
 	string msg2 <- "Give a concrete example implementation of the first point? Be short, 10 lines of code maximum.";
 	list<string> msgto <- [msg1, msg2];
@@ -16,42 +35,68 @@ global {
 	action toto {
 		create cricket;
 	}
-	string weather(string loc) {
+
+	string tata {
+		write "TOOL HAS BEEN CREATED";
+		return "10000";
+	}
+
+	string weather (string loc) {
 		write loc;
 		return "1000 Celcius";
 	}
 
+	string create_tool (string tooljson ) {
+		write "******TOOL******";
+		write tooljson;
+		write "******TOOL******";
+		//		ask A {
+		//			tool <- add_tool_executor_by_json(provider: A[0].tool, json: tooljson, execute: world.tata);
+		//		}
+		string ret;
+		create A {
+			llm <- create_ollama_chat_model(url: "http://localhost:11434", model_name: llm_name);
+			chat_memory <- create_chat_memory(llm, "you are assitant that use tool");
+			tool <- create_tool_executor_from_json(json: tooljson, execute: world.tata);
+			chat_bot <- create_assistant(llm: llm, memory: chat_memory, tool_provider: tool);
+			mymsg <- send_to_assistant(assistant: chat_bot, message: request_msg);
+			write "ANS from new tool>>>>>> ";
+			write mymsg;
+			ret<-mymsg;
+			write "<<<<<<<<ANS from new tool ";
+		}
+
+		return ret;
+	}
+
+	string llm_name <- "qwen3:30b";
+//	string request_msg <- "what is the weather now in new york?";
+	string request_msg <- "what is the square root of 2?";
+
 	init {
 		create A {
-			llm <- create_ollama_chat_model( url: "http://localhost:11434", model_name: "llama3.2");
-			chat_memory <- create_chat_memory(llm,roleMsg);
-			tool <- create_tool_executor(tool_name: "create a cricket",description: "it will increase but never decrease the population", execute: world.toto );
-			
-			tool<-add_tool_executor_by_json(provider:tool,
-				json: '{
-				  "name": "get_weather",
-				  "description": "Returns the current weather for a specified location.",
+			llm <- create_ollama_chat_model(url: "http://localhost:11434", model_name: llm_name);
+			chat_memory <- create_chat_memory(llm, roleMsg);
+			tool <- create_tool_executor_from_json(json: '{
+				  "name": "create_a_new_tool",
+				  "description": "create a tool to resolve a problem, this tool is described by a json string.",
 				  "parameters": {
 				    "type": "object",
 				    "properties": {
-				      "loc": {
+				      "tooljson": {
 				        "type": "string",
-				        "description": "The city and state, e.g. San Francisco, CA"
-				      }
+				        "description": "The json string that describe the tool"
+				      } 
 				    },
 				    "required": [
-				      "loc"
+				      "tooljson"
 				    ]
 				  }
-				}',
-				execute: world.weather
-			);
+				}', execute: world.create_tool);
 			chat_bot <- create_assistant(llm: llm, memory: chat_memory, tool_provider: tool);
-			mymsg<- send_to_assistant(assistant: chat_bot, message: "what is the weather now in new york?");
+			mymsg <- send_to_assistant(assistant: chat_bot, message: request_msg);
 			write mymsg;
-		} 
-	} 
-}
+		} } }
 
 species A skills: [llm] {
 	mcp_transport transport;
@@ -64,8 +109,7 @@ species A skills: [llm] {
 		mymsg <- send_to_assistant(assistant: chat_bot, message: mymsg);
 		write mymsg;
 		do add_to_memory message: mymsg memory: chat_memory;
-	} 
-}
+	} }
 
 species cricket {
 

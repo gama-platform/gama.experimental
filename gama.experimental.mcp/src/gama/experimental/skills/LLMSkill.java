@@ -197,7 +197,7 @@ public class LLMSkill extends Skill {
 		return chatMemory;
 
 	}
-	
+
 	@action(name = "create_tool_executor", args = {
 			@arg(name = "tool_name", type = IType.STRING, doc = @doc("name defines the unique identifier used to reference the tool when it is called by the assistant")),
 			@arg(name = "description", type = IType.STRING, doc = @doc(", description provides a brief explanation of the tool’s purpose to help the assistant understand when and how to use it")),
@@ -209,6 +209,19 @@ public class LLMSkill extends Skill {
 		final String description = scope.getStringArg("description");
 		final ActionDescription executor = (ActionDescription) scope.getArg("execute", IType.ACTION);
 		provider.addToolExecutor(scope,name, description, executor);
+		return provider; 
+
+	}
+
+	@action(name = "create_tool_executor_from_json", args = {
+			@arg(name = "json", type = IType.STRING, doc = @doc("name defines the unique identifier used to reference the tool when it is called by the assistant")),
+			@arg(name = "execute", type = IType.ACTION, doc = @doc("execute specifies the GAMA action that must be triggered by the assistant")), 
+	}, doc = @doc(value = "Action that builds a tool_provider in charge of executing a GAMA action when it is invoked by the assistant during a conversation", returns = "The tool_provider built"))
+	public ToolProvider create_tool_executor_from_json(final IScope scope) {
+		final ToolProvider provider = new ToolProvider();
+		final String json = scope.getStringArg("json");  
+		final ActionDescription executor = (ActionDescription) scope.getArg("execute", IType.ACTION);
+		provider.addToolExecutor(scope,json, executor);
 		return provider; 
 
 	}
