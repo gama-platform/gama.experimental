@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="institution.gama.feature.floodingPlugin"
+      id="gama.experimental.feature.flooding"
       label="FloodingPlugin"
       version="1.0.0.qualifier">
 
@@ -17,7 +17,7 @@
    </license>
 
    <plugin
-         id="floodingPlugin"
+         id="gama.experimental.flooding"
          version="0.0.0"/>
 
 </feature>

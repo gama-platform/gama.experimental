@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: FloodingPlugin
-Bundle-SymbolicName: floodingPlugin;singleton:=true
+Bundle-SymbolicName: gama.experimental.flooding;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: gama.core;bundle-version="0.0.0",
  gama.dependencies;bundle-version="0.0.0"
