@@ -57,18 +57,24 @@ import gama.core.metamodel.shape.GamaPoint;
 		@variable(name = "rain_active", type = IType.BOOL, init = "false", doc = @doc("Whether rain is currently active")),
 		@variable(name = "rain_rate", type = IType.FLOAT, init = "0.0", doc = @doc("Rate of rain affecting water rising and spreading (in meters per step)")),
 		@variable(name = "rain_intensity", type = IType.FLOAT, init = "1.0", doc = @doc("Multiplier for rain effects on spreading (1.0 = normal, >1.0 = more aggressive spreading)")),
-		// OBSTACLE VARIABLES
+		// OBSTACLE VARIABLES (generic)
 		@variable(name = "obstacle_field", type = IType.MATRIX, doc = @doc("Field representing obstacle elevations for visualization")),
 		@variable(name = "obstacle_building_mode", type = IType.BOOL, init = "false", doc = @doc("Whether obstacle building mode is active")),
 		@variable(name = "obstacle_removal_mode", type = IType.BOOL, init = "false", doc = @doc("Whether obstacle removal mode is active")),
 		@variable(name = "default_obstacle_height", type = IType.FLOAT, init = "5.0", doc = @doc("Default height of obstacles in meters")),
 		@variable(name = "obstacle_destruction_time", type = IType.FLOAT, init = "10.0", doc = @doc("Time in cycles before obstacle cell under water attack is destroyed")),
+		// DYKE VARIABLES (aliases for backwards compatibility with GAML models)
+		@variable(name = "dyke_field", type = IType.MATRIX, doc = @doc("Field representing dyke elevations for visualization (alias for obstacle_field)")),
+		@variable(name = "dyke_building_mode", type = IType.BOOL, init = "false", doc = @doc("Whether dyke building mode is active (alias for obstacle_building_mode)")),
+		@variable(name = "dyke_removal_mode", type = IType.BOOL, init = "false", doc = @doc("Whether dyke removal mode is active (alias for obstacle_removal_mode)")),
+		@variable(name = "dyke_height", type = IType.FLOAT, init = "5.0", doc = @doc("Default height of dykes in meters (alias for default_obstacle_height)")),
+		@variable(name = "dyke_destruction_time", type = IType.FLOAT, init = "10.0", doc = @doc("Time in cycles before dyke cell under water attack is destroyed (alias for obstacle_destruction_time)")),
 		// C++ ENGINE VARIABLES
 		@variable(name = "use_cpp_engine", type = IType.BOOL, init = "false", doc = @doc("Whether to use C++ engine for spreading simulation")),
 		@variable(name = "cpp_engine_path", type = IType.STRING, init = "", doc = @doc("Path to the C++ spreading engine binary"))
 })
-@skill(name = "spreading", concept = { "spreading", "simulation", "water", "flood", "rain", "obstacles", "buildings", "cpp", "acceleration" }, 
-       doc = @doc("A skill for managing spreading simulations with optimized water flow mechanics, rain system, generic obstacle management, and optional C++ acceleration"))
+@skill(name = "spreading", concept = { "spreading", "simulation", "water", "flood", "rain", "obstacles", "buildings", "dykes", "cpp", "acceleration" },
+       doc = @doc("A skill for managing spreading simulations with optimized water flow mechanics, rain system, generic obstacle management (including dykes), and optional C++ acceleration"))
 public class SpreadingSkill extends Skill {
 	// === SKILL VARIABLES ===
 	public static final String FLOW_THRESHOLD = "flow_threshold";
@@ -90,6 +96,12 @@ public class SpreadingSkill extends Skill {
 	public static final String OBSTACLE_REMOVAL_MODE = "obstacle_removal_mode";
 	public static final String DEFAULT_OBSTACLE_HEIGHT = "default_obstacle_height";
 	public static final String OBSTACLE_DESTRUCTION_TIME = "obstacle_destruction_time";
+	// DYKE CONSTANTS (aliases for backwards compatibility)
+	public static final String DYKE_FIELD = "dyke_field";
+	public static final String DYKE_BUILDING_MODE = "dyke_building_mode";
+	public static final String DYKE_REMOVAL_MODE = "dyke_removal_mode";
+	public static final String DYKE_HEIGHT = "dyke_height";
+	public static final String DYKE_DESTRUCTION_TIME = "dyke_destruction_time";
 	// C++ ENGINE CONSTANTS
 	public static final String USE_CPP_ENGINE = "use_cpp_engine";
 	public static final String CPP_ENGINE_PATH = "cpp_engine_path";
@@ -439,9 +451,320 @@ public class SpreadingSkill extends Skill {
 		System.out.println("  Grid dimensions: " + gridWidth + "x" + gridHeight);
 		System.out.println("  Water cells: " + activeWaterCells.size());
 		System.out.println("  Individual obstacle management system ready");
+
+		return true;
+	}
+
+	// === DYKE-SPECIFIC INITIALIZATION (alias for obstacle initialization) ===
+	@action(name = "initialize_spreading_grid_with_dyke_field", args = {
+			@arg(name = "dem_field", type = IType.MATRIX, doc = @doc("Digital elevation model field")),
+			@arg(name = "dyke_field", type = IType.MATRIX, doc = @doc("Pre-created dyke field with correct coordinate system")),
+			@arg(name = "water_geometries", type = IType.LIST, doc = @doc("List of water polygon geometries")),
+			@arg(name = "initial_water_depth", type = IType.FLOAT, optional = true, doc = @doc("Initial water depth (default: 1.5m)")),
+			@arg(name = "flow_threshold", type = IType.FLOAT, optional = true, doc = @doc("Flow threshold parameter")),
+			@arg(name = "rising_rate", type = IType.FLOAT, optional = true, doc = @doc("Rising rate parameter")),
+			@arg(name = "min_flow_diff", type = IType.FLOAT, optional = true, doc = @doc("Minimum flow difference parameter")),
+			@arg(name = "equalization_threshold", type = IType.FLOAT, optional = true, doc = @doc("Equalization threshold parameter")) },
+			doc = @doc("Initializes the spreading grid with DEM and pre-created dyke field (alias for initialize_spreading_grid_with_obstacle_field)"))
+	public Boolean initializeSpreadingGridWithDykeField(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+
+		final IField demField = (IField) scope.getArg("dem_field", IType.FIELD);
+		final IField dykeField = (IField) scope.getArg("dyke_field", IType.FIELD);
+		final IList<IShape> waterGeometries = scope.getListArg("water_geometries");
+		final Double initialWaterDepth = scope.hasArg("initial_water_depth")
+				? scope.getFloatArg("initial_water_depth")
+				: 1.5;
+
+		if (scope.hasArg("flow_threshold")) {
+			agent.setAttribute(FLOW_THRESHOLD, scope.getFloatArg("flow_threshold"));
+		}
+		if (scope.hasArg("rising_rate")) {
+			agent.setAttribute(RISING_RATE, scope.getFloatArg("rising_rate"));
+		}
+		if (scope.hasArg("min_flow_diff")) {
+			agent.setAttribute(MIN_FLOW_DIFF, scope.getFloatArg("min_flow_diff"));
+		}
+		if (scope.hasArg("equalization_threshold")) {
+			agent.setAttribute(EQUALIZATION_THRESHOLD, scope.getFloatArg("equalization_threshold"));
+		}
+
+		int gridWidth = demField.getCols(scope);
+		int gridHeight = demField.getRows(scope);
+		setIntAttribute(agent, GRID_WIDTH, gridWidth);
+		setIntAttribute(agent, GRID_HEIGHT, gridHeight);
+
+		internalGrid = new GridCell[gridWidth][gridHeight];
+		activeWaterCells.clear();
+		edgeWaterCells.clear();
+		activeObstacles.clear();
+		obstacleGridCells.clear();
+		individualObstacles.clear();
+		cellToObstacleIds.clear();
+		nextObstacleId = 1;
+
+		IField waterField = GamaFieldType.withObject(scope, 0.0, gridWidth, gridHeight, Types.FLOAT);
+		for (int i = 0; i < gridWidth; i++) {
+			for (int j = 0; j < gridHeight; j++) {
+				waterField.set(scope, i, j, 0.0);
+			}
+		}
+
+		for (int i = 0; i < gridWidth; i++) {
+			for (int j = 0; j < gridHeight; j++) {
+				dykeField.set(scope, i, j, 0.0);
+			}
+		}
+
+		initializeGridCells(scope, demField, waterGeometries, initialWaterDepth, waterField);
+
+		// Store fields with both obstacle and dyke names for compatibility
+		agent.setAttribute(WATER_FIELD, waterField);
+		agent.setAttribute(OBSTACLE_FIELD, dykeField);
+		agent.setAttribute(DYKE_FIELD, dykeField);
+
+		// Sync dyke-specific variables with obstacle variables
+		syncDykeAndObstacleVariables(agent);
+
+		System.out.println("Grid initialized successfully with coordinate-aligned dyke field:");
+		System.out.println("  Grid dimensions: " + gridWidth + "x" + gridHeight);
+		System.out.println("  Water cells: " + activeWaterCells.size());
+		System.out.println("  Dyke management system ready");
+
+		return true;
+	}
+
+	// Helper method to sync dyke and obstacle variables
+	private void syncDykeAndObstacleVariables(IAgent agent) {
+		// Sync building mode
+		Boolean buildingMode = getBoolAttribute(agent, OBSTACLE_BUILDING_MODE);
+		if (buildingMode != null) {
+			agent.setAttribute(DYKE_BUILDING_MODE, buildingMode);
+		}
+		// Sync removal mode
+		Boolean removalMode = getBoolAttribute(agent, OBSTACLE_REMOVAL_MODE);
+		if (removalMode != null) {
+			agent.setAttribute(DYKE_REMOVAL_MODE, removalMode);
+		}
+		// Sync height
+		Double height = getFloatAttribute(agent, DEFAULT_OBSTACLE_HEIGHT);
+		if (height != null) {
+			agent.setAttribute(DYKE_HEIGHT, height);
+		}
+		// Sync destruction time
+		Double destructionTime = getFloatAttribute(agent, OBSTACLE_DESTRUCTION_TIME);
+		if (destructionTime != null) {
+			agent.setAttribute(DYKE_DESTRUCTION_TIME, destructionTime);
+		}
+		// Sync field
+		Object field = agent.getAttribute(OBSTACLE_FIELD);
+		if (field != null) {
+			agent.setAttribute(DYKE_FIELD, field);
+		}
+	}
+
+
+	// === NEW: ADD OBSTACLES FROM SHAPEFILE ===
+	@action(name = "add_obstacles_from_shapefile", args = {
+			@arg(name = "obstacle_shapefile", type = IType.LIST, doc = @doc("List of obstacle geometries from shapefile")),
+			@arg(name = "obstacle_type", type = IType.STRING, doc = @doc("Type of obstacle (dyke, building, wall, earthwork, barrier)")),
+			@arg(name = "height", type = IType.FLOAT, doc = @doc("Height of obstacles in meters")),
+			@arg(name = "uniform_height", type = IType.BOOL, optional = true, doc = @doc("Whether to use uniform height (default: true)")),
+			@arg(name = "destroyable", type = IType.BOOL, optional = true, doc = @doc("Whether obstacles can be destroyed by water (default: based on obstacle type)")),
+			@arg(name = "destruction_time", type = IType.FLOAT, optional = true, doc = @doc("Time in cycles before obstacle is destroyed under water attack (default: based on obstacle type)"))
+	}, doc = @doc("Adds obstacles from shapefile geometries to the simulation"))
+	public Boolean addObstaclesFromShapefile(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		final IList<IShape> obstacleGeometries = scope.getListArg("obstacle_shapefile");
+		final String obstacleTypeStr = scope.getStringArg("obstacle_type");
+		final double height = scope.getFloatArg("height");
+		final boolean uniformHeight = scope.hasArg("uniform_height") ? scope.getBoolArg("uniform_height") : true;
+		
+		// Parse obstacle type
+		ObstacleType obstacleType = ObstacleType.fromString(obstacleTypeStr);
+		
+		// Determine destroyable property
+		boolean destroyable = scope.hasArg("destroyable") ? scope.getBoolArg("destroyable") : obstacleType.destroyable;
+		
+		// Determine destruction time
+		double destructionTime = scope.hasArg("destruction_time") ? scope.getFloatArg("destruction_time") : obstacleType.defaultDestructionTime;
+		
+		if (obstacleGeometries == null || obstacleGeometries.isEmpty()) {
+			System.out.println("No obstacle geometries provided");
+			return false;
+		}
+		
+		// Get grid dimensions and fields
+		int width = getIntAttribute(agent, GRID_WIDTH);
+		int height_grid = getIntAttribute(agent, GRID_HEIGHT);
+		IField obstacleField = (IField) agent.getAttribute(OBSTACLE_FIELD);
+		IField waterField = (IField) agent.getAttribute(WATER_FIELD);
+		
+		if (obstacleField == null) {
+			System.out.println("ERROR: Obstacle field is null!");
+			return false;
+		}
+		
+		double currentTime = scope.getSimulation().getClock().getCycle();
+		int totalObstaclesCreated = 0;
+		int totalCellsAffected = 0;
+		
+		// Process each obstacle geometry
+		for (IShape obstacleGeom : obstacleGeometries) {
+			if (obstacleGeom == null) continue;
+			
+			// Create individual obstacle structure
+			int currentObstacleId = nextObstacleId++;
+			ObstacleStructure newObstacle = new ObstacleStructure(currentObstacleId, obstacleType, currentTime, destroyable, destructionTime);
+			
+			// Find all grid cells that intersect with this obstacle
+			List<GridCell> affectedCells = new ArrayList<>();
+			List<GridCell> displacedWaterCells = new ArrayList<>();
+			
+			for (int i = 0; i < width; i++) {
+				for (int j = 0; j < height_grid; j++) {
+					GridCell cell = internalGrid[i][j];
+					if (cell != null && cell.shape != null) {
+						try {
+							// Check if cell intersects with obstacle geometry
+							if (SpatialProperties.overlaps(scope, cell.shape, obstacleGeom) || 
+								obstacleGeom.covers(cell.shape.getLocation())) {
+								affectedCells.add(cell);
+							}
+						} catch (Exception e) {
+							// Fallback to location-based check
+							if (obstacleGeom.covers(cell.shape.getLocation())) {
+								affectedCells.add(cell);
+							}
+						}
+					}
+				}
+			}
+			
+			if (affectedCells.isEmpty()) {
+				continue; // Skip this geometry if no cells affected
+			}
+			
+			// Calculate obstacle elevations for affected cells
+			for (GridCell cell : affectedCells) {
+				double obstacleElevation;
+				
+				if (uniformHeight) {
+					// Uniform height mode
+					if (obstacleType.followTerrain) {
+						obstacleElevation = cell.originalTerrainElevation + height;
+					} else {
+						obstacleElevation = height; // Absolute elevation
+					}
+				} else {
+					// Variable height mode (could be enhanced later with height attributes from shapefile)
+					obstacleElevation = cell.originalTerrainElevation + height;
+				}
+				
+				// Handle water displacement if building through water
+				if (cell.isWater) {
+					displacedWaterCells.add(cell);
+					newObstacle.addDisplacedWaterCell(cell);
+					displaceWaterFromCell(cell, waterField, scope);
+				}
+				
+				// Add to obstacle tracking
+				newObstacle.addCell(cell, obstacleElevation);
+				cellToObstacleIds.computeIfAbsent(cell, k -> new HashSet<>()).add(currentObstacleId);
+				obstacleGridCells.add(cell);
+				
+				// Create ObstacleCell for water attack tracking
+				ObstacleCell obstacleCell = new ObstacleCell(cell, currentObstacleId, obstacleType, currentTime, destroyable);
+				activeObstacles.add(obstacleCell);
+				
+				// Update terrain elevation and obstacle field
+				double currentFieldElevation = ((Number) obstacleField.get(scope, cell.x, cell.y)).doubleValue();
+				double newElevation = Math.max(currentFieldElevation, obstacleElevation);
+				
+				obstacleField.set(scope, cell.x, cell.y, newElevation);
+				cell.terrainElevation = newElevation;
+				
+				totalCellsAffected++;
+			}
+			
+			// Store the obstacle
+			individualObstacles.put(currentObstacleId, newObstacle);
+			totalObstaclesCreated++;
+			
+			// Handle water redistribution
+			if (!displacedWaterCells.isEmpty()) {
+				redistributeDisplacedWater(displacedWaterCells, waterField, scope);
+			}
+		}
+		
+		// Update water system after all obstacles are placed
+		if (totalCellsAffected > 0) {
+			identifyEdgeCells();
+		}
+		
+		System.out.println("Obstacles from shapefile added successfully:");
+		System.out.println("  Type: " + obstacleType.name);
+		System.out.println("  Obstacles created: " + totalObstaclesCreated);
+		System.out.println("  Cells affected: " + totalCellsAffected);
+		System.out.println("  Destroyable: " + destroyable);
+		if (destroyable) {
+			System.out.println("  Destruction time: " + destructionTime + " cycles");
+		}
 		
 		return true;
 	}
+	
+	// Helper method: Displace water from cell - ENHANCED WITH TRACKING
+	private void displaceWaterFromCell(GridCell cell, IField waterField, IScope scope) {
+		if (cell.isWater) {
+			double waterVolume = Math.max(0, cell.waterElevation - cell.terrainElevation);
+			
+			// Remove from water system
+			cell.isWater = false;
+			cell.waterElevation = 0.0;
+			activeWaterCells.remove(cell);
+			edgeWaterCells.remove(cell);
+			
+			// Clear water field
+			if (waterField != null) {
+				waterField.set(scope, cell.x, cell.y, 0.0);
+			}
+			
+			// Store for redistribution
+			cell.setAttribute("displaced_water", waterVolume);
+		}
+	}
+	
+	
+	// Helper method: Redistribute displaced water
+	private void redistributeDisplacedWater(List<GridCell> displacedCells, IField waterField, IScope scope) {
+		for (GridCell displacedCell : displacedCells) {
+			Double waterVolumeObj = (Double) displacedCell.getAttribute("displaced_water");
+			double waterVolume = waterVolumeObj != null ? waterVolumeObj : 0.0;
+			
+			if (waterVolume > 0) {
+				// Find valid neighbors for redistribution
+				List<GridCell> validNeighbors = displacedCell.neighbors.stream()
+					.filter(n -> n.isWater && !obstacleGridCells.contains(n))
+					.collect(Collectors.toList());
+				
+				if (!validNeighbors.isEmpty()) {
+					double waterPerNeighbor = waterVolume / validNeighbors.size();
+					
+					for (GridCell neighbor : validNeighbors) {
+						neighbor.waterElevation += waterPerNeighbor;
+						if (waterField != null) {
+							waterField.set(scope, neighbor.x, neighbor.y, neighbor.waterElevation);
+						}
+					}
+				}
+			}
+			
+			// Clean up
+			displacedCell.setAttribute("displaced_water", 0.0);
+		}
+	}
+	
 	
 	// === COMBINED INITIALIZATION WITH C++ ===
 	@action(name = "initialize_spreading_with_cpp", args = {
@@ -1655,13 +1978,13 @@ public class SpreadingSkill extends Skill {
 	private Set<GridCell> findConnectedWaterRegion(GridCell startCell) {
 		Set<GridCell> region = new HashSet<>();
 		Queue<GridCell> queue = new LinkedList<>();
-		
+
 		queue.add(startCell);
 		region.add(startCell);
-		
+
 		while (!queue.isEmpty()) {
 			GridCell current = queue.poll();
-			
+
 			for (GridCell neighbor : current.neighbors) {
 				if (neighbor.isWater && !region.contains(neighbor)) {
 					region.add(neighbor);
@@ -1669,7 +1992,391 @@ public class SpreadingSkill extends Skill {
 				}
 			}
 		}
-		
+
 		return region;
+	}
+
+	// === RAIN ADDITIONAL ACTIONS ===
+	@action(name = "set_rain_rate", args = {
+			@arg(name = "rain_rate", type = IType.FLOAT, doc = @doc("New rain rate (meters per step)")) },
+			doc = @doc("Updates the rain rate while rain is active"))
+	public Boolean setRainRate(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		final double rainRate = scope.getFloatArg("rain_rate");
+		setFloatAttribute(agent, RAIN_RATE, rainRate);
+		return true;
+	}
+
+	@action(name = "set_rain_intensity", args = {
+			@arg(name = "rain_intensity", type = IType.FLOAT, doc = @doc("Rain intensity multiplier")) },
+			doc = @doc("Updates the rain intensity while rain is active"))
+	public Boolean setRainIntensity(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		final double rainIntensity = scope.getFloatArg("rain_intensity");
+		setFloatAttribute(agent, RAIN_INTENSITY, rainIntensity);
+		return true;
+	}
+
+	@action(name = "is_rain_active", doc = @doc("Returns whether rain is currently active"))
+	public Boolean isRainActive(final IScope scope) {
+		return getBoolAttribute(getCurrentAgent(scope), RAIN_ACTIVE);
+	}
+
+	@action(name = "get_rain_rate", doc = @doc("Returns the current rain rate"))
+	public Double getRainRate(final IScope scope) {
+		return getFloatAttribute(getCurrentAgent(scope), RAIN_RATE);
+	}
+
+	@action(name = "get_rain_intensity", doc = @doc("Returns the current rain intensity"))
+	public Double getRainIntensity(final IScope scope) {
+		return getFloatAttribute(getCurrentAgent(scope), RAIN_INTENSITY);
+	}
+
+	// === DYKE-SPECIFIC ACTIONS (aliases for obstacle methods for GAML compatibility) ===
+
+	@action(name = "toggle_dyke_building_mode", doc = @doc("Toggles dyke building mode on/off"))
+	public Boolean toggleDykeBuildingMode(final IScope scope) {
+		final IAgent agent = getCurrentAgent(scope);
+		boolean currentMode = getBoolAttribute(agent, OBSTACLE_BUILDING_MODE);
+		setBoolAttribute(agent, OBSTACLE_BUILDING_MODE, !currentMode);
+		setBoolAttribute(agent, DYKE_BUILDING_MODE, !currentMode);
+		return !currentMode;
+	}
+
+	@action(name = "is_dyke_building_mode", doc = @doc("Returns whether dyke building mode is active"))
+	public Boolean isDykeBuildingMode(final IScope scope) {
+		return getBoolAttribute(getCurrentAgent(scope), OBSTACLE_BUILDING_MODE);
+	}
+
+	@action(name = "toggle_dyke_removal_mode", doc = @doc("Toggles dyke removal mode on/off"))
+	public Boolean toggleDykeRemovalMode(final IScope scope) {
+		final IAgent agent = getCurrentAgent(scope);
+		boolean currentMode = getBoolAttribute(agent, OBSTACLE_REMOVAL_MODE);
+		setBoolAttribute(agent, OBSTACLE_REMOVAL_MODE, !currentMode);
+		setBoolAttribute(agent, DYKE_REMOVAL_MODE, !currentMode);
+		return !currentMode;
+	}
+
+	@action(name = "is_dyke_removal_mode", doc = @doc("Returns whether dyke removal mode is active"))
+	public Boolean isDykeRemovalMode(final IScope scope) {
+		return getBoolAttribute(getCurrentAgent(scope), OBSTACLE_REMOVAL_MODE);
+	}
+
+	@action(name = "toggle_obstacle_building_mode", doc = @doc("Toggles obstacle building mode on/off"))
+	public Boolean toggleObstacleBuildingMode(final IScope scope) {
+		final IAgent agent = getCurrentAgent(scope);
+		boolean currentMode = getBoolAttribute(agent, OBSTACLE_BUILDING_MODE);
+		setBoolAttribute(agent, OBSTACLE_BUILDING_MODE, !currentMode);
+		setBoolAttribute(agent, DYKE_BUILDING_MODE, !currentMode);
+		return !currentMode;
+	}
+
+	@action(name = "is_obstacle_building_mode", doc = @doc("Returns whether obstacle building mode is active"))
+	public Boolean isObstacleBuildingMode(final IScope scope) {
+		return getBoolAttribute(getCurrentAgent(scope), OBSTACLE_BUILDING_MODE);
+	}
+
+	@action(name = "toggle_obstacle_removal_mode", doc = @doc("Toggles obstacle removal mode on/off"))
+	public Boolean toggleObstacleRemovalMode(final IScope scope) {
+		final IAgent agent = getCurrentAgent(scope);
+		boolean currentMode = getBoolAttribute(agent, OBSTACLE_REMOVAL_MODE);
+		setBoolAttribute(agent, OBSTACLE_REMOVAL_MODE, !currentMode);
+		setBoolAttribute(agent, DYKE_REMOVAL_MODE, !currentMode);
+		return !currentMode;
+	}
+
+	@action(name = "is_obstacle_removal_mode", doc = @doc("Returns whether obstacle removal mode is active"))
+	public Boolean isObstacleRemovalMode(final IScope scope) {
+		return getBoolAttribute(getCurrentAgent(scope), OBSTACLE_REMOVAL_MODE);
+	}
+
+	@action(name = "build_dyke", args = {
+			@arg(name = "point1", type = IType.POINT, doc = @doc("First point of the dyke")),
+			@arg(name = "point2", type = IType.POINT, doc = @doc("Second point of the dyke")),
+			@arg(name = "destroyable", type = IType.BOOL, optional = true, doc = @doc("Whether dyke can be destroyed (default: true)")),
+			@arg(name = "destruction_time", type = IType.FLOAT, optional = true, doc = @doc("Destruction time in cycles (default: based on dyke settings)")) },
+			doc = @doc("Builds a dyke between two points"))
+	public Boolean buildDyke(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+
+		if (!getBoolAttribute(agent, OBSTACLE_BUILDING_MODE)) {
+			return false;
+		}
+
+		GamaPoint point1 = (GamaPoint) scope.getArg("point1", IType.POINT);
+		GamaPoint point2 = (GamaPoint) scope.getArg("point2", IType.POINT);
+		boolean destroyable = scope.hasArg("destroyable") ? scope.getBoolArg("destroyable") : true;
+		double destructionTime = scope.hasArg("destruction_time") ? scope.getFloatArg("destruction_time") : getFloatAttribute(agent, OBSTACLE_DESTRUCTION_TIME);
+
+		int width = getIntAttribute(agent, GRID_WIDTH);
+		int height = getIntAttribute(agent, GRID_HEIGHT);
+		IField obstacleField = (IField) agent.getAttribute(OBSTACLE_FIELD);
+		IField waterField = (IField) agent.getAttribute(WATER_FIELD);
+
+		if (obstacleField == null) {
+			System.out.println("ERROR: Obstacle/Dyke field is null!");
+			return false;
+		}
+
+		int[] coords1 = worldToGrid(point1, scope, width, height);
+		int[] coords2 = worldToGrid(point2, scope, width, height);
+
+		double dykeHeight = getFloatAttribute(agent, DEFAULT_OBSTACLE_HEIGHT);
+		double currentTime = scope.getSimulation().getClock().getCycle();
+
+		int currentObstacleId = nextObstacleId++;
+		ObstacleStructure newObstacle = new ObstacleStructure(currentObstacleId, ObstacleType.DYKE, currentTime, destroyable, destructionTime);
+
+		List<int[]> dykeCoords = getLineCoordinates(coords1[0], coords1[1], coords2[0], coords2[1]);
+		int cellsAffected = 0;
+
+		for (int[] coord : dykeCoords) {
+			int x = coord[0], y = coord[1];
+			if (x >= 0 && x < width && y >= 0 && y < height) {
+				GridCell cell = internalGrid[x][y];
+
+				double obstacleElevation = cell.originalTerrainElevation + dykeHeight;
+
+				if (cell.isWater) {
+					displaceWaterFromCell(cell, waterField, scope);
+					newObstacle.addDisplacedWaterCell(cell);
+				}
+
+				newObstacle.addCell(cell, obstacleElevation);
+				cellToObstacleIds.computeIfAbsent(cell, k -> new HashSet<>()).add(currentObstacleId);
+				obstacleGridCells.add(cell);
+
+				ObstacleCell obstacleCell = new ObstacleCell(cell, currentObstacleId, ObstacleType.DYKE, currentTime, destroyable);
+				activeObstacles.add(obstacleCell);
+
+				double currentFieldElevation = ((Number) obstacleField.get(scope, cell.x, cell.y)).doubleValue();
+				double newElevation = Math.max(currentFieldElevation, obstacleElevation);
+
+				obstacleField.set(scope, cell.x, cell.y, newElevation);
+				cell.terrainElevation = newElevation;
+
+				cellsAffected++;
+			}
+		}
+
+		if (cellsAffected > 0) {
+			individualObstacles.put(currentObstacleId, newObstacle);
+			identifyEdgeCells();
+
+			// Sync dyke field
+			agent.setAttribute(DYKE_FIELD, obstacleField);
+
+			System.out.println("Dyke built: " + cellsAffected + " cells, ID=" + currentObstacleId);
+			return true;
+		}
+
+		return false;
+	}
+
+	@action(name = "get_active_dyke_count", doc = @doc("Returns the number of active dyke cells"))
+	public Integer getActiveDykeCount(final IScope scope) {
+		return obstacleGridCells.size();
+	}
+
+	@action(name = "get_surrounded_dyke_count", doc = @doc("Returns the number of dyke cells under water attack"))
+	public Integer getSurroundedDykeCount(final IScope scope) {
+		int count = 0;
+		for (ObstacleCell obstacleCell : activeObstacles) {
+			if (obstacleCell.isUnderWaterAttack && !obstacleCell.isDestroyed) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	// === ENHANCED OBSTACLE STATUS ACTIONS ===
+	@action(name = "get_active_obstacle_count", doc = @doc("Returns the number of active individual obstacles"))
+	public Integer getActiveObstacleCount(final IScope scope) {
+		return (int) individualObstacles.values().stream().filter(o -> !o.isDestroyed).count();
+	}
+
+	@action(name = "get_obstacles_under_attack", doc = @doc("Returns a list of obstacle IDs that are currently under water attack"))
+	public IList<Integer> getObstaclesUnderAttack(final IScope scope) {
+		Set<Integer> attackedObstacleIds = new HashSet<>();
+		for (ObstacleCell obstacleCell : activeObstacles) {
+			if (obstacleCell.isUnderWaterAttack && !obstacleCell.isDestroyed) {
+				attackedObstacleIds.add(obstacleCell.obstacleId);
+			}
+		}
+		IList<Integer> result = GamaListFactory.create(Types.INT);
+		result.addAll(attackedObstacleIds);
+		return result;
+	}
+
+	@action(name = "clear_all_dykes", doc = @doc("Removes all dykes from the simulation (alias for clear_all_obstacles)"))
+	public Boolean clearAllDykes(final IScope scope) {
+		return clearAllObstacles(scope);
+	}
+
+	@action(name = "get_dyke_area_size", args = {
+			@arg(name = "location", type = IType.POINT, doc = @doc("Point location to check for dyke area")) },
+			doc = @doc("Returns the size of the connected dyke area at the given location"))
+	public Integer getDykeAreaSize(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		GamaPoint location = (GamaPoint) scope.getArg("location", IType.POINT);
+
+		int width = getIntAttribute(agent, GRID_WIDTH);
+		int height = getIntAttribute(agent, GRID_HEIGHT);
+
+		int[] gridCoords = worldToGrid(location, scope, width, height);
+		int x = gridCoords[0], y = gridCoords[1];
+
+		if (x < 0 || x >= width || y < 0 || y >= height) {
+			return 0;
+		}
+
+		GridCell cell = internalGrid[x][y];
+		if (!obstacleGridCells.contains(cell)) {
+			return 0;
+		}
+
+		Set<GridCell> connectedArea = findConnectedObstacleRegion(cell);
+		return connectedArea.size();
+	}
+
+	@action(name = "remove_dyke_area", args = {
+			@arg(name = "location", type = IType.POINT, doc = @doc("Point location where dyke area should be removed")) },
+			doc = @doc("Removes the connected dyke area at the given location"))
+	public Boolean removeDykeArea(final IScope scope) throws GamaRuntimeException {
+		final IAgent agent = getCurrentAgent(scope);
+		GamaPoint location = (GamaPoint) scope.getArg("location", IType.POINT);
+
+		int width = getIntAttribute(agent, GRID_WIDTH);
+		int height = getIntAttribute(agent, GRID_HEIGHT);
+		IField obstacleField = (IField) agent.getAttribute(OBSTACLE_FIELD);
+		IField waterField = (IField) agent.getAttribute(WATER_FIELD);
+
+		int[] gridCoords = worldToGrid(location, scope, width, height);
+		int x = gridCoords[0], y = gridCoords[1];
+
+		if (x < 0 || x >= width || y < 0 || y >= height) {
+			return false;
+		}
+
+		GridCell startCell = internalGrid[x][y];
+		if (!obstacleGridCells.contains(startCell)) {
+			return false;
+		}
+
+		Set<GridCell> connectedArea = findConnectedObstacleRegion(startCell);
+		Set<GridCell> waterCellsToRestore = new HashSet<>();
+
+		for (GridCell cell : connectedArea) {
+			cell.terrainElevation = cell.originalTerrainElevation;
+			if (obstacleField != null) {
+				obstacleField.set(scope, cell.x, cell.y, 0.0);
+			}
+
+			if (cell.wasOriginalWater) {
+				waterCellsToRestore.add(cell);
+			}
+
+			Set<Integer> obstacleIds = cellToObstacleIds.get(cell);
+			if (obstacleIds != null) {
+				for (int obstacleId : obstacleIds) {
+					ObstacleStructure obstacle = individualObstacles.get(obstacleId);
+					if (obstacle != null) {
+						obstacle.obstacleCells.remove(cell);
+						obstacle.cellElevations.remove(cell);
+					}
+				}
+				cellToObstacleIds.remove(cell);
+			}
+
+			obstacleGridCells.remove(cell);
+			activeObstacles.removeIf(oc -> oc.gridCell == cell);
+		}
+
+		if (!waterCellsToRestore.isEmpty()) {
+			restoreOriginalWaterCells(scope, waterCellsToRestore, waterField);
+		}
+
+		identifyEdgeCells();
+
+		// Sync dyke field
+		agent.setAttribute(DYKE_FIELD, obstacleField);
+
+		System.out.println("Dyke area removed: " + connectedArea.size() + " cells");
+		return true;
+	}
+
+	private Set<GridCell> findConnectedObstacleRegion(GridCell startCell) {
+		Set<GridCell> region = new HashSet<>();
+		Queue<GridCell> queue = new LinkedList<>();
+
+		queue.add(startCell);
+		region.add(startCell);
+
+		while (!queue.isEmpty()) {
+			GridCell current = queue.poll();
+
+			for (GridCell neighbor : current.neighbors) {
+				if (obstacleGridCells.contains(neighbor) && !region.contains(neighbor)) {
+					region.add(neighbor);
+					queue.add(neighbor);
+				}
+			}
+		}
+
+		return region;
+	}
+
+	// === COORDINATE CONVERSION HELPER ===
+	private int[] worldToGrid(GamaPoint worldPoint, IScope scope, int gridWidth, int gridHeight) {
+		IAgent agent = getCurrentAgent(scope);
+		IShape worldShape = scope.getSimulation().getGeometry();
+
+		double worldMinX = worldShape.getEnvelope().getMinX();
+		double worldMinY = worldShape.getEnvelope().getMinY();
+		double worldMaxX = worldShape.getEnvelope().getMaxX();
+		double worldMaxY = worldShape.getEnvelope().getMaxY();
+
+		double worldWidth = worldMaxX - worldMinX;
+		double worldHeight = worldMaxY - worldMinY;
+
+		double normalizedX = (worldPoint.getX() - worldMinX) / worldWidth;
+		double normalizedY = (worldPoint.getY() - worldMinY) / worldHeight;
+
+		int gridX = (int) Math.floor(normalizedX * gridWidth);
+		int gridY = (int) Math.floor(normalizedY * gridHeight);
+
+		gridX = Math.max(0, Math.min(gridWidth - 1, gridX));
+		gridY = Math.max(0, Math.min(gridHeight - 1, gridY));
+
+		return new int[] { gridX, gridY };
+	}
+
+	// === LINE DRAWING HELPER (Bresenham's algorithm) ===
+	private List<int[]> getLineCoordinates(int x0, int y0, int x1, int y1) {
+		List<int[]> coords = new ArrayList<>();
+
+		int dx = Math.abs(x1 - x0);
+		int dy = Math.abs(y1 - y0);
+		int sx = x0 < x1 ? 1 : -1;
+		int sy = y0 < y1 ? 1 : -1;
+		int err = dx - dy;
+
+		while (true) {
+			coords.add(new int[] { x0, y0 });
+
+			if (x0 == x1 && y0 == y1) break;
+
+			int e2 = 2 * err;
+			if (e2 > -dy) {
+				err -= dy;
+				x0 += sx;
+			}
+			if (e2 < dx) {
+				err += dx;
+				y0 += sy;
+			}
+		}
+
+		return coords;
 	}
 }
