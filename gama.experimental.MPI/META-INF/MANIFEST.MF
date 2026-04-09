@@ -2,14 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MPI
 Bundle-SymbolicName: gama.experimental.MPI;singleton:=true
-Bundle-Version: 2024.6.0.qualifier
+Bundle-Version: 0.0.0.qualifier
 Automatic-Module-Name: gama.experimental.MPI
 Bundle-Activator: pluginActivator.MPIActivator
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-25
 Import-Package: com.google.inject,
  gama.headless.common,
  gama.headless.job,
- gama.gaml.types,
  org.osgi.framework;version="1.10.0"
 Require-Bundle: gama.extension.serialize,
  gama.extension.network,

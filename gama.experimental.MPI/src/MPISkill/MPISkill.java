@@ -2,24 +2,28 @@ package MPISkill;
 
 import java.util.List;
 
-import gama.annotations.precompiler.GamlAnnotations.action;
-import gama.annotations.precompiler.GamlAnnotations.arg;
-import gama.annotations.precompiler.GamlAnnotations.doc;
-import gama.annotations.precompiler.GamlAnnotations.example;
-import gama.annotations.precompiler.GamlAnnotations.getter;
-import gama.annotations.precompiler.GamlAnnotations.skill;
-import gama.annotations.precompiler.GamlAnnotations.variable;
-import gama.annotations.precompiler.GamlAnnotations.vars;
-import gama.annotations.precompiler.IConcept;
-import gama.core.runtime.IScope;
-import gama.core.util.IList;
-import gama.core.util.IMap;
+import gama.annotations.action;
+import gama.annotations.arg;
+import gama.annotations.doc;
+import gama.annotations.example;
+import gama.annotations.getter;
+import gama.annotations.skill;
+import gama.annotations.variable;
+import gama.annotations.vars;
+import gama.annotations.support.IConcept;
+import gama.api.gaml.types.IType;
+import gama.api.kernel.skill.Skill;
+import gama.api.runtime.scope.IScope;
+import gama.api.types.list.IList;
+import gama.api.types.map.IMap;
 import gama.dev.DEBUG;
 import gama.extension.serialize.gaml.SerialisationOperators;
-import gama.gaml.skills.Skill;
-import gama.gaml.types.IType;
 import mpi.MPI;
 import mpi.MPIException;
+
+
+
+
 
 @vars ({ @variable (
 		name = IMPISkill.MPI_RANK,
@@ -37,7 +41,7 @@ public class MPISkill extends Skill
 
 	static
 	{
-		DEBUG.ON();
+		DEBUG.OFF();
 	}
 
 	@getter(IMPISkill.MPI_SIZE)

@@ -4,22 +4,21 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
+import gama.api.GAMA;
+import gama.api.runtime.scope.IScope;
+import gama.api.types.list.GamaListFactory;
+import gama.api.types.list.IList;
+import gama.api.types.map.GamaMapFactory;
+import gama.api.types.map.IMap;
+import gama.dev.DEBUG;
+import gama.extension.serialize.binary.BinarySerialisation;
+import gama.extension.serialize.gaml.SerialisationOperators;
 import mpi.MPI;
 import mpi.MPIException;
 import mpi.Op;
 import mpi.Request;
 import mpi.Status;
-import gama.core.runtime.GAMA;
-import gama.core.runtime.IScope;
-import gama.core.util.GamaListFactory;
-import gama.core.util.GamaMapFactory;
-import gama.core.util.IList;
-import gama.core.util.IMap;
-import gama.dev.DEBUG;
-import gama.extension.serialize.gaml.SerialisationOperators;
-import gama.extension.serialize.implementations.BinarySerialisation;
 
 /**
  * Class containing MPI functions for communication and data exchange
@@ -28,7 +27,7 @@ public class MPIFunctions
 {	
 	static
 	{
-		DEBUG.ON();
+		DEBUG.OFF();
 	}
 
     /**
@@ -218,7 +217,7 @@ public class MPIFunctions
 	                	//DEBUG.OUT("end displ" + dataBufferOut.length);
 	                	b1 = Arrays.copyOfRange(dataBufferOut, indexInBuffer, dataBufferOut.length);  	
 	                }
-	                li.addAll((List)BinarySerialisation.createFromString(scope, new String(b1)));
+	                li.addAll((List)SerialisationOperators.unserialize(scope, new String(b1)));
 	                //DEBUG.OUT("created li : " + li);
 	            }
 	            //DEBUG.OUT("returning li : " + (IList<?>) li);

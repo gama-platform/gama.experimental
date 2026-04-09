@@ -3,29 +3,26 @@ package mpiExperiment;
 import java.io.FileNotFoundException;
 
 import MPISkill.MPIFunctions;
-import gama.annotations.precompiler.GamlAnnotations.doc;
-import gama.annotations.precompiler.GamlAnnotations.experiment;
-import gama.annotations.precompiler.IConcept;
-import gama.core.kernel.experiment.ExperimentAgent;
-import gama.core.metamodel.agent.IAgent;
-import gama.core.metamodel.population.IPopulation;
-import gama.core.runtime.IScope;
-import gama.core.runtime.exceptions.GamaRuntimeException;
+import gama.annotations.doc;
+import gama.annotations.experiment;
+import gama.annotations.support.IConcept;
+import gama.api.exceptions.GamaRuntimeException;
+import gama.api.kernel.agent.IAgent;
+import gama.api.kernel.agent.IPopulation;
+import gama.api.runtime.scope.IScope;
+import gama.core.experiment.ExperimentAgent;
 import gama.dev.DEBUG;
 import gama.headless.common.Globals;
 import gama.headless.job.IExperimentJob;
 import mpi.MPI;
 import mpi.MPIException;
 
-@experiment (IConcept.MPI_EXP)
+
+
+@experiment ("MPI_EXP")
 @doc("MPI experiment")
 public class MPIExperiment extends ExperimentAgent
 {
-	static
-	{
-		//DEBUG.ON();
-		//DEBUG.FORCE_ON();
-	}
 	
 	public MPIExperiment(IPopulation<? extends IAgent> s, int index) throws GamaRuntimeException 
 	{
@@ -59,11 +56,9 @@ public class MPIExperiment extends ExperimentAgent
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			DEBUG.OUT("DEBUG.REGISTER_LOG_WRITER failed");
 		} catch (MPIException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			DEBUG.OUT("getRankgetRank failed");
 		}
 	}
 }

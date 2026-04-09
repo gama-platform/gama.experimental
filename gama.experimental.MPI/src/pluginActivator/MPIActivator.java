@@ -6,12 +6,12 @@ import java.io.FileNotFoundException;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import gama.core.runtime.GAMA;
+import gama.api.GAMA;
 import gama.dev.DEBUG;
 import gama.headless.common.Globals;
 import gama.headless.job.IExperimentJob;
-import mpi.*;
-
+import mpi.MPI;
+import mpi.MPIException;
 
 /**
  * The MPIActivator.
@@ -34,18 +34,14 @@ public class MPIActivator implements BundleActivator {
 			DEBUG.OUT("isInHeadLessMode : " + GAMA.isInHeadLessMode());
 			
 			Globals.OUTPUT_PATH = "output.log";
-			DEBUG.OUT("OK  ? MPI.COMM_WORLD.getRank() " + MPI.COMM_WORLD.getRank());
+			DEBUG.OUT("MPI.COMM_WORLD.getRank() " + MPI.COMM_WORLD.getRank());
 			
-			DEBUG.OUT("pre register");
 			DEBUG.REGISTER_LOG_WRITER(new IExperimentJob.DebugStream(MPI.COMM_WORLD.getRank()));
-			DEBUG.OUT("post register");
 			
-			DEBUG.LOG("MPI STARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTSTARTvv");
 			DEBUG.LOG("************* MPI Init : " + MPI.COMM_WORLD.getRank());
 		} catch (FileNotFoundException | MPIException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			DEBUG.OUT("getRankgetRank failed");
 		}
 	}
 
