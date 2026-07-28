@@ -1,7 +1,7 @@
 > [!CAUTION]
 > ## This is *an old version* of the source code of this plugin. The repo has been migrated to this new location along other gama plugins
 > 
-> # https://github.com/gama-platform-plugin/
+> # https://github.com/gama-platform-plugins/
 
 ---
 
